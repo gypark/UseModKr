@@ -6548,7 +6548,7 @@ sub PrintPageList {
 				$count2++;
 			}
 # 앵커를 삽입
-			print $q->h3("<a name=\"H_$indexTitle[$count]\" href=\"#TOC\">$indexTitle[$count]</A>"); 
+			print $q->h3("<a name=\"H_$indexTitle[$count]\" title=\"". T('Top') ."\" href=\"#TOC\">$indexTitle[$count]</A>"); 
 			$count2 = $count + 1;
 ### gypark 의 색인 패치
 ###############
