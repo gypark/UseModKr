@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.42pre1";
-$WikiRelease = "2003-03-23";
+$WikiVersion = "0.92K3-ext1.42pre2";
+$WikiRelease = "2003-03-24";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -137,6 +137,16 @@ if ($CheckTime) {
 		$StartTime = [gettimeofday()];
 	}
 }
+###
+###############
+
+###############
+### added by gypark
+### oekaki
+	if ($ENV{'QUERY_STRING'} eq "action=oekaki&mode=save") {
+		&OekakiSave();
+		return;
+	}
 ###
 ###############
 
@@ -4602,9 +4612,6 @@ sub GetParam {
 
 	$result = $q->param($name);
 	if (!defined($result)) {
-#		if (defined($q->url_param($name))) {
-#			$result = $q->url_param($name);
-#		} elsif (defined($UserData{$name})) {
 		if (defined($UserData{$name})) {
 			$result = $UserData{$name};
 		} else {
@@ -7544,27 +7551,60 @@ height [480-40]<input type="text" name="height" size="4" maxlength="3" value="30
 }
 
 sub OekakiSave {
-	local $/ = undef;
-	my $queryFile = "$TempDir/query.$$";
-	open (FILE, $queryFile);
-	my $buffer = <FILE>;
-	close (FILE);
+	my ($buffer, $p, $filename, $prefix, $target_full);
 
-	my $filename = "oekaki.png";
+# POST 데이타 읽음
+	read (STDIN, $buffer, $ENV{'CONTENT_LENGTH'});
+	$p = index($buffer, "\r");
 
-	my $prefix = &GetLastPrefix($UploadDir, $filename);
+# 초기화
+	&InitRequest();
+	print &GetHttpHeader();
+
+# 각종 에러 처리
+	if (!($buffer =~ m/^\0\0\0\0\r\n/)) {
+		die("Invalid POST data");
+	}
+
+	if ($p < 0) {
+		my $size = length($buffer);
+		die("Data size $size");
+	}
+
+# 현재는 제대로 동작하지 않는다
+#	if (!(&UserCanEdit("",1))) {
+#		die T('Oekaki is not allowed');
+#	}
+
+# 락을 획득
+	if (!(&RequestLockDir('oekaki', 5, 2, 0))) {
+		die("can not get lock");
+	}
+
+# 저장할 화일명 결정
+	$filename = "oekaki.png";
+	$prefix = &GetLastPrefix($UploadDir, $filename);
 	if ($prefix == 0) {
 		$prefix = "";
 	} else {
 		$prefix = ($prefix+1)."_";
 	}
-	my $target_full = $UploadDir."/".$prefix.$filename;
+	$target_full = $UploadDir."/".$prefix.$filename;
 
+# 저장
 	&CreateDir($UploadDir);
-
-	my $p = index($buffer, "\r");
 	&WriteStringToFile($target_full, substr($buffer, $p+2));
+
+# 락을 해제
+	&ReleaseLockDir('oekaki');
 	chmod(0644, "$target_full");
+
+# 종료
+# print &GetHttpHeader();
+	print &GetHtmlHeader("$SiteName : ", T('Oekaki Save'), "");
+	print "success\n";
+	print $q->end_html();
+
 }
 
 sub OekakiPaint {
@@ -7619,7 +7659,7 @@ height [480-40]<input type="text" name="height" size="4" maxlength="3" value="$i
 <param name="color_icon" value="#ccccff">
 <param name="color_iconselect" value="#202030">
 
-<param name="url_save" value="mod_oekaki.pl">
+<param name="url_save" value="$ScriptName?action=oekaki&mode=save">
 <param name="url_exit" value="$ScriptName?action=oekaki&mode=exit">
 
 <param name="poo" value="true">
@@ -7628,7 +7668,6 @@ height [480-40]<input type="text" name="height" size="4" maxlength="3" value="$i
 
 |;
 }
-# <param name="url_save" value="$ScriptName?action=oekaki&mode=save&garbage=">
 
 ### 화일명이 겹칠 경우 가장 최근 화일의 prefix 를 얻는 함수
 sub GetLastPrefix {
