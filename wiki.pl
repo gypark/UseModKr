@@ -1503,7 +1503,6 @@ sub GetFormStart {
 	if ($name eq '') {
 		return $q->startform("POST", "$ScriptName", "application/x-www-form-urlencoded");
 	} else {
-#		return $q->startform("POST", "$ScriptName", "application/x-www-form-urlencoded");
 		return $q->startform(-method=>"POST", -action=>"$ScriptName", -enctype=>"application/x-www-form-urlencoded" ,-name=>"$name") ;
 	}
 ###
