@@ -857,7 +857,7 @@ sub DoRc {
 ### replaced by gypark
 ### rss from usemod1.0
 #	if ($idOnly ne "") {
-	if ($idOnly && &showHTML) {
+	if ($idOnly && $showHTML) {
 ###
 ###############
 		print '<b>(' . Ts('for %s only', &ScriptLink($idOnly, $idOnly))
