@@ -8844,7 +8844,7 @@ sub DoComments {
 		}
 	}
 
-	DoPostMain($string, $id, "", $Section{'ts'}, 0, 0, $pageid);
+	DoPostMain($string, $id, "*", $Section{'ts'}, 0, 0, $pageid);
 	return;
 }
 
