@@ -547,4 +547,6 @@ currently set to %s
 현재는 %s 으로 설정되어 있음
 set bookmark
 북마크 지정
+cant create directory %s
+%s 디렉토리를 생성할 수 없습니다
 END_OF_TRANSLATION

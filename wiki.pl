@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.27";
+$WikiVersion = "0.92K3-ext1.27a";
 $WikiRelease = "2003-02-24";
 
 $HashKey = "salt"; # 2-character string
@@ -4176,7 +4176,15 @@ sub AppendStringToFile {
 sub CreateDir {
 	my ($newdir) = @_;
 
-	mkdir($newdir, 0775)  if (!(-d $newdir));
+###############
+### replaced by gypark
+### 디렉토리 생성에 실패할 경우 에러 출력
+#	mkdir($newdir, 0775)  if (!(-d $newdir));
+	if (!(-d $newdir)) {
+		mkdir($newdir, 0775) or die(Ts('cant create directory %s', $newdir) . ": $!");
+	}
+###
+###############
 }
 
 sub CreatePageDir {
@@ -5911,7 +5919,7 @@ sub GetFullLinkList {
 			"inter", 0,
 			"url", 0,
 			"exists", 2,
-			"empty", 0,
+			"empty", 1,
 			"search", "",
 			"reverse", ""
 	);
