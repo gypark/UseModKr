@@ -6659,7 +6659,12 @@ sub DeletePage {
 ###
 #########################################################3
 	unlink($IndexFile)  if ($UseIndex);
-	&EditRecentChanges(1, $page, "")  if ($doRC);  # Delete page
+###############
+### commented by gypark
+### 최근변경내역에 북마크 기능 도입
+#	&EditRecentChanges(1, $page, "")  if ($doRC);  # Delete page
+###
+###############
 	# Currently don't do anything with page text
 }
 
