@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.22";
+$WikiVersion = "0.92K3-ext1.22a";
 $WikiRelease = "2003-02-13";
 
 $HashKey = "salt"; # 2-character string
@@ -741,7 +741,7 @@ sub DoRc {
 ### added by gypark
 ### 최근변경내역에 북마크 기능 도입
 	if (&GetParam("username") ne "") {
-		my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(&GetParam('bookmark',0));
+		my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(&GetParam('bookmark',-1));
 		print &ScriptLink("action=bookmark&time=$Now",
 				T('Update my bookmark timestamp'));
 		print " (". 
@@ -800,16 +800,13 @@ sub GetRcHtml {
 ### 최근변경내역에 북마크 기능 도입
 	my $bookmark;
 	my $difflink;
+	my $bookmarkuser = &GetParam('username', "");
 	my ($rcnew, $rcupdated, $rcdiff) = (
 			"<img src='icons/rc-new.gif'>",
 			"<img src='icons/rc-updated.gif'>",
 			"<img src='icons/rc-diff.gif'>"
 	);
-	if (&GetParam('username') eq "") {
-		$bookmark = $Now;
-	} else {
-		$bookmark = &GetParam('bookmark',0);
-	}
+	$bookmark = &GetParam('bookmark',-1);
 ###
 ###############
 
@@ -831,7 +828,13 @@ sub GetRcHtml {
 	# Later add lines to assoc. pagename array (for new RC display)
 	foreach $rcline (@outrc) {
 		($ts, $pagename) = split(/$FS3/, $rcline);
-		$pagecount{$pagename}++;
+###############
+### replaced by gypark
+### 최근변경내역에 북마크 기능 도입
+#		$pagecount{$pagename}++;
+		$pagecount{$pagename}++ if ($ts > $bookmark);
+###
+###############
 		$changetime{$pagename} = $ts;
 	}
 	$date = "";
@@ -863,7 +866,19 @@ sub GetRcHtml {
 				$html .= "</UL>\n";
 				$inlist = 0;
 			}
-			$html .= "<p><strong>" . $date . "</strong><p>\n";
+###############
+### replaced by gypark
+### 최근변경내역에 북마크 기능 도입
+#			$html .= "<p><strong>" . $date . "</strong><p>\n";
+			if ($bookmarkuser eq "") {
+				$html .= "<p><strong>" . $date . "</strong><p>\n";
+			} else {
+				$html .= "<p><strong>" . $date . "</strong> "." ["
+					.&ScriptLink("action=bookmark&time=$ts",T('set bookmark'))
+					."]<p>\n";
+			}
+###
+###############
 		}
 		if (!$inlist) {
 			$html .= "<UL>\n";
@@ -898,9 +913,9 @@ sub GetRcHtml {
 ### replaced by gypark
 ### 최근변경내역에 북마크 기능 도입
 #			$link .= &ScriptLinkDiff(4, $pagename, $tDiff, "") . "  ";
-			if ($ts < $bookmark) {
+			if (($bookmarkuser eq "") || ($ts <= $bookmark)) {
 				$difflink = $rcdiff;
-			} elsif ($extra{'tscreate'} >= $bookmark) {
+			} elsif ($extra{'tscreate'} > $bookmark) {
 				$difflink = $rcnew;
 			} else {
 				$difflink = $rcupdated;
