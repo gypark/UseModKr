@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.63a";
-$WikiRelease = "2004-10-07";
+$WikiVersion = "0.92K3-ext1.64";
+$WikiRelease = "2004-11-18";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -2208,7 +2208,7 @@ sub GetGotoBar {
 	$bartext .= "<TR class='gotobar'>\n<TD class='gotohomepage'>";
 	$bartext .= &GetPageLink($HomePage);
 	$bartext .= "</TD>\n<TD class='gotoindex'>" . &ScriptLink("action=index", T('Index'));
-	$bartext .= " </TD>\n<TD class='gotorecentchanges'> " . &GetPageLink(T($RCName));
+	$bartext .= "</TD>\n<TD class='gotorecentchanges'>" . &GetPageLink(T($RCName));
 	if ($id =~ m|/|) {
 		$main = $id;
 		$main =~ s|/.*||;  # Only the main page name (remove subpage)
@@ -2216,7 +2216,7 @@ sub GetGotoBar {
 ### replaceed by gypark
 ### subpage 의 경우, 상위페이지 이름 앞에 아이콘 표시
 #		$bartext .= " </td><td> " . &GetPageLink($main);
-		$bartext .= " </TD>\n<TD class='gotoparentpage'> <img src=\"$IconDir/parentpage.gif\" border=\"0\" alt=\""
+		$bartext .= "</TD>\n<TD class='gotoparentpage'><img src=\"$IconDir/parentpage.gif\" border=\"0\" alt=\""
 					. T('Main Page:') . " $main\" align=\"absmiddle\">" . &GetPageLink($main);
 ###
 ###############
@@ -2226,34 +2226,36 @@ sub GetGotoBar {
 ### 상단 메뉴 바에 사용자 정의 항목을 추가
 ### UserGotoBar2~4 라는 이름으로 지정해주면 된다
 	if ($UserGotoBar2 ne '') {
-		$bartext .= " </TD>\n<TD class='gotouser'> " . $UserGotoBar2;
+		$bartext .= "</TD>\n<TD class='gotouser'>" . $UserGotoBar2;
 	}
 	if ($UserGotoBar3 ne '') {
-		$bartext .= " </TD>\n<TD class='gotouser'> " . $UserGotoBar3;
+		$bartext .= "</TD>\n<TD class='gotouser'>" . $UserGotoBar3;
 	}
 	if ($UserGotoBar4 ne '') {
-		$bartext .= " </TD>\n<TD class='gotouser'> " . $UserGotoBar4;
+		$bartext .= "</TD>\n<TD class='gotouser'>" . $UserGotoBar4;
 	}
 ###
 ###############
-	$bartext .= " </TD>\n<TD class='gotopref'> " . &GetPrefsLink();
+	$bartext .= "</TD>\n<TD class='gotopref'>" . &GetPrefsLink();
 	if (&GetParam("linkrandom", 0)) {
-		$bartext .= " </TD>\n<TD class='gotorandom'> " . &GetRandomLink();
+		$bartext .= "</TD>\n<TD class='gotorandom'>" . &GetRandomLink();
 	}
 	if (&UserIsAdmin()) {
-		$bartext .= " </TD>\n<TD class='gotoadmin'> " . &ScriptLink("action=editlinks", T('Admin'));
+		$bartext .= "</TD>\n<TD class='gotoadmin'>" . &ScriptLink("action=editlinks", T('Admin'));
 	}
-	$bartext .= " </TD>\n<TD class='gotolinks'> " . &ScriptLink("action=links", T('Links'));
+	$bartext .= "</TD>\n<TD class='gotolinks'>" . &ScriptLink("action=links", T('Links'));
 #	if (($UserID eq "113") || ($UserID eq "112")) {
 	if (!&LoginUser()) {
-		$bartext .= " </TD>\n<TD class='gotologin'> " . &ScriptLink("action=login", T('Login'));
+		$bartext .= "</TD>\n<TD class='gotologin'>" . &ScriptLink("action=login", T('Login'));
 	}
 	else {
-		$bartext .= " </TD>\n<TD class='gotologin'> " . &ScriptLink("action=logout", T('Logout'));
+		$bartext .= "</TD>\n<TD class='gotologin'>".
+			&GetPageLink(&GetParam('username'));
+		$bartext .= "</TD>\n<TD class='gotologin'>" . &ScriptLink("action=logout", T('Logout'));
 	}
-	$bartext .= " </TD>\n<TD class='gotosearch'> " . &GetSearchForm();
+	$bartext .= "</TD>\n<TD class='gotosearch'>" . &GetSearchForm();
 	if ($UserGotoBar ne '') {
-		$bartext .= " </TD>\n<TD class='gotouser'> " . $UserGotoBar;
+		$bartext .= "</TD>\n<TD class='gotouser'>" . $UserGotoBar;
 	}
 	$bartext .= "</TD></TR>";
 	$bartext .= $q->endform;
