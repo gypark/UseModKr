@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.38";
+$WikiVersion = "0.92K3-ext1.38a";
 $WikiRelease = "2003-03-11";
 
 $HashKey = "salt"; # 2-character string
@@ -3318,6 +3318,16 @@ sub ISBNLink {
 		return "<a href=\"http://www.aladdin.co.kr/catalog/book.asp?ISBN=$num\"><img $ImageTag src=\"http://www.aladdin.co.kr/Cover/$num\_1.gif\" border=1></a>";
 	#	return "<a href=\"http://www.wowbook.com/generic/book/info/book_detail.asp?isbn=ISBN$hyphened\"><img $ImageTag src=\"http://image.wowbook.com/book/large_image/$hyphened.gif\" border=1></a>";
 	}
+###############
+### added by gypark
+### 일본 서적은 별도로 링크
+	if ($num =~ /^4/) {
+		return "<a href='http://bookweb.kinokuniya.co.jp/guest/cgi-bin/wshosea.cgi?W-ISBN=$num'>" .
+			"<img $ImageTag src='http://bookweb.kinokuniya.co.jp/imgdata/$num.jpg' border=1>" .
+			"</a>";
+	}
+###
+###############
 
 	$first  = "<a href=\"http://shop.barnesandnoble.com/bookSearch/"
 						. "isbnInquiry.asp?isbn=$num\">";
