@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.66a";
-$WikiRelease = "2005-01-12";
+$WikiVersion = "0.92K3-ext1.67";
+$WikiRelease = "2005-01-14";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -2379,7 +2379,13 @@ sub WikiToHTML {
 		pop @HeadingNumbers;
 		$TableOfContents .= "</dd></dl>\n\n";
 	}
-	$pageText =~ s/&__LT__;toc&__GT__;/$TableOfContents/gi;
+###############
+### added by gypark
+### WikiHeading 개선 from Jof
+#	$pageText =~ s/&__LT__;toc&__GT__;/$TableOfContents/gi;
+	$pageText =~ s/&__LT__;toc&__GT__;/<a name="toc"><\/a>$TableOfContents/gi;
+###
+###############
 
 ###############
 ### added by gypark
@@ -3842,7 +3848,13 @@ sub WikiHeadingNumber {
 ###
 ###############
 
-	return &StoreHref(" name=\"$anchor\"") . $number;
+###############
+### replaced by gypark
+### WikiHeading 개선 from Jof
+#	return &StoreHref(" name=\"$anchor\"") . $number;
+	return &StoreHref(" name='$anchor' href='#toc'",$number);
+###
+###############
 }
 
 sub WikiHeading {
