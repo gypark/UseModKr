@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.19a";
+$WikiVersion = "0.92K3-ext1.20";
 $WikiRelease = "2003-02-11";
 
 $HashKey = "salt"; # 2-character string
@@ -1269,11 +1269,27 @@ sub GetHttpHeader {
 
 	$t = gmtime;
 	if (defined($SetCookie{'id'})) {
+###############
+### replaced by gypark
+### 로긴할 때 자동 로그인 여부 선택
+### from Bab2's patch
+#		$cookie = "$CookieName="
+#						. "rev&" . $SetCookie{'rev'}
+#						. "&id&" . $SetCookie{'id'}
+#						. "&randkey&" . $SetCookie{'randkey'};
+#		$cookie .= ";expires=Fri, 08-Sep-2010 19:48:23 GMT";
+
 		$cookie = "$CookieName="
-						. "rev&" . $SetCookie{'rev'}
-						. "&id&" . $SetCookie{'id'}
-						. "&randkey&" . $SetCookie{'randkey'};
-		$cookie .= ";expires=Fri, 08-Sep-2010 19:48:23 GMT";
+			. "expire&" . $SetCookie{'expire'}
+			. "&rev&"   . $SetCookie{'rev'}
+			. "&id&"    . $SetCookie{'id'}
+			. "&randkey&" . $SetCookie{'randkey'}
+			. ";";
+		if ($SetCookie{'expire'} eq "1") {
+			$cookie .= "expires=Fri, 08-Sep-2010 19:47:23 GMT";
+		}
+###
+###############
 		if ($HttpCharset ne '') {
 			return $q->header(-cookie=>$cookie,
 				-pragma=>"no-cache",
@@ -5226,6 +5242,13 @@ sub DoEnterLogin {
 	print '<br>', T('Password:'), ' ',
 				$q->password_field(-name=>'p_password', -value=>'',
 													 -size=>15, -maxlength=>50);
+###############
+### added by gypark
+### 로긴할 때 자동 로그인 여부 선택
+### from Bab2's patch
+	print '<br>', &GetFormCheck('p_expire', 0, T('Keep login information'));
+###
+###############
 	print '<br>', $q->submit(-name=>'Login', -value=>T('Login')), "\n";
 	print "<hr>\n";
 	#print &GetGotoBar('');
@@ -5267,6 +5290,18 @@ sub DoLogin {
 #				($UserData{'password'} eq $password)) {
 		if (defined($UserData{'password'}) &&
 				(crypt($password, $UserData{'password'}) eq $UserData{'password'})) {
+###
+###############
+###############
+### added by gypark
+### 로긴할 때 자동 로그인 여부 선택
+### from Bab2's patch
+			my $expire_mode = &UpdatePrefCheckbox("p_expire");
+			if ($expire_mode eq "") {
+				$SetCookie{'expire'} = 1;
+			} else {
+				$SetCookie{'expire'} = $expire_mode;
+			}
 ###
 ###############
 			$SetCookie{'id'} = $uid;

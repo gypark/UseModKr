@@ -539,4 +539,6 @@ You need the web browser which supports frame tag.
 이 페이지를 보려면, 프레임을 볼 수 있는 브라우저가 필요합니다.
 Use wikiX style for the links to empty pages
 내용이 없는 페이지의 링크를 wikiX 스타일로 표시
+Keep login information
+자동 로그인 사용
 END_OF_TRANSLATION
