@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.38d";
-$WikiRelease = "2003-03-12";
+$WikiVersion = "0.92K3-ext1.39";
+$WikiRelease = "2003-03-15";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -91,7 +91,7 @@ use vars qw(%Page %Section %Text %InterSite %SaveUrl %SaveNumUrl
 ### added by gypark
 ### 패치를 위해 추가된 내부 전역 변수
 use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime $Sec_Revision $Sec_Ts
-	$ViewCount);
+	$ViewCount $AnchoredFreeLinkPattern);
 ###
 ###############
 
@@ -196,7 +196,13 @@ sub InitLinkPatterns {
 		$LinkPattern = "($LpA)";
 	}
 	$QDelim = '(?:"")?';     # Optional quote delimiter (not in output)
-	$AnchoredLinkPattern = $LinkPattern . '#(\\w+)' . $QDelim if $NamedAnchors;
+###############
+### replaced by gypark
+### anchor 에 한글 사용
+#	$AnchoredLinkPattern = $LinkPattern . '#(\\w+)' . $QDelim if $NamedAnchors;
+	$AnchoredLinkPattern = $LinkPattern . '#([0-9A-Za-z\xa0-\xff]+)' . $QDelim if $NamedAnchors;
+###
+###############
 	$LinkPattern .= $QDelim;
 
 	# Inter-site convention: sites must start with uppercase letter
@@ -217,6 +223,14 @@ sub InitLinkPatterns {
 		$FreeLinkPattern = "((?:(?:$AnyLetter+)?\\/)?$AnyLetter+)";
 	}
 	$FreeLinkPattern .= $QDelim;
+
+###############
+### added by gypark
+### 한글패이지에 anchor 사용
+### from Bab2's patch
+	$AnchoredFreeLinkPattern = $FreeLinkPattern . '#([0-9A-Za-z\xa0-\xff]+)' . $QDelim if $NamedAnchors;
+###
+###############
 
 	# Url-style links are delimited by one of:
 	#   1.  Whitespace                           (kept in output)
@@ -1924,6 +1938,14 @@ sub CommonMarkup {
 			# Also, consider that one could write [[Bad Page|Good Page]]?
 			s/\[\[$FreeLinkPattern\|([^\]]+)\]\]/&StorePageOrEditLink($1, $2)/geo;
 			s/\[\[$FreeLinkPattern\]\]/&StorePageOrEditLink($1, "")/geo;
+###############
+### added by gypark
+### 한글패이지에 anchor 사용
+### from Bab2's patch
+			s/\[\[$AnchoredFreeLinkPattern\|([^\]]+)\]\]/&StoreBracketAnchoredLink($1, $2, $3)/geos if $NamedAnchors;
+			s/\[\[$AnchoredFreeLinkPattern\]\]/&StoreRaw(&GetPageOrEditAnchoredLink($1, $2, ""))/geos if $NamedAnchors;
+###
+###############
 		}
 		if ($BracketText) {  # Links like [URL text of link]
 			s/\[$UrlPattern\s+([^\]]+?)\]/&StoreBracketUrl($1, $2)/geos;
