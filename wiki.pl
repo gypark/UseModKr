@@ -72,7 +72,7 @@ use vars qw(
 	$EditGuideInExtern $SizeTopFrame $SizeBottomFrame
 	$LogoPage $CheckTime $LinkDir $IconDir $CountDir $UploadDir $UploadUrl
 	$HiddenPageFile $TemplatePage
-	$InterWikiMoniker $SiteDescription $RssLogoUrl $RssDays
+	$InterWikiMoniker $SiteDescription $RssLogoUrl $RssDays $RssTimeZone
 	$SlashLinks
 	);
 ###
@@ -8705,7 +8705,7 @@ sub GetRssRcLine {
 	my ($sec, $min, $hour, $mday, $mon, $year) = localtime($timestamp);
 	$year += 1900;
 	$date = sprintf("%4d-%02d-%02dT%02d:%02d:%02d+%02d:00",
-		$year, $mon+1, $mday, $hour, $min, $sec, $TimeZoneOffset/(60*60));
+		$year, $mon+1, $mday, $hour, $min, $sec, ($TimeZoneOffset/(60*60) + $RssTimeZone));
 	$pagename = &QuoteHtml($pagename);
 	# Write it out longhand
 	$item = <<RSS ;
