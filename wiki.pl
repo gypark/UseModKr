@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.22a";
+$WikiVersion = "0.92K3-ext1.22b";
 $WikiRelease = "2003-02-13";
 
 $HashKey = "salt"; # 2-character string
@@ -733,21 +733,26 @@ sub DoRc {
 			# Following comment line is for translation helper script
 			# Ts('%s days', '');
 	}
-	print "<br>" . &ScriptLink("action=rc&from=$lastTs",
-		T('List new changes starting from'));
-	print " " . &TimeToText($lastTs) . "<br>\n";
 
 ###############
 ### added by gypark
 ### 최근변경내역에 북마크 기능 도입
-	if (&GetParam("username") ne "") {
+#	print "<br>" . &ScriptLink("action=rc&from=$lastTs",
+#		T('List new changes starting from'));
+#	print " " . &TimeToText($lastTs) . "<br>\n";
+
+	if (&GetParam("username") eq "") {
+		print "<br>" . &ScriptLink("action=rc&from=$lastTs",
+			T('List new changes starting from'));
+		print " " . &TimeToText($lastTs) . "<br>\n";
+	} else {
 		my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(&GetParam('bookmark',-1));
-		print &ScriptLink("action=bookmark&time=$Now",
+		print "<br>" . &ScriptLink("action=bookmark&time=$Now",
 				T('Update my bookmark timestamp'));
 		print " (". 
 			Ts('currently set to %s', 
 				($year+1900)."-".($mon+1)."-".$mday." "."$hour:$min:$sec").
-			")<br>";
+			")<br>\n";
 	}
 ### 
 ###############
