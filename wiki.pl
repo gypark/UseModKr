@@ -7279,7 +7279,7 @@ sub UploadFile {
 	$filename =~ s/ /_/g;
 
 	my ($prefix, $target, $target_full) = (1, $filename, "$UploadDir/$filename");
-	while (-f "$UploadDir/$target") {
+	while (-f "$target_full") {
 		$prefix++;
 		$target = "$prefix"."_$filename";
 		$target_full = "$UploadDir/$target";
