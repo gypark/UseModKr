@@ -7467,7 +7467,7 @@ sub DoOekaki {
 	my $mode = &GetParam('mode','paint');
 
 	print &GetHttpHeader();
-	print &GetHtmlHeader("$SiteName : ". T('Oekaki'), "");
+	print &GetHtmlHeader("$SiteName : ". T("Oekaki $mode"), "");
 	print $q->h2(T('Oekaki')) . "\n";
 	if (!(&UserCanEdit("",1))) {
 		print T('Oekaki is not allowed');
@@ -7557,10 +7557,6 @@ sub OekakiSave {
 	read (STDIN, $buffer, $ENV{'CONTENT_LENGTH'});
 	$p = index($buffer, "\r");
 
-# 초기화
-	&InitRequest();
-	print &GetHttpHeader();
-
 # 각종 에러 처리
 	if (!($buffer =~ m/^\0\0\0\0\r\n/)) {
 		die("Invalid POST data");
@@ -7577,7 +7573,7 @@ sub OekakiSave {
 #	}
 
 # 락을 획득
-	if (!(&RequestLockDir('oekaki', 5, 2, 0))) {
+	if (!(&RequestLockDir('oekaki', 4, 3, 0))) {
 		die("can not get lock");
 	}
 
@@ -7600,11 +7596,8 @@ sub OekakiSave {
 	chmod(0644, "$target_full");
 
 # 종료
-# print &GetHttpHeader();
-	print &GetHtmlHeader("$SiteName : ". T('Oekaki Save'), "");
+	print "Content-type: text/plain\n\n";
 	print "success\n";
-	print $q->end_html();
-
 }
 
 sub OekakiPaint {
