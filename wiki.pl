@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.16";
-$WikiRelease = "2003-01-02";
+$WikiVersion = "0.92K3-ext1.17";
+$WikiRelease = "2003-01-08";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -1660,7 +1660,7 @@ sub WikiToHTML {
 #	$pageText =~ s/\\\\ *\r?\n/<BR>/g;		# double backslash for forced <BR> - comes in handy for <LI>
 #	$pageText =~ s/\\ *\r?\n/ /g;			# Join lines with backslash at end
 
-	$pageText =~ s/\\\\ *\r?\n/&__DOUBLEBACKSLASH__;/g;		# double backslash for forced <BR> - comes in handy for <LI>
+	$pageText =~ s/\\\\ *\r?\n/ &__DOUBLEBACKSLASH__;/g;		# double backslash for forced <BR> - comes in handy for <LI>
 	$pageText =~ s/\\ *\r?\n/&__SINGLEBACKSLASH__;/g;			# Join lines with backslash at end
 
 ###
