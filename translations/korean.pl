@@ -541,4 +541,6 @@ Use wikiX style for the links to empty pages
 내용이 없는 페이지의 링크를 wikiX 스타일로 표시
 Keep login information
 자동 로그인 사용
+NEW
+새 글
 END_OF_TRANSLATION
