@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.61-beta4";
+$WikiVersion = "0.92K3-ext1.61-beta5";
 $WikiRelease = "2004-07-19";
 
 $HashKey = "salt"; # 2-character string
@@ -2716,7 +2716,7 @@ sub MacroSubst {
 	$txt =~ s/&__LT__;color\(([^,)]+),([^,)]+),([^\n]+?)\)&__GT__;/&MacroColorBk($1, $2, $3)/gei;
 	$txt =~ s/&__LT__;color\(([^,)]+),([^\n]+?)\)&__GT__;/&MacroColor($1, $2)/gei;
 ### <trackbacksent> <trackbackreceived>
-	$txt =~ s/&__LT__;trackbacksent&__GT__;/&MacroTrackBackSent()/gei;
+	$txt =~ s/(&__LT__;trackbacksent\((.*?)\)&__GT__;)/&MacroTrackBackSent($1, $2)/gei;
 	$txt =~ s/(&__LT__;trackbackreceived\((.*?)\)&__GT__;)/&MacroTrackBackReceived($1,$2)/gei;
 ###
 ###############
@@ -2762,6 +2762,14 @@ sub MacroIncludeSubst {
 ### 추가한 매크로의 동작부
 ### trackback
 sub MacroTrackBackSent {
+	my ($itself, $id) = @_;
+
+	$id = &RemoveLink($id);
+	my $temp = &FreeToNormal($id) if ($FreeLinks);
+
+	if (&ValidId($temp) ne '') {
+		return $itself;
+	}
 	return "";
 }
 
@@ -4146,7 +4154,8 @@ sub ProcessPostMacro {
 		$string =~ s/(^|\n)<((long)?comments)\(([-+]?\d+)\)>([\r\f]*\n)/$1<$2($id,$4)>$5/gim;
 	}
 	### trackback
-	$string =~ s/<(trackbackreceived)>/<$1($id)>/gi;
+	$string =~ s/(^|\n)<(trackbacksent)>([\r\f]*\n)/$1<$2($id)>$3/gim;
+	$string =~ s/(^|\n)<(trackbackreceived)>([\r\f]*\n)/$1<$2($id)>$3/gim;
 ### 
 	return $string;
 }
@@ -9242,10 +9251,10 @@ sub DoSendTrackBackPing {
 			&OpenPage($id);
 			&OpenDefaultText();
 			my $string = $Text{'text'};
-			if ($string =~ /\<trackbacksent\>/) {
+			if ($string =~ /\<trackbacksent\($id\)\>/) {
 				my $timestamp = &CalcDay($Now) . " " . &CalcTime($Now);
 				my $newtrackbacksent = "* $timestamp | $ping_url";
-				$string =~ s/(\<trackbacksent\>)/$1\n$newtrackbacksent/;
+				$string =~ s/(\<trackbacksent\($id\)\>)/$1\n$newtrackbacksent/;
 				&DoPostMain($string, $id, &T('New TrackBack Sent'), $Section{'ts'}, 0, 0, "!!");
 			}
 			$result .= &T('Ping successfully sent');
