@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.72";
-$WikiRelease = "2005-01-23";
+$WikiVersion = "0.92K3-ext1.72a";
+$WikiRelease = "2005-01-24";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -3551,9 +3551,17 @@ sub StorePlugin {
 		my $func = "plugin_$name";
 
 		my $txt = &{\&$func}($content, @opt);
-		$html = &StoreRaw($txt);
+		if (not defined $txt) {
+			$html = &StoreRaw("\n<PRE class='code'>").
+				&StoreRaw("\n<font color='red'>Plugin execution failed: $name</font>\n").
+				&StoreCodeRaw($content).
+				&StoreRaw("\n<\/PRE>") . "\n";
+		} else {
+			$html = &StoreRaw($txt);
+		}
 	} else {
 		$html = &StoreRaw("\n<PRE class='code'>").
+			&StoreRaw("\n<font color='red'>No such plugin found: $name</font>\n").
 			&StoreCodeRaw($content).
 			&StoreRaw("\n<\/PRE>") . "\n";
 	}
