@@ -568,6 +568,8 @@ TD.calendarthispage
 	border-left:1px solid black;
 	border-bottom:1px solid silver;
 	border-right:1px solid silver;
+	text-align: right;
+	font: 75%/100% Gulimche, Curier, monospace;
 	background-color:#F8F8F8;
 	color:black;
 }
@@ -579,6 +581,8 @@ TD.calendartodaythispage
 	border-left:1px solid black;
 	border-bottom:1px solid silver;
 	border-right:1px solid silver;
+	text-align: right;
+	font: 75%/100% Gulimche, Curier, monospace;
 	background: yellow;
 	color: black;
 }
