@@ -83,9 +83,8 @@ use vars qw(%Page %Section %Text %InterSite %SaveUrl %SaveNumUrl
 ### 보안을 위해서 데이타 저장 공간을 다른 곳으로 지정
 ### 적절히 바꾸어서 사용할 것
 # $DataDir     = "data"; # Main wiki directory
-$DataDir     = "../../../wiki_data/__gypark__";    # Main wiki directory
-$DataDir     = "../../../wiki_data/__HAHAHAHA";    # Main wiki directory
-$ConfigFile  = "../../../wiki_data/__gypark__.pl"; # path of config file
+$DataDir     = "newdata";    # Main wiki directory
+$ConfigFile  = "newconfig.pl"; # path of config file
 ###
 ###############
 $UseConfig   = 1;       # 1 = use config file,    0 = do not look for config
