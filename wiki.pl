@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.38b";
+$WikiVersion = "0.92K3-ext1.38c";
 $WikiRelease = "2003-03-12";
 
 $HashKey = "salt"; # 2-character string
@@ -1433,6 +1433,14 @@ sub GetHtmlHeader {
 		$html .= qq(<LINK REL="stylesheet" HREF="$StyleSheet">\n);
 	}
 	# Insert other header stuff here (like inline style sheets?)
+###############
+### added by gypark
+### 헤더 출력 개선
+	$html .= qq(<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=euc-kr">\n);
+	$html .= qq(<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">\n);
+###
+###############
+
 	$bodyExtra = '';
 	if ($bgcolor ne '') {
 		$bodyExtra = qq( BGCOLOR="$bgcolor");
@@ -3314,22 +3322,26 @@ sub ISBNLink {
 	#$hyphened = $num;	
 	#$hyphened =~ s/(..)(.....)(..)(.)/\1-\2-\3-\4/;
 
+###############
+### replaced by gypark
+### ISBNLink 개선
+	my $noCoverIcon = 'icons/isbn-nocover.jpg';
 	if ($num =~ /^89/) {
 		return "<a href='http://www.aladdin.co.kr/catalog/book.asp?ISBN=$num'>" .
 			"<IMG class='isbn' ".
 			"$ImageTag src='http://www.aladdin.co.kr/Cover/$num\_1.gif' ".
-			"alt='".T('Go to the on-line bookstore')."'>".
+			"OnError='src=\"$noCoverIcon\"' ".
+			"alt='".T('Go to the on-line bookstore')." ISBN:$rawprint'>".
 			"</a>";
 	#	return "<a href=\"http://www.wowbook.com/generic/book/info/book_detail.asp?isbn=ISBN$hyphened\"><img $ImageTag src=\"http://image.wowbook.com/book/large_image/$hyphened.gif\" border=1></a>";
 	}
-###############
-### added by gypark
 ### 일본 서적은 별도로 링크
 	if ($num =~ /^4/) {
 		return "<a href='http://bookweb.kinokuniya.co.jp/guest/cgi-bin/wshosea.cgi?W-ISBN=$num'>" .
 			"<IMG class='isbn' ".
 			"$ImageTag src='http://bookweb.kinokuniya.co.jp/imgdata/$num.jpg' ".
-			"alt='".T('Go to the on-line bookstore')."'>".
+			"OnError='src=\"$noCoverIcon\"' ".
+			"alt='".T('Go to the on-line bookstore')." ISBN:$rawprint'>".
 			"</a>";
 	}
 ###
