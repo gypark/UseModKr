@@ -1426,7 +1426,7 @@ sub GetHtmlHeader {
 			if ($FreeLinks) {
 				$id = &FreeToNormal($id);
 			}
-			$bodyExtra .= qq(ondblclick="location.href='$ScriptName?action=edit&id=$id'") if (&UserCanEdit($id,0));
+			$bodyExtra .= qq(ondblclick="location.href='$ScriptName?action=edit&id=$id'");
 		}
 	}
 
