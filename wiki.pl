@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.45a";
+$WikiVersion = "0.92K3-ext1.46";
 $WikiRelease = "2003-08-31";
 
 $HashKey = "salt"; # 2-character string
@@ -2006,6 +2006,7 @@ sub CommonMarkup {
 ###
 ###############
 
+
 		# The <nowiki> tag stores text with no markup (except quoting HTML)
 		s/\&__LT__;nowiki\&__GT__;((.|\n)*?)\&__LT__;\/nowiki\&__GT__;/&StoreRaw($1)/ige;
 		# The <pre> tag wraps the stored text with the HTML <pre> tag
@@ -2247,6 +2248,8 @@ sub MacroSubst {
 	$txt =~ s/(\&__LT__;myinterest(\(([^\n]+)\))?\&__GT__;)/&MacroMyInterest($1, $3)/gei;
 ### <comments(숫자)>
 	$txt =~ s/(\&__LT__;comments\(([^,]+),([-+]?\d+)\)&__GT__;)/&MacroComments($1,$2,$3)/gei;
+### <noinclude> </noinclude> from Jof
+	$txt =~ s/\&__LT__;(\/)?noinclude\&__GT__;//gei;
 ###
 ###############
 	return $txt;
@@ -3051,6 +3054,9 @@ sub MacroInclude {
 	
 	# includenotoc 의 경우
  	$TextInclude{'text'} =~ s/<toc>/$FS_lt."toc".$FS_gt/gei if ($opt eq "notoc");
+	# noinclude 처리 from Jof
+	$TextInclude{'text'} =~ s/<noinclude>(.)*?<\/noinclude>//igs;
+
 	return $TextInclude{'text'};
 }
 
