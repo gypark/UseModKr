@@ -93,7 +93,7 @@ use vars qw(%Page %Section %Text %InterSite %SaveUrl %SaveNumUrl
 ### 패치를 위해 추가된 내부 전역 변수
 use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime $Sec_Revision $Sec_Ts
 	$ViewCount $AnchoredFreeLinkPattern %UserInterest %HiddenPage
-	$pageid $IsClip);
+	$pageid $IsPDA);
 ###
 ###############
 
@@ -436,8 +436,8 @@ sub DoBrowseRequest {
 	$id = &GetParam('keywords', '');
 ###############
 ### pda clip by gypark
-	$IsClip = &GetParam("clip", "");
-	$EmbedWiki = 1 if ($IsClip);
+	$IsPDA = &GetParam("pda", "");
+	$EmbedWiki = 1 if ($IsPDA);
 ###
 ###############
 	if ($id) {                    # Just script?PageName
@@ -476,7 +476,7 @@ sub DoBrowseRequest {
 ###############
 ### pda clip by gypark
 #		&BrowsePage(T($RCName));
-		if ($IsClip) {
+		if ($IsPDA) {
 			my $temp_id = T("$RCName");
 			print &GetHeader($temp_id, &QuoteHtml($temp_id), "");
 			&DoRc();
@@ -723,7 +723,7 @@ sub DoRc {
 
 ###############
 ### pda clip by gypark
-	if ($IsClip) {
+	if ($IsPDA) {
 		$daysago = 7;
 		$starttime = $Now - ((24*60*60)*$daysago);
 		print "<h2>$SiteName : " . 
@@ -804,7 +804,7 @@ sub DoRc {
 	}
 ###############
 ### pda clip by gypark
-	if (!($IsClip)) {
+	if (!($IsPDA)) {
 ###
 ###############
 	foreach $i (@RcDays) {
@@ -944,7 +944,7 @@ sub GetRcHtml {
 ### from Jof4002's patch
 ### pda clip 기능 추가
 #	$html = "";
-	if ($IsClip) {
+	if ($IsPDA) {
 		$html = "";
 	} else {
 		$html = "<TABLE class='rc'>";
@@ -996,7 +996,7 @@ sub GetRcHtml {
 ### from Jof4002's patch
 ### pda clip 기능 추가
 #				$html .= "</UL>\n";
-				$html .= "</UL>\n" if ($IsClip);
+				$html .= "</UL>\n" if ($IsPDA);
 ###
 ###############
 				$inlist = 0;
@@ -1007,7 +1007,7 @@ sub GetRcHtml {
 ### 최근 변경 내역을 테이블로 출력 패치도 같이 적용
 ### pda clip 기능 추가
 #			$html .= "<p><strong>" . $date . "</strong><p>\n";
-			if ($IsClip) {
+			if ($IsPDA) {
 				$html .= "<p><strong>" . $date . "</strong><p>\n";
 			} else {
 				$html .= "<TR class='rc'><TD colspan='6' class='rcblank'>&nbsp;</TD></TR>".
@@ -1030,7 +1030,7 @@ sub GetRcHtml {
 ### from Jof4002's patch
 ### pda clip 기능 추가
 #			$html .= "<UL>\n";
-			$html .= "<UL>\n" if ($IsClip);
+			$html .= "<UL>\n" if ($IsPDA);
 ###
 ###############
 			$inlist = 1;
@@ -1040,7 +1040,7 @@ sub GetRcHtml {
 ###############
 ### pda clip by gypark
 #			$author = &GetAuthorLink($host, $extra{'name'}, $extra{'id'});
-			if ($IsClip) {
+			if ($IsPDA) {
 				$author = &GetPageLink($extra{'name'});
 			} else {
 				$author = &GetAuthorLink($host, $extra{'name'}, $extra{'id'});
@@ -1103,7 +1103,7 @@ sub GetRcHtml {
 #		$html .= ". . . . . $author\n";  # Make dots optional?
 #	}
 #	$html .= "</UL>\n" if ($inlist);
-		if (!($IsClip)) {
+		if (!($IsPDA)) {
 			$html .= "<TR class='rc'>"
 				. "<TD class='rc'>"
 ### 관심 페이지
@@ -1125,7 +1125,7 @@ sub GetRcHtml {
 			$html .=  &CalcTime($ts) . " - $author $sum\n";
 		}
 	}
-	if ($IsClip) {
+	if ($IsPDA) {
 		$html .= "</UL>\n";
 	} else {
 		$html .= "</table>";
@@ -1277,8 +1277,8 @@ sub GetPageLink {
 	}
 ###############
 ### pda clip by gypark
-	if ($IsClip) {
-		return 	&ScriptLink("action=browse&clip=1&id=$id", $name);
+	if ($IsPDA) {
+		return 	&ScriptLink("action=browse&pda=1&id=$id", $name);
 	}
 ###
 ###############
@@ -1295,8 +1295,8 @@ sub GetPageLinkText {
 	}
 ###############
 ### pda clip by gypark
-	if ($IsClip) {
-		return 	&ScriptLink("action=browse&clip=1&id=$id", $name);
+	if ($IsPDA) {
+		return 	&ScriptLink("action=browse&pda=1&id=$id", $name);
 	}
 ###
 ###############
@@ -1482,7 +1482,7 @@ sub GetHeader {
 	$result .= &GetHtmlHeader("$SiteName: $title", $title);
 ###############
 ### pda clip by gypark
-	if ($IsClip) {
+	if ($IsPDA) {
 		$result .= "<h1>$title</h1>\n<hr>";
 	}
 ###
