@@ -1269,7 +1269,7 @@ sub DoHistory {
 	print &GetHeader("",&QuoteHtml(Ts('History of %s', $id)), "") . "<br>";
 	&OpenPage($id);
 	&OpenDefaultText();
-	$canEdit = &UserCanEdit($id);
+	$canEdit = &UserCanEdit($id,1);
 	$canEdit = 0;  # Turn off direct "Edit" links
 	if ( $UseDiff ) {
 		print <<FORMEOF ;
@@ -1920,7 +1920,7 @@ sub GetEditGuide {
 
 	$result .= ' | ';
 
-	if (&UserCanEdit($id, 0)) {
+	if (&UserCanEdit($id, 1)) {
 		if ($rev ne '') {
 			$result .= &GetOldPageLink('edit',   $id, $rev,
 						 Ts('Edit revision %s of this page', $rev));
@@ -2564,7 +2564,7 @@ sub MacroComments {
 		$hidden_long = &GetHiddenValue("long","1") . "<br>";
 	}
 
-	if ((!&UserCanEdit($id)) && (abs($up) < 100)) {		# 에디트 불가
+	if (((!&UserCanEdit($id,1)) && (abs($up) < 100)) || (&UserIsBanned())) {		# 에디트 불가
 		$readonly_true = "true";
 		$readonly_style = "background-color: #f0f0f0;";
 		$readonly_msg = T('Comment is not allowed');
@@ -4817,6 +4817,7 @@ sub ValidIdOrDie {
 sub UserCanEdit {
 	my ($id, $deepCheck) = @_;
 
+	return 1  if (&UserIsAdmin());
 ###############
 ### added by gypark
 ### hide page
@@ -4841,8 +4842,8 @@ sub UserCanEdit {
 		return 0;
 	}
 	if ($deepCheck) {   # Deeper but slower checks (not every page)
-		return 1  if (&UserIsEditor());
 		return 0  if (&UserIsBanned());
+		return 1  if (&UserIsEditor());
 	}
 	return 1;
 }
