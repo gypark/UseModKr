@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.49";
-$WikiRelease = "2003-09-16";
+$WikiVersion = "0.92K3-ext1.50";
+$WikiRelease = "2003-09-21";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -93,7 +93,7 @@ use vars qw(%Page %Section %Text %InterSite %SaveUrl %SaveNumUrl
 ### 패치를 위해 추가된 내부 전역 변수
 use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime $Sec_Revision $Sec_Ts
 	$ViewCount $AnchoredFreeLinkPattern %UserInterest %HiddenPage
-	$pageid);
+	$pageid $IsClip);
 ###
 ###############
 
@@ -434,6 +434,12 @@ sub DoBrowseRequest {
 		return 1;
 	}
 	$id = &GetParam('keywords', '');
+###############
+### pda clip by gypark
+	$IsClip = &GetParam("clip", "");
+	$EmbedWiki = 1 if ($IsClip);
+###
+###############
 	if ($id) {                    # Just script?PageName
 		if ($FreeLinks && (!-f &GetPageFile($id))) {
 			$id = &FreeToNormal($id);
@@ -467,7 +473,19 @@ sub DoBrowseRequest {
 		&BrowsePage($id)  if &ValidIdOrDie($id);
 		return 1;
 	} elsif ($action eq 'rc') {
-		&BrowsePage(T($RCName));
+###############
+### pda clip by gypark
+#		&BrowsePage(T($RCName));
+		if ($IsClip) {
+			my $temp_id = T("$RCName");
+			print &GetHeader($temp_id, &QuoteHtml($temp_id), "");
+			&DoRc();
+			print $q->end_html;
+		} else {
+			&BrowsePage(T($RCName));
+		}
+###
+###############
 		return 1;
 	} elsif ($action eq 'random') {
 		&DoRandom();
@@ -696,12 +714,23 @@ sub BrowseExternUrl {
 }
 ###
 ###############
+
 sub DoRc {
 	my ($fileData, $rcline, $i, $daysago, $lastTs, $ts, $idOnly);
 	my (@fullrc, $status, $oldFileData, $firstTs, $errorText);
 	my $starttime = 0;
 	my $showbar = 0;
 
+###############
+### pda clip by gypark
+	if ($IsClip) {
+		$daysago = 7;
+		$starttime = $Now - ((24*60*60)*$daysago);
+		print "<h2>$SiteName : " . 
+			Ts('Updates in the last %s day' . (($daysago != 1)?"s":""), $daysago) . "</h2>\n";
+	} else {
+###
+###############
 	if (&GetParam("sincelastvisit", 0)) {
 		$starttime = $q->cookie($CookieName ."-RC");
 	} elsif (&GetParam("from", 0)) {
@@ -726,6 +755,11 @@ sub DoRc {
 			. (($RcDefault != 1)?"s":""), $RcDefault) . "</h2>\n";
 		# Translation of above line is identical to previous version
 	}
+###############
+### pda clip by gypark
+	}
+###
+###############
 
 	# Read rclog data (and oldrclog data if needed)
 	($status, $fileData) = &ReadFile($RcFile);
@@ -768,6 +802,11 @@ sub DoRc {
 		print '<b>(' . Ts('for %s only', &ScriptLink($idOnly, $idOnly))
 					. ')</b><br>';
 	}
+###############
+### pda clip by gypark
+	if (!($IsClip)) {
+###
+###############
 	foreach $i (@RcDays) {
 		print " | "  if $showbar;
 		$showbar = 1;
@@ -798,6 +837,11 @@ sub DoRc {
 			")<br>\n";
 	}
 ### 
+###############
+###############
+### pda clip by gypark
+	}
+###
 ###############
 
 	# Later consider a binary search?
@@ -898,8 +942,13 @@ sub GetRcHtml {
 ### replaced by gypark
 ### 최근 변경 내역을 테이블로 출력
 ### from Jof4002's patch
+### pda clip 기능 추가
 #	$html = "";
-	$html = "<TABLE class='rc'>";
+	if ($IsClip) {
+		$html = "";
+	} else {
+		$html = "<TABLE class='rc'>";
+	}
 ###
 ###############
 	$all = &GetParam("rcall", 0);
@@ -945,7 +994,9 @@ sub GetRcHtml {
 ### commented by gypark
 ### 최근 변경 내역을 테이블로 출력
 ### from Jof4002's patch
+### pda clip 기능 추가
 #				$html .= "</UL>\n";
+				$html .= "</UL>\n" if ($IsClip);
 ###
 ###############
 				$inlist = 0;
@@ -954,15 +1005,20 @@ sub GetRcHtml {
 ### replaced by gypark
 ### 최근변경내역에 북마크 기능 도입
 ### 최근 변경 내역을 테이블로 출력 패치도 같이 적용
+### pda clip 기능 추가
 #			$html .= "<p><strong>" . $date . "</strong><p>\n";
-			$html .= "<TR class='rc'><TD colspan='6' class='rcblank'>&nbsp;</TD></TR>".
-				"<TR class='rc'>".
-				"<TD colspan=6 class='rcdate'><b>" . $date . "</b>";
-			if ($bookmarkuser eq "") {
-				$html .= "</TD></TR>\n";
+			if ($IsClip) {
+				$html .= "<p><strong>" . $date . "</strong><p>\n";
 			} else {
-				$html .= "  [" .&ScriptLink("action=bookmark&time=$ts",T('set bookmark')) ."]"
-					. "</TD></TR>\n";
+				$html .= "<TR class='rc'><TD colspan='6' class='rcblank'>&nbsp;</TD></TR>".
+					"<TR class='rc'>".
+					"<TD colspan=6 class='rcdate'><b>" . $date . "</b>";
+				if ($bookmarkuser eq "") {
+					$html .= "</TD></TR>\n";
+				} else {
+					$html .= "  [" .&ScriptLink("action=bookmark&time=$ts",T('set bookmark')) ."]"
+						. "</TD></TR>\n";
+				}
 			}
 ###
 ###############
@@ -972,14 +1028,25 @@ sub GetRcHtml {
 ### commented by gypark
 ### 최근 변경 내역을 테이블로 출력
 ### from Jof4002's patch
+### pda clip 기능 추가
 #			$html .= "<UL>\n";
+			$html .= "<UL>\n" if ($IsClip);
 ###
 ###############
 			$inlist = 1;
 		}
 		$host = &QuoteHtml($host);
 		if (defined($extra{'name'}) && defined($extra{'id'})) {
-			$author = &GetAuthorLink($host, $extra{'name'}, $extra{'id'});
+###############
+### pda clip by gypark
+#			$author = &GetAuthorLink($host, $extra{'name'}, $extra{'id'});
+			if ($IsClip) {
+				$author = &GetPageLink($extra{'name'});
+			} else {
+				$author = &GetAuthorLink($host, $extra{'name'}, $extra{'id'});
+			}
+###
+###############
 		} else {
 			$author = &GetAuthorLink($host, "", 0);
 		}
@@ -1028,6 +1095,7 @@ sub GetRcHtml {
 ### replaced by gypark
 ### 최근 변경 내역을 테이블로 출력
 ### from Jof4002's patch
+### pda clip 기능 추가
 #		$link .= &GetPageLink($pagename);
 #		$html .= "<li>$link ";
 #		# Later do new-RC looping here.
@@ -1035,22 +1103,33 @@ sub GetRcHtml {
 #		$html .= ". . . . . $author\n";  # Make dots optional?
 #	}
 #	$html .= "</UL>\n" if ($inlist);
-		$html .= "<TR class='rc'>"
-			. "<TD class='rc'>"
+		if (!($IsClip)) {
+			$html .= "<TR class='rc'>"
+				. "<TD class='rc'>"
 ### 관심 페이지
-			. ((defined ($UserInterest{$pagename}))?"$rcinterest":"&nbsp;&nbsp;")
-			. "</TD>"
-			. "<TD class='rc'>$link </TD>"
-			. "<TD class='rcpage'>" . &GetPageOrEditLink($pagename) . "</TD>"
-			. "<TD class='rctime'>" . &CalcTime($ts) . "</TD>"
-			. "<TD class='rccount'>$count$edit</TD>"
-			. "<TD class='rcauthor'>$author</TD></TR>\n";
-		if ($sum ne "") {
-			$html .= "<TR class='rc'><TD colspan=2 class='rc'></TD>"
-				. "<TD colspan=4 class='rcsummary'>&nbsp;&nbsp;$sum</TD></TR>\n";
+				. ((defined ($UserInterest{$pagename}))?"$rcinterest":"&nbsp;&nbsp;")
+				. "</TD>"
+				. "<TD class='rc'>$link </TD>"
+				. "<TD class='rcpage'>" . &GetPageOrEditLink($pagename) . "</TD>"
+				. "<TD class='rctime'>" . &CalcTime($ts) . "</TD>"
+				. "<TD class='rccount'>$count$edit</TD>"
+				. "<TD class='rcauthor'>$author</TD></TR>\n";
+			if ($sum ne "") {
+				$html .= "<TR class='rc'><TD colspan=2 class='rc'></TD>"
+					. "<TD colspan=4 class='rcsummary'>&nbsp;&nbsp;$sum</TD></TR>\n";
+			}
+		} else {
+			$link = &GetPageLink($pagename);
+			$html .= "<li>$link ... ";
+			# Later do new-RC looping here.
+			$html .=  &CalcTime($ts) . " - $author $sum\n";
 		}
 	}
-	$html .= "</table>";
+	if ($IsClip) {
+		$html .= "</UL>\n";
+	} else {
+		$html .= "</table>";
+	}
 
 ###
 ###############
@@ -1196,6 +1275,13 @@ sub GetPageLink {
 		$id = &FreeToNormal($id);
 		$name =~ s/_/ /g;
 	}
+###############
+### pda clip by gypark
+	if ($IsClip) {
+		return 	&ScriptLink("action=browse&clip=1&id=$id", $name);
+	}
+###
+###############
 	return &ScriptLink($id, $name);
 }
 
@@ -1207,6 +1293,13 @@ sub GetPageLinkText {
 		$id = &FreeToNormal($id);
 		$name =~ s/_/ /g;
 	}
+###############
+### pda clip by gypark
+	if ($IsClip) {
+		return 	&ScriptLink("action=browse&clip=1&id=$id", $name);
+	}
+###
+###############
 	return &ScriptLink($id, $name);
 }
 
@@ -1387,6 +1480,14 @@ sub GetHeader {
 		$title =~ s/_/ /g;   # Display as spaces
 	}
 	$result .= &GetHtmlHeader("$SiteName: $title", $title);
+###############
+### pda clip by gypark
+	if ($IsClip) {
+		$result .= "<h1>$title</h1>\n<hr>";
+	}
+###
+###############
+
 	return $result  if ($embed);
 
 ###############
