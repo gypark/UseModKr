@@ -8146,6 +8146,11 @@ sub DoComments {
 	my $string;
 	my $long = &GetParam("long", "");
 	
+	if ($newcomments =~ /^\s*$/) {
+		&ReBrowsePage($pageid, "", 0);
+		return;
+	}
+		
 	$name = &GetRemoteHost(0) if ($name eq "");
 	$name =~ s/,/./g;
 	$newcomments = &QuoteHtml($newcomments);
@@ -8158,9 +8163,9 @@ sub DoComments {
 		$newcomments =~ s/(^|\n)/$1: /g;
 		$newcomments =~ s/(^|\n)(: +(\r?\n))+/$1$3/mg;
 		if ($up > 0) {
-			$string =~ s/(\<longcomments\($id,$up\)\>)/\n$newcomments\n<mysign($name,$timestamp)>\n\n$1/;
+			$string =~ s/(\<longcomments\($id,$up\)\>)/\n$newcomments <mysign($name,$timestamp)>\n\n$1/;
 		} else {
-			$string =~ s/(\<longcomments\($id,$up\)\>)/$1\n\n$newcomments\n<mysign($name,$timestamp)>\n/;
+			$string =~ s/(\<longcomments\($id,$up\)\>)/$1\n\n$newcomments <mysign($name,$timestamp)>\n/;
 		}
 	} else {
 		if ($up > 0) {
