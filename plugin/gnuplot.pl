@@ -16,7 +16,7 @@ sub plugin_gnuplot {
 	my $plt = $content;
 	my $log;
 
-	my $gnuplot = "/usr/local/bin/gnuplot";		# PATH of gnuplot;
+	my $gnuplot = "gnuplot";		# PATH of gnuplot;
 
 # 그림 파일의 이름 결정
 	my $hash;
