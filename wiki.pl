@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.34b";
-$WikiRelease = "2003-03-06";
+$WikiVersion = "0.92K3-ext1.35";
+$WikiRelease = "2003-03-08";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -2089,6 +2089,8 @@ sub MacroSubst {
 	$txt =~ s/\&__LT__;dic\(([^)]+)\)\&__GT__;/&MacroEDic($1)/gei;
 	$txt =~ s/\&__LT__;kdic\(([^)]+)\)\&__GT__;/&MacroKDic($1)/gei;
 	$txt =~ s/\&__LT__;jdic\(([^)]+)\)\&__GT__;/&MacroJDic($1)/gei;
+### <MostPopular(시작, 갯수)>
+	$txt =~ s/(\&__LT__;mostpopular\(([-+]?\d+),([-+]?\d+)\)\&__GT__;)/&MacroMostPopular($1,$2, $3)/gei;
 ###
 ###############
 	return $txt;
@@ -2129,6 +2131,56 @@ sub MacroIncludeSubst {
 ###############
 ### added by gypark
 ### 추가한 매크로의 동작부
+
+### MostPopular
+sub MacroMostPopular {
+	my ($itself, $start, $end) = (@_);
+	my (%pgcount, $page, $countfile, $status, $count, @pages);
+	my $txt;
+
+	if (($start == 0) || ($end == 0)) { return $itself; }
+
+	foreach $page (&AllPagesList()) {
+		$countfile = &GetCountFile($page);
+		($status, $count) = &ReadFile($countfile);
+		$pgcount{$page} = $count if ($status);
+	}
+
+	@pages = sort {
+		$pgcount{$b} <=> $pgcount{$a}
+				||
+		$a cmp $b
+	} keys %pgcount;
+
+	if ($start > 0) {
+		$start--;
+	} else {
+		$start = $#pages + $start + 1;
+	}
+	if ($end > 0) {
+		$end--;
+	} else {
+		$end = $#pages + $end + 1;
+	}
+	$start = 0 if ($start < 0);
+	$start = $#pages if ($start > $#pages);
+	$end = 0 if ($end < 0);
+	$end = $#pages if ($end > $#pages);
+
+	if ($start <= $end) {
+		@pages = @pages[$start .. $end];
+	} else {
+		@pages = reverse(@pages[$end .. $start]);
+	}
+
+	foreach $page (@pages) {
+		$txt .= ".... "  if ($page =~ m|/|);
+		$txt .= &GetPageLink($page) . 
+			" (".Ts('%s hit'.(($pgcount{$page}>1)?'s':''), $pgcount{$page}) . ")<br>";
+	}
+
+	return $txt;
+}
 
 ### 세 가지 사전 매크로
 sub MacroEDic {
@@ -6252,6 +6304,11 @@ sub DoMaintain {
 ### added by gypark
 ### 링크 목록을 별도로 관리
 		&SaveLinkFile($name);
+### page count
+		if (!(-f &GetCountFile($name))) {
+			&CreatePageDir($CountDir, $name);  # It might not exist yet
+			&WriteStringToFile(&GetCountFile($name), "0");
+		}
 ###
 ###############
 		print ".... "  if ($name =~ m|/|);
@@ -6839,6 +6896,7 @@ sub RenamePage {
 	$oldcnt = &GetCountFile($old);
 	if (-f $oldcnt) {
 		$newcnt = &GetCountFile($new);
+		&CreatePageDir($CountDir, $new);  # It might not exist yet
 		rename($oldcnt, $newcnt) || die "error while renaming count file";
 	}
 ###
