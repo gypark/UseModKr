@@ -735,4 +735,12 @@ Write New Thread
 새 글 쓰기
 Write Comment
 위 글에 의견달기
+Prev
+이전
+Next
+다음
+TOC
+목차
+Up
+위
 END_OF_TRANSLATION
