@@ -764,7 +764,7 @@ sub DoRc {
 	}
 
 ###############
-### added by gypark
+### replaced by gypark
 ### 최근변경내역에 북마크 기능 도입
 #	print "<br>" . &ScriptLink("action=rc&from=$lastTs",
 #		T('List new changes starting from'));
@@ -946,8 +946,13 @@ sub GetRcHtml {
 		$sum = "";
 		if (($summary ne "") && ($summary ne "*")) {
 			$summary = &QuoteHtml($summary);
+###############
+### replaced by gypark
+### 최근 변경 내역을 테이블로 출력
 #			$sum = "<strong>[$summary]</strong> ";
 			$sum = "<span style='color:green'>[$summary]</span> ";
+###
+###############
 		}
 		$edit = "";
 		$edit = "<em>$tEdit</em> "  if ($isEdit);
@@ -6661,7 +6666,7 @@ sub DeletePage {
 	unlink($IndexFile)  if ($UseIndex);
 ###############
 ### commented by gypark
-### 최근변경내역에 북마크 기능 도입
+### 페이지 삭제 시에 keep 화일은 보존해 둠
 #	&EditRecentChanges(1, $page, "")  if ($doRC);  # Delete page
 ###
 ###############
