@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.22d";
+$WikiVersion = "0.92K3-ext1.22e";
 $WikiRelease = "2003-02-14";
 
 $HashKey = "salt"; # 2-character string
@@ -775,12 +775,11 @@ sub DoRc {
 			T('List new changes starting from'));
 		print " " . &TimeToText($lastTs) . "<br>\n";
 	} else {
-		my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(&GetParam('bookmark',-1));
+		my $bookmark = &GetParam('bookmark',-1);
 		print "<br>" . &ScriptLink("action=bookmark&time=$Now",
 				T('Update my bookmark timestamp'));
 		print " (". 
-			Ts('currently set to %s', 
-				($year+1900)."-".($mon+1)."-".$mday." "."$hour:$min:$sec").
+			Ts('currently set to %s', &TimeToText($bookmark)).
 			")<br>\n";
 	}
 ### 
@@ -2161,7 +2160,7 @@ sub MacroIncludeDay {
 
 	# 날짜의 변위 계산 
 	$temp = $Now + ($day_offset * 86400);
-	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($temp);
+	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($temp+$TimeZoneOffset);
 
 	$page .= ($year + 1900) . "-";
 
@@ -2366,7 +2365,7 @@ sub MacroCalendar {
 	my $cal_page;
 	my @cal_color = ("red", "black", "black", "black", "black", "black", "blue", "green");
 	my @cal_dow = (T('Su'), T('Mo'), T('Tu'), T('We'), T('Th'), T('Fr'), T('Sa'));
-	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($Now);
+	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($Now+$TimeZoneOffset);
 	my ($this_year, $this_month, $this_day) = ($year, $mon, $mday);
 	my $cal_time;
 	my $cal_tdstyle;
