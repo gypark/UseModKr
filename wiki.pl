@@ -3623,6 +3623,16 @@ sub StoreBracketInterPage {
 	($site, $remotePage) = split(/:/, $id, 2);
 	$remotePage =~ s/&amp;/&/g;  # Unquote common URL HTML
 	$url = &GetSiteUrl($site);
+###############
+### added by gypark
+### interwiki 아이콘
+	my ($image, $url_main);
+	if ($url =~ /\|/) {
+		($url, $image) = split(/\|/, $url, 2);		
+	}
+	$url_main = $url;
+###
+###############
 	if ($text ne "") {
 		return "[$id $text]"  if ($url eq "");
 	} else {
@@ -3632,10 +3642,15 @@ sub StoreBracketInterPage {
 	$url .= $remotePage;
 ###############
 ### replaced by gypark
-### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
-### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
+### interwiki 아이콘
 #	return &StoreRaw("<a href=\"$url\">[$text]</a>");
-	return &StoreRaw("<A class='inter' href=\"$url\">[$text]</A><a href=\"$url\" target=\"_blank\"><img src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>");
+	my $link_html = '';
+	$link_html = "<A class='inter' href='$url' title='$id'>[$text]</A>" .
+### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
+				"<a href=\"$url\" target=\"_blank\">" .
+				"<img src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\">" .
+				"</a>";
+	return &StoreRaw($link_html);
 ###
 ###############
 }
