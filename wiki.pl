@@ -5474,7 +5474,7 @@ sub DoEditPrefs {
 		print '<br>', T('Email Address:'), ' ',
 					&GetFormText('email', "", 30, 60);
 	}
-	print "<hr noshade size=1><b>$recentName:</b>\n";
+	print "<hr noshade size=1><b>".T($recentName).":</b>\n";
 	print '<br>', T('Default days to display:'), ' ',
 				&GetFormText('rcdays', $RcDefault, 4, 9);
 	print "<br>", &GetFormCheck('rcnewtop', $RecentTop,
@@ -5492,11 +5492,11 @@ sub DoEditPrefs {
 	if ($UseDiff) {
 		print '<hr noshade size=1><b>', T('Differences:'), "</b>\n";
 		print "<br>", &GetFormCheck('diffrclink', 1,
-															Ts('Show (diff) links on %s', $recentName));
+															Ts('Show (diff) links on %s', T($recentName)));
 		print "<br>", &GetFormCheck('alldiff', 0,
 																T('Show differences on all pages'));
 		print "  (",  &GetFormCheck('norcdiff', 1,
-																Ts('No differences on %s', $recentName)), ")";
+																Ts('No differences on %s', T($recentName))), ")";
 		%labels = (1=>T('Major'), 2=>T('Minor'), 3=>T('Author'));
 		print '<br>', T('Default difference type:'), ' ';
 		print $q->popup_menu(-name=>'p_defaultdiff',
