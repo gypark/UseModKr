@@ -103,8 +103,8 @@ sub action_comments {
 		$blogrccomment =~ s/(\r?\n)/ /g;
 		$blogrccomment =~ s/\[/{/g;
 		$blogrccomment =~ s/\]/}/g;
-		if (length($blogrccomment) > 33) {
-			$blogrccomment = substr($blogrccomment, 0, 30);
+		if (length($blogrccomment) > 30) {
+			$blogrccomment = substr($blogrccomment, 0, 27);
 			$blogrccomment =~ s/(([\x80-\xff].)*)[\x80-\xff]?$/$1/;
 			$blogrccomment .= "...";
 		}
