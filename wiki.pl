@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.43";
-$WikiRelease = "2003-03-29";
+$WikiVersion = "0.92K3-ext1.43a";
+$WikiRelease = "2003-03-30";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -7773,13 +7773,6 @@ sub DoInterest {
 		return;
 	}
 	
-	if (!(-f &GetPageFile($id))) {
-		print &GetHeader('', $failMsg, '');
-		print Ts('Page %s does not exist', $id);
-		print &GetCommonFooter();
-		return;
-	}
-
 	print &GetHeader('', $title, '');
 	if ($mode eq "add") {
 		$UserInterest{$id} = "1";
