@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.50";
-$WikiRelease = "2003-09-21";
+$WikiVersion = "0.92K3-ext1.50a";
+$WikiRelease = "2003-09-22";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -724,7 +724,8 @@ sub DoRc {
 ###############
 ### pda clip by gypark
 	if ($IsPDA) {
-		$daysago = 7;
+		$daysago = &GetParam("days", 0);
+		$daysago = 7 if ($daysago == 0);
 		$starttime = $Now - ((24*60*60)*$daysago);
 		print "<h2>$SiteName : " . 
 			Ts('Updates in the last %s day' . (($daysago != 1)?"s":""), $daysago) . "</h2>\n";
