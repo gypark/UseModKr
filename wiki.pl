@@ -953,9 +953,9 @@ sub GetRcHtml {
 			} else {
 				$link .= &ScriptLinkDiffRevision(5, $pagename, "", $rcupdated) . "  ";
 			}
-		}
 ###
 ###############
+		}
 		$link .= &GetPageLink($pagename);
 		$html .= "<li>$link ";
 		# Later do new-RC looping here.
