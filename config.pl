@@ -49,7 +49,7 @@ $SizeBottomFrame = 110;
 ### 인자 없이 wiki.pl 을 부르면 $LogoPage 를 embed 형식으로 출력
 $LogoPage   = "";	# this page will be displayed when no parameter
 ### 페이지 처리 시간을 출력한다
-$CheckTime = 1;   # 1 = mesure the processing time (requires Time::HiRes module), 0 = do not 
+$CheckTime = 0;   # 1 = mesure the processing time (requires Time::HiRes module), 0 = do not 
 ### 내부 아이콘이 저장된 디렉토리
 $IconDir = "./icons/";	# directory containing icon files
 ### 
