@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.74g";
-$WikiRelease = "2005-02-19";
+$WikiVersion = "0.92K3-ext1.74f";
+$WikiRelease = "2005-02-26";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -4842,6 +4842,7 @@ sub UserIsBanned {
 
 	($status, $data) = &ReadFile("$DataDir/banlist");
 	return 0  if (!$status);  # No file exists, so no ban
+	$data =~ s/\r//g;
 	$ip = $ENV{'REMOTE_ADDR'};
 	$host = &GetRemoteHost(0);
 	foreach (split(/\n/, $data)) {
@@ -7369,15 +7370,17 @@ sub DoEditBanned {
 	$banList = ""  if (!$status);
 	print &GetFormStart();
 	print GetHiddenValue("edit_ban", 1), "\n";
-	print "<b>Banned IP/network/host list:</b><br>\n";
 	print "<p>Each entry is either a commented line (starting with #), ",
-				"or a Perl regular expression (matching either an IP address or ",
-				"a hostname).  <b>Note:</b> To test the ban on yourself, you must ",
-				"give up your admin access (remove password in Preferences).";
-	print "<p>Examples:<br>",
-				"\\.foocorp.com\$  (blocks hosts ending with .foocorp.com)<br>",
-				"^123.21.3.9\$  (blocks exact IP address)<br>",
-				"^123.21.3.  (blocks whole 123.21.3.* IP network)<p>";
+		"or a Perl regular expression (matching either an IP address or ",
+		"a hostname).  <b>Note:</b> To test the ban on yourself, you must ",
+		"give up your admin access (remove password in Preferences).";
+	print "<p>Example:<br>",
+		"# blocks hosts ending with .foocorp.com<br>",
+		"\\.foocorp\\.com\$<br>",
+		"# blocks exact IP address<br>",
+		"^123\\.21\\.3\\.9\$<br>",
+		"# blocks whole 123.21.3.* IP network<br>",
+		"^123\\.21\\.3\\.\\d+\$<p>";
 	print &GetTextArea('banlist', $banList, 12, 50);
 	print "<br>", $q->submit(-name=>'Save'), "\n";
 	print "<hr class='footer'>\n";
