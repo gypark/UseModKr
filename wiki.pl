@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.75";
+$WikiVersion = "0.92K3-ext1.76";
 $WikiRelease = "2005-02-27";
 
 $HashKey = "salt"; # 2-character string
@@ -2306,7 +2306,7 @@ sub GetGotoBar {
 		$bartext .= "</TD>\n<TD class='gotorandom'>" . &GetRandomLink();
 	}
 	if (&UserIsAdmin()) {
-		$bartext .= "</TD>\n<TD class='gotoadmin'>" . &ScriptLink("action=editlinks", T('Admin'));
+		$bartext .= "</TD>\n<TD class='gotoadmin'>" . &ScriptLink("action=adminmenu", T('Admin'));
 	}
 	$bartext .= "</TD>\n<TD class='gotolinks'>" . &ScriptLink("action=links", T('Links'));
 #	if (($UserID eq "113") || ($UserID eq "112")) {

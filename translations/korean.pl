@@ -386,7 +386,7 @@ Could not get editing lock
 Normal Unlock.
 
 Removing edit lock
-
+페이지 수정시 생성된 락 제거
 This operation may take several seconds...
 
 Forced Unlock.
@@ -396,7 +396,7 @@ Forced Unlock.
 can not write diff_log
 diff_log 를 기록할 수 없습니다.
 Maintenance on all pages
-
+전체 페이지 보수
 Maintenance not done.
 
 (Maintenance can only be done once every 12 hours.)
@@ -464,7 +464,7 @@ unlock
 (read-only)
 (읽기전용)
 Editing/Deleting page titles:
-페이지 제목 변경 또는 페이지 삭제:
+페이지 제목 변경 또는 페이지 삭제
 Enter one command on each line.  Commands are:
 한 줄에 한 명령씩 입력하시오. 명령은 다음과 같습니다:
 <tt>!PageName</tt> -- deletes the page called PageName
@@ -747,4 +747,12 @@ Up
 위
 Index:
 찾아보기:
+Admin Menu
+관리자 메뉴
+Editing Banned list
+접근 차단 목록 수정
+Lock Site
+사이트 수정금지
+Unlock Site
+사이트 수정금지 해제
 END_OF_TRANSLATION
