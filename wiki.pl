@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.53";
-$WikiRelease = "2003-10-06";
+$WikiVersion = "0.92K3-ext1.53a";
+$WikiRelease = "2003-10-07";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -8718,6 +8718,8 @@ sub GetRc {
 			= split(/$FS3/, $rcline);
 		next  if ((!$all) && ($ts < $changetime{$pagename}));
 		next  if (($idOnly ne "") && ($idOnly ne $pagename));
+### hide page
+		next if (&PageIsHidden($pagename));
 		%extra = split(/$FS2/, $extraTemp, -1);
 		if ($date ne &CalcDay($ts)) {
 			$date = &CalcDay($ts);
