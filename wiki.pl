@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.46d";
+$WikiVersion = "0.92K3-ext1.46e";
 $WikiRelease = "2003-09-04";
 
 $HashKey = "salt"; # 2-character string
@@ -4004,7 +4004,10 @@ sub DiffToHTMLunified {
 	foreach $line (@lines) {
 		$row = "";
 
-		$line = &QuoteHtml($line);
+		$line =~ s/&/&amp;/g;
+		$line =~ s/</&lt;/g;
+		$line =~ s/>/&gt;/g;
+
 		if ($line =~ /^@@ (.*)@@.*$/) {
 			if ($in_table) {
 				$in_table = 0;
