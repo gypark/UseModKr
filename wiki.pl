@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.48b";
-$WikiRelease = "2003-09-10";
+$WikiVersion = "0.92K3-ext1.48c";
+$WikiRelease = "2003-09-15";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -2284,13 +2284,13 @@ sub RemoveLink {
 sub MacroIncludeSubst {
 	my ($txt) = @_;
 
-	$txt =~ s/<include\((.*)\)>/&MacroInclude($1)/gei;
+	$txt =~ s/(^|\n)<include\((.*)\)>([ \t\r\f]*\n)/$1 . &MacroInclude($2) . $3/geim;
 ### toc 를 포함하지 않는 includenotoc 매크로 추가
-	$txt =~ s/<includenotoc\((.*)\)>/&MacroInclude($1, "notoc")/gei;
+	$txt =~ s/(^|\n)<includenotoc\((.*)\)>([ \t\r\f]*\n)/$1 . &MacroInclude($2, "notoc") . $3/geim;
 ### includeday 매크로
- 	$txt =~ s/(<includeday\(([^,\n]+,)?([-+]?\d+)\)>)/&MacroIncludeDay($1, $2, $3)/gei;
+ 	$txt =~ s/(^|\n)(<includeday\(([^,\n]+,)?([-+]?\d+)\)>)([ \t\r\f]*\n)/$1 . &MacroIncludeDay($2, $3, $4) . $5/geim;
 ### includedays 매크로
-	$txt =~ s/(<includedays\(([^,\n]+,)?([-+]?\d+),([-+]?\d+)\)>)/&MacroIncludeDay($1, $2, $3, $4)/gei;
+	$txt =~ s/(^|\n)(<includedays\(([^,\n]+,)?([-+]?\d+),([-+]?\d+)\)>)([ \t\r\f]*\n)/$1 . &MacroIncludeDay($2, $3, $4, $5) . $6/geim;
 	return $txt;
 }
 ###
