@@ -6694,6 +6694,7 @@ sub DeletePage {
 	&OpenDefaultText();
 	&SaveKeepSection();
 	&ExpireKeepFile();
+	&WriteRcLog($OpenPageName, "*", 0, $Now, &GetParam("username",""), &GetRemoteHost(0));
 ###
 ###############
 	$fname = &GetPageFile($page);
