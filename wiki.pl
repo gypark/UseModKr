@@ -35,6 +35,7 @@ use strict;
 use vars qw($WikiVersion $WikiRelease $HashKey);
 $WikiVersion = "0.92K3-ext1.13";
 $WikiRelease = "2002-12-23";
+
 $HashKey = "salt"; # 2-character string
 ###
 ###############
