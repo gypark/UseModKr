@@ -96,7 +96,7 @@ $UseIndex    = 0;       # 1 = use index file,     0 = slow/reliable method
 $UseHeadings = 1;       # 1 = allow = h1 text =,  0 = no header formatting
 $NetworkFile = 1;       # 1 = allow remote file:, 0 = no file:// links
 $BracketWiki = 0;       # 1 = [WikiLnk txt] link, 0 = no local descriptions
-$UseLookup   = 1;       # 1 = lookup host names,  0 = skip lookup (IP only)
+$UseLookup   = 0;       # 1 = lookup host names,  0 = skip lookup (IP only)
 $FreeUpper   = 0;       # 1 = force upper case,   0 = do not force case
 $FastGlob    = 1;       # 1 = new faster code,    0 = old compatible code
 
