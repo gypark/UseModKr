@@ -1,5 +1,4 @@
 #!/usr/bin/perl
-
 # UseModWiki version 0.92K2 (2001-12-27)
 # Copyright (C) 2000-2001 Clifford A. Adams
 #    <caadams@frontiernet.net> or <usemod@usemod.com>
@@ -36,7 +35,7 @@ use strict;
 use vars qw($WikiVersion $WikiRelease $HashKey);
 $WikiVersion = "0.92K3-ext1.12";
 $WikiRelease = "2002-12-09";
-$HashKey = "gyparkwiki"; # 2-character string
+$HashKey = "salt"; # 2-character string
 ###
 ###############
 
@@ -632,9 +631,10 @@ sub BrowseExternUrl {
 		return;
 	} else {
 		print &GetHttpHeader();
+		print "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Frameset//EN\">\n";
 		print "<html>\n";
 		print "<title>$SiteName: $id</title>\n";
-		print "<frameset rows=\"$SizeTopFrame,*,$sizeBottomFrame\" cols=\"1\" border=\"0\">\n";
+		print "<frameset rows=\"$SizeTopFrame,*,$sizeBottomFrame\" cols=\"1\" frameborder=\"0\">\n";
 		print "  <frame src=\"$ScriptName?action=browse&InFrame=1&id=$id&oldid=$oldId\" noresize scrolling=\"no\">\n";
 		print "  <frame src=\"$url\" noresize>\n";
 		print "  <frame src=\"$ScriptName?action=browse&InFrame=2&id=$id&oldid=$oldId\" noresize scrolling=\"no\">\n"
@@ -1187,15 +1187,6 @@ sub GetHeader {
 		$title =~ s/_/ /g;   # Display as spaces
 	}
 	$result .= &GetHtmlHeader("$SiteName: $title", $title);
-### begin of logging routine 
-	my ($authorAddr) = $ENV{REMOTE_ADDR};
-	my ($timestamp) = CalcDay($Now) . " " . CalcTime($Now);
-	my ($author) = &GetParam('username');
-	if (open (LogFile, ">>$DataDir/__log__")) {
-		printf (LogFile "%-19s|%-10s|%-15s|%s\n", $timestamp, $author, $authorAddr, $title);
-		close LogFile;
-	}
-### end of logging routine
 	return $result  if ($embed);
 
 ###############
