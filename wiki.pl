@@ -2118,6 +2118,7 @@ sub GetEditGuide {
 		my $excerpt = substr($Text{'text'},0,252);
 		$excerpt =~ s/(([\x80-\xff].)*)[\x80-\xff]?$/$1/;
 		$excerpt = &QuoteHtml($excerpt);
+		$excerpt =~ s/"/&quot;/g;
 
 		$result .= &GetFormStart("TrackBack_ping") .
 			&GetHiddenValue("action", "send_ping") .
