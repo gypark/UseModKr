@@ -8154,6 +8154,8 @@ sub DoComments {
 	$name = &GetRemoteHost(0) if ($name eq "");
 	$name =~ s/,/./g;
 	$newcomments = &QuoteHtml($newcomments);
+	$newcomments =~ s/(----+)/<nowiki>$1<\/nowiki>/g;
+
 	&OpenPage($id);
 	&OpenDefaultText();
 	$string = $Text{'text'};
