@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.57b";
-$WikiRelease = "2004-03-11";
+$WikiVersion = "0.92K3-ext1.58";
+$WikiRelease = "2004-03-12";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -740,7 +740,8 @@ sub BrowsePage {
 ### added by gypark
 ### 최근변경내역에 북마크 기능 도입
 		if ($showDiff == 5) { 
-			if (&GetParam('username',"") ne "") {
+#			if (&GetParam('username',"") ne "") {
+			if (&LoginUser()) {
 				$diffRevision = $Page{'revision'} - 1;
 				my $userBookmark = &GetParam('bookmark',-1);
 				while (($diffRevision > 1) && 
@@ -1014,7 +1015,8 @@ sub DoRc {
 #		T('List new changes starting from'));
 #	print " " . &TimeToText($lastTs) . "<br>\n";
 
-	if (&GetParam("username") eq "") {
+#	if (&GetParam("username") eq "") {
+	if (!&LoginUser()) {
 		print "<br>" . &ScriptLink("action=rc&from=$lastTs",
 			T('List new changes starting from'));
 		print " " . &TimeToText($lastTs) . "<br>\n";
@@ -1145,15 +1147,40 @@ sub GetRcHtml {
 		@outrc = @temprc;
 	}
 
+### summary 개선 by gypark
+	my %all_summary;
+
+	$all = &GetParam("rcall", 0);
+	$all = &GetParam("all", $all);
+	$newtop = &GetParam("rcnewtop", $RecentTop);
+	$newtop = &GetParam("newtop", $newtop);
+	$idOnly = &GetParam("rcidonly", "");
+####
+
 	# Later consider folding into loop above?
 	# Later add lines to assoc. pagename array (for new RC display)
 	foreach $rcline (@outrc) {
-		($ts, $pagename) = split(/$FS3/, $rcline);
+### summary 개선 by gypark
+# 		($ts, $pagename) = split(/$FS3/, $rcline);
+		($ts, $pagename, $summary) = split(/$FS3/, $rcline);
+####
+
 ###############
 ### replaced by gypark
 ### 최근변경내역에 북마크 기능 도입
 #		$pagecount{$pagename}++;
-		$pagecount{$pagename}++ if ($ts > $bookmark);
+### summary 개선 by gypark
+#		$pagecount{$pagename}++ if ($ts > $bookmark);
+		if ($ts > $bookmark) {
+			$pagecount{$pagename}++;
+			if (!($all) && &LoginUser()) {
+				if (($summary ne "") && ($summary ne "*")) {
+					$summary = &QuoteHtml($summary);
+					$all_summary{$pagename} = "[$summary]<br>" . $all_summary{$pagename};
+				}
+			}
+		}
+####
 ###
 ###############
 		$changetime{$pagename} = $ts;
@@ -1173,11 +1200,13 @@ sub GetRcHtml {
 	}
 ###
 ###############
-	$all = &GetParam("rcall", 0);
-	$all = &GetParam("all", $all);
-	$newtop = &GetParam("rcnewtop", $RecentTop);
-	$newtop = &GetParam("newtop", $newtop);
-	$idOnly = &GetParam("rcidonly", "");
+### summary 개선 by gypark
+#	$all = &GetParam("rcall", 0);
+#	$all = &GetParam("all", $all);
+#	$newtop = &GetParam("rcnewtop", $RecentTop);
+#	$newtop = &GetParam("newtop", $newtop);
+#	$idOnly = &GetParam("rcidonly", "");
+####
 
 	@outrc = reverse @outrc if ($newtop);
 ###############
@@ -1186,8 +1215,8 @@ sub GetRcHtml {
 #	($oldts, $pagename, $summary, $isEdit, $host, $kind, $extraTemp)
 #		= split(/$FS3/, $outrc[0]);
 #	$oldts += 1;
-###
-###############
+
+
 	foreach $rcline (@outrc) {
 		($ts, $pagename, $summary, $isEdit, $host, $kind, $extraTemp)
 			= split(/$FS3/, $rcline);
@@ -1343,10 +1372,18 @@ sub GetRcHtml {
 				. "<TD class='rctime'>" . &CalcTime($ts) . "</TD>"
 				. "<TD class='rccount'>$count$edit</TD>"
 				. "<TD class='rcauthor'>$author</TD></TR>\n";
-			if ($sum ne "") {
+### summary 개선 by gypark
+# 			if ($sum ne "") {
+# 					. "<TD colspan=4 class='rcsummary'>&nbsp;&nbsp;$sum</TD></TR>\n";
+#			}
+			if ($all_summary{$pagename} ne "") {
 				$html .= "<TR class='rc'><TD colspan=2 class='rc'></TD>"
-					. "<TD colspan=4 class='rcsummary'>&nbsp;&nbsp;$sum</TD></TR>\n";
+					. "<TD colspan=4 class='rcsummary'>$all_summary{$pagename}</TD></TR>\n";
+			} elsif ($sum ne "") {
+				$html .= "<TR class='rc'><TD colspan=2 class='rc'></TD>"
+					. "<TD colspan=4 class='rcsummary'>$sum</TD></TR>\n";
 			}
+####
 		} else {
 			$link = &GetPageLink($pagename);
 			$html .= "<li>$link ... ";
@@ -2025,7 +2062,8 @@ sub GetEditGuide {
 ###############
 ### added by gypark
 ### 관심 페이지
-	if (&GetParam('username') ne "") {
+#	if (&GetParam('username') ne "") {
+	if (&LoginUser()) {
 		if (defined($UserInterest{$id})) {
 			$result .= &ScriptLink("action=interest&mode=remove&id=$id", T('Remove from interest list'));
 		} else {
@@ -2194,7 +2232,8 @@ sub GetGotoBar {
 		$bartext .= " </TD>\n<TD class='gotoadmin'> " . &ScriptLink("action=editlinks", T('Admin'));
 	}
 	$bartext .= " </TD>\n<TD class='gotolinks'> " . &ScriptLink("action=links", T('Links'));
-	if (($UserID eq "113") || ($UserID eq "112")) {
+#	if (($UserID eq "113") || ($UserID eq "112")) {
+	if (!&LoginUser()) {
 		$bartext .= " </TD>\n<TD class='gotologin'> " . &ScriptLink("action=login", T('Login'));
 	}
 	else {
@@ -2712,7 +2751,8 @@ sub MacroComments {
 	}
 	$id = "$temp";
 
-	if (($UserID ne "113") && ($UserID ne "112")) {
+#	if (($UserID ne "113") && ($UserID ne "112")) {
+	if (&LoginUser()) {
 		$idvalue = "[[$UserID]]";
 	}
 
@@ -6518,7 +6558,8 @@ sub DoLogout {
 ###
 ###############
 
-	if (($UserID ne "113") && ($UserID ne "112")) {
+#	if (($UserID ne "113") && ($UserID ne "112")) {
+	if (&LoginUser()) {
 		print Ts('Logout for user ID %s complete.', $UserID);
 	}
 
@@ -7102,7 +7143,8 @@ sub DoPostMain {
 ### 로그인 하지 않은 경우의 conflict
 #	if (($UserID ne "") || ($Section{'id'} ne ""))  {
 	if (
-		(($UserID ne "") && ($UserID ne "112") && ($UserID ne "113")) ||
+#		(($UserID ne "") && ($UserID ne "112") && ($UserID ne "113")) ||
+		(($UserID ne "") && (&LoginUser())) ||
 		(($Section{'id'} ne "") && ($Section{'id'} ne "112") && ($Section{'id'} ne "113"))
 		) {
 ###
@@ -8078,6 +8120,15 @@ sub DoShowVersion {
 ### added by gypark
 ### 통채로 추가한 함수들은 여기에 둠
 
+### 로그인한 사용자인지 검사
+sub LoginUser {
+	if (($UserID eq "113") || ($UserID eq "112")) {
+		return 0;
+	} else {
+		return 1;
+	}
+}
+
 ###############
 ### added by gypark
 ### 최근변경내역에 북마크 기능 도입
@@ -8567,7 +8618,8 @@ sub DoInterest {
 	my $id = &GetParam('id');
 	my $failMsg = T('Fail to access Interest Page List');
 
-	if (&GetParam('username') eq "") {
+#	if (&GetParam('username') eq "") {
+	if (!&LoginUser()) {
 		print &GetHeader('', $failMsg, '');
 		print T('You must login to do this action');
 		print &GetCommonFooter();
