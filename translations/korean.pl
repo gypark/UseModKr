@@ -689,8 +689,14 @@ Comment is not allowed
 답글 달기가 허용되지 않습니다
 Footnote
 각주
+Send TrackBack
+트랙백 주고받기
 Send TrackBack Ping of this page to:
 이 페이지의 트랙백 핑을 다음 주소로 보냄:
+TrackBack URL:
+트랙백 URL:
+Permalink URL (optional):
+해당 글의 URL (선택사항):
 Send Ping
 보내기
 You are not allowed to send TrackBack ping of this page

@@ -384,6 +384,15 @@ DIV.editguide {
 	color: black;
 }
 
+/* 트랙백 URL 안내창 */
+DIV.trackbackguide {
+	text-align: left;
+	background: transparent;
+	border: none;
+	color: black;
+}
+
+
 /* footer */
 DIV.footer {
 	text-align: right;
