@@ -37,9 +37,9 @@ $UserGotoBar4 = "";
 ### 번역화일 사용
 do "./translations/korean.pl";    # Path of translation file
 
-### path of code2html
+### path of source-highlight
 $SOURCEHIGHLIGHT    = "/usr/local/bin/source-highlight";    # path of source-highlight
-@SRCHIGHLANG = qw(cpp java prolog perl php3 python flex changeelog);
+@SRCHIGHLANG = qw(cpp java javascript prolog perl php3 python flex changeelog);
 ### 존재하지 않는 페이지 표시 방식
 $LinkFirstChar = 1;    # 1 = link on first character,  0 = followed by "?" mark (classical)
 ### EXTERN 페이지 하단에 편집 가이드 표시
