@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.61-beta3";
+$WikiVersion = "0.92K3-ext1.61-beta4";
 $WikiRelease = "2004-07-19";
 
 $HashKey = "salt"; # 2-character string
@@ -2114,7 +2114,10 @@ sub GetEditGuide {
 	if (&UserCanSendTrackBackPing($id)) {
 		$FullUrl = $q->url(-full=>1)  if ($FullUrl eq "");
 		my $url = $FullUrl . &ScriptLinkChar . $id;
-
+		my $title = $id;
+		if ($FreeLinks) {
+			$title =~ s/_/ /g;  # Display with spaces
+		}
 		my $excerpt = substr($Text{'text'},0,255);
 		$excerpt =~ s/(([\x80-\xff].)*)[\x80-\xff]?$/$1/;
 		$excerpt =~ s/(\r?\n)/&nbsp;/g;
@@ -2123,7 +2126,7 @@ sub GetEditGuide {
 
 		$result .= &GetFormStart("TrackBack_ping") .
 			&GetHiddenValue("action", "send_ping") .
-			&GetHiddenValue("title", "$id") .
+			&GetHiddenValue("title", "$title") .
 			&GetHiddenValue("blog_name", "$SiteName") .
 			&GetHiddenValue("excerpt", "$excerpt") .
 			&GetHiddenValue("url", "$url") .
