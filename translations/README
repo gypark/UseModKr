@@ -1,0 +1,27 @@
+This directory contains "UseModWiki translation files".
+
+To use this files, add the following line in your config file
+(or the script after the configuration settings):
+
+    do "./language/french.pl";			(relative path)
+or
+	do "/home/me/wiki/french.pl";       (absolute path)
+
+"Home" and "RecentChange" are "page name"s themselves. Therefore, 
+they are not defined in translation files. 
+Use $HomePage and $RCName, respectively, for them.
+
+
+이 디렉토리에는 "UseModWiki translation file" 들을 보관합니다.
+
+번역 화일을 사용하기 위해서는, config.pl 화일 마지막에
+
+    do "./language/korean.pl";          (상대 경로)
+또는
+	do "/home/me/wiki/french.pl";       (절대 경로)
+
+등과 같이 사용하려는 화일의 경로를 명시해 주면 됩니다.
+
+"Home" 과 "RecentChange" 는 그 자체가 페이지 이름이기 때문에
+언어팩에서 지정하지 않습니다. wiki.pl 또는 config.pl 에 있는
+$HomePage 와 $RCName 을 변경하세요.
