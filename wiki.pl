@@ -2782,8 +2782,11 @@ sub MacroTrackBackReceived {
 	if (&ValidId($temp) ne '') {
 		return $itself;
 	}
+
 	$FullUrl = $q->url(-full=>1)  if ($FullUrl eq "");
+	$temp = &EncodeUrl($temp);
 	my $url = $FullUrl . &ScriptLinkChar() . "action=trackback&id=$temp";
+
 	return &T('Trackback address of this page:') . " " . (&UrlLink("$url"))[0];
 }
 
@@ -5095,6 +5098,7 @@ sub ReportError {
 	my ($errmsg) = @_;
 
 	print $q->header, "<H2>", $errmsg, "</H2>", $q->end_html;
+#	&AppendStringToFile("$DataDir/tblog.txt", $errmsg);
 }
 
 sub ValidId {
@@ -9291,6 +9295,8 @@ sub DoReceiveTrackBackPing {
 	my $id = &GetParam('id');
 	my $normal_id = $id;
 
+#	my $debug = "1->";
+
 	my $url = &GetParam('url');
 	my $title = &GetParam('title', $url);
 	my $blog_name = &GetParam('blog_name');
@@ -9308,17 +9314,24 @@ sub DoReceiveTrackBackPing {
 		$normal_id = &FreeToNormal($id);
 	}
 
+#	$debug .= "url[[$url]]title[[$title]]blog_name[[$blog_name]]id[[$id]]excerpt[[$excerpt]]";
+
 	if ($url eq '') {
+#		$debug .= "2->";
 		&SendTrackBackResponse("1", "No URL (url)");
 	} elsif ($id eq '') {
+#		$debug .= "3->";
 		&SendTrackBackResponse("1", "No Pagename (id)");
 	} elsif (! -f &GetPageFile($normal_id)) {
+#		$debug .= "4($normal_id)->";
 		&SendTrackBackResponse("1", "No wikipage found : $id");
 	} else {
+#		$debug .= "5->";
 		&OpenPage($normal_id);
 		&OpenDefaultText();
 		my $string = $Text{'text'};
 		if ($string =~ /\<trackbackreceived\($normal_id\)\>/) {
+#		$debug .= "6->";
 			my $timestamp = &CalcDay($Now) . " " . &CalcTime($Now);
 			my $newtrackbackreceived = "* " .
 				&Ts('Trackback from %s', "'''<nowiki>$blog_name</nowiki>'''") .
@@ -9329,9 +9342,12 @@ sub DoReceiveTrackBackPing {
 			&DoPostMain($string, $id, &T('New TrackBack Received'), $Section{'ts'}, 0, 0, "!!");
 			&SendTrackBackResponse(0, "");
 		} else {
+#		$debug .= "7->";
 			&SendTrackBackResponse(1, "Wikipage is not set to receive trackback : $id");
 		}
 	}
+#	$debug .= "\n";
+#	&AppendStringToFile("$DataDir/tblog.txt", $debug);
 }
 
 sub SendTrackBackResponse {
@@ -9357,6 +9373,11 @@ END
 	}
 }
 	
+sub EncodeUrl {
+	my ($string) = @_;
+	$string =~ s!([^a-zA-Z0-9_.-])!uc sprintf "%%%02x", ord($1)!eg;
+	return $string;
+}
 ### 통채로 추가한 함수들의 끝
 ###############
 
