@@ -601,4 +601,24 @@ Upload
 업로드
 cant opening %s
 %s 를 열 수 없습니다
+Delete
+삭제
+File Name
+화일명
+Size (byte)
+크기 (byte)
+Date
+날짜
+Total %s files
+전체 화일 갯수 : %s
+Delete Checked Files
+선택한 화일 삭제
+Delete Uploaded Files
+업로드한 화일 삭제
+Deleting is not allowed
+화일 삭제가 허용되지 않습니다
+%s is deleted successfully
+%s 화일이 삭제되었습니다
+%s can not be deleted
+%s 화일을 삭제할 수 없습니다
 END_OF_TRANSLATION

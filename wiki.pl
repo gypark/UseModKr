@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.40";
+$WikiVersion = "0.92K3-ext1.41";
 $WikiRelease = "2003-03-16";
 
 $HashKey = "salt"; # 2-character string
@@ -2157,6 +2157,8 @@ sub MacroSubst {
 	$txt =~ s/\&__LT__;jdic\(([^)]+)\)\&__GT__;/&MacroJDic($1)/gei;
 ### <MostPopular(시작, 갯수)>
 	$txt =~ s/(\&__LT__;mostpopular\(([-+]?\d+),([-+]?\d+)\)\&__GT__;)/&MacroMostPopular($1,$2, $3)/gei;
+### <UploadedFiles>
+	$txt =~ s/(\&__LT__;uploadedfiles\&__GT__;)/&MacroUploadedFiles($1)/gei;
 ###
 ###############
 	return $txt;
@@ -2197,6 +2199,93 @@ sub MacroIncludeSubst {
 ###############
 ### added by gypark
 ### 추가한 매크로의 동작부
+
+### UploadedFiles
+sub MacroUploadedFiles {
+	my ($itself) = (@_);
+	my (@files, %filesize, %filemtime, $size, $totalSize);
+	my $txt;
+	my $uploadsearch = "<img style='border:0' src='$IconDir/upload-search.gif'>";
+	my $canDelete = &UserIsAdmin();
+	
+	if (!(-e $UploadDir)) {
+		&CreateDir($UploadDir);
+	}
+
+	opendir (DIR, "$UploadDir") || die "haha $!";
+	@files = readdir(DIR);
+	shift @files;
+	shift @files;
+	close (DIR);
+
+	$totalSize = 0;
+	foreach (@files) {
+		$filesize{$_} = (-s "$UploadDir/$_");
+		$totalSize += $filesize{$_};
+		$filemtime{$_} = ($Now - (-M "$UploadDir/$_") * 86400);
+	}
+
+	@files = sort {
+		$filemtime{$b} <=> $filemtime{$a}
+				||
+				$a cmp $b
+	} @files;
+
+	$txt = $q->start_form("post","$ScriptName","");
+	$txt .= "<input type='hidden' name='action' value='deleteuploadedfiles'>";
+	$txt .= "<input type='hidden' name='pagename' value='$OpenPageName'>"; 
+
+	$txt .= "<TABLE class='uploadedfiles'>";
+	$txt .= "<TR class='uploadedfiles'>";
+	if ($canDelete) {
+		$txt .= "<TH class='uploadedfiles'><b>".T('Delete')."</b></TH>";
+	}
+	$txt .= "<TH class='uploadedfiles'><b>".T('File Name')."</b></TH>".
+		"<TH class='uploadedfiles'><b>".T('Size (byte)')."</b></TH>".
+		"<TH class='uploadedfiles'><b>".T('Date')."</b></TH>";
+	$txt .= "</TR>";
+
+
+	foreach (@files) {
+		$txt .= "<TR class='uploadedfiles'>";
+		if ($canDelete) {
+			$txt .= "<TD class='uploadedfiles' align='center'>";
+			$txt .= "<input type='checkbox' name='files' value='$_'></input> ";
+			$txt .= "</TD>";
+		}
+		$txt .= "<TD class='uploadedfiles'>";
+		$txt .= &ScriptLink("search=Upload:$_", $uploadsearch) . " ";
+
+		$txt .= "<a href='$UploadDir/$_'>$_</a>";
+		$txt .= "</TD>";
+
+		$size = $filesize{$_};
+		while ($size =~ m/(\d+)(\d{3})((,\d{3})*$)/) {
+			$size = "$1,$2$3";
+		}
+		$txt .= "<TD class='uploadedfiles' align='right'>$size</TD>";
+		$txt .= "<TD class='uploadedfiles'>".&TimeToText($filemtime{$_})."</TD>";
+		$txt .= "</TR>";
+	}
+	$txt .= "<TR class='uploadedfiles'>";
+	$txt .= "<TD class='uploadedfiles'>&nbsp;</TD>" if ($canDelete);
+	$txt .= "<TD class='uploadedfiles'>";
+	$txt .= "<b>". Ts('Total %s files', ($#files + 1))."</b>";
+	$txt .= "</TD>";
+	while ($totalSize =~ m/(\d+)(\d{3})((,\d{3})*$)/) {
+		$totalSize = "$1,$2$3";
+	}
+	$txt .= "<TD class='uploadedfiles' align='right'>";
+	$txt .= "<b>$totalSize</b>";
+	$txt .= "</TD>";
+	$txt .= "<TD class='uploadedfiles'>&nbsp;</TD>";
+
+	$txt .= "</TABLE>";
+	$txt .= $q->submit(T('Delete Checked Files')) if ($canDelete);
+	$txt .= $q->endform;
+	return $txt;
+
+}
 
 ### MostPopular
 sub MacroMostPopular {
@@ -2990,6 +3079,7 @@ sub InterPageLink {
 
 	$name = $id;
 	($site, $remotePage) = split(/:/, $id, 2);
+	
 	$url = &GetSiteUrl($site);
 	return ("", $id . $punct)  if ($url eq "");
 	$remotePage =~ s/&amp;/&/g;  # Unquote common URL HTML
@@ -4678,6 +4768,13 @@ sub DoOtherRequest {
 			&DoUpload();
 ###
 ###############
+###############
+### added by gypark
+### UploadedFiles 매크로
+		} elsif ($action eq "deleteuploadedfiles") {
+			&DoDeleteUploadedFiles();
+###
+###############
 		} else {
 			# Later improve error reporting
 			&ReportError(Ts('Invalid action parameter %s', $action));
@@ -4884,7 +4981,7 @@ function help(s)
 <!--
 function upload()
 {
-	var w = window.open("$ScriptName?action=upload", "upload", "width=640,height=200,resizable=1,statusbar=1,scrollbars=1");
+	var w = window.open("$ScriptName?action=upload", "upload", "width=640,height=250,resizable=1,statusbar=1,scrollbars=1");
 	w.focus();
 }
 //-->
@@ -7226,18 +7323,13 @@ sub DoUpload {
 		return;
 	}
 	if ($prev_error) {
-		print "<b>$uploadError[$prev_error]</b><br>\n";
-		&PrintUploadFileForm();
+		print "<b>$uploadError[$prev_error]</b><br><hr>\n";
 	} elsif ($upload) {
 		$file = &GetParam('upload_file');
 		$result = &UploadFile($file);
-		print "<b>$uploadError[$result]</b><br>\n";
-		if ($result != 0) {
-			&PrintUploadFileForm();
-		}
-	} else {
-		&PrintUploadFileForm();
+		print "<b>$uploadError[$result]</b><br><hr>\n";
 	}
+	&PrintUploadFileForm();
 	print $q->end_html;
 }
 
@@ -7286,7 +7378,6 @@ sub UploadFile {
 	}
 
 	&CreateDir($UploadDir);
-	chmod(0777, $UploadDir);
 
 	open (FILE, ">$target_full") || die Ts('cant opening %s', $target_full) . ": $!";
 	binmode FILE;
@@ -7313,6 +7404,33 @@ sub UploadFile {
 	return 0;
 }
 
+### DeleteUploadedFiles 매크로
+sub DoDeleteUploadedFiles {
+	my (%vars, @files);
+
+	print &GetHeader("", T('Delete Uploaded Files'), "");
+
+	if (!(&UserIsAdmin())) {
+		print T('Deleting is not allowed');
+		print "<br>\n";
+	} else {
+		%vars = $q->Vars;
+		@files = split(/\0/,$vars{'files'}, -1);
+		foreach (@files) {
+			if (unlink ("$UploadDir/$_")) {
+				print Ts('%s is deleted successfully', $_)."<br>";
+			} else {
+				print Ts('%s can not be deleted', $_). " : $!<br>";
+			}
+		}
+	}
+
+	if (&GetParam('pagename') ne "") {
+		print "<hr size='1'>".Ts('Return to %s' , &GetPageLink(&GetParam('pagename')));
+	}
+
+	print &GetCommonFooter();
+}
 ### 통채로 추가한 함수들의 끝
 ###############
 
