@@ -584,3 +584,12 @@ DIV.comments {
 	border:1px solid silver;
 	padding:5px;
 }
+
+/* memo */
+DIV.memo {
+	background-color:#F8F8F8;
+	color:#000;
+	border:1px solid silver;
+	padding:5px;
+}
+

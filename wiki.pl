@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.54a";
-$WikiRelease = "2003-12-11";
+$WikiVersion = "0.92K3-ext1.55";
+$WikiRelease = "2004-01-27";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -2497,6 +2497,8 @@ sub MacroSubst {
 	$txt =~ s/\&__LT__;(\/)?noinclude\&__GT__;//gei;
 ### <longcomments(숫자)>
 	$txt =~ s/(\&__LT__;longcomments\(([^,]+),([-+]?\d+)\)&__GT__;)/&MacroComments($1,$2,$3,1)/gei;
+### <memo(제목)></memo> from Jof
+	$txt =~ s/(&__LT__;memo\(([^\n]+?)\)&__GT__;((.)*?)&__LT__;\/memo&__GT__;)/&MacroMemo($1, $2, $3)/geis;
 ###
 ###############
 	return $txt;
@@ -2540,6 +2542,22 @@ sub MacroIncludeSubst {
 ### added by gypark
 ### 추가한 매크로의 동작부
 ### comments from Jof
+sub MacroMemo {
+	my ($itself, $id, $text) = @_;
+
+	$id = &RemoveLink($id);
+
+	return "<A href=\"#none\" onClick=\"if (document.all['$id'].style.display=='block') " .
+		"{document.all['$id'].style.display='none'} " .
+		"else " .
+		"{document.all['$id'].style.display='block'}\">" .
+		$id .
+		"</A>" .
+		"<DIV class=\"memo\" id=\"$id\" style=\"display:none\">" .
+		$text .
+		"</DIV>";
+}
+
 sub MacroComments {
 	my ($itself,$id,$up,$long) = @_;	
 	my $idvalue;
