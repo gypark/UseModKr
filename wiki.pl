@@ -2000,6 +2000,7 @@ key['f'] = "${shortCutUrl}$shortCutHome";
 key['i'] = "${shortCutUrl}action=index";
 key['r'] = "${shortCutUrl}action=rc";
 key['l'] = "${shortCutUrl}action=$shortCutLogin";
+key['m'] = "${shortCutUrl}action=bookmark&time=$Now";
 
 key['t'] = "#PAGE_TOP";
 key['b'] = "#PAGE_BOTTOM";
