@@ -245,6 +245,21 @@ sub DoWikiRequest {
 #   do "./translations/trans.pl";
 ###############
 
+###############
+### added by gypark
+### 처리 시간 측정
+$CheckTime = 1;
+if ($CheckTime) {
+	eval "use Time::HiRes qw( usleep ualarm gettimeofday tv_interval )";
+	if ($@) { 
+		$CheckTime = 0; 
+	} else {
+		$StartTime = [gettimeofday()];
+	}
+}
+###
+###############
+
 	&InitLinkPatterns();
 	if (!&DoCacheBrowse()) {
 		eval $BrowseCode;
@@ -1676,7 +1691,7 @@ sub GetMinimumFooter {
 ### 처리 시간 측정
 	$result .= "\n<div align='right'>";
 	if ($CheckTime) {
-		$result .= "<i>" . sprintf("%8.3f",tv_interval($StartTime)) . " sec </i>";
+		$result .= "<i>" . sprintf("%8.3f",&tv_interval($StartTime)) . " sec </i>";
 	}
 	$result .= "<a accesskey=\"x\" name=\"#PAGE_BOTTOM\" href=\"#PAGE_TOP\">" . T('Top') . "</a></div>\n" . $q->end_html;
 ### 
@@ -6983,20 +6998,6 @@ sub DoBookmark {
 ###############
 
 ### 통채로 추가한 함수들의 끝
-###############
-
-###############
-### added by gypark
-### 처리 시간 측정
-if ($CheckTime) {
-	eval "use Time::HiRes qw( usleep ualarm gettimeofday tv_interval )";
-	if ($@) { 
-		$CheckTime = 0; 
-	} else {
-		$StartTime = [gettimeofday()];
-	}
-}
-###
 ###############
 
 &DoWikiRequest()  if ($RunCGI && ($_ ne 'nocgi'));   # Do everything.
