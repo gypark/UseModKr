@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.20";
+$WikiVersion = "0.92K3-ext1.21";
 $WikiRelease = "2003-02-11";
 
 $HashKey = "salt"; # 2-character string
@@ -856,6 +856,13 @@ sub GetRcHtml {
 				$count .= $tChanges;
 			}
 			$count .= ") ";
+###############
+### added by gypark
+### 새 글 옆에는 New 마크 표시
+		} else {
+			$count = "<font color=red>(".&T('NEW').")</font>";
+###
+###############
 		}
 		$link = "";
 		if ($UseDiff && &GetParam("diffrclink", 1)) {
