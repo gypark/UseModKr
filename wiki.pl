@@ -8269,16 +8269,17 @@ sub GetTemplatePageText {
 	}
 
 	if ($newpage =~ /^(.*)\/(.*)/) {
-		$templatePage = $1 . "/";
+		$templatePage = $1 . "/" . $TemplatePage;
+	} else {
+		$templatePage = $TemplatePage;
 	}
-	$templatePage .= $TemplatePage;
 
 	$fname = &GetPageFile($templatePage);
 	if (!(-f $fname)) {
 		$fname = &GetPageFile($TemplatePage);
-	}
-	if (!(-f $fname)) {
-		return "";
+		if (!(-f $fname)) {
+			return "";
+		}
 	}
 
 	($status, $data) = &ReadFile($fname);
