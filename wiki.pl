@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.28b";
+$WikiVersion = "0.92K3-ext1.28c";
 $WikiRelease = "2003-02-24";
 
 $HashKey = "salt"; # 2-character string
@@ -6801,6 +6801,13 @@ sub DeletePage {
 	&UnlinkHtmlCache($page);
 ###
 #########################################################3
+###############
+### added by gypark
+### 링크 목록을 별도로 관리
+	$fname = &GetLinkFile($page);
+	unlink($fname) if (-f $fname);
+###
+###############
 	unlink($IndexFile)  if ($UseIndex);
 ###############
 ### commented by gypark
