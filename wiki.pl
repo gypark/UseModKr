@@ -3333,7 +3333,6 @@ sub ISBNLink {
 			"OnError='src=\"$noCoverIcon\"' ".
 			"alt='".T('Go to the on-line bookstore')." ISBN:$rawprint'>".
 			"</a>";
-	#	return "<a href=\"http://www.wowbook.com/generic/book/info/book_detail.asp?isbn=ISBN$hyphened\"><img $ImageTag src=\"http://image.wowbook.com/book/large_image/$hyphened.gif\" border=1></a>";
 	}
 ### 일본 서적은 별도로 링크
 	if ($num =~ /^4/) {
