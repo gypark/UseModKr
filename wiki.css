@@ -227,6 +227,16 @@ img {
 	border: solid 0px #fffff0;
 }
 
+/* ISBN 링크시 책표지 */
+IMG.isbn {
+	border: 1px solid silver;
+	/* 책 표지가 없을 경우 나타날 이미지 */
+	background-image: url(icons/isbn-nocover.jpg);
+	background-repeat: no-repeat;
+	width: 100px;
+	color: gray;
+}
+
 /* 페이지 소스 보기 텍스트영역 */
 TEXTAREA.view
 {

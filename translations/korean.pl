@@ -575,4 +575,6 @@ Viewing revision %s of
 
 This is the difference between the saved text and your text:
 다음은 저장된 내용과 귀하가 작성한 내용 중 서로 다른 부분입니다:
+Go to the on-line bookstore
+온라인 서점으로 이동
 END_OF_TRANSLATION
