@@ -9230,6 +9230,8 @@ sub DoSendTrackBackPing {
 		my ($code, $message) = ($msg_str =~ m!<error>(\d+).*<message>(.*?)</message>!s);
 		
 		if ($msg->is_success) {
+			sleep(1);
+			$Now = time;
 			&OpenPage($id);
 			&OpenDefaultText();
 			my $string = $Text{'text'};
