@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.51";
-$WikiRelease = "2003-10-03";
+$WikiVersion = "0.92K3-ext1.52";
+$WikiRelease = "2003-10-04";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -620,9 +620,10 @@ sub BrowsePage {
 ### 최근변경내역에 북마크 기능 도입
 		if ($showDiff == 5) { 
 			$diffRevision = $Page{'revision'} - 1;
+			my $userBookmark = &GetParam('bookmark',-1);
 			while (($diffRevision > 1) && 
 				(defined($RevisionTs{$diffRevision})) && 
-				($RevisionTs{$diffRevision} > &GetParam('bookmark',-1))) {
+				($RevisionTs{$diffRevision} > $userBookmark)) {
 				$diffRevision--;
 			}
 			$showDiff = &GetParam("defaultdiff", 1);
@@ -3568,6 +3569,16 @@ sub InterPageLink {
 	$name = $id;
 	($site, $remotePage) = split(/:/, $id, 2);
 	$url = &GetSiteUrl($site);
+###############
+### added by gypark
+### interwiki 아이콘 from jof4002
+	my ($image, $url_main);
+	if ($url =~ /\|/) {
+		($url, $image) = split(/\|/, $url, 2);		
+	}
+	$url_main = $url;
+###
+###############
 	return ("", $id . $punct)  if ($url eq "");
 	$remotePage =~ s/&amp;/&/g;  # Unquote common URL HTML
 	$url .= $remotePage;
@@ -3584,13 +3595,21 @@ sub InterPageLink {
 
 ###############
 ### replaced by gypark
-### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
-### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
+### interwiki 아이콘 from jof4002
 #	return ("<a href=\"$url\">$name</a>", $punct);
-	return ("<A class='inter' href=\"$url\">$name</A><a href=\"$url\" target=\"_blank\"><img src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>", $punct);
+	my $link_html = '';
+	if (!($image)) {
+		$image = "$IconDir/inter.gif";
+	}
+	$link_html = "<A class='inter' href='$url_main'>" .
+				"<IMG class='inter' src='$image' alt='$site:' title='$site:'>" .
+				"</A>";
+	$link_html .= "<A class='inter' href='$url' title='$id'>$remotePage</A>";
+### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
+	$link_html .= "<a href=\"$url\" target=\"_blank\"><img src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>";
+	return ($link_html, $punct);
 ###
 ###############
-
 
 }
 
