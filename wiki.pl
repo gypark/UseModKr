@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.12-2";
-$WikiRelease = "2002-12-17";
+$WikiVersion = "0.92K3-ext1.12-3";
+$WikiRelease = "2002-12-18";
 $HashKey = "salt"; # 2-character string
 ###
 ###############
@@ -2497,8 +2497,15 @@ sub WikiLinesToHtml {
 		#  $pageHtml .=  "</" . pop(@htmlStack) . ">\n";		-- deleted luke
 			$tag = pop(@htmlStack);								# added luke
 			if ($tag eq "TABLE") {
-				$pageHtml .=  "</TR>\n";
-				$tag = "table"
+###############
+### replaced by gypark
+### 줄 중간 || 문제 해결
+### from Jof4002's patch
+#				$pageHtml .=  "</TR>\n";
+#				$tag = "table"
+				$TableMode = 0;
+###
+###############
 			};
 			$pageHtml .=  "</" . $tag . ">\n";					# added end luke
 		}
