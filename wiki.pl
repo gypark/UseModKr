@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.39";
-$WikiRelease = "2003-03-15";
+$WikiVersion = "0.92K3-ext1.40";
+$WikiRelease = "2003-03-16";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -70,7 +70,7 @@ use vars qw(
 	$UserGotoBar $UserGotoBar2 $UserGotoBar3 $UserGotoBar4 
 	$ConfigFile $SOURCEHIGHLIGHT @SRCHIGHLANG $LinkFirstChar
 	$EditGuideInExtern $SizeTopFrame $SizeBottomFrame
-	$LogoPage $CheckTime $LinkDir $IconDir $CountDir
+	$LogoPage $CheckTime $LinkDir $IconDir $CountDir $UploadDir
 	);
 ###
 ###############
@@ -341,10 +341,25 @@ sub InitRequest {
 	my @ScriptPath = split('/', "$ENV{SCRIPT_NAME}");
 
 	$CGI::POST_MAX = $MaxPost;
-	$CGI::DISABLE_UPLOADS = 1;  # no uploads
+###############
+### replaced by gypark
+### file upload
+#	$CGI::DISABLE_UPLOADS = 1;  # no uploads
+	$CGI::DISABLE_UPLOADS = 0;  
+###
+###############
 	$q = new CGI;
 	$q->autoEscape(undef);
 
+###############
+### added by gypark
+### file upload
+	if ($q->cgi_error() =~ m/^413/) {
+		print $q->redirect(-url=>"http:$ENV{SCRIPT_NAME}?action=upload&error=3");
+		exit 1;
+	}
+###
+###############
 	$Now = time;                     # Reset in case script is persistent
 	$ScriptName = pop(@ScriptPath);  # Name used in links
 	$IndexInit = 0;                  # Must be reset for each request
@@ -3048,7 +3063,12 @@ sub GetSiteUrl {
 		($status, $data) = &ReadFile($InterFile);
 		return ""  if (!$status);
 		%InterSite = split(/\s+/, $data);  # Later consider defensive code
-
+###############
+### added by gypark
+### file upload
+		$InterSite{'Upload'} = "http:$UploadDir\/";
+###
+###############
 	}
 	$url = $InterSite{$site}  if (defined($InterSite{$site}));
 	return $url;
@@ -4651,6 +4671,13 @@ sub DoOtherRequest {
 			&DoBookmark();
 ###
 ###############
+###############
+### added by gypark
+### file upload
+		} elsif ($action eq "upload") {
+			&DoUpload();
+###
+###############
 		} else {
 			# Later improve error reporting
 			&ReportError(Ts('Invalid action parameter %s', $action));
@@ -4851,6 +4878,23 @@ function help(s)
 
 ###############
 ### added by gypark
+### file upload
+	print qq|
+<script language="javascript" type="text/javascript">
+<!--
+function upload()
+{
+	var w = window.open("$ScriptName?action=upload", "upload", "width=640,height=200,resizable=1,statusbar=1,scrollbars=1");
+	w.focus();
+}
+//-->
+</script>
+|;
+###
+###############
+
+###############
+### added by gypark
 ### view action 추가
 	if ($canEdit) {
 ###
@@ -4942,6 +4986,14 @@ function help(s)
 ###
 ###############
 
+###############
+### added by gypark
+### file upload
+		print " ".q(<input type="button" name="prev1" value="). 
+			T('Upload File') . 
+			q(" onclick="javascript:upload();">);
+###
+###############
 		if ($isConflict) {
 			print "\n<br><hr noshade size=1><p><strong>", T('This is the text you submitted:'),
 					"</strong><p>",
@@ -7150,8 +7202,116 @@ sub GetPageCount {
 	return $pagecount;
 }
 
-###
-###############
+### file upload
+sub DoUpload {
+	my $file;
+	my $upload = &GetParam('upload');
+	my $prev_error = &GetParam('error', "");
+	my @uploadError = (
+			T('Upload completed successfully'),
+			T('Invalid filename'),
+			T('You can not upload html or any executable scripts'),
+			T('File is too large'),
+			T('File has no content'),
+		);
+			
+	my $result;
+
+	print &GetHttpHeader();
+	print &GetHtmlHeader("$SiteName : ". T('Upload File'), "");
+	print $q->h2(T('Upload File')) . "\n";
+	if (!(&UserCanEdit("",1))) {
+		print T('Uploading is not allowed');
+		print $q->end_html;
+		return;
+	}
+	if ($prev_error) {
+		print "<b>$uploadError[$prev_error]</b><br>\n";
+		&PrintUploadFileForm();
+	} elsif ($upload) {
+		$file = &GetParam('upload_file');
+		$result = &UploadFile($file);
+		print "<b>$uploadError[$result]</b><br>\n";
+		if ($result != 0) {
+			&PrintUploadFileForm();
+		}
+	} else {
+		&PrintUploadFileForm();
+	}
+	print $q->end_html;
+}
+
+sub PrintUploadFileForm {
+	print T('Select the file you want to upload') . "\n";
+	print "<br>".Ts('File must be smaller than %s MB', ($MaxPost / 1024 / 1024)) . "\n";
+	print $q->start_form('post',"$ScriptName", 'multipart/form-data') . "\n";
+	print "<input type='hidden' name='action' value='upload'>";
+	print "<input type='hidden' name='upload' value='1'>" . "\n";
+	print "<center>" . "\n";
+	print $q->filefield("upload_file","",60,80) . "\n";
+	print "&nbsp;&nbsp;" . "\n";
+	print $q->submit(T('Upload')) . "\n";
+	print "</center>" . "\n";
+	print $q->endform();
+}
+
+sub UploadFile {
+	my ($file) = @_;
+	my ($filename);
+	my ($target);
+
+	if ($file =~ m/\//) {
+		$file =~ m/(.*)\/([^\/]*)/;
+		$filename = $2;
+	} else {
+		$file =~ m/(.*)\\([^\\]*)/;
+		$filename = $2;
+	}
+
+	if (($filename eq "") || ($filename =~ /\0/)) {
+		return 1;
+	}
+
+	if ($filename =~ m/(\.pyc|\.py|\.pl|\.html|\.htm|\.php|\.cgi)$/i) {
+		return 2;
+	}
+
+	$filename =~ s/ /_/g;
+
+	my ($prefix, $target, $target_full) = (1, $filename, "$UploadDir/$filename");
+	while (-f "$UploadDir/$target") {
+		$prefix++;
+		$target = "$prefix"."_$filename";
+		$target_full = "$UploadDir/$target";
+	}
+
+	&CreateDir($UploadDir);
+	chmod(0777, $UploadDir);
+
+	open (FILE, ">$target_full") || die Ts('cant opening %s', $target_full) . ": $!";
+	binmode FILE;
+	while (<$file>) {
+		print FILE $_;
+	}
+	close(FILE);
+	chmod(0644, "$target_full");
+
+	if ((-s "$target_full") > $MaxPost) {
+		unlink "$target_full";
+		return 3;
+	}
+
+	if ((-s "$target_full") == 0) {
+		unlink "$target_full";
+		return 4;
+	}
+
+	print T('Following is the Interlink of your file') . "<br>\n";
+	print "<div style='text-align:center; font-size:larger; font-weight:bold;'>\n";
+	print "Upload:$target\n";
+	print "</div>\n";
+	return 0;
+}
 
 ### 통채로 추가한 함수들의 끝
 ###############

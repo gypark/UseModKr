@@ -577,4 +577,28 @@ This is the difference between the saved text and your text:
 다음은 저장된 내용과 귀하가 작성한 내용 중 서로 다른 부분입니다:
 Go to the on-line bookstore
 온라인 서점으로 이동
+Upload File
+화일 업로드
+Upload completed successfully
+업로드가 성공적으로 끝났습니다
+Invalid filename
+화일 이름이 올바르지 않습니다
+You can not upload html or any executable scripts
+html 또는 실행 스크립트는 올릴 수 없습니다
+File is too large
+화일이 너무 큽니다
+File has no content
+화일의 내용이 없습니다
+Following is the Interlink of your file
+다음 주소를 복사해서 사용하세요
+Uploading is not allowed
+업로드가 허용되지 않습니다
+Select the file you want to upload
+업로드할 화일을 선택하세요
+File must be smaller than %s MB
+화일 크기는 %s MB 이하여야 합니다.
+Upload
+업로드
+cant opening %s
+%s 를 열 수 없습니다
 END_OF_TRANSLATION
