@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.41b";
-$WikiRelease = "2003-03-17";
+$WikiVersion = "0.92K3-ext1.42pre1";
+$WikiRelease = "2003-03-23";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -2212,7 +2212,7 @@ sub MacroUploadedFiles {
 		&CreateDir($UploadDir);
 	}
 
-	opendir (DIR, "$UploadDir") || die "haha $!";
+	opendir (DIR, "$UploadDir") || die Ts('cant opening %s', $UploadDir) . ": $!";
 	@files = readdir(DIR);
 	shift @files;
 	shift @files;
@@ -4602,6 +4602,9 @@ sub GetParam {
 
 	$result = $q->param($name);
 	if (!defined($result)) {
+#		if (defined($q->url_param($name))) {
+#			$result = $q->url_param($name);
+#		} elsif (defined($UserData{$name})) {
 		if (defined($UserData{$name})) {
 			$result = $UserData{$name};
 		} else {
@@ -4757,13 +4760,12 @@ sub DoOtherRequest {
 ### 최근변경내역에 북마크 기능 도입
 		} elsif ($action eq "bookmark") {
 			&DoBookmark();
-###
-###############
-###############
-### added by gypark
 ### file upload
 		} elsif ($action eq "upload") {
 			&DoUpload();
+### oekaki
+		} elsif ($action eq "oekaki") {
+			&DoOekaki();
 ###
 ###############
 ###############
@@ -4982,6 +4984,11 @@ function upload()
 	var w = window.open("$ScriptName?action=upload", "upload", "width=640,height=250,resizable=1,statusbar=1,scrollbars=1");
 	w.focus();
 }
+function oekaki()
+{
+	var w = window.open("$ScriptName?action=oekaki&mode=paint", "oekaki", "width=900,height=750,resizable=1,statusbar=1,scrollbars=1");
+	w.focus();
+}
 //-->
 </script>
 |;
@@ -5087,6 +5094,10 @@ function upload()
 		print " ".q(<input type="button" name="prev1" value="). 
 			T('Upload File') . 
 			q(" onclick="javascript:upload();">);
+### oekaki
+		print " ".q(<input type="button" name="prev1" value="). 
+			T('Oekaki') . 
+			q(" onclick="javascript:oekaki();">);
 ###
 ###############
 		if ($isConflict) {
@@ -7311,6 +7322,7 @@ sub DoUpload {
 			T('You can not upload html or any executable scripts'),
 			T('File is too large'),
 			T('File has no content'),
+			T('Failed to get lock'),
 		);
 			
 	my $result;
@@ -7372,17 +7384,25 @@ sub UploadFile {
 	}
 
 	$filename =~ s/ /_/g;
+	$filename =~ s/#/_/g;
 
-	my ($prefix, $target, $target_full) = (1, $filename, "$UploadDir/$filename");
-	while (-f "$target_full") {
-		$prefix++;
-		$target = "$prefix"."_$filename";
-		$target_full = "$UploadDir/$target";
+	&RequestLockDir('upload', 5, 2, 0) || return 5;
+	my $prefix = &GetLastPrefix($UploadDir, $filename);
+	if ($prefix == 0) {
+		$prefix = "";
+	} else {
+		$prefix = ($prefix+1)."_";
 	}
+	my $target = $prefix.$filename;
+	my $target_full = "$UploadDir/$target";
 
 	&CreateDir($UploadDir);
 
-	open (FILE, ">$target_full") || die Ts('cant opening %s', $target_full) . ": $!";
+	if (!open (FILE, ">$target_full")) {
+		&ReleaseLockDir('upload');
+		die Ts('cant opening %s', $target_full) . ": $!";
+	}
+	&ReleaseLockDir('upload');
 	binmode FILE;
 	while (<$file>) {
 		print FILE $_;
@@ -7434,6 +7454,207 @@ sub DoDeleteUploadedFiles {
 
 	print &GetCommonFooter();
 }
+
+### oekaki
+sub DoOekaki {
+	my $mode = &GetParam('mode','paint');
+
+	print &GetHttpHeader();
+	print &GetHtmlHeader("$SiteName : ". T('Oekaki'), "");
+	print $q->h2(T('Oekaki')) . "\n";
+	if (!(&UserCanEdit("",1))) {
+		print T('Oekaki is not allowed');
+		print $q->end_html;
+		return;
+	}
+	if ($mode eq "exit") {
+		&OekakiExit();
+	} elsif ($mode eq "save") {
+		&OekakiSave();
+	} elsif ($mode eq "paint") {
+		&OekakiPaint();
+	} else {
+		print Ts('Invalid action parameter %s', ": $mode");
+	}
+
+	print $q->end_html;
+}
+
+sub OekakiExit {
+	my $filename = "oekaki.png";
+	my $prefix = &GetLastPrefix($UploadDir, $filename);
+	my (@allfiles, @files, %filemtime);
+
+	if ($prefix == 0) {
+		$prefix = "";
+	} else {
+		$prefix = $prefix."_";
+	}
+
+	opendir (DIR, "$UploadDir") || die Ts('cant opening %s', $UploadDir) . ": $!";
+	@allfiles = readdir(DIR);
+	shift @allfiles;
+	shift @allfiles;
+	close(DIR);
+
+	foreach (@allfiles) {
+		if ($_ =~ m/$filename$/) {
+			push (@files, $_);
+			$filemtime{$_} = ($Now - (-M "$UploadDir/$_") * 86400);
+		}
+	}
+
+	@files = sort {
+		$filemtime{$b} <=> $filemtime{$a}
+				||
+				$a cmp $b
+	} @files;
+
+	print T('If saving oekaki was done successfully')."<br>\n";
+	print T('Following is the Interlink of your file') . "<br>\n";
+	print "<div style='text-align:center; font-size:larger; font-weight:bold;'>\n";
+	print "Upload:$files[0]<br>\n";
+	print "<img style='border: solid 1 gray;' src='$UploadDir/$files[0]'>\n";
+	print "</div>\n";
+
+	print "<hr size='1'>";
+	print T('If you want to paint a new picture')."<br>\n";
+
+	print qq|
+<div align="center">
+<form action="$ScriptName" method="POST">
+<input type="hidden" name="action" value="oekaki">
+width [640-40]<input type="text" name="width" size="4" maxlength="3" value="300">
+height [480-40]<input type="text" name="height" size="4" maxlength="3" value="300">
+<input type="submit" value="OK">
+</form>
+</div>
+|;
+
+	print "<hr size='1'>";
+	print T('If the picture above is not what you had painted, find your picture from the follwing list')."<br>\n";
+	print "<UL>\n";
+	foreach (@files) {
+		print "<LI>";
+		print "<a href='$UploadDir/$_' target='OekakiPreview'>Upload:$_</a>";
+		print " (".&TimeToText($filemtime{$_}).")</LI>\n";
+	}
+	print "</UL>\n";
+
+}
+
+sub OekakiSave {
+	local $/ = undef;
+	my $queryFile = "$TempDir/query.$$";
+	open (FILE, $queryFile);
+	my $buffer = <FILE>;
+	close (FILE);
+
+	my $filename = "oekaki.png";
+
+	my $prefix = &GetLastPrefix($UploadDir, $filename);
+	if ($prefix == 0) {
+		$prefix = "";
+	} else {
+		$prefix = ($prefix+1)."_";
+	}
+	my $target_full = $UploadDir."/".$prefix.$filename;
+
+	&CreateDir($UploadDir);
+
+	my $p = index($buffer, "\r");
+	&WriteStringToFile($target_full, substr($buffer, $p+2));
+	chmod(0644, "$target_full");
+}
+
+sub OekakiPaint {
+	my ($imageWidth, $imageHeight) = (
+		&GetParam('width','300'), 
+		&GetParam('height','300')
+	);
+
+	$imageWidth = 40 if ($imageWidth < 40);
+	$imageWidth = 640 if ($imageWidth > 640);
+	$imageHeight = 40 if ($imageHeight < 40);
+	$imageHeight = 480 if ($imageHeight > 480);
+
+	my ($appletWidth, $appletHeight) = (
+		(($imageWidth < 300)?400:($imageWidth+100)),
+		(($imageHeight < 300)?420:($imageHeight+120))
+	);
+
+	print qq|
+<script Language="JavaScript">
+<!--
+function getColors(){
+colors=document.paintbbs.getColors();
+}
+//-->
+</script>
+
+<div align="center">
+<form action="$ScriptName" method="POST">
+<input type="hidden" name="action" value="oekaki">
+width [640-40]<input type="text" name="width" size="4" maxlength="3" value="$imageWidth">
+height [480-40]<input type="text" name="height" size="4" maxlength="3" value="$imageHeight">
+<input type="submit" value="OK">
+</form>
+</div>
+
+<p align="center">
+<applet codebase="./" code="pbbs.PaintBBS.class" archive="./PaintBBS.jar" name="paintbbs" width="$appletWidth" height="$appletHeight">
+<param name="jp" value="false">
+<param name="image_width" value="$imageWidth">
+<param name="image_height" value="$imageHeight">
+
+<param name="image_bkcolor" value="#ffffff">
+
+<param name="undo" value="60">
+<param name="undo_in_mg" value="12">
+
+<param name="color_text" value="#505078">
+<param name="color_bk" value="#9999bb">
+<param name="color_bk2" value="#8888aa">
+
+<param name="color_icon" value="#ccccff">
+<param name="color_iconselect" value="#202030">
+
+<param name="url_save" value="mod_oekaki.pl">
+<param name="url_exit" value="$ScriptName?action=oekaki&mode=exit">
+
+<param name="poo" value="true">
+<param name="target" value="_self">
+</applet></p>
+
+|;
+}
+# <param name="url_save" value="$ScriptName?action=oekaki&mode=save&garbage=">
+
+### 화일명이 겹칠 경우 가장 최근 화일의 prefix 를 얻는 함수
+sub GetLastPrefix {
+	my ($dir, $file) = @_;
+
+	if (!(-f "$dir/$file")) {
+		return 0;
+	}
+	
+	if (!(-f "$dir/2_$file")) {
+		return 1;
+	}
+
+	my $prefix = 2;
+	while (-f "$dir/$prefix"."_$file") {
+		$prefix += 10;
+	}
+	$prefix -= 10;
+	while (-f "$dir/$prefix"."_$file") {
+		$prefix++;
+	}
+
+	return ($prefix - 1);
+}
+
+
 ### 통채로 추가한 함수들의 끝
 ###############
 

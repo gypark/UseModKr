@@ -589,6 +589,8 @@ File is too large
 화일이 너무 큽니다
 File has no content
 화일의 내용이 없습니다
+Failed to get lock
+업로드를 위한 lock 을 얻지 못했습니다
 Following is the Interlink of your file
 다음 주소를 복사해서 사용하세요
 Uploading is not allowed
@@ -621,4 +623,12 @@ Deleting is not allowed
 %s 화일이 삭제되었습니다
 %s can not be deleted
 %s 화일을 삭제할 수 없습니다
+Oekaki
+오에카키
+If saving oekaki was done successfully
+그림이 제대로 저장되었다면
+If you want to paint a new picture
+또다른 그림을 그리고 싶다면
+If the picture above is not what you had painted, find your picture from the follwing list
+위에 있는 그림이 귀하가 그린 것이 아니라면, 아래의 목록에서 그림을 찾아 보세요
 END_OF_TRANSLATION
