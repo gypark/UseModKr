@@ -682,7 +682,7 @@ Hiding/Unhiding page failed
 Name
 이름
 Comment
-답글
+내용
 Submit
 달기
 Comment is not allowed
