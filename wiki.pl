@@ -1790,7 +1790,7 @@ sub GetHeader {
 	if ($FreeLinks) {
 		$title =~ s/_/ /g;   # Display as spaces
 	}
-	$result .= &GetHtmlHeader("$title :$SiteName", $title);
+	$result .= &GetHtmlHeader("$title : $SiteName", $title);
 ###############
 ### pda clip by gypark
 	if ($IsPDA) {
