@@ -2229,13 +2229,13 @@ sub MacroIncludeSubst {
 
 ### 세 가지 사전 매크로
 sub MacroEDic {
-	return "<a class='dic' href='http://dic.naver.com/endic?query=@_' target='dictionary'>@_</a>";
+	return "<A class='dic' href='http://dic.naver.com/endic?query=@_' target='dictionary'>@_</A>";
 }
 sub MacroKDic {
-	return "<a class='dic' href='http://krdic.naver.com/krdic?query=@_' target='dictionary'>@_</a>";
+	return "<A class='dic' href='http://krdic.naver.com/krdic?query=@_' target='dictionary'>@_</A>";
 }
 sub MacroJDic {
-	return "<a class='dic' href='http://jpdic.naver.com/jpdic?query=@_' target='dictionary'>@_</a>";
+	return "<A class='dic' href='http://jpdic.naver.com/jpdic?query=@_' target='dictionary'>@_</A>";
 }
 
 ### <IncludeDay>

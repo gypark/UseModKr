@@ -184,7 +184,7 @@ A.outer:hover
 }
 
 /* InterWiki */
-A.inter:link, A.inter:active, A.inter:visited A.inter:hover {
+A.inter:link, A.inter:active, A.inter:visited, A.inter:hover {
 	background: transparent;
 	color: blue;
 	text-decoration: none;
@@ -195,7 +195,7 @@ A.inter:hover
 }
 
 /* 사전 링크 */
-A.dic:link, A.dic:active, A.dic:visited A.dic:hover {
+A.dic:link, A.dic:active, A.dic:visited, A.dic:hover {
 	background: transparent;
 	color: blue;
 	text-decoration: none;
