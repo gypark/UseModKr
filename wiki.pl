@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.66";
+$WikiVersion = "0.92K3-ext1.66-beta2";
 $WikiRelease = "2005-01-09";
 
 $HashKey = "salt"; # 2-character string
@@ -2788,12 +2788,12 @@ sub MacroMemo {
 }
 
 sub MacroComments {
-# TEST
-#	my ($itself,$id,$up,$long) = @_;	
 	my ($itself,$id,$up,$long,$threadindent) = @_;	
 	my $idvalue;
 	my $temp;
 	my $txt;
+	my $abs_up = abs($up);
+	my ($threshold1, $threshold2) = (100000000, 1000000000);
 
 	$temp = $id;
 	$temp =~ s/,$//;
@@ -2804,7 +2804,6 @@ sub MacroComments {
 	}
 	$id = "$temp";
 
-#	if (($UserID ne "113") && ($UserID ne "112")) {
 	if (&LoginUser()) {
 		$idvalue = "[[$UserID]]";
 	}
@@ -2817,7 +2816,7 @@ sub MacroComments {
 		$hidden_long = &GetHiddenValue("long","1") . "<br>";
 	}
 
-	if (((!&UserCanEdit($id,1)) && (abs($up) < 100)) || (&UserIsBanned())) {		# 에디트 불가
+	if (((!&UserCanEdit($id,1)) && (($abs_up < 100) || ($abs_up > $threshold2))) || (&UserIsBanned())) {		# 에디트 불가
 		$readonly_true = "true";
 		$readonly_style = "background-color: #f0f0f0;";
 		$readonly_msg = T('Comment is not allowed');
@@ -2832,7 +2831,7 @@ sub MacroComments {
 		if ($long) {		# longcomments
 			$comment_field = $q->textarea(-name=>"comment",
 									-class=>"comments",
-									-rows=>"10",
+									-rows=>"7",
 									-cols=>"80",
 									-readonly=>"$readonly_true",
 									-style=>"$readonly_style",
@@ -2854,7 +2853,7 @@ sub MacroComments {
 		if ($long) {		# longcomments
 			$comment_field = $q->textarea(-name=>"comment",
 									-class=>"comments",
-									-rows=>"10",
+									-rows=>"7",
 									-cols=>"80"
 									-default=>"");
 		} else {			# comments
@@ -2880,9 +2879,11 @@ sub MacroComments {
 		$submit_button .
 		$q->endform;
 
-	if ($threadindent ne '') {
+	if ($threadindent >= 1) {
 		my $memotitle = ($threadindent == 0)?T('Write New Thread'):T('Write Comment');
 		$txt = &MacroMemo("", $memotitle, $txt, "threadmemo");
+	} elsif ($threadindent == 0) {
+		$txt = T('Write New Thread') . $txt;
 	}
 
 	return $txt;
@@ -8254,6 +8255,8 @@ sub DoComments {
 	my $string;
 	my $long = &GetParam("long", "");
 	my $threadindent = &GetParam("threadindent", "");
+	my $abs_up = abs($up);
+	my ($threshold1, $threshold2) = (100000000, 1000000000);
 	
 	if ($newcomments =~ /^\s*$/) {
 		&ReBrowsePage($pageid, "", 0);
@@ -8268,13 +8271,15 @@ sub DoComments {
 	&OpenDefaultText();
 	$string = $Text{'text'};
 
-	if ($threadindent ne '') {
+	if ($threadindent ne '') {		# thread
 		$newcomments =~ s/^\s*//g;
 		$newcomments =~ s/\s*$//g;
 		$newcomments =~ s/(\n)\s*(\r?\n)/$1$2/g;
 		$newcomments =~ s/(\r?\n)/ \\\\$1/g;
 
 		my ($comment_indent, $comment_tail) = ("", "");
+		my $newup;
+
 		if ($threadindent >= 1) {
 			for (1 .. $threadindent) {
 				$comment_indent .= ":";
@@ -8282,15 +8287,35 @@ sub DoComments {
 			$comment_indent .= " ";
 		}
 
-		$comment_tail = "<thread($id,$Now," . ($threadindent+1) . ")>";
-
-		if (($up > 0) && ($up < 1000000000)) {
-			$string =~ s/(\<thread\($id,$up(,\d+)?\)\>)/$comment_indent$newcomments <mysign($name,$timestamp)>\n$comment_tail\n\n$1/;
+		if (($abs_up >= 100) && ($abs_up <= $threshold2)) {	# 커멘트 권한
+			$newup = $Now - $threshold2;
 		} else {
-			$string =~ s/(\<thread\($id,$up(,\d+)?\)\>)/$1\n\n$comment_indent$newcomments <mysign($name,$timestamp)>\n$comment_tail/;
+			$newup = $Now;
 		}
-	} elsif ($long) {
-#	if ($long) {
+
+# 답글이 아래로 가는 방식
+		$comment_tail = "<thread($id,$newup," . ($threadindent+1) . ")>\n" .
+			"<threadhere($id,$newup," . ($threadindent+1) . ")>";
+
+		if ($abs_up < $threshold1) {		# 첫 글
+			if ($up > 0) {
+				$string =~ s/(\<thread\($id,$up(,\d+)?\)\>)/$comment_indent$newcomments <mysign($name,$timestamp)>\n$comment_tail\n\n$1/;
+			} else {
+				$string =~ s/(\<thread\($id,$up(,\d+)?\)\>)/$1\n\n$comment_indent$newcomments <mysign($name,$timestamp)>\n$comment_tail/;
+			}
+		} else {							# 리플
+			$string =~ s/(\<threadhere\($id,$up,$threadindent\)\>)/\n$comment_indent$newcomments <mysign($name,$timestamp)>\n$comment_tail\n$1/;
+		}
+
+# 답글이 위로 가는 방식
+# 		$comment_tail = "<thread($id,$newup," . ($threadindent+1) . ")>";
+# 
+# 		if (($up > 0) && ($up < $threshold1)) {
+# 			$string =~ s/(\<thread\($id,$up(,\d+)?\)\>)/$comment_indent$newcomments <mysign($name,$timestamp)>\n$comment_tail\n\n$1/;
+# 		} else {
+# 			$string =~ s/(\<thread\($id,$up(,\d+)?\)\>)/$1\n\n$comment_indent$newcomments <mysign($name,$timestamp)>\n$comment_tail/;
+# 		}
+	} elsif ($long) {				# longcomments
 		$newcomments =~ s/^\s*//g;
 		$newcomments =~ s/\s*$//g;
 		$newcomments =~ s/(\n)\s*(\r?\n)/$1$2/g;
@@ -8301,13 +8326,17 @@ sub DoComments {
 		} else {
 			$string =~ s/(\<longcomments\($id,$up\)\>)/$1\n$newcomments <mysign($name,$timestamp)>\n/;
 		}
-	} else {
+	} else {						# comments
 		$newcomments =~ s/(----+)/<nowiki>$1<\/nowiki>/g;
 		if ($up > 0) {
 			$string =~ s/\<comments\($id,$up\)\>/* ''' $name ''' : $newcomments - <small>$timestamp<\/small>\n\<comments\($id,$up\)\>/;
 		} else {
 			$string =~ s/\<comments\($id,$up\)\>/\<comments\($id,$up\)\>\n* ''' $name ''' : $newcomments - <small>$timestamp<\/small>/;
 		}
+	}
+
+	if (((!&UserCanEdit($id,1)) && (($abs_up < 100) || ($abs_up > $threshold2))) || (&UserIsBanned())) {		# 에디트 불가
+		$pageid = "";
 	}
 
 	DoPostMain($string, $id, "*", $Section{'ts'}, 0, 0, $pageid);

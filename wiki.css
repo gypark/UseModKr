@@ -700,3 +700,14 @@ DIV.threadmemo {
 	border:1px solid silver;
 	padding:5px;
 }
+
+A.threadmemo:link, A.threadmemo:active, A.threadmemo:visited, A.threadmemo:hover {
+	background: transparent;
+	color: gray;
+	text-decoration: none;
+}
+A.threadmemo:hover
+{
+	text-decoration: underline;
+}
+
