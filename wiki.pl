@@ -6995,7 +6995,7 @@ sub GetPageCount {
 	# 카운트 기록
 	if ($add == 1) {
 		# 1 try, 2 second wait, do not die on error
-		&RequestLockDir('count', 1, 2, 0) || return $pagecount;
+		&RequestLockDir('count', 1, 1, 0) || return $pagecount;
 		&WriteStringToFile($countfile, $pagecount);
 		&ReleaseLockDir('count');
 	}
