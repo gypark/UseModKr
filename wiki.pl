@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.42c";
+$WikiVersion = "0.92K3-ext1.42d";
 $WikiRelease = "2003-03-27";
 
 $HashKey = "salt"; # 2-character string
@@ -6271,7 +6271,10 @@ sub DoPost {
 ### replaced by gypark
 ### 로그인 하지 않은 경우의 conflict
 #	if (($UserID ne "") || ($Section{'id'} ne ""))  {
-	if ((length($UserID) > 3) || (length($Section{'id'}) > 3)) {
+	if (
+		(($UserID ne "") && ($UserID ne "112") && ($UserID ne "113")) ||
+		(($Section{'id'} ne "") && ($Section{'id'} ne "112") && ($Section{'id'} ne "113"))
+		) {
 ###
 ###############
 		$newAuthor = ($UserID ne $Section{'id'});       # known user(s)
