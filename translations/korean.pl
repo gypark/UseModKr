@@ -743,4 +743,6 @@ TOC
 목차
 Up
 위
+Index:
+찾아보기:
 END_OF_TRANSLATION

@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.69";
-$WikiRelease = "2005-01-15";
+$WikiVersion = "0.92K3-ext1.70";
+$WikiRelease = "2005-01-16";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -3564,6 +3564,8 @@ sub UnquoteHtmlForPageContent {
 	$html =~ s/&__GT__;/>/g;
 	$html =~ s/&__LT__;/</g;
 	$html =~ s/&__AMP__;/&/g;
+	$html =~ s/&__DOUBLEBACKSLASH__;/\\\\\n/g;
+	$html =~ s/&__SINGLEBACKSLASH__;/\\\n/g;
 	return $html;
 }
 ###

@@ -716,3 +716,20 @@ A.threadmemo:hover
 	text-decoration: underline;
 }
 
+/* index */
+DIV.wordindex {
+	background-color: transparent;
+	border-top:1px solid silver;
+	padding:5px;
+}
+
+A.wordindex:link, A.wordindex:active, A.wordindex:visited, A.wordindex:hover {
+	background: transparent;
+	color: maroon;
+	text-decoration: none;
+}
+A.wordindex:hover
+{
+	text-decoration: underline;
+}
+
