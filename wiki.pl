@@ -5935,7 +5935,7 @@ sub GetFullLinkList {
 			"inter", 0,
 			"url", 0,
 			"exists", 2,
-			"empty", 1,
+			"empty", 0,
 			"search", "",
 			"reverse", ""
 	);
