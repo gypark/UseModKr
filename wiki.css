@@ -418,6 +418,7 @@ TD.diff
 {
 	font: normal normal normal 75%/160% Gulimche, Courier, monospace;
 	border: none;
+	height: 17pt;
 }
 
 TD.diffrange
@@ -427,6 +428,7 @@ TD.diffrange
 	font: italic normal bold 75%/160% Gulim, "Times New Roman", Serif;
 	background: #CCCCCC;
 	color: black;
+	height: 17pt;
 }
 
 TD.diffremove
@@ -435,6 +437,7 @@ TD.diffremove
 	border: none;
 	background: #FFFFCC;
 	color: black;
+	height: 17pt;
 }
 
 TD.diffadd
@@ -443,6 +446,7 @@ TD.diffadd
 	border: none;
 	background: #CCFFCC;
 	color: black;
+	height: 17pt;
 }
 
 /**********
