@@ -1,3 +1,14 @@
+# blog_rss 액션
+
+my @ChannelField = ('title','link','description','language',
+		'copyright','manageingEditor','webMaster','pubDate',
+		'lastBuildDate','category','generator','docs','could',
+		'ttl','image','rating','textInput','skipHours','skipDays');
+my @ItemField = ('title','link','description','author','category',
+		'comments','enclosure','guid','pubDate','source');
+my %NeedCdata = map { $_ => 1 } ('description');
+my (%RssChannelField, %RssItemFieldInList, %RssItemField, $ListPageAuthor);
+
 sub action_blog_rss {
 	use strict;
 	my $listpage = &GetParam("listpage","");
@@ -12,6 +23,7 @@ sub action_blog_rss {
 	$cachefile = "$TempDir/rss_$cachefile.xml";
 
 # cache 파일이 있고 마지막 갱신 이후 $update_period(분)이 지나지 않은 경우 
+# cache 파일을 읽어서 출력
 	if (-f $cachefile) {
 		my $mtime = (stat($cachefile))[9];
 		if (($Now - $mtime) < ($update_period * 60)) {
@@ -26,38 +38,48 @@ sub action_blog_rss {
 	if ($xml eq "") {
 		my ($rssHeader, $rssBody, $rssFooter);
 
-		my ($title, $description, $link, $pubDate, $language);
+# 디폴트 값을 먼저 설정
 # 사이트 제목
-		$title = &QuoteHtml($SiteName);
-# 사이트 설명
-		$description = &QuoteHtml($SiteDescription);
+		$RssChannelField{'title'} = &QuoteHtml($SiteName);
 # 사이트 링크
 		$FullUrl = $q->url(-full=>1)  if ($FullUrl eq "");
 		$QuotedFullUrl = &QuoteHtml($FullUrl);
-		$link = $QuotedFullUrl;
-		$link .= &ScriptLinkChar() . $blogpage if ($blogpage);
-# xml작성 시각
-		$pubDate = &BlogRssGetPubDate($Now);
+		$RssChannelField{'link'} = $QuotedFullUrl;
+ 		$RssChannelField{'link'} .= &ScriptLinkChar() . $blogpage if ($blogpage);
+# 사이트 설명
+		$RssChannelField{'description'} = &QuoteHtml($SiteDescription);
 # 언어 - how to detect?
-		$language = "ko";
+		$RssChannelField{'language'} = "ko";
+# xml작성 시각
+		$RssChannelField{'pubDate'} = &BlogRssGetPubDate($Now);
+
+# 리스트 페이지에 사용자가 정의한 값을 읽어서 덮어 씀
+		&OpenPage($listpage);
+		&OpenDefaultText;
+		$ListPageAuthor = $Section{'username'};
+		&BlogRssGetUserDefinedValue($Text{'text'}, "list");
 
 # rss header 생성
-		$rssHeader = <<RSS;
+		$rssHeader = <<EOF;
 <?xml version="1.0" encoding="$HttpCharset" ?>
 <rss version="2.0">
 <channel>
-<title>$title</title>
-<link>$link</link>
-<description>$description</description>
-<pubDate>$pubDate</pubDate>
-<language>$language</language>
-RSS
+EOF
+		foreach my $field (@ChannelField) {
+			if ($RssChannelField{$field} ne "") {
+				$rssHeader .= 
+					"<$field>".
+					(($NeedCdata{$field})?"<![CDATA[".$RssChannelField{$field}."]]>":$RssChannelField{$field}).
+					"</$field>".
+					"\n";
+			}
+		}
 
 # rss footer 생성
-		$rssFooter = <<RSS;
+		$rssFooter = <<EOF;
 </channel>
 </rss>
-RSS
+EOF
 
 # header와 footer사이의 body 생성
 		$rssBody = &BlogRssGetItems($listpage, $num_items);
@@ -108,14 +130,9 @@ sub BlogRssGetItems {
 		return "";
 	}
 
-	&OpenPage($tocpage);
-	&OpenDefaultText();
-	my $tocpage_author = $Section{'username'};
-
 	# 리스트의 각 페이지를 읽어서 item 형식으로 만들어 반환함
 	my $txt;
 
-	my ($title, $description, $link, $pubDate, $category, $author);
 	my ($page, $pagename, $date, $pageid);
 	foreach my $item (@tocitem_List) {
 		if ($item =~ /^(.+)$FS1(.*)$FS1(.+)$/) {
@@ -128,35 +145,50 @@ sub BlogRssGetItems {
 # 페이지가 존재하지 않으면 통과
 		next if (not -f &GetPageFile($pageid));
 
+# 아이템 필드 초기화
+		%RssItemField = %RssItemFieldInList;
+
 		&OpenPage($pageid);
 		&OpenDefaultText();
-
 # 제목
-		$title = $page;
+		$RssItemField{'title'} = $page;
+# 링크
+		$RssItemField{'link'} = $QuotedFullUrl.&ScriptLinkChar().&EncodeUrl($pageid);
 # 내용
-		$description = $Text{'text'};
+		my $description = $Text{'text'};
 		$description =~ s/<noinclude>.*?<\/noinclude>//igs;
+		$description =~ s/<blog_rss>.*?<\/blog_rss>//igs;
 		$description = &QuoteHtml($description);
 		$description =~ s/\n/<br \/>\n/g;
-# 링크
-		$link = $QuotedFullUrl.&ScriptLinkChar().&EncodeUrl($pageid);
-# 작성시각
-		$pubDate = &BlogRssGetPubDate($Page{'tscreate'});
-# 카테고리 - 대책없음
-		$category = "";
+ 		$RssItemField{'description'} = $description;
 # 작성자 - 편법으로, list 페이지의 작성자를 각 글의 작성자로 간주
-		$author = &QuoteHtml($tocpage_author);
+		my $author;
+		if ($RssItemFieldInList{'author'}) {
+			$author = $RssItemFieldInList{'author'};
+		} else {
+			$author = $ListPageAuthor;
+		}
+		$RssItemField{'author'} = &QuoteHtml($author);
+# 카테고리 - 대책없음
+# 		$RssItemField{'category'} = "";
+# 작성시각
+		$RssItemField{'pubDate'} = &BlogRssGetPubDate($Page{'tscreate'});
 
-		$txt .= <<ITEM
-<item>
-<title>$title</title>
-<description>$description</description>
-<link>$link</link>
-<pubDate>$pubDate</pubDate>
-<category>$category</category>
-<author>$author</author>
-</item>
-ITEM
+# 포스트 페이지에 사용자가 정의한 값을 읽어서 덮어 씀
+		&BlogRssGetUserDefinedValue($Text{'text'});
+
+		$txt .= "<item>\n";
+		foreach my $field (@ItemField) {
+			if ($RssItemField{$field} ne "") {
+				$txt .=
+					"<$field>".
+					(($NeedCdata{$field})?"<![CDATA[".$RssItemField{$field}."]]>":$RssItemField{$field}).
+					"</$field>".
+					"\n";
+			}
+		}
+		$txt .= "</item>\n";
+
 	}
 
 	return $txt;
@@ -176,6 +208,36 @@ sub BlogRssGetPubDate {
 			$dow[$wday], $mday, $month[$mon], $year+1900, $hour, $min, $sec, $RssTimeZone);
 
 	return $pubDate;
+}
+
+
+# param: 텍스트[,출처]
+# 텍스트에서 <blog_rss> </blog_rss> 부분을 찾아서 파싱하여 전역변수에 저장
+sub BlogRssGetUserDefinedValue {
+	my ($text, $where) = @_;
+	my ($text_channel, $text_item);
+
+	my $text_blog;
+	while ($text =~ /<blog_rss>(.+?)<\/blog_rss>/igs) {
+		$text_blog .= $1;
+	}
+	while ($text_blog =~ /<channel>(.+?)<\/channel>/igs) {
+		$text_channel .= $1;
+	}
+	while ($text_channel =~ s/<item>(.+?)<\/item>//igs) {
+		$text_item .= $1;
+	}
+
+	while ($text_channel =~ /<(.+?)>(.+)?<\/\1>/gs) {
+		$RssChannelField{$1} = $2;
+	}
+	while ($text_item =~ /<(.+?)>(.+)?<\/\1>/gs) {
+		if ($where eq "list") {
+			$RssItemFieldInList{$1} = $2;
+		} else {
+			$RssItemField{$1} = $2;
+		}
+	}
 }
 
 1;

@@ -5,6 +5,7 @@ sub blog_rss {
 	my ($txt) = @_;
 
 	$txt =~ s/\&__LT__;blog_rss\((.*?)\)&__GT__;/&MacroBlogRss($1)/gei;
+	$txt =~ s/&__LT__;blog_rss&__GT__;.*?&__LT__;\/blog_rss&__GT__;//geis;
 
 	return $txt;
 }
