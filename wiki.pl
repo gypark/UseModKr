@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.36";
-$WikiRelease = "2003-03-08";
+$WikiVersion = "0.92K3-ext1.37";
+$WikiRelease = "2003-03-09";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -3633,7 +3633,7 @@ sub DiffToHTMLunified {
 	my ($html) = @_;
 	my (@lines, $line, $result, $row, $td_class, $in_table, $output_exist);
 
-	@lines = split("\n", $html, -1);
+	@lines = split("\n", $html);
 	shift(@lines);
 	shift(@lines);
 
@@ -4889,6 +4889,18 @@ function help(s)
 					"</strong><p>",
 					&GetTextArea('newtext', $newText, $editRows, $editCols),
 					"<p>\n";
+###############
+### added by gypark
+### conflict 발생시 양쪽의 입력을 비교
+			my $conflictdiff = &GetDiff($oldText, $newText, 1);
+			$conflictdiff = T('No diff available.') if ($conflictdiff eq "");
+			print "\n<br><hr noshade size=1><p><strong>",
+				T('This is the diff output of the saved text and your text:'),
+				"</strong><p>",
+				&DiffToHTML($conflictdiff),
+				"<p>\n";
+###
+###############
 		}
 ###############
 ### added by gypark
