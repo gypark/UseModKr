@@ -625,6 +625,8 @@ Deleting is not allowed
 %s 화일을 삭제할 수 없습니다
 Oekaki
 오에카키
+Oekaki is not allowed
+오에카키를 사용하는 것이 허용되지 않습니다
 If saving oekaki was done successfully
 그림이 제대로 저장되었다면
 If you want to paint a new picture
