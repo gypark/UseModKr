@@ -848,22 +848,33 @@ sub GetRcHtml {
 		$edit = "";
 		$edit = "<em>$tEdit</em> "  if ($isEdit);
 		$count = "";
-		if ((!$all) && ($pagecount{$pagename} > 1)) {
-			$count = "($pagecount{$pagename} ";
-			if (&GetParam("rcchangehist", 1)) {
-				$count .= &GetHistoryLink($pagename, $tChanges);
-			} else {
-				$count .= $tChanges;
-			}
-			$count .= ") ";
 ###############
-### added by gypark
+### replaced by gypark
 ### 새 글 옆에는 New 마크 표시
+#		if ((!$all) && ($pagecount{$pagename} > 1)) {
+#			$count = "($pagecount{$pagename} ";
+#			if (&GetParam("rcchangehist", 1)) {
+#				$count .= &GetHistoryLink($pagename, $tChanges);
+#			} else {
+#				$count .= $tChanges;
+#			}
+#			$count .= ") ";
+#		}
+		if ($pagecount{$pagename} > 1) {
+			if (!$all) {
+				$count = "($pagecount{$pagename} ";
+				if (&GetParam("rcchangehist", 1)) {
+					$count .= &GetHistoryLink($pagename, $tChanges);
+				} else {
+					$count .= $tChanges;
+				}
+				$count .= ") ";
+			}
 		} else {
 			$count = "<font color=red>(".&T('NEW').")</font>";
+		}
 ###
 ###############
-		}
 		$link = "";
 		if ($UseDiff && &GetParam("diffrclink", 1)) {
 			$link .= &ScriptLinkDiff(4, $pagename, $tDiff, "") . "  ";
