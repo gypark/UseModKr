@@ -9364,7 +9364,7 @@ sub GetTrackBackGuide {
 
 	my $result = "\n<HR class='footer'>\n<DIV class='trackbackguide'>";
 
-	my $trackbackguide = "";
+	my $trackbackguide = "<P>";
 
 	$FullUrl = $q->url(-full=>1)  if ($FullUrl eq "");
 	my $encoded = &EncodeUrl($id);
