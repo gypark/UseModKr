@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.61a";
+$WikiVersion = "0.92K3-ext1.61b";
 $WikiRelease = "2004-07-21";
 
 $HashKey = "salt"; # 2-character string
@@ -761,7 +761,7 @@ sub BrowsePage {
 	}
 
 	if ($EditPagePos >= 2) {
-		$fullHtml .= &GetTrackBackGuide($id);
+		$fullHtml .= &GetTrackbackGuide($id);
 		$fullHtml .= &GetEditGuide($id, $goodRevision);		# luke added
 	}
 
@@ -820,7 +820,7 @@ sub BrowseExternUrl {
 	} elsif ((&GetParam('InFrame','') eq '2') && ($EditGuideInExtern)) {
 		print &GetHeader($id, "$id [InBottomFrame]",$oldId);
 		print "<hr>\n";
-		print &GetTrackBackGuide($id);
+		print &GetTrackbackGuide($id);
 		print &GetEditGuide($id, '');
 		print &GetMinimumFooter();
 		return;
@@ -2127,7 +2127,7 @@ sub GetFooterText {
 	}
 
 	if ($EditPagePos eq 1 or $EditPagePos eq 3) {
-		$result .= &GetTrackBackGuide($id);
+		$result .= &GetTrackbackGuide($id);
 		$result .= &GetEditGuide($id, $rev);
 	}
 
@@ -2686,8 +2686,8 @@ sub MacroSubst {
 	$txt =~ s/&__LT__;color\(([^,)]+),([^,)]+),([^\n]+?)\)&__GT__;/&MacroColorBk($1, $2, $3)/gei;
 	$txt =~ s/&__LT__;color\(([^,)]+),([^\n]+?)\)&__GT__;/&MacroColor($1, $2)/gei;
 ### <trackbacksent> <trackbackreceived>
-	$txt =~ s/(&__LT__;trackbacksent&__GT__;)/&MacroTrackBackSent($1)/gei;
-	$txt =~ s/(&__LT__;trackbackreceived&__GT__;)/&MacroTrackBackReceived($1)/gei;
+	$txt =~ s/(((^|\n)\* .*)*\n?)(&__LT__;trackbacksent&__GT__;)/&MacroTrackbackSent($4,$1)/gei;
+	$txt =~ s/(((^|\n)\* .*\n\*\* .*\n\*\* .*)*\n?)(&__LT__;trackbackreceived&__GT__;)/&MacroTrackbackReceived($4,$1)/gei;
 ###
 ###############
 	return $txt;
@@ -2731,16 +2731,24 @@ sub MacroIncludeSubst {
 ### added by gypark
 ### 추가한 매크로의 동작부
 ### trackback
-sub MacroTrackBackSent {
-	my ($itself) = @_;
+sub MacroTrackbackSent {
+	my ($itself, $trackbacks) = @_;
+	my $title = &T('No Trackback sent');
 
-	return "";
+	my $count = ($trackbacks =~ s/((^|\n)\* .*)/$1/g);
+	$title = &Ts('Trackback sent [%s]', $count) if ($count);
+
+	return &MacroMemo("", $title, $trackbacks);
 }
 
-sub MacroTrackBackReceived {
-	my ($itself) = @_;
-	
-	return "";
+sub MacroTrackbackReceived {
+	my ($itself, $trackbacks) = @_;
+	my $title = &T('No Trackback received');
+
+	my $count = ($trackbacks =~ s/((^|\n)\* .*\n\*\* .*\n\*\* .*)/$1/g);
+	$title = &Ts('Trackback received [%s]', $count) if ($count);
+
+	return &MacroMemo("", $title, $trackbacks);
 }
 
 ### img from Jof
@@ -5683,11 +5691,11 @@ sub DoOtherRequest {
 ### rss from usemod1.0
 		} elsif ($action eq "rss") {
 			&DoRss();
-### TrackBack
+### Trackback
 		} elsif ($action eq "send_ping") {
-			&DoSendTrackBackPing($id);
+			&DoSendTrackbackPing($id);
 		} elsif ($action eq "trackback") {
-			&DoReceiveTrackBackPing($id);
+			&DoReceiveTrackbackPing($id);
 ###
 ###############
 		} else {
@@ -9165,8 +9173,8 @@ sub GetHtmlRcLine {
 	die "GetHtmlRcLine -- must not be executed!!!";
 }
 
-### TrackBack
-sub DoSendTrackBackPing {
+### Trackback
+sub DoSendTrackbackPing {
 	require Net::Trackback::Client;
 	require Net::Trackback::Ping;
 
@@ -9184,8 +9192,8 @@ sub DoSendTrackBackPing {
 
 	if ($validid ne '') {
 		$result .= $validid;
-	} elsif (!&UserCanSendTrackBackPing($id)) {
-		$result .= &T('You are not allowed to send TrackBack ping of this page');
+	} elsif (!&UserCanSendTrackbackPing($id)) {
+		$result .= &T('You are not allowed to send Trackback ping of this page');
 	} elsif ($ping_url eq '') {
 		$result .= &T('No Ping URL');
 	} else {
@@ -9214,7 +9222,7 @@ sub DoSendTrackBackPing {
 				my $newtrackbacksent = "* $timestamp | " . 
 					(($ping_permalink ne '')?$ping_permalink:$ping_url);
 				$string =~ s/($macro)/$newtrackbacksent\n$1/;
-				&DoPostMain($string, $id, &T('New TrackBack Sent'), $Section{'ts'}, 0, 0, "!!");
+				&DoPostMain($string, $id, &T('New Trackback Sent'), $Section{'ts'}, 0, 0, "!!");
 			}
 			$result .= &T('Ping successfully sent');
 		} else {
@@ -9223,8 +9231,8 @@ sub DoSendTrackBackPing {
 	}
 
 	print &GetHttpHeader();
-	print &GetHtmlHeader("$SiteName : ". &T('Send TrackBack Ping'), "");
-	print $q->h2(&T('Send TrackBack Ping')) . "\n";
+	print &GetHtmlHeader("$SiteName : ". &T('Send Trackback Ping'), "");
+	print $q->h2(&T('Send Trackback Ping')) . "\n";
 	print $result;
 	print "<hr size='1'>".Ts('Return to %s' , &GetPageLink($id));
 	print $q->end_html;
@@ -9232,7 +9240,7 @@ sub DoSendTrackBackPing {
 	return;
 }
 
-sub UserCanSendTrackBackPing {
+sub UserCanSendTrackbackPing {
 	my ($id) = @_;
 
 	return 1 if ($SendPingAllowed == 0);
@@ -9242,7 +9250,7 @@ sub UserCanSendTrackBackPing {
 	return 0;
 }
 
-sub PageCanReceiveTrackBackPing {
+sub PageCanReceiveTrackbackPing {
 	my ($id) = @_;
 
 	return 0 if (! -f &GetPageFile($id));
@@ -9252,7 +9260,7 @@ sub PageCanReceiveTrackBackPing {
 	return 1;
 }
 
-sub DoReceiveTrackBackPing {
+sub DoReceiveTrackbackPing {
 	my ($id) = @_;
 	my $normal_id = $id;
 
@@ -9274,11 +9282,11 @@ sub DoReceiveTrackBackPing {
 	}
 
 	if ($url eq '') {
-		&SendTrackBackResponse("1", "No URL (url)");
+		&SendTrackbackResponse("1", "No URL (url)");
 	} elsif ($id eq '') {
-		&SendTrackBackResponse("1", "No Pagename (id)");
-	} elsif (!&PageCanReceiveTrackBackPing($normal_id)) {
-		&SendTrackBackResponse("1", "Invalid Pagename (Page is missing, or Trackback is not allowed)");
+		&SendTrackbackResponse("1", "No Pagename (id)");
+	} elsif (!&PageCanReceiveTrackbackPing($normal_id)) {
+		&SendTrackbackResponse("1", "Invalid Pagename (Page is missing, or Trackback is not allowed)");
 	} else {
 		&OpenPage($normal_id);
 		&OpenDefaultText();
@@ -9294,12 +9302,12 @@ sub DoReceiveTrackBackPing {
 			"** " . &T('Title:') . " [$url $title]\n" .
 			"** " . &T('Content:') . " $excerpt";
 		$string =~ s/($macro)/$newtrackbackreceived\n$1/;
-		&DoPostMain($string, $id, &T('New TrackBack Received'), $Section{'ts'}, 0, 0, "!!");
-		&SendTrackBackResponse(0, "");
+		&DoPostMain($string, $id, &T('New Trackback Received'), $Section{'ts'}, 0, 0, "!!");
+		&SendTrackbackResponse(0, "");
 	}
 }
 
-sub SendTrackBackResponse {
+sub SendTrackbackResponse {
 	my ($code, $message) = @_;
 
 	if ($code == 0) {
@@ -9328,7 +9336,7 @@ sub EncodeUrl {
 	return $string;
 }
 
-sub GetTrackBackGuide {
+sub GetTrackbackGuide {
 	my ($id) = @_;
 
 	my $result = "\n<HR class='footer'>\n<DIV class='trackbackguide'>";
@@ -9339,13 +9347,13 @@ sub GetTrackBackGuide {
 	my $encoded = &EncodeUrl($id);
 	my $url = $FullUrl . &ScriptLinkChar() . "action=trackback&id=$encoded";
 
-	if (&PageCanReceiveTrackBackPing($id)) {
-		$trackbackguide .= &T('TrackBack address of this page:') . " " . (&UrlLink("$url"))[0];
+	if (&PageCanReceiveTrackbackPing($id)) {
+		$trackbackguide .= &T('Trackback address of this page:') . " " . (&UrlLink("$url"))[0];
 	} else {
-		$trackbackguide .= &T('This page can not receive TrackBack');
+		$trackbackguide .= &T('This page can not receive Trackback');
 	}
 
-	if (&UserCanSendTrackBackPing($id)) {
+	if (&UserCanSendTrackbackPing($id)) {
 		$FullUrl = $q->url(-full=>1)  if ($FullUrl eq "");
 		my $url = $FullUrl . &ScriptLinkChar . $id;
 		my $title = $id;
@@ -9363,7 +9371,7 @@ sub GetTrackBackGuide {
 		$excerpt =~ s/"/&quot;/g;
 
 		$trackbackguide .= "\n<BR>";
-		$trackbackguide .= &GetFormStart("TrackBack_ping") .
+		$trackbackguide .= &GetFormStart("Trackback_ping") .
 			&GetHiddenValue("action", "send_ping") .
 			&GetHiddenValue("title", "$title") .
 			&GetHiddenValue("blog_name", "$SiteName") .
@@ -9371,8 +9379,8 @@ sub GetTrackBackGuide {
 			&GetHiddenValue("url", "$url") .
 			&GetHiddenValue("id", "$id") .
 			"<TABLE style='border: none;'>" .
-			"<TR><TD style='border: none;' colspan=2>" . &T('Send TrackBack Ping of this page to:') . "</TD></TR>" .
-			"<TR><TD style='border: none;'>" . &T('TrackBack URL:') . "</TD>" .
+			"<TR><TD style='border: none;' colspan=2>" . &T('Send Trackback Ping of this page to:') . "</TD></TR>" .
+			"<TR><TD style='border: none;'>" . &T('Trackback URL:') . "</TD>" .
 			"<TD style='border: none;'>" . $q->textfield(-name=>"ping_url", -default=>"", -override=>1, -size=>100, -maxlength=>200) . "</TD></TR>" .
 			"<TR><TD style='border: none;'>" . &T('Permalink URL (optional):') . "</TD>" .
 			"<TD style='border: none;'>" .
@@ -9384,7 +9392,7 @@ sub GetTrackBackGuide {
 
 	$result .= "<A class=\"trackbackguide\" href=\"#\" onClick=\"" .
 		"return onMemoToggle('__TRACKBACKGUIDE__');\">" .
-		&T('Send TrackBack') .
+		&T('Send Trackback') .
 		"</A>" .
 		"<DIV id=\"__TRACKBACKGUIDE__\" style=\"display:none\">" .
 		$trackbackguide.
