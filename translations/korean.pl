@@ -569,6 +569,8 @@ Viewing %s
 %s 페이지의 소스 보기
 Viewing revision %s of
 %s 번째 수정본 소스 보기 :
+%s hit
+
 %s hits
 
 END_OF_TRANSLATION
