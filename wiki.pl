@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.74";
+$WikiVersion = "0.92K3-ext1.74a";
 $WikiRelease = "2005-02-05";
 
 $HashKey = "salt"; # 2-character string
@@ -2479,7 +2479,7 @@ sub CommonMarkup {
 		s/(^|\n)\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/&StoreRaw("\n<PRE class=\"code\">") . &StoreCodeRaw($2) . &StoreRaw("\n<\/PRE>") . "\n"/igem;
 
 ### plugin
-		s/(^|\n)\{\{\{#!((\w+)( .+)?)\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/$1.&StorePlugin($2,$5)."\n"/igem;
+		s/(^|\n)\{\{\{#!((\w+)( .+)?)[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/$1.&StorePlugin($2,$5)."\n"/igem;
 
 ### {{{lang|n|t }}} 처리
 		s/(^|\n)\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/&StoreRaw("<PRE class=\"syntax\">") . &StoreSyntaxHighlight($2, $4, $5) . &StoreRaw("<\/PRE>") . "\n"/igem;
