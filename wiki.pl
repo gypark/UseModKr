@@ -248,7 +248,6 @@ sub DoWikiRequest {
 ###############
 ### added by gypark
 ### 처리 시간 측정
-$CheckTime = 1;
 if ($CheckTime) {
 	eval "use Time::HiRes qw( usleep ualarm gettimeofday tv_interval )";
 	if ($@) { 
