@@ -70,7 +70,7 @@ use vars qw(
 	$UserGotoBar $UserGotoBar2 $UserGotoBar3 $UserGotoBar4 
 	$ConfigFile $SOURCEHIGHLIGHT %SRCHIGHLANG $LinkFirstChar
 	$EditGuideInExtern $SizeTopFrame $SizeBottomFrame
-	$EmbedHome
+	$LogoPage
 	);
 ###
 ###############
@@ -150,7 +150,7 @@ $LinkFirstChar = 0;    # 1 = link on first character,  0 = followed by "?" mark 
 $EditGuideInExtern = 0; # 1 = show edit guide in bottom frame, 0 = don't show
 $SizeTopFrame = 160;
 $SizeBottomFrame = 110;
-$EmbedHome   = 0;   # 1 - embed $HomePage when no parameter, 0 - normal output
+$LogoPage   = "";	# this page will be displayed when no parameter
 ###
 ###############
 
@@ -346,12 +346,21 @@ sub DoCacheBrowse {
 	return 0  if (!$UseCache);
 	$query = $ENV{'QUERY_STRING'};
 	if (($query eq "") && ($ENV{'REQUEST_METHOD'} eq "GET")) {
-		$query = $HomePage;  # Allow caching of home page.
+###############
+### replaced by gypark
+### LogoPage 가 있으면 이것을 embed 형식으로 출력
+		if ($LogoPage eq "") {
+			$query = $HomePage;  # Allow caching of home page.
+		} else {
+			$query = $LogoPage;
+		}
+###
+###############
 	}
 ###############
-### added by gypark
-### 인자가 없을 때 HomePage 를 embed 형식으로 출력
-	return 0 if ($query eq $HomePage);
+### replaced by gypark
+### LogoPage 가 있으면 이것을 embed 형식으로 출력
+	return 0 if ($query eq $LogoPage);
 ###
 ###############
 	if (!($query =~ /^$LinkPattern$/)) {
@@ -457,12 +466,17 @@ sub DoBrowseRequest {
 
 	if (!$q->param) {             # No parameter
 ###############
-### added by gypark
-### 인자가 없을 때 HomePage 를 embed 형식으로 출력
-		$EmbedWiki = 1 if ($EmbedHome);
+### replaced by gypark
+### LogoPage 가 있으면 이것을 embed 형식으로 출력
+#		&BrowsePage($HomePage);
+		if ($LogoPage eq "") {
+			&BrowsePage($HomePage);
+		} else {
+			$EmbedWiki = 1;
+			&BrowsePage($LogoPage);
+		}
 ###
 ###############
-		&BrowsePage($HomePage);
 		return 1;
 	}
 	$id = &GetParam('keywords', '');

@@ -46,8 +46,8 @@ $LinkFirstChar = 1;    # 1 = link on first character,  0 = followed by "?" mark 
 $EditGuideInExtern = 0; # 1 = show edit guide in bottom frame, 0 = don't show
 $SizeTopFrame = 160;
 $SizeBottomFrame = 110;
-### 인자 없이 wiki.pl 을 부르면 $HomePage 를 embed 형식으로 출력
-$EmbedHome   = 0;   # 1 - embed $HomePage when no parameter, 0 - normal output
+### 인자 없이 wiki.pl 을 부르면 $LogoPage 를 embed 형식으로 출력
+$LogoPage   = "";	# this page will be displayed when no parameter
 ### 
 ##
 ##########################################################
