@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.35";
+$WikiVersion = "0.92K3-ext1.36";
 $WikiRelease = "2003-03-08";
 
 $HashKey = "salt"; # 2-character string
@@ -756,7 +756,13 @@ sub GetRcHtml {
 	my @outrc = @_;
 	my ($rcline, $html, $date, $sum, $edit, $count, $newtop, $author);
 	my ($showedit, $inlist, $link, $all, $idOnly);
-	my ($ts, $oldts, $pagename, $summary, $isEdit, $host, $kind, $extraTemp);
+###############
+### replaced by gypark
+### RcOldFile 버그 수정
+#	my ($ts, $oldts, $pagename, $summary, $isEdit, $host, $kind, $extraTemp);
+	my ($ts, $pagename, $summary, $isEdit, $host, $kind, $extraTemp);
+###
+###############
 	my ($tEdit, $tChanges, $tDiff);
 	my %extra = ();
 	my %changetime = ();
@@ -782,7 +788,6 @@ sub GetRcHtml {
 	$bookmark = &GetParam('bookmark',-1);
 ###
 ###############
-
 
 	if ($showedit != 1) {
 		my @temprc = ();
@@ -827,17 +832,27 @@ sub GetRcHtml {
 	$idOnly = &GetParam("rcidonly", "");
 
 	@outrc = reverse @outrc if ($newtop);
-	($oldts, $pagename, $summary, $isEdit, $host, $kind, $extraTemp)
-		= split(/$FS3/, $outrc[0]);
-	$oldts += 1;
+###############
+### commented by gypark
+### RcOldFile 버그 수정
+#	($oldts, $pagename, $summary, $isEdit, $host, $kind, $extraTemp)
+#		= split(/$FS3/, $outrc[0]);
+#	$oldts += 1;
+###
+###############
 	foreach $rcline (@outrc) {
 		($ts, $pagename, $summary, $isEdit, $host, $kind, $extraTemp)
 			= split(/$FS3/, $rcline);
 		# Later: need to change $all for new-RC?
 		next  if ((!$all) && ($ts < $changetime{$pagename}));
 		next  if (($idOnly ne "") && ($idOnly ne $pagename));
-		next  if ($ts >= $oldts);
-		$oldts = $ts;
+###############
+### commented by gypark
+### RcOldFile 버그 수정
+#		next  if ($ts >= $oldts);
+#		$oldts = $ts;
+###
+###############
 		# print $ts . " " . $pagename . "<br>\n";
 		%extra = split(/$FS2/, $extraTemp, -1);
 		if ($date ne &CalcDay($ts)) {
@@ -6556,7 +6571,13 @@ sub EditRecentChanges {
 	my ($action, $old, $new) = @_;
 
 	&EditRecentChangesFile($RcFile,    $action, $old, $new);
-	&EditRecentChangesFile($RcOldFile, $action, $old, $new);
+###############
+### replaced by gypark
+### RcOldFile 버그 수정
+#	&EditRecentChangesFile($RcOldFile, $action, $old, $new);
+	&EditRecentChangesFile($RcOldFile, $action, $old, $new) if (-f $RcOldFile);
+###
+###############
 }
 
 sub EditRecentChangesFile {
