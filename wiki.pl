@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.37";
-$WikiRelease = "2003-03-09";
+$WikiVersion = "0.92K3-ext1.38";
+$WikiRelease = "2003-03-11";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -232,7 +232,13 @@ sub InitLinkPatterns {
 	$UrlPattern = "((?:(?:$UrlProtocols):[^\\]\\s\"<>$FS]+)$QDelim)";
 	$ImageExtensions = "(gif|jpg|png|bmp|jpeg|GIF|JPG|PNG|BMP|JPEG)";
 	$RFCPattern = "RFC\\s?(\\d+)";
-	$ISBNPattern = "ISBN:?([0-9- xX]{10,})";
+###############
+### replaced by gypark
+### ISBN 패턴 수정
+#	$ISBNPattern = "ISBN:?([0-9- xX]{10,})";
+	$ISBNPattern = "ISBN:?([0-9-xX]{10,})";
+###
+###############
 }
 
 # Simple HTML cache
