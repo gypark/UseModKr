@@ -84,7 +84,6 @@ use vars qw(%Page %Section %Text %InterSite %SaveUrl %SaveNumUrl
 ### 적절히 바꾸어서 사용할 것
 # $DataDir     = "data"; # Main wiki directory
 $DataDir     = "../../../wiki_data/__gypark__";    # Main wiki directory
-$DataDir     = "newdata";
 $ConfigFile  = "../../../wiki_data/__gypark__.pl"; # path of config file
 ###
 ###############
@@ -1727,12 +1726,6 @@ sub CommonMarkup {
 		s/\&__LT__;pre\&__GT__;((.|\n)*?)\&__LT__;\/pre\&__GT__;/&StorePre($1, "pre")/ige;
 		s/\&__LT__;code\&__GT__;((.|\n)*?)\&__LT__;\/code\&__GT__;/&StorePre($1, "code")/ige;
 
-### test gypark
-		if (s/(^|\n)IMG:([^\r\n]*)[ \t\r\f]*\n/\n/gm) {		# luke added
-			StoreImageTag($2);
-		}
-###
-
 		s/\[\#(\w+)\]/&StoreHref(" name=\"$1\"")/ge if $NamedAnchors;
 		if ($HtmlTags) {
 			my ($t);
@@ -2839,7 +2832,6 @@ sub UrlLink {
 ### 이미지에 alt 태그를 넣어 원래 주소를 보임
 #		return ("<img $ImageTag src=\"$name\">", $punct);
 		return ("<img $ImageTag src=\"$name\" alt=\"$name\">", $punct);
-
 ###
 ###############
 	}
