@@ -2118,8 +2118,12 @@ sub GetEditGuide {
 		if ($FreeLinks) {
 			$title =~ s/_/ /g;  # Display with spaces
 		}
-		my $excerpt = substr($Text{'text'},0,255);
-		$excerpt =~ s/(([\x80-\xff].)*)[\x80-\xff]?$/$1/;
+		my $excerpt = $Text{'text'};
+		if (length($excerpt) > 255) {
+			$excerpt = substr($excerpt, 0, 252);
+			$excerpt =~ s/(([\x80-\xff].)*)[\x80-\xff]?$/$1/;
+			$excerpt .= "...";
+		}
 		$excerpt =~ s/(\r?\n)/ /g;
 		$excerpt = &QuoteHtml($excerpt);
 		$excerpt =~ s/"/&quot;/g;
