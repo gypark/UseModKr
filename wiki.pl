@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.60a";
-$WikiRelease = "2004-03-22";
+$WikiVersion = "0.92K3-ext1.60b";
+$WikiRelease = "2004-03-23";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -1846,7 +1846,7 @@ sub GetHeader {
 ### page 처음에 bottom 으로 가는 링크를 추가
 ### #EXTERN
 	if (&GetParam('InFrame','') eq '') {
-		$result .= "\n<div align=\"right\"><a accesskey=\"z\" name=\"#PAGE_TOP\" href=\"#PAGE_BOTTOM\">". T('Bottom') . "</a></div>\n";
+		$result .= "\n<div align=\"right\"><a accesskey=\"z\" name=\"PAGE_TOP\" href=\"#PAGE_BOTTOM\">". T('Bottom') . "</a></div>\n";
 	}
 ###
 ###############
@@ -2160,7 +2160,7 @@ sub GetMinimumFooter {
 	if ($CheckTime) {
 		$result .= "<i>" . sprintf("%8.3f",&tv_interval($StartTime)) . " sec </i>";
 	}
-	$result .= "<a accesskey=\"x\" name=\"#PAGE_BOTTOM\" href=\"#PAGE_TOP\">" . T('Top') . "</a></DIV>\n" . $q->end_html;
+	$result .= "<a accesskey=\"x\" name=\"PAGE_BOTTOM\" href=\"#PAGE_TOP\">" . T('Top') . "</a></DIV>\n" . $q->end_html;
 ### 
 
 	return $result;
@@ -2780,10 +2780,10 @@ sub MacroFootnote {
 	my ($note) = @_;
 
 	$MyFootnoteCounter++;
-	$MyFootnotes .= "<A name='#FN_$MyFootnoteCounter' href='#FNR_$MyFootnoteCounter'>$MyFootnoteCounter</A>" .
+	$MyFootnotes .= "<A name='FN_$MyFootnoteCounter' href='#FNR_$MyFootnoteCounter'>$MyFootnoteCounter</A>" .
 					". $note" .
 					"<br>\n";
-	return "<A class='footnote' name='#FNR_$MyFootnoteCounter' href='#FN_$MyFootnoteCounter'>$MyFootnoteCounter</A>";
+	return "<A class='footnote' name='FNR_$MyFootnoteCounter' href='#FN_$MyFootnoteCounter'>$MyFootnoteCounter</A>";
 }
 
 ### comments from Jof
@@ -3596,7 +3596,7 @@ sub MacroFullSearch()
 sub MacroDate() { return &CalcDay(time); }
 sub MacroTime() { return &CalcTime(time); }
 sub MacroDateTime() { return &CalcDay(time) . " " . &CalcTime(time); }
-sub MacroAnchor() {	return "<a name=\"\#@_\"></a>"; }
+sub MacroAnchor() {	return "<a name=\"@_\"></a>"; }
 
 sub MacroPageCount() {
 	my @pageList = &AllPagesList();
