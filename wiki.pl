@@ -7763,7 +7763,10 @@ sub DeletePage {
 	unlink ($fname) if (-f $fname);
 ### hide page by gypark
 	if (defined($HiddenPage{$page})) {
+		# 숨긴 화일의 경우는 keep 화일과 rclog 를 다 제거한다.
 		&EditRecentChanges(1, $page, "");
+		$fname = $KeepDir . "/" . &GetPageDirectory($page) .  "/$page.kp";
+		unlink($fname)  if (-f $fname);
 		delete $HiddenPage{$page};
 		&SaveHiddenPageFile();
 	}
