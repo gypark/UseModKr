@@ -544,7 +544,7 @@ Keep login information
 Update my bookmark timestamp
 북마크 타임스탬프 갱신
 currently set to %s
-현재는 %s 로 설정되어 있음
+현재는 %s 으로 설정되어 있음
 set bookmark
 북마크 지정
 END_OF_TRANSLATION
