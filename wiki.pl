@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.21a";
-$WikiRelease = "2003-02-12";
+$WikiVersion = "0.92K3-ext1.22";
+$WikiRelease = "2003-02-13";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -737,6 +737,21 @@ sub DoRc {
 		T('List new changes starting from'));
 	print " " . &TimeToText($lastTs) . "<br>\n";
 
+###############
+### added by gypark
+### 최근변경내역에 북마크 기능 도입
+	if (&GetParam("username") ne "") {
+		my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(&GetParam('bookmark',0));
+		print &ScriptLink("action=bookmark&time=$Now",
+				T('Update my bookmark timestamp'));
+		print " (". 
+			Ts('currently set to %s', 
+				($year+1900)."-".($mon+1)."-".$mday." "."$hour:$min:$sec").
+			")<br>";
+	}
+### 
+###############
+
 	# Later consider a binary search?
 	$i = 0;
 	while ($i < @fullrc) {  # Optimization: skip old entries quickly
@@ -779,6 +794,26 @@ sub GetRcHtml {
 	$tChanges = T('changes');
 	$showedit = &GetParam("rcshowedit", $ShowEdits);
 	$showedit = &GetParam("showedit", $showedit);
+
+###############
+### added by gypark
+### 최근변경내역에 북마크 기능 도입
+	my $bookmark;
+	my $difflink;
+	my ($rcnew, $rcupdated, $rcdiff) = (
+			"<img src='icons/rc-new.gif'>",
+			"<img src='icons/rc-updated.gif'>",
+			"<img src='icons/rc-diff.gif'>"
+	);
+	if (&GetParam('username') eq "") {
+		$bookmark = $Now;
+	} else {
+		$bookmark = &GetParam('bookmark',0);
+	}
+###
+###############
+
+
 	if ($showedit != 1) {
 		my @temprc = ();
 		foreach $rcline (@outrc) {
@@ -848,37 +883,32 @@ sub GetRcHtml {
 		$edit = "";
 		$edit = "<em>$tEdit</em> "  if ($isEdit);
 		$count = "";
+		if ((!$all) && ($pagecount{$pagename} > 1)) {
+			$count = "($pagecount{$pagename} ";
+			if (&GetParam("rcchangehist", 1)) {
+				$count .= &GetHistoryLink($pagename, $tChanges);
+			} else {
+				$count .= $tChanges;
+			}
+			$count .= ") ";
+		}
+		$link = "";
+		if ($UseDiff && &GetParam("diffrclink", 1)) {
 ###############
 ### replaced by gypark
-### 새 글 옆에는 New 마크 표시
-#		if ((!$all) && ($pagecount{$pagename} > 1)) {
-#			$count = "($pagecount{$pagename} ";
-#			if (&GetParam("rcchangehist", 1)) {
-#				$count .= &GetHistoryLink($pagename, $tChanges);
-#			} else {
-#				$count .= $tChanges;
-#			}
-#			$count .= ") ";
-#		}
-		if ($pagecount{$pagename} > 1) {
-			if (!$all) {
-				$count = "($pagecount{$pagename} ";
-				if (&GetParam("rcchangehist", 1)) {
-					$count .= &GetHistoryLink($pagename, $tChanges);
-				} else {
-					$count .= $tChanges;
-				}
-				$count .= ") ";
+### 최근변경내역에 북마크 기능 도입
+#			$link .= &ScriptLinkDiff(4, $pagename, $tDiff, "") . "  ";
+			if ($ts < $bookmark) {
+				$difflink = $rcdiff;
+			} elsif ($extra{'tscreate'} >= $bookmark) {
+				$difflink = $rcnew;
+			} else {
+				$difflink = $rcupdated;
 			}
-		} else {
-			$count = "<font color=red>(".&T('NEW').")</font>";
+			$link .= &ScriptLinkDiff(4, $pagename, $difflink, "") . "  ";
 		}
 ###
 ###############
-		$link = "";
-		if ($UseDiff && &GetParam("diffrclink", 1)) {
-			$link .= &ScriptLinkDiff(4, $pagename, $tDiff, "") . "  ";
-		}
 		$link .= &GetPageLink($pagename);
 		$html .= "<li>$link ";
 		# Later do new-RC looping here.
@@ -1560,7 +1590,7 @@ sub GetGotoBar {
 ### replaceed by gypark
 ### subpage 의 경우, 상위페이지 이름 앞에 아이콘 표시
 #		$bartext .= " </td><td> " . &GetPageLink($main);
-		$bartext .= " </td><td> <img src=\"./emoticon/parentpage.gif\" border=\"0\" alt=\""
+		$bartext .= " </td><td> <img src=\"./icons/parentpage.gif\" border=\"0\" alt=\""
 					. T('Main Page:') . " $main\" align=\"absmiddle\">" . &GetPageLink($main);
 ###
 ###############
@@ -2753,7 +2783,7 @@ sub InterPageLink {
 ### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
 ### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
 #	return ("<a href=\"$url\">$name</a>", $punct);
-	return ("<a href=\"$url\">$name</a><a href=\"$url\" target=\"_blank\"><img src=\"./emoticon/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>", $punct);
+	return ("<a href=\"$url\">$name</a><a href=\"$url\" target=\"_blank\"><img src=\"./icons/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>", $punct);
 ###
 ###############
 
@@ -2779,7 +2809,7 @@ sub StoreBracketInterPage {
 ### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
 ### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
 #	return &StoreRaw("<a href=\"$url\">[$text]</a>");
-	return &StoreRaw("<a href=\"$url\">[$text]</a><a href=\"$url\" target=\"_blank\"><img src=\"./emoticon/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>");
+	return &StoreRaw("<a href=\"$url\">[$text]</a><a href=\"$url\" target=\"_blank\"><img src=\"./icons/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>");
 ###
 ###############
 }
@@ -2998,7 +3028,7 @@ sub UrlLink {
 ### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
 ### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
 #	return ("<a href=\"$name\">$name</a>", $punct);
-	return ("<a href=\"$name\">$protocol$name</a><a href=\"$name\" target=\"_blank\"><img src=\"./emoticon/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>", $punct);
+	return ("<a href=\"$name\">$protocol$name</a><a href=\"$name\" target=\"_blank\"><img src=\"./icons/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>", $punct);
 ###
 ###############
 }
@@ -3015,7 +3045,7 @@ sub StoreBracketUrl {
 ### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
 ### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
 #	return &StoreRaw("<a href=\"$url\">[$text]</a>");
-	return &StoreRaw("<a href=\"$url\">[$text]</a><a href=\"$url\" target=\"_blank\"><img src=\"./emoticon/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>");
+	return &StoreRaw("<a href=\"$url\">[$text]</a><a href=\"$url\" target=\"_blank\"><img src=\"./icons/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>");
 ###
 ###############
 }
@@ -4561,6 +4591,13 @@ sub DoOtherRequest {
 			&DoEditPrefs();  # Also creates new ID
 		} elsif ($action eq "version") {
 			&DoShowVersion();
+###############
+### added by gypark
+### 최근변경내역에 북마크 기능 도입
+		} elsif ($action eq "bookmark") {
+			&DoBookmark();
+###
+###############
 		} else {
 			# Later improve error reporting
 			&ReportError(Ts('Invalid action parameter %s', $action));
@@ -5558,7 +5595,7 @@ sub PrintPageList {
 # 앵커를 삽입
 			print "\n<a name=\"H_$indexTitle[$count]\"></a>";
 			print $q->h3($indexTitle[$count] 
-					. "&nbsp;<a href=\"#PAGE_TOP\"><img src=\"emoticon/gotop.gif\" align=\"texttop\" alt=\"" . T('Top') 
+					. "&nbsp;<a href=\"#PAGE_TOP\"><img src=\"icons/gotop.gif\" align=\"texttop\" alt=\"" . T('Top') 
 					. "\"></a>");
 			$count2 = $count + 1;
 ### gypark 의 색인 패치
@@ -6145,6 +6182,13 @@ sub WriteRcLog {
 	%extra = ();
 	$extra{'id'} = $UserID  if ($UserID ne "");
 	$extra{'name'} = $name  if ($name ne "");
+###############
+### added by gypark
+### 최근변경내역에 북마크 기능 도입
+	$extra{'tscreate'} = $Page{'tscreate'};
+###
+###############
+
 	$extraTemp = join($FS2, %extra);
 	# The two fields at the end of a line are kind and extension-hash
 	my $rc_line = join($FS3, $editTime, $id, $summary,
@@ -6739,6 +6783,33 @@ sub DoShowVersion {
 
 #END_OF_OTHER_CODE
 
+###############
+### added by gypark
+### 통채로 추가한 함수들은 여기에 둠
+
+###############
+### added by gypark
+### 최근변경내역에 북마크 기능 도입
+sub DoBookmark {
+	if (&GetParam('username') eq "") {		# 로그인하지 않은 경우
+		&BrowsePage($RCName);				# 그냥 최근 변경 내역으로 이동
+		return 1;
+	}
+	if (&GetParam('time') ne "") {
+		$UserData{'bookmark'} = &GetParam('time');
+	} else {
+		$UserData{'bookmark'} = $Now;
+	}
+	&SaveUserData();
+	&BrowsePage($RCName);
+	return 1;
+}
+###
+###############
+
+
+### 통채로 추가한 함수들의 끝
+###############
 &DoWikiRequest()  if ($RunCGI && ($_ ne 'nocgi'));   # Do everything.
 1; # In case we are loaded from elsewhere
 # == End of UseModWiki script. ===========================================
