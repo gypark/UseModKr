@@ -5,7 +5,7 @@
 #
 # {{{#!gnuplot
 # plot "data1.dat"
-# FILE:data1.dat
+# ##FILE:data1.dat
 # 1    2
 # 2    3
 # 3    3.5
