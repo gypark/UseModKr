@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.48";
-$WikiRelease = "2003-09-08";
+$WikiVersion = "0.92K3-ext1.48a";
+$WikiRelease = "2003-09-09";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -2288,9 +2288,9 @@ sub MacroIncludeSubst {
 ### toc 를 포함하지 않는 includenotoc 매크로 추가
 	$txt =~ s/<includenotoc\((.*)\)>/&MacroInclude($1, "notoc")/gei;
 ### includeday 매크로
- 	$txt =~ s/<includeday\(([^,\n]+,)?([-+]?\d+)\)>/&MacroIncludeDay($1, $2)/gei;
+ 	$txt =~ s/(<includeday\(([^,\n]+,)?([-+]?\d+)\)>)/&MacroIncludeDay($1, $2, $3)/gei;
 ### includedays 매크로
-	$txt =~ s/<includedays\(([^,\n]+,)?([-+]?\d+),([-+]?\d+)\)>/&MacroIncludeDay($1, $2, $3)/gei;
+	$txt =~ s/(<includedays\(([^,\n]+,)?([-+]?\d+),([-+]?\d+)\)>)/&MacroIncludeDay($1, $2, $3, $4)/gei;
 	return $txt;
 }
 ###
@@ -2575,7 +2575,7 @@ sub MacroJDic {
 
 ### <IncludeDay>
 sub MacroIncludeDay {
-	my ($mainpage, $day_offset, $num_days) = @_;
+	my ($itself, $mainpage, $day_offset, $num_days) = @_;
 	my $page = "";
 	my $temp;
 	my $result = "";
@@ -2595,7 +2595,7 @@ sub MacroIncludeDay {
 		$temp = &RemoveLink($temp);
 		$temp = &FreeToNormal($temp);
 		if (&ValidId($temp) ne "") {
-			return "&lt;includeday($mainpage$day_offset)&gt;";
+			return $itself;
 		}
 		$temp =~ s/\/.*$//;
 		$mainpage = $temp . "/";
