@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.42";
-$WikiRelease = "2003-03-24";
+$WikiVersion = "0.92K3-ext1.42a";
+$WikiRelease = "2003-03-25";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -7395,11 +7395,6 @@ sub UploadFile {
 
 	&RequestLockDir('upload', 5, 2, 0) || return 5;
 	my $prefix = &GetLastPrefix($UploadDir, $filename);
-	if ($prefix == 0) {
-		$prefix = "";
-	} else {
-		$prefix = ($prefix+1)."_";
-	}
 	my $target = $prefix.$filename;
 	my $target_full = "$UploadDir/$target";
 
@@ -7489,14 +7484,7 @@ sub DoOekaki {
 
 sub OekakiExit {
 	my $filename = "oekaki.png";
-	my $prefix = &GetLastPrefix($UploadDir, $filename);
 	my (@allfiles, @files, %filemtime);
-
-	if ($prefix == 0) {
-		$prefix = "";
-	} else {
-		$prefix = $prefix."_";
-	}
 
 	opendir (DIR, "$UploadDir") || die Ts('cant opening %s', $UploadDir) . ": $!";
 	@allfiles = readdir(DIR);
@@ -7580,11 +7568,6 @@ sub OekakiSave {
 # 저장할 화일명 결정
 	$filename = "oekaki.png";
 	$prefix = &GetLastPrefix($UploadDir, $filename);
-	if ($prefix == 0) {
-		$prefix = "";
-	} else {
-		$prefix = ($prefix+1)."_";
-	}
 	$target_full = $UploadDir."/".$prefix.$filename;
 
 # 저장
@@ -7662,16 +7645,16 @@ height [480-40]<input type="text" name="height" size="4" maxlength="3" value="$i
 |;
 }
 
-### 화일명이 겹칠 경우 가장 최근 화일의 prefix 를 얻는 함수
+### 화일명이 겹칠 경우 앞에 붙일 prefix 를 얻는 함수
 sub GetLastPrefix {
 	my ($dir, $file) = @_;
 
 	if (!(-f "$dir/$file")) {
-		return 0;
+		return "";
 	}
 	
 	if (!(-f "$dir/2_$file")) {
-		return 1;
+		return "2_";
 	}
 
 	my $prefix = 2;
@@ -7683,7 +7666,7 @@ sub GetLastPrefix {
 		$prefix++;
 	}
 
-	return ($prefix - 1);
+	return $prefix ."_";
 }
 
 
