@@ -549,4 +549,16 @@ set bookmark
 북마크 지정
 cant create directory %s
 %s 디렉토리를 생성할 수 없습니다
+Editing Help :
+도움말 :
+Make Page
+페이지 만들기
+Text Formatting
+문장 구성
+Link and Image
+링크와 이미지
+Macro
+매크로
+Emoticon
+이모티콘
 END_OF_TRANSLATION

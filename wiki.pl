@@ -5058,10 +5058,10 @@ function help(s)
 </script>
 |;
 
-	print "도움말: ";
-	print &HelpLink(1, "페이지 만들기") . " | ";
-	print &HelpLink(2, "문장 구성") . " | ";
-	print &HelpLink(3, "링크와 이미지") . " | ";
+	print T('Editing Help :') . "&nbsp;";
+	print &HelpLink(1, T('Make Page')) . " | ";
+	print &HelpLink(2, T('Text Formatting')) . " | ";
+	print &HelpLink(3, T('Link and Image')) . " | ";
 ###############
 ### replaceed by gypark
 ### 이모티콘 관련 도움말 출력
@@ -5069,8 +5069,8 @@ function help(s)
 
 #	print &HelpLink(4, "매크로") . "<br>";
 
-	print &HelpLink(4, "매크로") . " | ";
-	print &HelpLink(5, "이모티콘") . "<br>\n";
+	print &HelpLink(4, T('Macro')) . " | ";
+	print &HelpLink(5, T('Emoticon')) . "<br>\n";
 ###
 ###############
 ###############
