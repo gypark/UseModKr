@@ -1039,7 +1039,7 @@ sub DoRc {
 	} else {
 		my $bookmark = &GetParam('bookmark',-1);
 		print "<br>" . &ScriptLink("action=bookmark&time=$Now",
-				T('Update my bookmark timestamp'));
+				T('Update my bookmark timestamp')." [m]");
 		print " (". 
 			Ts('currently set to %s', &TimeToText($bookmark)).
 			")<br>\n";
