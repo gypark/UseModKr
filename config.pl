@@ -30,9 +30,9 @@ $UserGotoBar = "<a href='/'>Home</a>";              # HTML added to end of goto 
 ##########################################################
 ### added by gypark
 ### 상단 메뉴에 사용자정의링크를 더 달 수 있게 함
-$UserGotoBar2 = "<a href='./wiki.pl?횡설수설'><b>횡설수설</b></a>";
-$UserGotoBar3 = "<a href='./wiki.pl?게시판'><b>게시판</b></a>";
-$UserGotoBar4 = "<a href='./wiki.pl?UploadBoard'><b>Upload</b></a>";
+$UserGotoBar2 = "";
+$UserGotoBar3 = "";
+$UserGotoBar4 = "";
 
 ### 번역화일 사용
 do "./translations/korean.pl";    # Path of translation file

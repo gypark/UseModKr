@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+
 # UseModWiki version 0.92K2 (2001-12-27)
 # Copyright (C) 2000-2001 Clifford A. Adams
 #    <caadams@frontiernet.net> or <usemod@usemod.com>
