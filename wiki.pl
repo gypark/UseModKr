@@ -5711,7 +5711,7 @@ sub DoReverse {
 	print &GetHeader('', &QuoteHtml(Ts('Links to %s', $string)), '');
 	print '<br>';
 
-	foreach $pagelines (&GetFullLinkList("sort=1&reverse=$string")) {
+	foreach $pagelines (&GetFullLinkList("page=1&unique=1&sort=1&exists=2&empty=0&reverse=$string")) {
 		my @pages = split(' ', $pagelines);
 		@x = (@x, shift(@pages));
 	}
@@ -5935,7 +5935,7 @@ sub GetFullLinkList {
 			"inter", 0,
 			"url", 0,
 			"exists", 2,
-			"empty", 0,
+			"empty", 1,
 			"search", "",
 			"reverse", ""
 	);
