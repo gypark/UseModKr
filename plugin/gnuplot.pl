@@ -26,7 +26,7 @@ sub plugin_gnuplot {
 	} else {
 		$hash = crypt($content, $HashKey);
 	}
-	$hash =~ s/(\W)/uc sprintf "%%%02x", ord($1)/eg;
+	$hash =~ s/(\W)/uc sprintf "_%02x", ord($1)/eg;
 
 	my $hashimage = "$hash.png";
 	my $imgpath = "";

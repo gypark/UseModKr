@@ -39,7 +39,7 @@ sub plugin_vim {
 	} else {
 		$hash = crypt($content.join('',@opt), $HashKey);
 	}
-	$hash =~ s/(\W)/uc sprintf "%%%02x", ord($1)/eg;
+	$hash =~ s/(\W)/uc sprintf "_%02x", ord($1)/eg;
 
 	my $hashhtml = "$hash.html";
 	my $VimDir = "$UploadDir/vim";
