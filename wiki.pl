@@ -165,6 +165,7 @@ $RssTimeZone = 9;				# Time Zone of Server (hour), 0 for GMT, 9 for Korea
 $SlashLinks   = 0;      # 1 = use script/action links, 0 = script?action
 $InterIconDir = "./icons-inter/"; # directory containing interwiki icons
 $SendPingAllowed = 0;   # 0 - anyone, 1 - who can edit, 2 - who is admin
+$JavaScript  = "wikiscript.js";   # URL for JavaScript code (like "/wikiscript.js")
 
 # Major options:
 $UseSubpage  = 1;       # 1 = use subpages,       0 = do not use subpages
