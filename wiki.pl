@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.21";
-$WikiRelease = "2003-02-11";
+$WikiVersion = "0.92K3-ext1.21a";
+$WikiRelease = "2003-02-12";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -5264,7 +5264,7 @@ sub DoEnterLogin {
 ### added by gypark
 ### 로긴할 때 자동 로그인 여부 선택
 ### from Bab2's patch
-	print '<br>', &GetFormCheck('p_expire', 0, T('Keep login information'));
+	print '<br>', &GetFormCheck('expire', 0, T('Keep login information'));
 ###
 ###############
 	print '<br>', $q->submit(-name=>'Login', -value=>T('Login')), "\n";
@@ -5314,7 +5314,7 @@ sub DoLogin {
 ### added by gypark
 ### 로긴할 때 자동 로그인 여부 선택
 ### from Bab2's patch
-			my $expire_mode = &UpdatePrefCheckbox("p_expire");
+			my $expire_mode = &UpdatePrefCheckbox("expire");
 			if ($expire_mode eq "") {
 				$SetCookie{'expire'} = 1;
 			} else {
