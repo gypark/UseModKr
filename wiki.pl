@@ -368,7 +368,7 @@ sub InitRequest {
 		print $q->redirect(-url=>"http:$ENV{SCRIPT_NAME}?action=upload&error=3");
 		exit 1;
 	}
-	$UploadUrl = $UploadDir if ($UploadUrl eq "");
+	$UploadUrl = "http:$UploadDir" if ($UploadUrl eq "");
 ###
 ###############
 	$Now = time;                     # Reset in case script is persistent
