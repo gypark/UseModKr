@@ -77,6 +77,9 @@ $SendPingAllowed = 0;   # 0 - anyone, 1 - who can edit, 2 - who is admin
 $JavaScript  = "wikiscript.js";   # URL for JavaScript code (like "/wikiscript.js")
 ### LaTeX 변환 지원
 $UseLatex    = 0;		# 1 = Use LaTeX conversion   2 = Don't convert
+### 사용자 정의 헤더
+$UserHeader  = '';              # Optional HTML header additional content
+
 ##
 ##########################################################
 

@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.84";
+$WikiVersion = "0.92K3-ext1.85";
 $WikiRelease = "2005-04-06";
 
 $HashKey = "salt"; # 2-character string
@@ -75,6 +75,7 @@ use vars qw(
 	$InterWikiMoniker $SiteDescription $RssLogoUrl $RssDays $RssTimeZone
 	$SlashLinks $InterIconDir $SendPingAllowed $JavaScript
 	$UseLatex
+	$UserHeader
 	);
 ###
 ###############
@@ -169,6 +170,7 @@ $InterIconDir = "./icons-inter/"; # directory containing interwiki icons
 $SendPingAllowed = 0;   # 0 - anyone, 1 - who can edit, 2 - who is admin
 $JavaScript  = "wikiscript.js";   # URL for JavaScript code (like "/wikiscript.js")
 $UseLatex    = 0;		# 1 = Use LaTeX conversion   2 = Don't convert
+$UserHeader  = '';              # Optional HTML header additional content
 
 # Major options:
 $UseSubpage  = 1;       # 1 = use subpages,       0 = do not use subpages
@@ -1948,6 +1950,10 @@ sub GetHtmlHeader {
 	$html .= "\n";
 ###
 ###############
+
+### 사용자 정의 헤더
+	$html .= $UserHeader;
+	$html .= "\n";
 
 	$bodyExtra = '';
 	if ($bgcolor ne '') {
