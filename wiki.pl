@@ -2006,7 +2006,6 @@ sub CommonMarkup {
 ###
 ###############
 
-
 		# The <nowiki> tag stores text with no markup (except quoting HTML)
 		s/\&__LT__;nowiki\&__GT__;((.|\n)*?)\&__LT__;\/nowiki\&__GT__;/&StoreRaw($1)/ige;
 		# The <pre> tag wraps the stored text with the HTML <pre> tag
@@ -2322,9 +2321,7 @@ sub MacroComments {
 	my $submit_button = $q->submit(-name=>"Submit",-value=>T("Submit"));
 
 	if ($long) {
-		$hidden_long =
-			$q->hidden(-name=>"long",-value=>"1") .
-			"<br>";
+		$hidden_long = &GetHiddenValue("long","1") . "<br>";
 	}
 
 	if ((!&UserCanEdit($id)) && (abs($up) < 100)) {		# 에디트 불가
@@ -2377,10 +2374,10 @@ sub MacroComments {
 
 	return
 		$q->startform(-name=>"comments",-method=>"POST",-action=>"$ScriptName") .
-		$q->hidden(-name=>"action",-value=>"comments") .
-		$q->hidden(-name=>"id",-value=>"$id") .
-		$q->hidden(-name=>"pageid",-value=>"$pageid") .
-		$q->hidden(-name=>"up",-value=>"$up") .
+		&GetHiddenValue("action","comments") .
+		&GetHiddenValue("id","$id") .
+		&GetHiddenValue("pageid","$pageid") .
+		&GetHiddenValue("up","$up") .
 		T('Name') . ": " .
 		$name_field . "&nbsp;" .
 		T('Comment') . ": " .
