@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.11";
-$WikiRelease = "2002-12-04";
+$WikiVersion = "0.92K3-ext1.12";
+$WikiRelease = "2002-12-09";
 $HashKey = "gyparkwiki"; # 2-character string
 ###
 ###############
@@ -61,7 +61,7 @@ use vars qw(@RcDays @HtmlPairs @HtmlSingle
 	$FooterNote $EditNote $MaxPost $NewText $NotifyDefault $HttpCharset
 	$UserGotoBar $UserGotoBar2 $UserGotoBar3 $UserGotoBar4 
 	$ConfigFile $SOURCEHIGHLIGHT %SRCHIGHLANG $LinkFirstChar $FS_lt $FS_gt
-	$EditGuideInExtern $SizeTopFrame $SizeBottomFrame);
+	$EditGuideInExtern $SizeTopFrame $SizeBottomFrame $ImgUrlPattern);
 ###
 ###############
 
@@ -316,6 +316,12 @@ sub InitLinkPatterns {
 									. "prospero|telnet|gopher";
 	$UrlProtocols .= '|file'  if $NetworkFile;
 	$UrlPattern = "((?:(?:$UrlProtocols):[^\\]\\s\"<>$FS]+)$QDelim)";
+###############
+### added by gypark
+### 개별적인 IMG: 태그
+	$ImgUrlPattern = "IMG:([^<>\n]*)(\n)?$UrlPattern";
+###
+###############
 	$ImageExtensions = "(gif|jpg|png|bmp|jpeg)";
 	$RFCPattern = "RFC\\s?(\\d+)";
 	$ISBNPattern = "ISBN:?([0-9- xX]{10,})";
@@ -1768,6 +1774,12 @@ sub CommonMarkup {
 
 		s/\[$UrlPattern\]/&StoreBracketUrl($1, "")/geo;
 		s/\[$InterLinkPattern\]/&StoreBracketInterPage($1, "")/geo;
+###############
+### added by gypark
+### 개별적인 IMG: 태그
+		s/$ImgUrlPattern/&StoreImgUrl($1, $3, $useImage)/geo;
+###
+###############
 		s/$UrlPattern/&StoreUrl($1, $useImage)/geo;
 ###############
 ### replaced by gypark
@@ -2811,6 +2823,23 @@ sub StoreUrl {
 	$link = &StoreRaw($link)  if ($link ne "");
 	return $link . $extra;
 }
+
+###############
+### added by gypark
+### 개별적인 IMG: 태그
+sub StoreImgUrl {
+	my ($imgTag, $name, $useImage) = @_;
+	my ($link, $extra);
+
+	$ImageTag = $imgTag;
+	($link, $extra) = &UrlLink($name, $useImage);
+	# Next line ensures no empty links are stored
+	$link = &StoreRaw($link)  if ($link ne "");
+	$ImageTag = "";
+	return $link . $extra;
+}
+###
+###############
 
 sub UrlLink {
 	my ($rawname, $useImage) = @_;
