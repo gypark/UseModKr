@@ -20,7 +20,7 @@ sub index {
 		my $column = 0;
 
 		$index .= "<TABLE style='border:none; width=100%;' width='100%'>";
-		foreach my $key (sort {uc($a) cmp uc($b)} keys %MyIndexAlias) {
+		foreach my $key (sort {lc($a) cmp lc($b)} keys %MyIndexAlias) {
 			$column++;
 			$column = 1 if ($column > $tablecolumn);
 
@@ -33,7 +33,7 @@ sub index {
 			$index .= "$key&nbsp;&nbsp;&nbsp;";
 			$index .= "$MyIndexEntry{$key}";
 			if (@aliases) {
-				foreach my $aliaskey (sort {uc($a) cmp uc($b)} @aliases) {
+				foreach my $aliaskey (sort {lc($a) cmp lc($b)} @aliases) {
 					$title = $aliaskey;
 					$title =~ s/^(.+)::://;
 					$index .= "<BR>&nbsp;&nbsp;$title&nbsp;&nbsp;&nbsp;";
