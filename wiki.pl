@@ -3650,6 +3650,18 @@ sub GetSiteUrl {
 		$InterSite{'Upload'} = "$UploadUrl\/";
 ###
 ###############
+###############
+### added by gypark
+### Local, LocalWiki 인터위키 from usemod 1.0
+		if (!defined($InterSite{'LocalWiki'})) {
+			$InterSite{'LocalWiki'} = $ScriptName . &ScriptLinkChar();
+		}
+		if (!defined($InterSite{'Local'})) {
+			$InterSite{'Local'} = $ScriptName . &ScriptLinkChar();
+		}
+###
+###############
+
 	}
 	$url = $InterSite{$site}  if (defined($InterSite{$site}));
 	return $url;
