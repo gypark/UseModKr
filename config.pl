@@ -114,7 +114,8 @@ $InterFile   = "intermap";			# Interwiki site->url map
 $RcFile      = "$DataDir/rclog";    # New RecentChanges logfile
 $RcOldFile   = "$DataDir/rclog.old"; # Old RecentChanges logfile
 $IndexFile   = "$DataDir/pageidx";  # List of all pages
-$LinkDir     = "$DataDir/link";    # Stores the links of each page
+$LinkDir     = "$DataDir/link";    # by gypark. Stores the links of each page
+$CountDir    = "$DataDir/count";	# by gypark. Stores view-counts
 
 # added by luke
 

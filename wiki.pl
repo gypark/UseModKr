@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.33a";
+$WikiVersion = "0.92K3-ext1.34";
 $WikiRelease = "2003-03-06";
 
 $HashKey = "salt"; # 2-character string
@@ -70,7 +70,7 @@ use vars qw(
 	$UserGotoBar $UserGotoBar2 $UserGotoBar3 $UserGotoBar4 
 	$ConfigFile $SOURCEHIGHLIGHT @SRCHIGHLANG $LinkFirstChar
 	$EditGuideInExtern $SizeTopFrame $SizeBottomFrame
-	$LogoPage $CheckTime $LinkDir $IconDir
+	$LogoPage $CheckTime $LinkDir $IconDir $CountDir
 	);
 ###
 ###############
@@ -90,7 +90,8 @@ use vars qw(%Page %Section %Text %InterSite %SaveUrl %SaveNumUrl
 ###############
 ### added by gypark
 ### 패치를 위해 추가된 내부 전역 변수
-use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime $Sec_Revision $Sec_Ts);
+use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime $Sec_Revision $Sec_Ts
+	$ViewCount);
 ###
 ###############
 
@@ -429,6 +430,14 @@ sub BrowsePage {
 
 	&OpenPage($id);
 	&OpenDefaultText();
+###############
+### added by gypark
+### page count
+	if (-f &GetPageFile($id)) {
+		$ViewCount = &GetPageCount($id) if (-f &GetPageFile($id));
+	}
+###
+###############
 	$openKept = 0;
 	$revision = &GetParam('revision', '');
 	$revision =~ s/\D//g;           # Remove non-numeric chars
@@ -1517,7 +1526,12 @@ sub GetEditGuide {
 	}
 
 	$result .= '<br>';
-
+###############
+### added by gypark
+### page count
+		$result .= "$ViewCount ".T('hits')." | " if ($ViewCount ne "");
+###
+###############
 	$result .= &GetHistoryLink($id, T('History'));
 	if ($rev ne '') {
 		$result .= ' | ';
@@ -6563,6 +6577,9 @@ sub DeletePage {
 	unlink($fname) if (-f $fname);
 ### cache 화일도 같이 삭제
 	&UnlinkHtmlCache($page);
+### page count 화일도 같이 삭제
+	$fname = &GetCountFile($page);
+	unlink ($fname) if (-f $fname);
 ###
 #########################################################3
 ###############
@@ -6817,6 +6834,13 @@ sub RenamePage {
 	}
 ### cache 화일은 삭제
 	&UnlinkHtmlCache($old);
+### page count 화일도 변경
+	my ($oldcnt, $newcnt);
+	$oldcnt = &GetCountFile($old);
+	if (-f $oldcnt) {
+		$newcnt = &GetCountFile($new);
+		rename($oldcnt, $newcnt) || die "error while renaming count file";
+	}
 ###
 ###############
 
@@ -6934,12 +6958,55 @@ sub GetPageLinksFromFile {
 
 	return @result;
 }
+
+### page count
+sub GetCountFile {
+	my ($id) = @_;
+
+	return $CountDir . "/" . &GetPageDirectory($id) . "/$id.cnt";
+}
+
+sub GetPageCount {
+	my ($id) = @_;
+	my ($pagecount, $countfile, $status);
+	my ($edit_user, $edit_ip, $view_user, $view_ip, $add)
+		= ($Section{'username'}, $Section{'ip'},
+			&GetParam('username', ""), $ENV{REMOTE_ADDR}, 0);
+
+	# 카운트 읽어옴
+	&CreatePageDir($CountDir, $id);
+	$countfile = &GetCountFile($id);
+	($status, $pagecount) = &ReadFile($countfile);
+	$pagecount = 0 if ($status == 0);
+
+	# 카운트 갱신 여부 결정
+	if ($view_user eq "") {
+		if ($edit_ip ne $view_ip) {
+			$add = 1;
+		}
+	} elsif ($edit_user ne $view_user) {
+		$add = 1;
+	}
+	if (&GetParam('InFrame',"") ne "") {
+		$add = 0;
+	}
+	$pagecount += $add;
+
+	# 카운트 기록
+	if ($add == 1) {
+		# 1 try, 2 second wait, do not die on error
+		&RequestLockDir('count', 1, 2, 0) || return $pagecount;
+		&WriteStringToFile($countfile, $pagecount);
+		&ReleaseLockDir('count');
+	}
+	return $pagecount;
+}
+
 ###
 ###############
 
 ### 통채로 추가한 함수들의 끝
 ###############
-
 
 &DoWikiRequest()  if ($RunCGI && ($_ ne 'nocgi'));   # Do everything.
 1; # In case we are loaded from elsewhere
