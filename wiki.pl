@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.60f";
-$WikiRelease = "2004-05-21";
+$WikiVersion = "0.92K3-ext1.61-beta1";
+$WikiRelease = "2004-07-18";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -73,7 +73,7 @@ use vars qw(
 	$LogoPage $CheckTime $LinkDir $IconDir $CountDir $UploadDir $UploadUrl
 	$HiddenPageFile $TemplatePage
 	$InterWikiMoniker $SiteDescription $RssLogoUrl $RssDays $RssTimeZone
-	$SlashLinks $InterIconDir
+	$SlashLinks $InterIconDir $SendPingAllowed
 	);
 ###
 ###############
@@ -164,6 +164,7 @@ $RssDays     = 7;               # Default number of days in RSS feed
 $RssTimeZone = 9;				# Time Zone of Server (hour), 0 for GMT, 9 for Korea
 $SlashLinks   = 0;      # 1 = use script/action links, 0 = script?action
 $InterIconDir = "./icons-inter/"; # directory containing interwiki icons
+$SendPingAllowed = 1;   # 0 - anyone, 1 - who can edit, 2 - who is admin
 
 # Major options:
 $UseSubpage  = 1;       # 1 = use subpages,       0 = do not use subpages
@@ -2106,9 +2107,35 @@ sub GetEditGuide {
 ###
 ###############
 	}
+
+###############
+### added by gypark
+### TrackBack
+	if (&UserCanSendTrackBackPing($id)) {
+		$FullUrl = $q->url(-full=>1)  if ($FullUrl eq "");
+		my $url = $FullUrl . &ScriptLinkChar . $id;
+
+		my $excerpt = substr($Text{'text'},0,252);
+		$excerpt =~ s/(([\x80-\xff].)*)[\x80-\xff]?$/$1/;
+		$excerpt = &QuoteHtml($excerpt);
+
+		$result .= &GetFormStart("TrackBack_ping") .
+			&GetHiddenValue("action", "send_ping") .
+			&GetHiddenValue("title", "$id") .
+			&GetHiddenValue("blog_name", "$SiteName") .
+			&GetHiddenValue("excerpt", "$excerpt") .
+			&GetHiddenValue("url", "$url") .
+			&GetHiddenValue("id", "$id") .
+			&T('Send TrackBack Ping of this page to:') . "&nbsp;" .
+			$q->textfield(-name=>"ping_url", -default=>"", -override=>1,
+					-size=>60, -maxlength=>200) .
+			$q->submit(&T('Send Ping')) .
+			$q->endform;
+	}
+###
+###############
+
 	$result .= "</DIV>";
-
-
 ###
 ###############
 	return $result;
@@ -2679,6 +2706,8 @@ sub MacroSubst {
 ### <color(글자색,[배경색,]내용)>
 	$txt =~ s/&__LT__;color\(([^,)]+),([^,)]+),([^\n]+?)\)&__GT__;/&MacroColorBk($1, $2, $3)/gei;
 	$txt =~ s/&__LT__;color\(([^,)]+),([^\n]+?)\)&__GT__;/&MacroColor($1, $2)/gei;
+### <trackbacksent> <trackbackreceived>
+	$txt =~ s/&__LT__;trackback(sent|received)&__GT__;//gei;
 ###
 ###############
 	return $txt;
@@ -5658,6 +5687,9 @@ sub DoOtherRequest {
 ### rss from usemod1.0
 		} elsif ($action eq "rss") {
 			&DoRss();
+### TrackBack
+		} elsif ($action eq "send_ping") {
+			&DoSendTrackBackPing();
 ###
 ###############
 		} else {
@@ -9133,6 +9165,77 @@ RSS
 sub GetHtmlRcLine {
 ### 현재는 사용되지 않음
 	die "GetHtmlRcLine -- must not be executed!!!";
+}
+
+### TrackBack
+sub DoSendTrackBackPing {
+	require Net::Trackback::Client;
+	require Net::Trackback::Ping;
+
+	my ($ping_url, $title, $url, $excerpt, $blog_name);
+	my $id = &GetParam('id');
+	my $validid = &ValidId($id);
+	my $result = "";
+
+	$ping_url = &GetParam('ping_url');
+	$title = &GetParam('title');
+	$url = &GetParam('url');
+	$excerpt = &GetParam('excerpt');
+	$blog_name = &GetParam('blog_name');
+
+	if ($validid ne '') {
+		$result .= $validid;
+	} elsif (!&UserCanSendTrackBackPing($id)) {
+		$result .= &T('You are not allowed to send TrackBack ping of this page');
+	} elsif ($ping_url eq '') {
+		$result .= &T('No Ping URL');
+	} else {
+		my $ping = Net::Trackback::Ping->new;
+		$ping->ping_url("$ping_url");
+		$ping->title("$title");
+		$ping->url("$url");
+		$ping->excerpt("$excerpt");
+		$ping->blog_name("$blog_name");
+
+		my $client = Net::Trackback::Client->new();
+		my $msg = $client->send_ping($ping);
+		my $msg_str = $msg->to_xml;
+
+		my ($code, $message) = ($msg_str =~ m!<error>(\d+).*<message>(.*?)</message>!s);
+		
+		if ($msg->is_success) {
+			&OpenPage($id);
+			&OpenDefaultText();
+			my $string = $Text{'text'};
+			my $timestamp = &CalcDay($Now) . " " . &CalcTime($Now);
+			my $newtrackbacksent = "* $timestamp | $ping_url";
+			$string =~ s/(\<trackbacksent\>)/$1\n$newtrackbacksent/;
+			&DoPostMain($string, $id, &T('New TrackBack Sent'), $Section{'ts'}, 0, 0);
+		} else {
+			$result .= &Ts('Error occurred: %s', "$code - $message");
+		}
+	}
+
+	if ($result ne "") {
+		print &GetHttpHeader();
+		print &GetHtmlHeader("$SiteName : ". &T('Send TrackBack Ping'), "");
+		print $q->h2(&T('Send TrackBack Ping')) . "\n";
+		print $result;
+		print "<hr size='1'>".Ts('Return to %s' , &GetPageLink($id));
+		print $q->end_html;
+	}
+
+	return;
+}
+
+sub UserCanSendTrackBackPing {
+	my ($id) = @_;
+
+	return 1 if ($SendPingAllowed == 0);
+	return 1 if (&UserIsAdmin());
+	return 1 if (($SendPingAllowed == 1) && (&UserCanEdit($id)));
+
+	return 0;
 }
 
 ### 통채로 추가한 함수들의 끝

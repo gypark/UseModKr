@@ -689,4 +689,18 @@ Comment is not allowed
 답글 달기가 허용되지 않습니다
 Footnote
 각주
+Send TrackBack Ping of this page to:
+이 페이지의 트랙백 핑을 다음 주소로 보냄:
+Send Ping
+보내기
+You are not allowed to send TrackBack ping of this page
+이 페이지의 트랙백 핑을 보낼 권한이 없습니다
+No Ping URL
+트랙백 핑을 받을 주소가 없습니다
+New TrackBack Sent
+트랙백 핑을 보냄
+Error occurred: %s
+에러가 발생했습니다: %s
+Send TrackBack Ping
+트랙백 핑 보내기
 END_OF_TRANSLATION

@@ -71,9 +71,10 @@ $RssTimeZone = 9;				# Time Zone of Server (hour), 0 for GMT, 9 for Korea
 $SlashLinks   = 0;      # 1 = use script/action links, 0 = script?action
 ### interwiki 아이콘 사용
 $InterIconDir = "./icons-inter/"; # directory containing interwiki icons
+### trackback 보내기
+$SendPingAllowed = 0;   # 0 - anyone, 1 - who can edit, 2 - who is admin
 ##
 ##########################################################
-
 
 # Major options:
 $UseSubpage  = 1;       # 1 = use subpages,       0 = do not use subpages
