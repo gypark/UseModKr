@@ -12,6 +12,7 @@ sub plugin_vim {
 	my $tohtml = "syntax/2html.vim";
 	my $text;
 	my $status;
+	my $option;
 
 	my $type = "nosyntax";
 	foreach my $opt (@opt) {
