@@ -573,6 +573,6 @@ Viewing revision %s of
 
 %s hits
 
-This is the diff output of the saved text and your text:
+This is the difference between the saved text and your text:
 다음은 저장된 내용과 귀하가 작성한 내용 중 서로 다른 부분입니다:
 END_OF_TRANSLATION

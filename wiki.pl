@@ -4895,7 +4895,7 @@ function help(s)
 			my $conflictdiff = &GetDiff($oldText, $newText, 1);
 			$conflictdiff = T('No diff available.') if ($conflictdiff eq "");
 			print "\n<br><hr noshade size=1><p><strong>",
-				T('This is the diff output of the saved text and your text:'),
+				T('This is the difference between the saved text and your text:'),
 				"</strong><p>",
 				&DiffToHTML($conflictdiff),
 				"<p>\n";
