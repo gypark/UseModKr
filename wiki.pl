@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.22b";
+$WikiVersion = "0.92K3-ext1.22c";
 $WikiRelease = "2003-02-13";
 
 $HashKey = "salt"; # 2-character string
@@ -59,10 +59,18 @@ use vars qw(@RcDays @HtmlPairs @HtmlSingle
 	$ShowEdits $ThinLine $LinkPattern $InterLinkPattern $InterSitePattern
 	$UrlProtocols $UrlPattern $ImageExtensions $RFCPattern $ISBNPattern
 	$FS $FS1 $FS2 $FS3 $CookieName $SiteBase $StyleSheet $NotFoundPg
-	$FooterNote $EditNote $MaxPost $NewText $NotifyDefault $HttpCharset
+	$FooterNote $EditNote $MaxPost $NewText $NotifyDefault $HttpCharset);
+###
+###############
+
+###############
+### added by gypark
+### 패치를 위해 추가된 환경설정 변수
+use vars qw(
 	$UserGotoBar $UserGotoBar2 $UserGotoBar3 $UserGotoBar4 
-	$ConfigFile $SOURCEHIGHLIGHT %SRCHIGHLANG $LinkFirstChar $FS_lt $FS_gt
-	$EditGuideInExtern $SizeTopFrame $SizeBottomFrame);
+	$ConfigFile $SOURCEHIGHLIGHT %SRCHIGHLANG $LinkFirstChar
+	$EditGuideInExtern $SizeTopFrame $SizeBottomFrame
+	);
 ###
 ###############
 
@@ -77,6 +85,13 @@ use vars qw(%Page %Section %Text %InterSite %SaveUrl %SaveNumUrl
 	%LinkIndex $InterSiteInit $SaveUrlIndex $SaveNumUrlIndex $MainPage
 	$OpenPageName @KeptList @IndexList $IndexInit
 	$q $Now $UserID $TimeZoneOffset $ScriptName $BrowseCode $OtherCode);
+
+###############
+### added by gypark
+### 패치를 위해 추가된 내부 전역 변수
+use vars qw(%RevisionTs $FS_lt $FS_gt);
+###
+###############
 
 # == Configuration =====================================================
 ###############
@@ -564,6 +579,20 @@ sub BrowsePage {
 		$diffRevision = &GetParam('diffrevision', $diffRevision);
 		# Later try to avoid the following keep-loading if possible?
 		&OpenKeptRevisions('text_default')  if (!$openKept);
+###############
+### added by gypark
+### 최근변경내역에 북마크 기능 도입
+		if ($showDiff == 5) { 
+			$diffRevision = $Page{'revision'} - 1;
+			while (($diffRevision > 1) && 
+				(defined($RevisionTs{$diffRevision})) && 
+				($RevisionTs{$diffRevision} > &GetParam('bookmark',-1))) {
+				$diffRevision--;
+			}
+			$showDiff = &GetParam("defaultdiff", 1);
+		}
+###
+###############
 		$fullHtml .= &GetDiffHTML($showDiff, $id, $diffRevision, "$revision", $newText);
 		$fullHtml .= "<hr>\n";
 	}
@@ -804,7 +833,6 @@ sub GetRcHtml {
 ### added by gypark
 ### 최근변경내역에 북마크 기능 도입
 	my $bookmark;
-	my $difflink;
 	my $bookmarkuser = &GetParam('username', "");
 	my ($rcnew, $rcupdated, $rcdiff) = (
 			"<img src='icons/rc-new.gif'>",
@@ -919,13 +947,12 @@ sub GetRcHtml {
 ### 최근변경내역에 북마크 기능 도입
 #			$link .= &ScriptLinkDiff(4, $pagename, $tDiff, "") . "  ";
 			if (($bookmarkuser eq "") || ($ts <= $bookmark)) {
-				$difflink = $rcdiff;
+				$link .= &ScriptLinkDiff(4, $pagename, $rcdiff, "") . "  ";
 			} elsif ($extra{'tscreate'} > $bookmark) {
-				$difflink = $rcnew;
+				$link .= $rcnew . "  ";
 			} else {
-				$difflink = $rcupdated;
+				$link .= &ScriptLinkDiffRevision(5, $pagename, "", $rcupdated) . "  ";
 			}
-			$link .= &ScriptLinkDiff(4, $pagename, $difflink, "") . "  ";
 		}
 ###
 ###############
@@ -3710,11 +3737,22 @@ sub OpenKeptRevisions {
 
 	%KeptRevisions = ();
 	&OpenKeptList();
-
+###############
+### added by gypark
+### 최근변경내역에 북마크 기능 도입
+	%RevisionTs = ();
+###
+###############
 	foreach (@KeptList) {
 		%tempSection = split(/$FS2/, $_, -1);
 		next  if ($tempSection{'name'} ne $name);
 		$KeptRevisions{$tempSection{'revision'}} = $_;
+###############
+### added by gypark
+### 최근변경내역에 북마크 기능 도입
+		$RevisionTs{$tempSection{'revision'}} = $tempSection{'ts'};
+###
+###############
 	}
 }
 
