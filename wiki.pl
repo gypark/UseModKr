@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.12-3";
-$WikiRelease = "2002-12-18";
+$WikiVersion = "0.92K3-ext1.13";
+$WikiRelease = "2002-12-23";
 $HashKey = "salt"; # 2-character string
 ###
 ###############
@@ -1068,7 +1068,8 @@ sub GetPageOrEditAnchoredLink {
 ### replaced by gypark
 ### 존재하지 않는 페이지에 대한 링크 출력 형식 변경
 #	return $name . &GetEditLink($id,"?");
-	if (($LinkFirstChar) && ($name =~ /(\[)?([^\/]*\/)?([a-zA-Z0-9\/]|[\x80-\xff][\x80-\xff])([^\]]*)(\])?/)) {
+	if ((&GetParam('linkstyle', $LinkFirstChar)) 
+			&& ($name =~ /(\[)?([^\/]*\/)?([a-zA-Z0-9\/]|[\x80-\xff][\x80-\xff])([^\]]*)(\])?/)) {
 		return $2 . &GetEditLink($id,"<b>$3</b>") . $4;
 	} else {
 		return $name . &GetEditLink($id,"?");
@@ -4797,7 +4798,14 @@ sub DoEditPrefs {
 
 	print '<br>', &GetFormCheck('toplinkbar', 1,
 							T('Show link bar on top'));
-
+###############
+### added by gypark
+### 빈 페이지 링크 스타일을 환경 설정에서 결정
+### from Bab2's patch
+	print '<br>', &GetFormCheck('linkstyle', $LinkFirstChar,
+			T('Use wikiX style for the links to empty pages'));
+###
+###############
 	print '<br>', &GetFormCheck('linkrandom', 0,
 												T('Add "Random Page" link to link bar'));
 	print '<br>', $q->submit(-name=>'Save', -value=>T('Save')), "\n";
@@ -4835,6 +4843,13 @@ sub DoUpdatePrefs {
 
 	# All link bar settings should be updated before printing the header
 	&UpdatePrefCheckbox("toplinkbar");
+###############
+### added by gypark
+### 빈 페이지 링크 스타일을 환경 설정에서 결정
+### from Bab2's patch
+	&UpdatePrefCheckbox("linkstyle");
+###
+###############
 	&UpdatePrefCheckbox("linkrandom");
 	print &GetHeader('',T('Saving Preferences'), '');
 	print '<br>';
