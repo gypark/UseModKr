@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.83a";
-$WikiRelease = "2005-03-13";
+$WikiVersion = "0.92K3-ext1.84";
+$WikiRelease = "2005-04-06";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -1790,7 +1790,7 @@ sub GetHeader {
 	if ($FreeLinks) {
 		$title =~ s/_/ /g;   # Display as spaces
 	}
-	$result .= &GetHtmlHeader("$SiteName: $title", $title);
+	$result .= &GetHtmlHeader("$title :$SiteName", $title);
 ###############
 ### pda clip by gypark
 	if ($IsPDA) {
@@ -5210,7 +5210,7 @@ $OtherCode = ""; # Comment next line to always compile (slower)
 sub DoPreview {
 	$ClickEdit = 0;
 	print &GetHttpHeader();
-	print &GetHtmlHeader("$SiteName: " . T('Preview'), "Preview");
+	print &GetHtmlHeader(T('Preview') . " : $SiteName", "Preview");
 ###############
 ### replaced by gypark
 ### 미리보기에서 <mysign> 등의 preprocessor 사용
@@ -8062,7 +8062,7 @@ sub DoUpload {
 	my $result;
 
 	print &GetHttpHeader();
-	print &GetHtmlHeader("$SiteName : ". T('Upload File'), "");
+	print &GetHtmlHeader(T('Upload File') . " : $SiteName", "");
 	print $q->h2(T('Upload File')) . "\n";
 	if (!(&UserCanEdit("",1))) {
 		print T('Uploading is not allowed');
@@ -8189,7 +8189,7 @@ sub DoOekaki {
 	my $mode = &GetParam('mode','paint');
 
 	print &GetHttpHeader();
-	print &GetHtmlHeader("$SiteName : ". T("Oekaki $mode"), "");
+	print &GetHtmlHeader(T("Oekaki $mode") . " : $SiteName", "");
 	print $q->h2(T('Oekaki')) . "\n";
 	if (!(&UserCanEdit("",1))) {
 		print T('Oekaki is not allowed');
@@ -8862,7 +8862,7 @@ sub DoSendTrackbackPing {
 	}
 
 	print &GetHttpHeader();
-	print &GetHtmlHeader("$SiteName : ". &T('Send Trackback Ping'), "");
+	print &GetHtmlHeader(&T('Send Trackback Ping') . " : $SiteName", "");
 	print $q->h2(&T('Send Trackback Ping')) . "\n";
 	print $result;
 	print "<hr size='1'>".Ts('Return to %s' , &GetPageLink($id));
