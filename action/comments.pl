@@ -51,8 +51,8 @@ sub action_comments {
 			}
 			$comment_head .= " ";
 		} else {	# 새글
-			$comment_head = "<thread>\n";
-			$comment_tail .= "\n</thread>";
+# 			$comment_head = "<thread>\n";
+# 			$comment_tail .= "\n</thread>";
 		}
 
 		if (($up > 0) && ($up < $threshold1)) {		# 위로 달리는 새글
