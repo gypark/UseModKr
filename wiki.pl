@@ -2329,7 +2329,7 @@ sub MacroComments {
 	if ($long) {
 		$comment_field =
 			"<input type=\"hidden\" name=\"long\" value=\"1\">" .
-			":<br><TEXTAREA wrap=hard name='comment' $readonly_style class=comments rows=10 cols=80>" . 
+			":<br><TEXTAREA name='comment' $readonly_style class=comments rows=10 cols=80>" . 
 			"$readonly_msg" .
 			"</TEXTAREA>";
 	} else {
@@ -8155,7 +8155,8 @@ sub DoComments {
 	if ($long) {
 		$newcomments =~ s/^[\r\n ]*//g;
 		$newcomments =~ s/[\r\n ]*$//g;
-		$newcomments =~ s/(^|\n)/$1 /g;
+		$newcomments =~ s/(^|\n)/$1: /g;
+		$newcomments =~ s/(^|\n)(: +(\r?\n))+/$1$3/mg;
 		if ($up > 0) {
 			$string =~ s/(\<longcomments\($id,$up\)\>)/\n$newcomments\n<mysign($name,$timestamp)>\n\n$1/;
 		} else {
