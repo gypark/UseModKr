@@ -21,13 +21,16 @@ sub MacroBlogRss {
 		return "<font color='red'>Invalid args</font>";
 	}
 
+	my $blogname;
 	$listpage = &RemoveLink($listpage);
+	$blogname = $listpage;
 	$listpage = &FreeToNormal($listpage);
 	$blogpage = &RemoveLink($blogpage);
+	$blogname = $blogpage if ($blogpage);
 	$blogpage = &FreeToNormal($blogpage);
 
 	$txt = &ScriptLink("action=blog_rss&listpage=$listpage&blogpage=$blogpage",
-			"<img align='absmiddle' src='$IconDir/xml_rss.gif'> Get XML");
+			"<img align='absmiddle' src='$IconDir/xml_rss.gif'> Get RSS of $blogname");
 
 	return $txt;
 }
