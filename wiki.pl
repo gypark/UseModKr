@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.74a";
-$WikiRelease = "2005-02-05";
+$WikiVersion = "0.92K3-ext1.74b";
+$WikiRelease = "2005-02-06";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -2022,13 +2022,20 @@ EOH
 		}
 
 		$headExtra .= <<EOH;
-function GetKeyStroke(KeyStroke) {
-	if ( (event.srcElement.tagName != 'INPUT') && (event.srcElement.tagName != 'TEXTAREA') ) {
-		isNetscape=(document.layers);
-		eventChooser = (isNetscape) ? KeyStorke.which : event.keyCode;
-		which = String.fromCharCode(eventChooser).toLowerCase();
-		for (var i in key)
-			if (which == i) window.location.href = key[i];
+function GetKeyStroke(KeyStorke) {
+	var evt = KeyStorke || window.event;
+	var eventChooser = evt.keyCode || evt.which;
+	var target = evt.target || evt.srcElement;
+	while (target && target.tagName.toLowerCase() != 'input' && target.tagName.toLowerCase() != 'textarea') {
+		target = target.parentElement;
+	}
+	if (!target) {
+		var which = String.fromCharCode(eventChooser).toLowerCase();
+		for (var i in key) {
+			if (which == i) {
+				document.location.href = key[i];
+			}
+		}
 	}
 }
 
