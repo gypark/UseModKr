@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.26";
-$WikiRelease = "2003-02-23";
+$WikiVersion = "0.92K3-ext1.27";
+$WikiRelease = "2003-02-24";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -70,7 +70,7 @@ use vars qw(
 	$UserGotoBar $UserGotoBar2 $UserGotoBar3 $UserGotoBar4 
 	$ConfigFile $SOURCEHIGHLIGHT %SRCHIGHLANG $LinkFirstChar
 	$EditGuideInExtern $SizeTopFrame $SizeBottomFrame
-	$LogoPage $CheckTime
+	$LogoPage $CheckTime $LinkDir
 	);
 ###
 ###############
@@ -213,6 +213,7 @@ $InterFile   = "$DataDir/intermap"; # Interwiki site->url map
 $RcFile      = "$DataDir/rclog";    # New RecentChanges logfile
 $RcOldFile   = "$DataDir/rclog.old"; # Old RecentChanges logfile
 $IndexFile   = "$DataDir/pageidx";  # List of all pages
+$LinkDir     = "$DataDir/link";    # Stores the links of each page
 
 # added by luke
 
@@ -2362,7 +2363,14 @@ sub MacroAllPagesFrom {
 		$pgExists{$pagename} = 1;
 	}
 
-	@x = &GetPageLinks($string, 1, 0, 0);
+###############
+### replaced by gypark
+### 링크 목록을 별도로 관리
+#	@x = &GetPageLinks($string, 1, 0, 0);
+	@x = &GetPageLinksFromFile($string, 1, 0, 0);
+###
+###############
+
 
 	foreach $pagename (@x) {
 		$pagename = (split('/',$string))[0]."$pagename" if ($pagename =~ /^\//);
@@ -5968,7 +5976,13 @@ sub GetFullLinkList {
 		if ($unique != 2) {
 			%seen = ();
 		}
-		@links = &GetPageLinks($name, $pagelink, $interlink, $urllink);
+###############
+### replaced by gypark
+### 링크 목록을 별도로 관리
+#		@links = &GetPageLinks($name, $pagelink, $interlink, $urllink);
+		@links = &GetPageLinksFromFile($name, $pagelink, $interlink, $urllink);
+###
+###############
 
 		foreach $link (@links) {
 			$seen{$link}++;
@@ -6180,6 +6194,12 @@ sub DoPost {
 	$Section{'host'} = &GetRemoteHost(1);
 	&SaveDefaultText();
 	&SavePage();
+###############
+### added by gypark
+### 링크 목록을 별도로 관리
+	&SaveLinkFile($id);
+###
+###############
 	&WriteRcLog($id, $summary, $isEdit, $editTime, $user, $Section{'host'});
 	if ($UseCache) {
 		UnlinkHtmlCache($id);          # Old cached copy is invalid
@@ -6416,6 +6436,12 @@ sub DoMaintain {
 		&OpenPage($name);
 		&OpenDefaultText();
 		&ExpireKeepFile();
+###############
+### added by gypark
+### 링크 목록을 별도로 관리
+		&SaveLinkFile($name);
+###
+###############
 		print ".... "  if ($name =~ m|/|);
 		print &GetPageLink($name), "<br>\n";
 	}
@@ -6614,7 +6640,13 @@ sub BuildLinkIndexPage {
 	my ($page) = @_;
 	my (@links, $link, %seen);
 
-	@links = &GetPageLinks($page, 1, 0, 0);
+###############
+### replaced by gypark
+### 링크 목록을 별도로 관리
+#	@links = &GetPageLinks($page, 1, 0, 0);
+	@links = &GetPageLinksFromFile($page, 1, 0, 0);
+###
+###############
 	%seen = ();
 	foreach $link (@links) {
 		if (defined($LinkIndex{$link})) {
@@ -6759,6 +6791,13 @@ sub SubstituteTextLinks {
 	$text =~ s/(<pre>((.|\n)*?)<\/pre>)/&StoreRaw($1)/ige;
 	$text =~ s/(<code>((.|\n)*?)<\/code>)/&StoreRaw($1)/ige;
 	$text =~ s/(<nowiki>((.|\n)*?)<\/nowiki>)/&StoreRaw($1)/ige;
+###############
+### added by gypark
+### {{{ }}} 내의 내용은 태그로 간주하지 않음
+	$text =~ s/((^|\n)\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n)/&StoreRaw($1)/igem;
+	$text =~ s/((^|\n)\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n)/&StoreRaw($1)/igem;
+###
+###############
 
 	if ($FreeLinks) {
 		$text =~
@@ -6916,6 +6955,12 @@ sub RenameTextLinks {
 		if ($changed) {
 			$file = &GetPageFile($page);
 			&WriteStringToFile($file, join($FS1, %Page));
+###############
+### added by gypark
+### 링크 목록을 별도로 관리
+			&SaveLinkFile($page);
+###
+###############
 		}
 		&RenameKeepText($page, $old, $new);
 	}
@@ -6970,6 +7015,18 @@ sub RenamePage {
 ###
 ###############
 
+###############
+### added by gypark
+### 링크 목록을 별도로 관리
+	my ($oldlink, $newlink);
+	$oldlink = &GetLinkFile($old);
+	if (-f $oldlink) {
+		$newlink = &GetLinkFile($new);
+		&CreatePageDir($LinkDir, $new);  # It might not exist yet
+		rename($oldlink, $newlink) || die "error while renaming link file";
+	}
+###
+###############
 	&EditRecentChanges(2, $old, $new)  if ($doRC);
 	if ($doText) {
 		&BuildLinkIndexPage($new);  # Keep index up-to-date
@@ -7012,6 +7069,65 @@ sub DoBookmark {
 	&SaveUserData();
 	&BrowsePage($RCName);
 	return 1;
+}
+###
+###############
+
+###############
+### added by gypark
+### 링크 목록을 별도로 관리
+sub GetLinkFile {
+	my ($id) = @_;
+
+	return $LinkDir . "/" . &GetPageDirectory($id) . "/$id.lnk";
+}
+
+sub SaveLinkFile {
+	my ($page) = @_;
+	my (%links, @pagelinks, @interlinks, @urllinks, @alllinks, $link);
+
+	@alllinks = &GetPageLinks($page, 1, 1, 1);
+
+	foreach $link (@alllinks) {
+		if ($link =~ /^$InterLinkPattern$/) {
+			push(@interlinks, $link);
+		} elsif ($link =~ /^$UrlPattern$/) {
+			push(@urllinks, $link);
+		} else {
+			push(@pagelinks, $link);
+		}
+	}
+	$links{'pagelinks'} = join($FS2, @pagelinks);
+	$links{'interlinks'} = join($FS2, @interlinks);
+	$links{'urllinks'} = join($FS2, @urllinks);
+
+	&CreatePageDir($LinkDir, $page);
+	&WriteStringToFile(&GetLinkFile($page), join($FS1, %links));
+}
+
+sub GetPageLinksFromFile {
+	my ($name, $pagelink, $interlink, $urllink) = @_;
+	my ($status, $data, %links, @result, $fname);
+
+	@result = ();
+	$fname = &GetLinkFile($name);
+
+	if (!(-f $fname)) {
+		&SaveLinkFile($name);
+	}
+
+	($status, $data) = &ReadFile($fname);
+
+	if (!($status)) {
+		return &GetPageLinks($name, $pagelink, $interlink, $urllink);
+	}
+
+	%links = split($FS1, $data, -1);
+	push (@result, split($FS2, $links{'pagelinks'}, -1)) if ($pagelink);
+	push (@result, split($FS2, $links{'interlinks'}, -1)) if ($interlink);
+	push (@result, split($FS2, $links{'urllinks'}, -1)) if ($urllink);
+
+	return @result;
 }
 ###
 ###############

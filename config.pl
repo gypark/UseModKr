@@ -112,7 +112,7 @@ $InterFile   = "intermap";			# Interwiki site->url map
 $RcFile      = "$DataDir/rclog";    # New RecentChanges logfile
 $RcOldFile   = "$DataDir/rclog.old"; # Old RecentChanges logfile
 $IndexFile   = "$DataDir/pageidx";  # List of all pages
-$LinkDir    = "$DataDir/links";    # Stores the links of each page
+$LinkDir     = "$DataDir/link";    # Stores the links of each page
 
 # added by luke
 
