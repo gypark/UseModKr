@@ -49,7 +49,7 @@ $SizeBottomFrame = 110;
 ### 인자 없이 wiki.pl 을 부르면 $LogoPage 를 embed 형식으로 출력
 $LogoPage   = "";	# this page will be displayed when no parameter
 ### 페이지 처리 시간을 출력한다
-$CheckTime = 0;   # 1 = mesure the processing time (requires Time::HiRes module), 0 = do not 
+$CheckTime = 1;   # 1 = mesure the processing time (requires Time::HiRes module), 0 = do not 
 ### 내부 아이콘이 저장된 디렉토리
 $IconDir = "./icons/";	# directory containing icon files
 ### 화일 업로드와 오에카키 저장을 위한 디렉토리 (내부 경로를 사용)
@@ -75,6 +75,10 @@ $InterIconDir = "./icons-inter/"; # directory containing interwiki icons
 $SendPingAllowed = 0;   # 0 - anyone, 1 - who can edit, 2 - who is admin
 ### java script 함수들
 $JavaScript  = "wikiscript.js";   # URL for JavaScript code (like "/wikiscript.js")
+### 매크로 모듈화
+$MacrosDir = "./macros/";       # directory containing macros
+$MyMacrosDir = "./mymacros/";	# directory containing user-defined macros
+### 
 ##
 ##########################################################
 

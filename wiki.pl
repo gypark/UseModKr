@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.62";
-$WikiRelease = "2004-10-04";
+$WikiVersion = "0.92K3-ext1.63";
+$WikiRelease = "2004-10-05";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -74,6 +74,7 @@ use vars qw(
 	$HiddenPageFile $TemplatePage
 	$InterWikiMoniker $SiteDescription $RssLogoUrl $RssDays $RssTimeZone
 	$SlashLinks $InterIconDir $SendPingAllowed $JavaScript
+	$MacrosDir $MyMacrosDir
 	);
 ###
 ###############
@@ -97,7 +98,7 @@ use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime $Sec_Revision $Sec_Ts
 	$ViewCount $AnchoredFreeLinkPattern %UserInterest %HiddenPage
 	$pageid $IsPDA $MemoID
 	$QuotedFullUrl
-	$MyFootnoteCounter $MyFootnotes);
+	%MacroFunc %MacroFile);
 ###
 ###############
 
@@ -166,6 +167,8 @@ $SlashLinks   = 0;      # 1 = use script/action links, 0 = script?action
 $InterIconDir = "./icons-inter/"; # directory containing interwiki icons
 $SendPingAllowed = 0;   # 0 - anyone, 1 - who can edit, 2 - who is admin
 $JavaScript  = "wikiscript.js";   # URL for JavaScript code (like "/wikiscript.js")
+$MacrosDir = "./macros/";       # directory containing macros
+$MyMacrosDir = "./mymacros/";	# directory containing user-defined macros
 
 # Major options:
 $UseSubpage  = 1;       # 1 = use subpages,       0 = do not use subpages
@@ -2617,55 +2620,8 @@ sub EmoticonSubst {
 sub MacroSubst {
 	my ($txt) = @_;
 
-	$txt =~ s/\&__LT__;Date\&__GT__;/&MacroDate()/gei;
-	$txt =~ s/\&__LT__;time\&__GT__;/&MacroTime()/gei;
-	$txt =~ s/\&__LT__;DateTime\&__GT__;/&MacroDateTime()/gei;
-	$txt =~ s/\&__LT__;PageCount\&__GT__;/&MacroPageCount()/gei;
-	$txt =~ s/\&__LT__;Anchor\((.*)\)\&__GT__;/&MacroAnchor($1)/gei;
-	$txt =~ s/\&__LT__;RandomPage\((.*)\)\&__GT__;/&MacroRandom($1)/gei;
-
-###############
-### commented by gypark
-### include 매크로 안에서 위키태그를 작동하게 함
-### http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
-#	$txt =~ s/\&__LT__;Include\((.*)\)\&__GT__;/&MacroInclude($1)/gei;
-###
-###############
-	$txt =~ s/\&__LT__;FullSearch\((.*)\)\&__GT__;/&MacroFullSearch($1)/gei;
-	$txt =~ s/\&__LT__;titlesearch\((.*)\)\&__GT__;/&MacroTitleSearch($1)/gei;
-	$txt =~ s/\&__LT__;goto\((.*)\)\&__GT__;/&MacroGoto($1)/gei;
-	$txt =~ s/\&__LT__;history\((.*)\)\&__GT__;/&MacroHistory($1)/gei;
-###############
-### added by gypark
-### 매크로 추가
-### <mysign(name,time)>
-	$txt =~ s/\&__LT__;mysign\(([^,]+),(\d+-\d+-\d+ \d+:\d+.*)\)\&__GT__;/&MacroMySign($1, $2)/gei;
-### <calendar([page,] year, month)>
-	$txt =~ s/\&__LT__;calendar\(([^,\n]+,)?([-+]?\d+),([-+]?\d+)\)\&__GT__;/&MacroCalendar($1, $2, $3)/gei;
-### <wikiversion>
-	$txt =~ s/\&__LT__;wikiversion&__GT__;/&MacroWikiVersion()/gei;
-### <vote(count [,scale])>
-	$txt =~ s/\&__LT__;vote\((\d+)(,(\d+))?\)&__GT__;/&MacroVote($1,$3)/gei;
-### <AllPagesTo(page)>
-	$txt =~ s/\&__LT__;allpagesto\(([^\n]+)\)\&__GT__;/&MacroAllPagesTo($1)/gei;
-### <AllPagesFrom(page)>
-	$txt =~ s/\&__LT__;allpagesfrom\(([^,\n]+)(,\d)?\)\&__GT__;/&MacroAllPagesFrom($1, $2)/gei;
-### <OrphanedPages>
-	$txt =~ s/\&__LT__;orphanedpages\(([-+])?(\d+)\)\&__GT__;/&MacroOrphanedPages($1, $2)/gei;
-### <WatedPages>
-	$txt =~ s/\&__LT__;wantedpages\&__GT__;/&MacroWantedPages()/gei;
-### <userlist>
-	$txt =~ s/\&__LT__;userlist\&__GT__;/&MacroUserList()/gei;
-### 사전매크로
-	$txt =~ s/\&__LT__;dic\(([^)]+)\)\&__GT__;/&MacroEDic($1)/gei;
-	$txt =~ s/\&__LT__;kdic\(([^)]+)\)\&__GT__;/&MacroKDic($1)/gei;
-	$txt =~ s/\&__LT__;jdic\(([^)]+)\)\&__GT__;/&MacroJDic($1)/gei;
-### <MostPopular(시작, 갯수)>
-	$txt =~ s/(\&__LT__;mostpopular\(([-+]?\d+),([-+]?\d+)\)\&__GT__;)/&MacroMostPopular($1,$2, $3)/gei;
 ### <UploadedFiles>
 	$txt =~ s/(\&__LT__;uploadedfiles\&__GT__;)/&MacroUploadedFiles($1)/gei;
-### <MyInterest(username)>
-	$txt =~ s/(\&__LT__;myinterest(\(([^\n]+)\))?\&__GT__;)/&MacroMyInterest($1, $3)/gei;
 ### <comments(숫자)>
 	$txt =~ s/(\&__LT__;comments\(([^,]+),([-+]?\d+)\)&__GT__;)/&MacroComments($1,$2,$3)/gei;
 ### <noinclude> </noinclude> from Jof
@@ -2675,21 +2631,32 @@ sub MacroSubst {
 ### <memo(제목)></memo> from Jof
 	$MemoID = 0;
 	$txt =~ s/(&__LT__;memo\(([^\n]+?)\)&__GT__;((.)*?)&__LT__;\/memo&__GT__;)/&MacroMemo($1, $2, $3)/geis;
-### <footnote(내용)> from Jof
-	$MyFootnoteCounter = 0;
-	$MyFootnotes = "\n" . T('Footnote') . ": <br>\n";
-	$txt =~ s/(&__LT__;footnote\(([^\n]+?)\)&__GT__;)/&MacroFootnote($2)/gei;
-	if ($MyFootnoteCounter > 0) {
-		$txt .= "<DIV class='footnote'>" .  $MyFootnotes .  "</DIV>";
-	}
-### <color(글자색,[배경색,]내용)>
-	$txt =~ s/&__LT__;color\(([^,)]+),([^,)]+),([^\n]+?)\)&__GT__;/&MacroColorBk($1, $2, $3)/gei;
-	$txt =~ s/&__LT__;color\(([^,)]+),([^\n]+?)\)&__GT__;/&MacroColor($1, $2)/gei;
 ### <trackbacksent> <trackbackreceived>
 	$txt =~ s/(((^|\n)\* .*)*\n?)(&__LT__;trackbacksent&__GT__;)/&MacroTrackbackSent($4,$1)/gei;
 	$txt =~ s/(((^|\n)\* .*\n\*\* .*\n\*\* .*)*\n?)(&__LT__;trackbackreceived&__GT__;)/&MacroTrackbackReceived($4,$1)/gei;
 ###
-###############
+
+### 매크로 모듈화
+	my $macroname;
+	foreach my $dir ($MacrosDir, $MyMacrosDir) {
+		foreach my $macrofile (glob("$dir/*.pl")) {
+			if ($macrofile =~ m|$dir/([^/]*).pl|) {
+				$macroname = $1;
+				$MacroFile{"$macroname"} = $macrofile;
+			}
+		}
+	}
+			
+	foreach my $macro (sort keys %MacroFile) {
+		if ($txt =~ /&__LT__;$macro/i) {
+			do "$MacroFile{$macro}";
+		}
+	}
+
+	foreach my $macro (sort keys %MacroFunc) {
+		$txt = &{$MacroFunc{$macro}}($txt);
+	}
+
 	return $txt;
 }
 
@@ -2796,28 +2763,6 @@ sub MacroImgTag {
 		$return = "<div align=\"center\" $s_divstyle>$return$s_caption</div>";
 	}
 	return &StoreRaw($return);
-}
-
-### color from Jof
-sub MacroColor {
-	my ($color, $message) = @_;
-	return "<span style='color:$color;'>$message</span>";
-}
-
-sub MacroColorBk {
-	my ($color, $bgcolor, $message) = @_;
-	return "<span style='color:$color; background-color:$bgcolor'>$message</span>";
-}
-
-### footnote from Jof
-sub MacroFootnote {
-	my ($note) = @_;
-
-	$MyFootnoteCounter++;
-	$MyFootnotes .= "<A name='FN_$MyFootnoteCounter' href='#FNR_$MyFootnoteCounter'>$MyFootnoteCounter</A>" .
-					". $note" .
-					"<br>\n";
-	return "<A class='footnote' name='FNR_$MyFootnoteCounter' href='#FN_$MyFootnoteCounter'>$MyFootnoteCounter</A>";
 }
 
 ### comments from Jof
@@ -2929,39 +2874,6 @@ sub MacroComments {
 		$q->endform;
 }
 
-### MyInterest
-sub MacroMyInterest {
-	my ($itself, $username) = (@_);
-	my ($data, $status, @pages);
-	my (%tempUserData, %tempUserInterest);
-	my $txt = "";
-
-	if ($username eq "") {
-		if (&GetParam('username') eq "") {
-			return "";
-		} else {
-			$username = &GetParam('username');
-		}
-	}
-
-	%tempUserData = ();
-	($status, $data) = &ReadFile(&UserDataFilename($username));
-	if (!$status) {
-		return "";
-	}
-	%tempUserData = split(/$FS1/, $data, -1);  # -1 keeps trailing null fields
-	%tempUserInterest = split(/$FS2/, $tempUserData{'interest'}, -1);
-	
-	@pages = sort (keys (%tempUserInterest));
-
-	foreach (@pages) {
-		$txt .= ".... "  if ($_ =~ m|/|);
-		$txt .= &GetPageOrEditLink($_)."<br>";
-	}
-
-	return $txt;
-}
-
 ### UploadedFiles
 sub MacroUploadedFiles {
 	my ($itself) = (@_);
@@ -3048,71 +2960,6 @@ sub MacroUploadedFiles {
 
 }
 
-### MostPopular
-sub MacroMostPopular {
-	my ($itself, $start, $end) = (@_);
-	my (%pgcount, $page, $countfile, $status, $count, @pages);
-	my $txt;
-
-	if (($start == 0) || ($end == 0)) { return $itself; }
-
-	foreach $page (&AllPagesList()) {
-		$countfile = &GetCountFile($page);
-		($status, $count) = &ReadFile($countfile);
-		if ($status) {
-			$pgcount{$page} = $count;
-		} else {
-			$pgcount{$page} = 0;
-		}
-	}
-
-	@pages = sort {
-		$pgcount{$b} <=> $pgcount{$a}
-				||
-		$a cmp $b
-	} keys %pgcount;
-
-	if ($start > 0) {
-		$start--;
-	} else {
-		$start = $#pages + $start + 1;
-	}
-	if ($end > 0) {
-		$end--;
-	} else {
-		$end = $#pages + $end + 1;
-	}
-	$start = 0 if ($start < 0);
-	$start = $#pages if ($start > $#pages);
-	$end = 0 if ($end < 0);
-	$end = $#pages if ($end > $#pages);
-
-	if ($start <= $end) {
-		@pages = @pages[$start .. $end];
-	} else {
-		@pages = reverse(@pages[$end .. $start]);
-	}
-
-	foreach $page (@pages) {
-		$txt .= ".... "  if ($page =~ m|/|);
-		$txt .= &GetPageLink($page) . 
-			" (".Ts('%s hit'.(($pgcount{$page}>1)?'s':''), $pgcount{$page}) . ")<br>";
-	}
-
-	return $txt;
-}
-
-### 세 가지 사전 매크로
-sub MacroEDic {
-	return "<A class='dic' href='http://dic.naver.com/endic?query=@_' target='dictionary'>@_</A>";
-}
-sub MacroKDic {
-	return "<A class='dic' href='http://krdic.naver.com/krdic?query=@_' target='dictionary'>@_</A>";
-}
-sub MacroJDic {
-	return "<A class='dic' href='http://jpdic.naver.com/jpdic?query=@_' target='dictionary'>@_</A>";
-}
-
 ### <IncludeDay>
 sub MacroIncludeDay {
 	my ($itself, $mainpage, $day_offset, $num_days) = @_;
@@ -3175,482 +3022,6 @@ sub MacroIncludeDay {
 	}
 
 	return $result;
-}
-
-### <UserList>
-sub MacroUserList {
-	my (@userlist, $result);
-	my $usernumber;
-	opendir(USERLIST, $UserDir);
-	@userlist = readdir(USERLIST);
-	close(USERLIST);
-	shift @userlist;
-	shift @userlist;
-	@userlist = sort @userlist;
-	foreach $usernumber (0..(@userlist-1)) {
-		@userlist[$usernumber] =~ s/(.*)\.db/($1)/gei;
-		@userlist[$usernumber] = &StorePageOrEditLink("@userlist[$usernumber]", "@userlist[$usernumber]") . "<br>";
-	}
-
-	$result = "@userlist";
-	
-	return $result;
-}
-
-### <WantedPages>
-sub MacroWantedPages {
-	my ($pageline, @found, $page);
-	my %numOfReverse;
-	my $txt;
-
-	foreach $pageline (&GetFullLinkList("exists=0&sort=0")) {
-		my @links = split(' ', $pageline);
-		my $id = shift(@links);
-		foreach $page (@links) {
-			$page = (split('/',$id))[0]."$page" if ($page =~ /^\//);
-			push(@found, $page) if ($numOfReverse{$page} == 0);
-			$numOfReverse{$page}++;
-		}
-	}
-	@found = sort(@found);
-
-	foreach $page (@found) {
-		$txt .= ".... " if ($page =~ m|/|);
-		$txt .= &GetPageOrEditLink($page, $page) . " ("
-			. &ScriptLink("action=links&editlink=1&empty=0&reverse=$page", $numOfReverse{$page})
-			. ")<br>";
-	}
-
-	return $txt;
-}
-
-
-### <OrphanedPages>
-sub MacroOrphanedPages {
-	my ($less_or_more, $criterion) = @_;
-	my (@allPages, $page, $pageline);
-	my %numOfReverse;
-	my $txt;
-
-	@allPages = &AllPagesList();
-
-	foreach $page (@allPages) {
-		$numOfReverse{$page} = 0;
-	}
-
-	foreach $pageline (&GetFullLinkList("exists=1&sort=0")) {
-		my @links = split(' ', $pageline);
-		my $id = shift(@links);
-		my $link;
-		foreach $link (@links) {
-			$link = (split('/',$id))[0]."$link" if ($link =~ /^\//);
-			next if ($id eq $link);
-			$numOfReverse{$link}++;
-		}
-	}
-
-	foreach $page (@allPages) {
-		next if (($less_or_more eq "-") && ($numOfReverse{$page} > $criterion));
-		next if (($less_or_more eq "+") && ($numOfReverse{$page} < $criterion));
-		next if (($less_or_more eq "") && ($numOfReverse{$page} != $criterion));
-		$txt .= ".... " if ($page =~ m|/|);
-		$txt .= &GetPageLink($page) . "<br>";
-	}
-
-	return $txt;
-}
-
-### <AllPagesFrom(page)>
-sub MacroAllPagesFrom {
-	my ($string, $exists) = @_;
-	my (@x, @links, $pagename, %seen, %pgExists);
-	my $txt;
-	
-	$string = &RemoveLink($string);
-	$string = &FreeToNormal($string);
-	if (&ValidId($string) ne "") {
-		return "&lt;allpagesfrom($string)&gt;";
-	}
-
-	if ($exists =~ /,(\d)/) {
-		$exists = $1;
-	} else {
-		$exists = 2;
-	}
-	
-	%pgExists = ();
-	foreach $pagename (&AllPagesList()) {
-		$pgExists{$pagename} = 1;
-	}
-
-###############
-### replaced by gypark
-### 링크 목록을 별도로 관리
-#	@x = &GetPageLinks($string, 1, 0, 0);
-	@x = &GetPageLinksFromFile($string, 1, 0, 0);
-###
-###############
-
-
-	foreach $pagename (@x) {
-		$pagename = (split('/',$string))[0]."$pagename" if ($pagename =~ /^\//);
-		if ($seen{$pagename} != 0) {
-			next;
-		}
-		if (($exists == 0) && ($pgExists{$pagename} == 1)) {
-			next;
-		}
-		if (($exists == 1) && ($pgExists{$pagename} != 1)) {
-			next;
-		}
-		$seen{$pagename}++;
-		push (@links, $pagename);
-	}
-	@links = sort(@links);
-
-	foreach $pagename (@links) {
-		$txt .= ".... "  if ($pagename =~ m|/|);
-		$txt .= &GetPageOrEditLink($pagename) . "<br>";
-	}
-
-	return $txt;
-}
-
-### <AllPagesTo(page)>
-sub MacroAllPagesTo {
-	my ($string) = @_;
-	my @x = ();
-	my ($pagelines, $pagename, $txt);
-	my $pagename;
-	
-	$string = &RemoveLink($string);
-	$string = &FreeToNormal($string);
-	if (&ValidId($string) ne "") {
-		return "&lt;allpagesto($string)&gt;";
-	}
-
-	foreach $pagelines (&GetFullLinkList("empty=0&sort=1&reverse=$string")) {
-		my @pages = split(' ', $pagelines);
-		@x = (@x, shift(@pages));
-	}
-
-	foreach $pagename (@x) {
-		$txt .= ".... "  if ($pagename =~ m|/|);
-		$txt .= &GetPageLink($pagename) . "<br>";
-	}
-
-	return $txt;
-}
-
-### <vote(count [,scale])>
-sub MacroVote {
-	my ($count, $scale) = @_;
-	my $maximum = 1000;
-	$scale = 10 if ($scale eq '');
-	my $width = $count * $scale;
-	$width = $maximum if ($width > $maximum);
-
-	return "<table ".(($width)?"bgcolor=\"lightgrey\" ":"")
-		."width=\"$width\" style=\"border:1 solid gray;\">"
-		."<tr><td style=\"padding:0; border:none; font-size:8pt;\">$count"
-		."</td></tr></table>";
-}
-
-### <mysign(name,time)> 매크로 추가
-sub MacroMySign {
-	my ($author, $timestamp) = @_;
-	return "<DIV class='mysign'>-- $author <small>$timestamp</small></DIV>";
-}
-
-### <calendar([page,] year, month)> 매크로 추가
-sub MacroCalendar {
-	use Time::Local;
-	my ($cal_mainpage, $cal_year, $cal_month) = @_;
-
-	my $result='';
-	my $cal_result='';
-	my $cal_page;
-	my @cal_color = ("red", "black", "black", "black", "black", "black", "blue", "green");
-	my @cal_dow = (T('Su'), T('Mo'), T('Tu'), T('We'), T('Th'), T('Fr'), T('Sa'));
-	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($Now+$TimeZoneOffset);
-	my ($this_year, $this_month, $this_day) = ($year, $mon, $mday);
-	my $cal_time;
-	my ($td_class, $span_style);
-	my $temp;
-
-	# 달의 값이 13 이상이면 무효
-	if (!($cal_month =~ /[-+]/) && ($cal_month > 12)) {
-		return "&lt;calendar($cal_mainpage$cal_year,$cal_month)&gt;";
-	}
-
-	# prefix 처리
-	if (length($cal_mainpage) != 0) {
-		$temp = $cal_mainpage;
-		$temp =~ s/,$//;
-		$temp = &RemoveLink($temp);
-		$temp = &FreeToNormal($temp);
-		if (&ValidId($temp) ne "") {
-			return "&lt;calendar($cal_mainpage$cal_year,$cal_month)&gt;";
-		}
-		$temp =~ s/\/.*$//;
-		$cal_mainpage = "$temp/";
-	}
-
-	# 년도나 달에 0 을 인자로 받으면 올해 또는 이번 달
-	$cal_year = $this_year+1900 if ($cal_year == 0); 
-	$cal_month = $this_month+1 if ($cal_month == 0);
-
-	# 년도에 + 또는 - 가 있으면 올해로부터 변위 계산
-	if ($cal_year =~ /\+(\d+)/ ) {
-		$cal_year = $this_year+1900 + $1;
-	} elsif ($cal_year =~ /-(\d+)/ ) {
-		$cal_year = $this_year+1900 - $1;
-	}
-
-	# 달에 + 또는 - 가 있으면 이번 달로부터 변위 계산
-	if ($cal_month =~ /\+(\d+)/ ) {
-		$cal_month = $this_month+1 + $1;
-		while ($cal_month > 12)  {
-			$cal_month -= 12;
-			$cal_year++;
-		}
-	} elsif ($cal_month =~ /-(\d+)/ ) {
-		$cal_month = $this_month+1 - $1;
-		while ($cal_month < 1) {
-			$cal_month += 12;
-			$cal_year--;
-		}
-	}
-	
-	# 1902년부터 2037년 사이만 지원함. 그 범위를 벗어나면 1902년과 2037년으로 계산
-	$cal_year = 2037 if ($cal_year > 2037);
-	$cal_year = 1902 if ($cal_year < 1902);
-
-	# 1월~9월은 01~09로 만듦
-	if ($cal_month < 10) {
-		$cal_month = "0" . $cal_month;
-	}
-
-	# 달력 제목 출력
-	$result .= "<TABLE class='calendar'>";
-	$result .= "<CAPTION class='calendar'>" 
-		."<a href=\"$ScriptName?$cal_mainpage$cal_year-$cal_month\">"
-		.(length($cal_mainpage)?"$cal_mainpage<br>":"")
-		."$cal_year-$cal_month"
-		."</a>"
-		."</CAPTION>";
-
-	# 상단의 요일 출력 
-	$result .= "<TR class='calendar'>";
-	for (0..6) {
-		$result .= "<TH class='calendar'>"
-			. "<span style='color:$cal_color[$_]'>$cal_dow[$_]</span></TH>";
-	}
-	$result .= "</TR>";
-
-	# 인자로 주어진 달의 1일날을 찾음
-	$cal_time = timelocal(0,0,0,1,$cal_month-1,$cal_year);
-	($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($cal_time);
-	# 달력의 첫번째 날 찾음
-	$cal_time -= $wday * (60 * 60 * 24);
-	($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($cal_time);
-
-	# 달력 그림
-	my ($temp_month, $temp_day);
-		
-	for (1..6) {
-		$result .= "<TR class='calendar'>";
-		for (0..6) {
-
-			# 1~9는 01~09로 만듦
-			($temp_month, $temp_day) = ($mon + 1, $mday);
-			$temp_month = "0".$temp_month if ($temp_month < 10);
-			$temp_day = "0".$temp_day if ($temp_day < 10);
-			$cal_page = ($year + 1900)."-".($temp_month)."-".($temp_day);
-
-			$cal_result = $mday;
-			$span_style = "";
-			if (($year == $this_year) && ($mon == $this_month) && ($mday == $this_day)) {
-				$td_class = "calendartoday";
-				$span_style = "text-decoration: underline; ";
-			} else {
-				$td_class = "calendar";
-			}
-			if ($pageid eq $cal_mainpage.$cal_page) {
-				$td_class .= "thispage";
-			}
-
-			if ((-f &GetPageFile($cal_mainpage . $cal_page)) && (!&PageIsHidden($cal_mainpage . $cal_page))) {
-				$span_style .= "font-weight: bold; text-decoration: underline; ";
-				$wday = 7;
-			}
-			if ($cal_month != ($mon+1)) {
-				$span_style .= "font-size: 0.9em; ";
-			}
-
-			$result .= "<td class='$td_class'>"
-				."<a href=\"$ScriptName?$cal_mainpage$cal_page\">"
-				."<span style='color:$cal_color[$wday]; $span_style'>"
-				.$cal_result
-				."</span></a></td>";
-			$cal_time += (60 * 60 * 24);
-			($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($cal_time);
-		}
-		$result .= "</TR>";
-		# 4 또는 5 줄로 끝낼 수 있으면 끝냄
-		last if (($mon+1 > $cal_month) || ($year+1900 > $cal_year));
-	}
-
-	$result .= "</table>";
-	return $result;
-}
-
-
-### <showversion> 매크로 추가
-sub MacroWikiVersion {
-	return &ScriptLink("action=version", $WikiVersion);
-}
-###
-###############
-
-sub MacroHistory {
-	my ($n) = @_;
-	my ($html, $i);
-
-	&OpenPage($DocID);
-	&OpenDefaultText();
-
-	$html = "<form action='$ScriptName' METHOD='GET'>";
-	$html .= "<input type='hidden' name='action' value='browse'/>";
-	$html .= "<input type='hidden' name='diff' value='1'/>";
-	$html .= "<input type='hidden' name='id' value='$DocID'/>";
-	$html .= "<table border='0' cellpadding=0 cellspacing=0 width='90%'><tr>";
-###############
-### replaced by gypark
-### History 매크로 버그 수정 
-#	$html .= &GetHistoryLine($DocID, $Page{'text_default'}, 0, 1);
-	$html .= &GetHistoryLine($DocID, $Page{'text_default'}, 0, 0);
-###
-###############
-	&OpenKeptRevisions('text_default');
-	$i = 0;
-	foreach (reverse sort {$a <=> $b} keys %KeptRevisions) {
-		if (++$i > $n) {
-			$html .= "<tr><td align='center'><input type='submit' value='" 
-					. T('Compare') . "'/>  </td><td>&nbsp;</td></table></form>\n";
-			return $html;
-		}
-		next  if ($_ eq "");  # (needed?)
-###############
-### replaced by gypark
-### History 매크로 버그 수정 
-#		$html .= &GetHistoryLine($DocID, $KeptRevisions{$_}, 0, 0);
-		$html .= &GetHistoryLine($DocID, $KeptRevisions{$_}, 0, $i);
-###
-###############
-	}
-	$html .= "<tr><td align='center'><input type='submit' value='"
-				. T('Compare') . "'/>  </td><td>&nbsp;</td></table></form>\n";
-	return $html;
-}
-
-sub MacroGoto {
-	my ($string) = @_;
-
-###############
-### added by gypark
-### goto 매크로 개선
-	$string = &RemoveLink($string);
-###
-###############
-
-	return
-###############
-### replaced by gypark
-### goto 매크로 개선
-### from Bab2's patch
-# 		"<form name=goto><input name=wkl type=text size=10 value=$string>" .
-# 		"<input type=button value=\"" . T('Go') . "\" onclick='javascript:document.location.href=\"$ScriptName?\"+document.goto.wkl.value'>" .
-# 		"</form>";
-		"<form name=goto><input type=\"hidden\" name=\"action\" value=\"browse\" id=\"hidden-box\">".
-		"<input name='id' type='text' size=10 value=$string>" . "&nbsp;" .
-		"<input type=submit value=\"". T('Go') . "\">".
-		"</form>";
-###
-###############
-}
-
-sub MacroTitleSearch {
-	my ($string) = @_;
-	my ($name, $freeName, $txt);
-
-	foreach $name (&AllPagesList()) {
-		if ($name =~ /$string/i) {
-###############
-### replace by gypark
-### 검색 결과를 세로로 보이도록 수정
-#			$txt .= &GetPageLink($name) . " ";
-			$txt .= &GetPageLink($name) . "<br>";
-###
-###############
-		} elsif ($FreeLinks && ($name =~ m/_/)) {
-			$freeName = $name;
-			$freeName =~ s/_/ /g;
-			if ($freeName =~ /$string/i) {
-###############
-### replace by gypark
-### 검색 결과를 세로로 보이도록 수정
-#				$txt .= &GetPageLink($name) . " ";
-				$txt .= &GetPageLink($name) . "<br>";
-###
-###############
-			}
-		}
-	}
-	return $txt;
-}
-
-sub MacroFullSearch()
-{
-	my $pagename;
-	my ($string) = @_;
-	my @x = &SearchTitleAndBody($string);
-	my $txt;
-
-	foreach $pagename (@x) {
-		$txt .= ".... "  if ($pagename =~ m|/|);
-###############
-### replace by gypark
-### 검색 결과를 세로로 보이도록 수정
-#		$txt .= &GetPageLink($pagename) . " ";
-		$txt .= &GetPageLink($pagename) . "<br>";
-###
-###############
-
-	}
-	return $txt;
-}
-
-sub MacroDate() { return &CalcDay(time); }
-sub MacroTime() { return &CalcTime(time); }
-sub MacroDateTime() { return &CalcDay(time) . " " . &CalcTime(time); }
-sub MacroAnchor() {	return "<a name=\"@_\"></a>"; }
-
-sub MacroPageCount() {
-	my @pageList = &AllPagesList();
-	return $#pageList + 1;
-}
-
-sub MacroRandom() {
-	my ($count) = @_;
-	my @pageList = &AllPagesList();
-	my ($txt);
-
-	srand($Now);
-	while ($count-- > 0) {
-		$txt .= &GetPageLink($pageList[int(rand($#pageList + 1))]) . " ";
-	}
-	return $txt;
 }
 
 sub MacroInclude {
