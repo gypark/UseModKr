@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.33";
-$WikiRelease = "2003-03-05";
+$WikiVersion = "0.92K3-ext1.33a";
+$WikiRelease = "2003-03-06";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -852,7 +852,7 @@ sub GetRcHtml {
 				"<TR class='rc'>".
 				"<TD colspan=6 class='rcdate'><b>" . $date . "</b>";
 			if ($bookmarkuser eq "") {
-				$html .= "</TD></TR>\n";
+				$html .= "<br>&nbsp;</TD></TR>\n";
 			} else {
 				$html .= "  [" .&ScriptLink("action=bookmark&time=$ts",T('set bookmark')) ."]"
 					. "</TD></TR>\n";
@@ -1283,18 +1283,10 @@ sub GetHeader {
 
 	my $topMsg = "";
 	if ($oldId ne '') {
-### view action 추가 by gypark
-#		$topMsg .= '('.Ts('redirected from %s',&GetEditLink($oldId, $oldId)).')  ';
-		my $oldpagelink = &GetViewLink($oldId, $oldId);
-		$oldpagelink = &GetEditLink($oldId, $oldId) if (&UserCanEdit($oldId));
-		$topMsg .= '('.Ts('redirected from %s',$oldpagelink).')  ';
+		$topMsg .= '('.Ts('redirected from %s',&GetEditLink($oldId, $oldId)).')  ';
 	}
 	if (&GetParam('InFrame','') eq '1') {
-### view action 추가 by gypark
-#		$topMsg .= '('.Ts('%s includes external page',&GetEditLink($id,$id)).')';
-		my $oldpagelink = &GetViewLink($id, $id);
-		$oldpagelink = &GetEditLink($id, $id) if (&UserCanEdit($id));
-		$topMsg .= '('.Ts('redirected from %s',$oldpagelink).')  ';
+		$topMsg .= '('.Ts('%s includes external page',&GetEditLink($id,$id)).')';
 	}
 	$result .= $q->h3($topMsg) if (($oldId ne '') || (&GetParam('InFrame','') eq '1'));
 ###
@@ -1434,9 +1426,7 @@ sub GetHtmlHeader {
 			if ($FreeLinks) {
 				$id = &FreeToNormal($id);
 			}
-			my $action = "view";
-			$action = "edit" if (&UserCanEdit($id,0));
-			$bodyExtra .= qq(ondblclick="location.href='$ScriptName?action=$action&id=$id'");
+			$bodyExtra .= qq(ondblclick="location.href='$ScriptName?action=edit&id=$id'") if (&UserCanEdit($id,0));
 		}
 	}
 
@@ -1539,7 +1529,7 @@ sub GetEditGuide {
 	if (&UserCanEdit($id, 0)) {
 		if ($rev ne '') {
 			$result .= &GetOldPageLink('edit',   $id, $rev,
-					 Ts('Edit revision %s of this page', $rev));
+						 Ts('Edit revision %s of this page', $rev));
 		} else {
 			$result .= &GetEditLink($id, T('Edit text of this page'));
 		}
@@ -1549,14 +1539,13 @@ sub GetEditGuide {
 ### view action 추가
 #		$result .= T('This page is read-only');
 		if ($rev ne '') {
-			$result .= &GetOldPageLink('view',   $id, $rev,
-					 Ts('View revision %s of this page', $rev));
+			$result .= &GetOldPageLink('edit',   $id, $rev,
+						 Ts('View revision %s of this page', $rev));
 		} else {
-			$result .= &GetViewLink($id, T('View text of this page'));
+			$result .= &GetEditLink($id, T('View text of this page'));
 		}
 ###
 ###############
-
 	}
 	$result .= "</DIV>";
 
@@ -4477,13 +4466,6 @@ sub DoOtherRequest {
 		$action = lc($action);
 		if ($action eq "edit") {
 			&DoEdit($id, 0, 0, "", 0)  if &ValidIdOrDie($id);
-###############
-### added by gypark
-### "view" action 추가
-		} elsif ($action eq "view") {
-			&DoView($id);
-###
-###############
 		} elsif ($action eq "unlock") {
 			&DoUnlock();
 		} elsif ($action eq "index") {
@@ -4582,30 +4564,45 @@ sub DoEdit {
 	my ($header, $editRows, $editCols, $userName, $revision, $oldText);
 	my ($summary, $isEdit, $pageTime);
 
-	if (!&UserCanEdit($id, 1)) {
-		print &GetHeader("", T('Editing Denied'), "");
-		if (&UserIsBanned()) {
-			print T('Editing not allowed: user, ip, or network is blocked.');
-			print "<p>";
-			print T('Contact the wiki administrator for more information.');
-		} else {
 ###############
-### replaced by gypark
+### added by gypark
+### view action 추가
+	my $canEdit = &UserCanEdit($id,1);
+###
+###############
+
+###############
+### commented by gypark
+### view action 추가
+#	if (!&UserCanEdit($id, 1)) {
+#		print &GetHeader("", T('Editing Denied'), "");
+#		if (&UserIsBanned()) {
+#			print T('Editing not allowed: user, ip, or network is blocked.');
+#			print "<p>";
+#			print T('Contact the wiki administrator for more information.');
+#		} else {
 ### 수정 불가를 알리는 메세지에, 사이트 제목이 아니라 
 ### 해당 페이지명이 나오도록 수정
 #			print Ts('Editing not allowed: %s is read-only.', $SiteName);
-			print Ts('Editing not allowed: %s is read-only.', $id);
+#			print Ts('Editing not allowed: %s is read-only.', $id);
+#		}
+#		print &GetCommonFooter();
+#		return;
+#	}
 ###
 ###############
-		}
-		print &GetCommonFooter();
-		return;
-	}
+
 	# Consider sending a new user-ID cookie if user does not have one
 	&OpenPage($id);
 	&OpenDefaultText();
 	$pageTime = $Section{'ts'};
 	$header = Ts('Editing %s', $id);
+###############
+### added by gypark
+### view action 추가
+	$header = Ts('Viewing %s', $id) if (!$canEdit);
+###
+###############
 	# Old revision handling
 	$revision = &GetParam('revision', '');
 	$revision =~ s/\D//g;  # Remove non-numeric chars
@@ -4617,6 +4614,12 @@ sub DoEdit {
 		} else {
 			&OpenKeptRevision($revision);
 			$header = Ts('Editing revision %s of', $revision) . " $id";
+###############
+### added by gypark
+### view action 추가
+			$header = Ts('Viewing revision %s of', $revision) . " $id" if (!$canEdit);
+###
+###############
 		}
 	}
 	$oldText = $Text{'text'};
@@ -4626,13 +4629,40 @@ sub DoEdit {
 	$editRows = &GetParam("editrows", 20);
 	$editCols = &GetParam("editcols", 65);
 	print &GetHeader('', &QuoteHtml($header), '');
-	if ($revision ne '') {
-		print "\n<b>"
-					. Ts('Editing old revision %s.', $revision) . "  "
-		. T('Saving this page will replace the latest revision with this text.')
-					. '</b><br>'
+###############
+### added by gypark
+### view action 추가
+	if (!$canEdit) {
+		if (&UserIsBanned()) {
+			print T('Editing not allowed: user, ip, or network is blocked.');
+			print "<p>";
+			print T('Contact the wiki administrator for more information.');
+		} else {
+			print Ts('Editing not allowed: %s is read-only.', $id);
+		}
+		print "<br>\n";
 	}
-	if ($isConflict) {
+###
+###############
+###############
+### replaced by gypark
+### view action 추가
+# 	if ($revision ne '') {
+	if ($canEdit && ($revision ne '')) {
+###
+###############
+		print "\n<b>"
+				. Ts('Editing old revision %s.', $revision) . "  "
+		. T('Saving this page will replace the latest revision with this text.')
+				. '</b><br>'
+	}
+###############
+### replaced by gypark
+### view action 추가
+# 	if ($isConflict) {
+	if ($canEdit && $isConflict) {
+###
+###############
 		$editRows -= 10  if ($editRows > 19);
 		print "\n<H1>" . T('Edit Conflict!') . "</H1>\n";
 		if ($isConflict>1) {
@@ -4680,7 +4710,13 @@ function help(s)
 </script>
 |;
 
-	print T('Editing Help :') . "&nbsp;";
+###############
+### added by gypark
+### view action 추가
+	if ($canEdit) {
+###
+###############
+		print T('Editing Help :') . "&nbsp;";
 ###############
 ### replaced by gypark
 ### 도움말 별도의 화일로 분리
@@ -4688,14 +4724,20 @@ function help(s)
 # 	print &HelpLink(1, T('Make Page')) . " | ";
 #   ...
 # 	print &HelpLink(5, T('Emoticon')) . "<br>\n";
-	use vars qw(@HelpItem);
-	require mod_edithelp;
+		use vars qw(@HelpItem);
+		require mod_edithelp;
 
-	foreach (0 .. $#HelpItem) {
-		print &HelpLink($_, T("$HelpItem[$_]"));
-		print " | " if ($_ ne $#HelpItem);
+		foreach (0 .. $#HelpItem) {
+			print &HelpLink($_, T("$HelpItem[$_]"));
+			print " | " if ($_ ne $#HelpItem);
+		}
+		print "<br>\n";
+###
+###############
+###############
+### added by gypark
+### view action 추가
 	}
-	print "<br>\n";
 ###
 ###############
 
@@ -4713,53 +4755,72 @@ function help(s)
 	if ($revision ne "") {
 		print &GetHiddenValue("revision", $revision), "\n";
 	}
-	print &GetTextArea('text', $oldText, $editRows, $editCols);
-	$summary = &GetParam("summary", "*");
-	print "<p>", T('Summary:') . " ",
-				$q->textfield(-name=>'summary',
-											-default=>$summary, -override=>1,
-											-size=>60, -maxlength=>200);
+###############
+### added by gypark
+### view action 추가
+	if ($canEdit) {
+###
+###############
+		print &GetTextArea('text', $oldText, $editRows, $editCols);
+		$summary = &GetParam("summary", "*");
+		print "<p>", T('Summary:') . " ",
+					$q->textfield(-name=>'summary',
+									-default=>$summary, -override=>1,
+									-size=>60, -maxlength=>200);
 
-	if (&GetParam("recent_edit") eq "on") {
-		print "<br>", $q->checkbox(-name=>'recent_edit', -checked=>1,
-															 -label=>T('This change is a minor edit.'));
-	} else {
-		print "<br>", $q->checkbox(-name=>'recent_edit',
-															 -label=>T('This change is a minor edit.'));
-	}
+		if (&GetParam("recent_edit") eq "on") {
+			print "<br>", $q->checkbox(-name=>'recent_edit', -checked=>1,
+								 -label=>T('This change is a minor edit.'));
+		} else {
+			print "<br>", $q->checkbox(-name=>'recent_edit',
+								 -label=>T('This change is a minor edit.'));
+		}
 
-	if ($EmailNotify) {
-		print "&nbsp;&nbsp;&nbsp;" .
+		if ($EmailNotify) {
+			print "&nbsp;&nbsp;&nbsp;" .
 					 $q->checkbox(-name=> 'do_email_notify',
-			-label=>Ts('Send email notification that %s has been changed.', $id));
-	}
-	print "<br>";
-	if ($EditNote ne '') {
-		print T($EditNote) . '<br>';  # Allow translation
-	}
-	print $q->submit(-name=>'Save', -value=>T('Save')), "\n";
-	$userName = &GetParam("username", "");
-	if ($userName ne "") {
-		print ' (', T('Your user name is'), ' ',
-					&GetPageLink($userName) . ') ';
-	} else {
-		print ' (', Ts('Visit %s to set your user name.', &GetPrefsLink()), ') ';
-	}
+				-label=>Ts('Send email notification that %s has been changed.', $id));
+		}
+		print "<br>";
+		if ($EditNote ne '') {
+			print T($EditNote) . '<br>';  # Allow translation
+		}
+		print $q->submit(-name=>'Save', -value=>T('Save')), "\n";
+		$userName = &GetParam("username", "");
+		if ($userName ne "") {
+			print ' (', T('Your user name is'), ' ',
+						&GetPageLink($userName) . ') ';
+		} else {
+			print ' (', Ts('Visit %s to set your user name.', &GetPrefsLink()), ') ';
+		}
 	#print $q->submit(-name=>'Preview', -value=>T('Preview'));	# luke delete
 ###############
 ### replaced by gypark 
 ### 미리보기 버튼에 번역함수 적용
 	# print q(<input type="button" name="prev1" value="Popup Preview" onclick="javascript:preview();">); # luke added
-	print q(<input type="button" name="prev1" value="). T('Popup Preview') . q(" onclick="javascript:preview();">); # luke added
+		print q(<input type="button" name="prev1" value="). 
+			T('Popup Preview') . 
+			q(" onclick="javascript:preview();">); # luke added
 ###
 ###############
 
-	if ($isConflict) {
-		print "\n<br><hr noshade size=1><p><strong>", T('This is the text you submitted:'),
+		if ($isConflict) {
+			print "\n<br><hr noshade size=1><p><strong>", T('This is the text you submitted:'),
 					"</strong><p>",
 					&GetTextArea('newtext', $newText, $editRows, $editCols),
 					"<p>\n";
+		}
+###############
+### added by gypark
+### view action 추가
+	} else {
+		print $q->textarea(-class=>'view', -accesskey=>'i', -name=>'text', 
+				-default=>$oldText, -rows=>$editRows, -columns=>$editCols, 
+				-override=>1, -style=>'width:100%', -wrap=>'virtual', 
+				-readonly=>'true');
 	}
+###
+###############
 	print "<hr class='footer'>\n";
 	if ($preview) {
 		print "<h2>", T('Preview:'), "</h2>\n";
@@ -4798,7 +4859,6 @@ function help(s)
 
 sub GetTextArea {
 	my ($name, $text, $rows, $cols) = @_;
-
 ###############
 ### added by gypark
 ### &lt; 와 &gt; 가 들어가 있는 페이지를 수정할 경우 자동으로 부등호로 바뀌어
@@ -6282,8 +6342,8 @@ sub DoEditBanned {
 				"^123.21.3.  (blocks whole 123.21.3.* IP network)<p>";
 	print &GetTextArea('banlist', $banList, 12, 50);
 	print "<br>", $q->submit(-name=>'Save'), "\n";
-	print "<hr>\n";
-	print &GetGotoBar("");
+	print "<hr class='footer'>\n";
+#	print &GetGotoBar("");
 	print $q->endform;
 	print &GetMinimumFooter();
 }
@@ -6875,61 +6935,6 @@ sub GetPageLinksFromFile {
 
 	return @result;
 }
-
-### view action 추가
-sub DoView {
-	my ($id) = @_;
-	my ($header, $viewRows, $viewCols, $revision, $pageSource);
-
-	&OpenPage($id);
-	&OpenDefaultText();
-	$header = Ts('Viewing %s', $id);
-	# Old revision handling
-	$revision = &GetParam('revision', '');
-	$revision =~ s/\D//g;  # Remove non-numeric chars
-	if ($revision ne '') {
-		&OpenKeptRevisions('text_default');
-		if (!defined($KeptRevisions{$revision})) {
-			$revision = '';
-			# Later look for better solution, like error message?
-		} else {
-			&OpenKeptRevision($revision);
-			$header = Ts('Viewing revision %s of', $revision) . " $id";
-		}
-	}
-	$pageSource = $Text{'text'};
-	$viewRows = &GetParam("editrows", 20);
-	$viewCols = &GetParam("editcols", 65);
-
-	print &GetHeader('', &QuoteHtml($header), '');
-	if ($revision ne '') {
-		print "\n<b>"
-					. Ts('Viewing old revision %s.', $revision)
-					. '</b><br>'
-	}
-	print $q->textarea(-class=>'view', -accesskey=>'i', -name=>'text', 
-				-default=>$pageSource, -rows=>$viewRows, -columns=>$viewCols, 
-				-override=>1, -style=>'width:100%', -wrap=>'virtual', 
-				-readonly=>'true');
-	print "<br>";
-
-	print "<hr class='footer'>\n";
-	print Ts('Return to %s' , &GetPageLink($id)) . " | ";
-	print &GetHistoryLink($id, T('View other revisions')) . "<br>\n";
-	print &GetMinimumFooter();
-}
-
-sub GetViewLink {
-	my ($id, $name) = @_;
-
-	if ($FreeLinks) {
-		$id = &FreeToNormal($id);
-		$name =~ s/_/ /g;
-	}
-	return &ScriptLink("action=view&id=$id", $name);
-}
-
-
 ###
 ###############
 
