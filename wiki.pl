@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.23";
-$WikiRelease = "2003-02-14";
+$WikiVersion = "0.92K3-ext1.24";
+$WikiRelease = "2003-02-15";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -70,6 +70,7 @@ use vars qw(
 	$UserGotoBar $UserGotoBar2 $UserGotoBar3 $UserGotoBar4 
 	$ConfigFile $SOURCEHIGHLIGHT %SRCHIGHLANG $LinkFirstChar
 	$EditGuideInExtern $SizeTopFrame $SizeBottomFrame
+	$EmbedHome
 	);
 ###
 ###############
@@ -149,6 +150,7 @@ $LinkFirstChar = 0;    # 1 = link on first character,  0 = followed by "?" mark 
 $EditGuideInExtern = 0; # 1 = show edit guide in bottom frame, 0 = don't show
 $SizeTopFrame = 160;
 $SizeBottomFrame = 110;
+$EmbedHome   = 0;   # 1 - embed $HomePage when no parameter, 0 - normal output
 ###
 ###############
 
@@ -448,6 +450,12 @@ sub DoBrowseRequest {
 	my ($id, $action, $text);
 
 	if (!$q->param) {             # No parameter
+###############
+### added by gypark
+### 인자가 없을 때 HomePage 를 embed 형식으로 출력
+		$EmbedWiki = 1 if ($EmbedHome);
+###
+###############
 		&BrowsePage($HomePage);
 		return 1;
 	}
@@ -1368,7 +1376,7 @@ sub GetHeader {
 ### replaced by gypark
 ### 로고 이미지에 단축키 alt+w 지정
 #		$header = &ScriptLink($HomePage, "<$logoImage>");
-		$header = "<a accesskey=\"w\" href=\"$ScriptName?$HomePage\"><$logoImage></a>";
+		$header = "<a accesskey=\"w\" href=\"$ScriptName\"><$logoImage></a>";
 ###
 ###############
 	}
