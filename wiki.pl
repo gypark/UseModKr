@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.54";
-$WikiRelease = "2003-10-09";
+$WikiVersion = "0.92K3-ext1.54a";
+$WikiRelease = "2003-12-11";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -8717,7 +8717,13 @@ sub GetRc {
 	$tEdit    = T('(edit)');
 	$tDiff    = T('(diff)');
 	$tChanges = T('changes');
-	$diffPrefix = $QuotedFullUrl . &QuoteHtml("?action=browse\&diff=4\&id=");
+###############
+### replaced by gypark
+### 북마크
+#	$diffPrefix = $QuotedFullUrl . &QuoteHtml("?action=browse\&diff=4\&id=");
+	$diffPrefix = $QuotedFullUrl . &QuoteHtml("?action=browse\&diff=5\&id=");
+###
+###############
 	$historyPrefix = $QuotedFullUrl . &QuoteHtml("?action=history\&id=");
 	foreach $rcline (@outrc) {
 		($ts, $pagename) = split(/$FS3/, $rcline);
@@ -8821,6 +8827,7 @@ sub GetRssRcLine {
         <link>$QuotedFullUrl?$pagename</link>
         <description>$description</description>
         <dc:date>$date</dc:date>
+		<dc:creator>$author</dc:creator>
         <dc:contributor>
             <rdf:Description wiki:host="$host" $authorLink>
                 <rdf:value>$author</rdf:value>
