@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.55";
-$WikiRelease = "2004-01-27";
+$WikiVersion = "0.92K3-ext1.55a";
+$WikiRelease = "2004-01-28";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -2546,11 +2546,12 @@ sub MacroMemo {
 	my ($itself, $id, $text) = @_;
 
 	$id = &RemoveLink($id);
-
-	return "<A class=\"memo\" href=\"#none\" onClick=\"if (document.all['$id'].style.display=='block') " .
-		"{document.all['$id'].style.display='none'} " .
+	
+	return "<A class=\"memo\" href=\"JavaScript://\" onClick=\"" .
+		"if (document.getElementById('$id').style.display=='block') " .
+		"{document.getElementById('$id').style.display='none'} " .
 		"else " .
-		"{document.all['$id'].style.display='block'}\">" .
+		"{document.getElementById('$id').style.display='block'}\">" .
 		$id .
 		"</A>" .
 		"<DIV class=\"memo\" id=\"$id\" style=\"display:none\">" .
