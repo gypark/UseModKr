@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.30";
-$WikiRelease = "2003-03-02";
+$WikiVersion = "0.92K3-ext1.30a";
+$WikiRelease = "2003-03-03";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -2458,7 +2458,7 @@ sub MacroVote {
 ### <mysign(name,time)> 매크로 추가
 sub MacroMySign {
 	my ($author, $timestamp) = @_;
-	return "<div align=\"right\">-- $author <small>$timestamp</small></div>";
+	return "<DIV class='mysign'>-- $author <small>$timestamp</small></DIV>";
 }
 
 ### <calendar([page,] year, month)> 매크로 추가

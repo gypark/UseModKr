@@ -534,4 +534,17 @@ TD.calendar A:hover
 	text-decoration: underline;
 }
 
+/* mysign */
+DIV.mysign
+{
+	text-align: right;
+	color: #333333;
+	background: transparent;
+}
+
+SPAN.mysign
+{
+	color: #333333;
+	background: transparent;
+}
 
