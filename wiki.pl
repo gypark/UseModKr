@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.47a";
-$WikiRelease = "2003-09-06";
+$WikiVersion = "0.92K3-ext1.48";
+$WikiRelease = "2003-09-08";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -2287,8 +2287,10 @@ sub MacroIncludeSubst {
 	$txt =~ s/<include\((.*)\)>/&MacroInclude($1)/gei;
 ### toc 를 포함하지 않는 includenotoc 매크로 추가
 	$txt =~ s/<includenotoc\((.*)\)>/&MacroInclude($1, "notoc")/gei;
-### includday 매크로
-	$txt =~ s/<includeday\(([^,\n]+,)?([-+]?\d+)\)>/&MacroIncludeDay($1, $2)/gei;
+### includeday 매크로
+ 	$txt =~ s/<includeday\(([^,\n]+,)?([-+]?\d+)\)>/&MacroIncludeDay($1, $2)/gei;
+### includedays 매크로
+	$txt =~ s/<includedays\(([^,\n]+,)?([-+]?\d+),([-+]?\d+)\)>/&MacroIncludeDay($1, $2, $3)/gei;
 	return $txt;
 }
 ###
@@ -2573,9 +2575,18 @@ sub MacroJDic {
 
 ### <IncludeDay>
 sub MacroIncludeDay {
-	my ($mainpage, $day_offset) = @_;
+	my ($mainpage, $day_offset, $num_days) = @_;
 	my $page = "";
 	my $temp;
+	my $result = "";
+
+	my ($sign, $num);
+	if ($num_days =~ /([-+]?(\d+))/) {
+		$num = $2;
+		$sign = $1 / $num if ($num != 0);
+	} else {
+		$num = -1;
+	}
 
 	# main page 처리
 	if ($mainpage ne "") {
@@ -2587,26 +2598,43 @@ sub MacroIncludeDay {
 			return "&lt;includeday($mainpage$day_offset)&gt;";
 		}
 		$temp =~ s/\/.*$//;
-		$page = "$temp/";
+		$mainpage = $temp . "/";
 	}
 
 	# 날짜의 변위 계산 
-	$temp = $Now + ($day_offset * 86400);
-	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($temp+$TimeZoneOffset);
+	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst);
+	my $maximum_count = 100;
+	while (($num != 0) && ($maximum_count > 0)) {
+		$temp = $Now + ($day_offset * 86400);
+		($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($temp+$TimeZoneOffset);
 
-	$page .= ($year + 1900) . "-";
+		$page = $mainpage . ($year + 1900) . "-";
 
-	if ($mon + 1 < 10) {
-		$page .= "0";
+		if ($mon + 1 < 10) {
+			$page .= "0";
+		}
+		$page .= ($mon + 1) . "-";
+
+		if ($mday < 10) {
+			$page .= "0";
+		}
+		$page .= "$mday";
+
+		$temp = &MacroInclude($page);
+		if ($num == -1) {
+			$result .= $temp;
+			last;
+		} else {
+			if ($temp ne "") {
+				$num--;
+				$result .= $temp . "\n";
+			}
+			$day_offset += $sign;
+		}
+		$maximum_count--;
 	}
-	$page .= ($mon + 1) . "-";
 
-	if ($mday < 10) {
-		$page .= "0";
-	}
-	$page .= "$mday";
-
-	return &MacroInclude($page);
+	return $result;
 }
 
 ### <UserList>
