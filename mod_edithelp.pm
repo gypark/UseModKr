@@ -497,6 +497,15 @@ count * scale 의 길이(픽셀 단위)의 막대가 그려진다. scale 을 생략하면 기본값은 1
 === <nowiki><footnote(내용)></nowiki> ===
 매크로가 있던 자리에는 각주 번호가 표시되고, 페이지 하단에 각주 번호와 내용이 나온다.
 
+=== <nowiki><color(글자색,[배경색,]내용)></nowiki> ===
+지정한 글자색, 배경색으로 내용을 출력한다.
+{{{
+<color(blue,yellow,이 매크로는)> <color(red,#EEE,다음과 같이)> 
+<color(green,짧은 부분의)> <color(gold,색깔을 바꿀 때)> 
+<color(#369,쉽게 사용할 수 있다.)>
+}}}
+<color(blue,yellow,이 매크로는)> <color(red,#EEE,다음과 같이)> <color(green,짧은 부분의)> <color(gold,색깔을 바꿀 때)> <color(#369,쉽게 사용할 수 있다.)>
+
 === #REDIRECT 페이지이름 ===
 '페이지이름'에 해당하는 페이지로 자동으로 이동한다. 현재 페이지의 제일 첫 줄에 존재해야 한다. 
 
