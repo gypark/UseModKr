@@ -11,3 +11,5 @@ sub dic {
 sub MacroEDic {
 	return "<A class='dic' href='http://dic.naver.com/endic?query=@_' target='dictionary'>@_</A>";
 }
+
+1;

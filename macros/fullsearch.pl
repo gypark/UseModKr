@@ -21,3 +21,5 @@ sub MacroFullSearch()
 	}
 	return $txt;
 }
+
+1;

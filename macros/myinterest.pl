@@ -39,3 +39,5 @@ sub MacroMyInterest {
 
 	return $txt;
 }
+
+1;

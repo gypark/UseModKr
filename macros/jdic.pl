@@ -11,3 +11,5 @@ sub jdic {
 sub MacroJDic {
 	return "<A class='dic' href='http://jpdic.naver.com/jpdic?query=@_' target='dictionary'>@_</A>";
 }
+
+1;

@@ -60,3 +60,5 @@ sub MacroMostPopular {
 
 	return $txt;
 }
+
+1;

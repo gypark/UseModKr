@@ -37,3 +37,5 @@ sub MacroHistory {
 				. T('Compare') . "'/>  </td><td>&nbsp;</td></table></form>\n";
 	return $html;
 }
+
+1;

@@ -27,3 +27,4 @@ sub MacroUserList {
 	return $result;
 }
 
+1;

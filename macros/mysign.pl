@@ -12,3 +12,5 @@ sub MacroMySign {
 	my ($author, $timestamp) = @_;
 	return "<DIV class='mysign'>-- $author <small>$timestamp</small></DIV>";
 }
+
+1;

@@ -25,3 +25,5 @@ sub MacroTitleSearch {
 	}
 	return $txt;
 }
+
+1;

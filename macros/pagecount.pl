@@ -12,3 +12,5 @@ sub MacroPageCount() {
 	my @pageList = &AllPagesList();
 	return $#pageList + 1;
 }
+
+1;

@@ -9,3 +9,5 @@ sub time {
 }
 
 sub MacroTime() { return &CalcTime(time); }
+
+1;

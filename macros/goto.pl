@@ -19,3 +19,5 @@ sub MacroGoto {
 		"<input type=submit value=\"". T('Go') . "\">".
 		"</form>";
 }
+
+1;

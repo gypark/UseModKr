@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.63";
-$WikiRelease = "2004-10-05";
+$WikiVersion = "0.92K3-ext1.63a";
+$WikiRelease = "2004-10-07";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -2649,7 +2649,7 @@ sub MacroSubst {
 			
 	foreach my $macro (sort keys %MacroFile) {
 		if ($txt =~ /&__LT__;$macro/i) {
-			do "$MacroFile{$macro}";
+			require "$MacroFile{$macro}";
 		}
 	}
 

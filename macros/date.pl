@@ -9,3 +9,5 @@ sub date {
 }
 
 sub MacroDate() { return &CalcDay(time); }
+
+1;

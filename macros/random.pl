@@ -19,3 +19,5 @@ sub MacroRandompage() {
 	}
 	return $txt;
 }
+
+1;

@@ -25,3 +25,5 @@ sub MacroFootnote {
 					"<br>\n";
 	return "<A class='footnote' name='FNR_$MyFootnoteCounter' href='#FN_$MyFootnoteCounter'>$MyFootnoteCounter</A>";
 }
+
+1;

@@ -34,3 +34,4 @@ sub MacroWantedPages {
 	return $txt;
 }
 
+1;

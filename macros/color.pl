@@ -18,3 +18,5 @@ sub MacroColorBk {
 	my ($color, $bgcolor, $message) = @_;
 	return "<span style='color:$color; background-color:$bgcolor'>$message</span>";
 }
+
+1;

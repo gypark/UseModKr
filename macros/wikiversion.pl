@@ -12,3 +12,4 @@ sub MacroWikiVersion {
 	return &ScriptLink("action=version", $WikiVersion);
 }
 
+1;

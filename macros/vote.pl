@@ -21,3 +21,4 @@ sub MacroVote {
 		."</td></tr></table>";
 }
 
+1;

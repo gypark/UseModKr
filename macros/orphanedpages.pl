@@ -42,3 +42,4 @@ sub MacroOrphanedPages {
 	return $txt;
 }
 
+1;

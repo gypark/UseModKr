@@ -33,3 +33,4 @@ sub MacroAllPagesTo {
 	return $txt;
 }
 
+1;

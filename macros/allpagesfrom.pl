@@ -55,3 +55,5 @@ sub MacroAllPagesFrom {
 
 	return $txt;
 }
+
+1;

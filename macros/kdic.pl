@@ -12,3 +12,4 @@ sub MacroKDic {
 	return "<A class='dic' href='http://krdic.naver.com/krdic?query=@_' target='dictionary'>@_</A>";
 }
 
+1;

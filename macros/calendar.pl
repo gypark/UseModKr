@@ -149,3 +149,5 @@ sub MacroCalendar {
 	$result .= "</table>";
 	return $result;
 }
+
+1;

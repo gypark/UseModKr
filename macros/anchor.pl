@@ -9,3 +9,5 @@ sub anchor {
 }
 
 sub MacroAnchor() {	return "<a name=\"@_\"></a>"; }
+
+1;
