@@ -85,7 +85,7 @@ use vars qw(%Page %Section %Text %InterSite %SaveUrl %SaveNumUrl
 # $DataDir     = "data"; # Main wiki directory
 $DataDir     = "newdata";    # Main wiki directory
 $ConfigFile  = "newconfig.pl"; # path of config file
-####
+###
 ###############
 $UseConfig   = 1;       # 1 = use config file,    0 = do not look for config
 
