@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.61-beta7";
-$WikiRelease = "2004-07-20";
+$WikiVersion = "0.92K3-ext1.61";
+$WikiRelease = "2004-07-21";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -95,7 +95,7 @@ use vars qw(%Page %Section %Text %InterSite %SaveUrl %SaveNumUrl
 ### 패치를 위해 추가된 내부 전역 변수
 use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime $Sec_Revision $Sec_Ts
 	$ViewCount $AnchoredFreeLinkPattern %UserInterest %HiddenPage
-	$pageid $IsPDA
+	$pageid $IsPDA $MemoID
 	$QuotedFullUrl
 	$MyFootnoteCounter $MyFootnotes);
 ###
@@ -1936,6 +1936,8 @@ sub GetHtmlHeader {
 ### 헤더 출력 개선
 	$html .= qq(<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=$HttpCharset">\n);
 	$html .= qq(<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">\n);
+	$html .= qq(<script src="wikiscript.js" language="javascript" type="text/javascript"></script>);
+	$html .= "\n";
 ###
 ###############
 
@@ -2832,18 +2834,18 @@ sub MacroFootnote {
 
 ### comments from Jof
 sub MacroMemo {
-	my ($itself, $id, $text) = @_;
+	my ($itself, $title, $text) = @_;
 
-	$id = &RemoveLink($id);
-	
-	return "<A class=\"memo\" href=\"JavaScript://\" onClick=\"" .
-		"if (document.getElementById('$id').style.display=='block') " .
-		"{document.getElementById('$id').style.display='none'} " .
-		"else " .
-		"{document.getElementById('$id').style.display='block'}\">" .
-		$id .
+	$title = &RemoveLink($title);
+	$MemoID++;
+
+	my $memo_id = "__MEMO__$MemoID";
+
+	return "<A class=\"memo\" href=\"#\" onClick=\"" .
+		"return onMemoToggle('$memo_id');\">" .
+		$title .
 		"</A>" .
-		"<DIV class=\"memo\" id=\"$id\" style=\"display:none\">" .
+		"<DIV class=\"memo\" id=\"$memo_id\" style=\"display:none\">" .
 		$text .
 		"</DIV>";
 }
@@ -9405,14 +9407,11 @@ sub GetTrackBackGuide {
 			$q->endform;
 	}
 
-	$result .= "<A class=\"trackbackguide\" href=\"JavaScript://\" onClick=\"" .
-		"if (document.getElementById('usemodwikitrackbackguide').style.display=='block') " .
-		"{document.getElementById('usemodwikitrackbackguide').style.display='none'} " .
-		"else " .
-		"{document.getElementById('usemodwikitrackbackguide').style.display='block'}\">" .
+	$result .= "<A class=\"trackbackguide\" href=\"#\" onClick=\"" .
+		"return onMemoToggle('__TRACKBACKGUIDE__');\">" .
 		&T('Send TrackBack') .
 		"</A>" .
-		"<DIV id=\"usemodwikitrackbackguide\" style=\"display:none\">" .
+		"<DIV id=\"__TRACKBACKGUIDE__\" style=\"display:none\">" .
 		$trackbackguide.
 		"</DIV>";
 
