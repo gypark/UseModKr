@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.46e";
-$WikiRelease = "2003-09-04";
+$WikiVersion = "0.92K3-ext1.47";
+$WikiRelease = "2003-09-05";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -2256,6 +2256,8 @@ sub MacroSubst {
 	$txt =~ s/(\&__LT__;comments\(([^,]+),([-+]?\d+)\)&__GT__;)/&MacroComments($1,$2,$3)/gei;
 ### <noinclude> </noinclude> from Jof
 	$txt =~ s/\&__LT__;(\/)?noinclude\&__GT__;//gei;
+### <longcomments(숫자)>
+	$txt =~ s/(\&__LT__;longcomments\(([^,]+),([-+]?\d+)\)&__GT__;)/&MacroComments($1,$2,$3,1)/gei;
 ###
 ###############
 	return $txt;
@@ -2298,11 +2300,9 @@ sub MacroIncludeSubst {
 ### 추가한 매크로의 동작부
 ### comments from Jof
 sub MacroComments {
-	my ($itself,$id,$up) = @_;	
+	my ($itself,$id,$up,$long) = @_;	
 	my $idvalue;
 	my $temp;
-	my ($readonly_style, $readonly_msg);
-	my $submit_button = "<input type=\"submit\" value=\"" . T('Submit') . "\">";
 
 	$temp = $id;
 	$temp =~ s/,$//;
@@ -2317,10 +2317,24 @@ sub MacroComments {
 		$idvalue = "[[$UserID]]";
 	}
 
+	my ($readonly_style, $readonly_msg);
+	my $submit_button = "<input type=\"submit\" value=\"" . T('Submit') . "\">";
 	if ((!&UserCanEdit($id)) && (abs($up) < 100)) {
 		$readonly_style = 'readonly="true" style="background-color: #f0f0f0;"';
 		$readonly_msg = T('Comment is not allowed');
 		$submit_button = "";
+	}
+
+	my $comment_field;
+	if ($long) {
+		$comment_field =
+			"<input type=\"hidden\" name=\"long\" value=\"1\">" .
+			":<br><TEXTAREA wrap=hard name='comment' $readonly_style class=comments rows=10 cols=80>" . 
+			"$readonly_msg" .
+			"</TEXTAREA>";
+	} else {
+		$comment_field =
+			": <INPUT name='comment' $readonly_style class=comments type=text size=60 value=\"$readonly_msg\">";
 	}
 
 	return
@@ -2330,9 +2344,9 @@ sub MacroComments {
 		"<input type=\"hidden\" name=\"pageid\" value=\"$pageid\">" .
 		"<input type=\"hidden\" name=\"up\" value=\"$up\">" .
 		T('Name') .
-		": <input name='name' $readonly_style class=text type=text size=10 value=\"$idvalue\"> " .
+		": <INPUT name='name' $readonly_style class=comments type=text size=10 value=\"$idvalue\"> " .
 		T('Comment') . 
-		": <input name='comment' $readonly_style class=text type=text size=60 value=\"$readonly_msg\">" .
+		$comment_field .
 		"&nbsp;" .
 		$submit_button .
 		"</form>";
@@ -3444,7 +3458,7 @@ sub ProcessPostMacro {
 	$string = &PostMacroMySign($string);
 	### comments from Jof
 	if (length($id) != 0) {
-		$string =~ s/<comments\(([-+]?\d+)\)>/<comments($id,$1)>/g;
+		$string =~ s/<((long)?)comments\(([-+]?\d+)\)>/<$1comments($id,$3)>/g;
 	}
 ### 
 	return $string;
@@ -5000,7 +5014,7 @@ sub DoOtherRequest {
 		} elsif ($action eq "pagehide") {
 			&DoPageHide();
 ### comment from Jof
-		} elsif ($action eq "comments") {
+		} elsif (($action eq "comments") || ($action eq "longcomments")) {
 			&DoComments($id) if &ValidIdOrDie($id);
 ###
 ###############
@@ -8130,19 +8144,35 @@ sub DoComments {
 	my $up   = &GetParam("up", "");
 	my ($timestamp) = CalcDay($Now) . " " . CalcTime($Now);
 	my $string;
+	my $long = &GetParam("long", "");
 	
+	$name = &GetRemoteHost(0) if ($name eq "");
+	$name =~ s/,/./g;
 	$newcomments = &QuoteHtml($newcomments);
 	&OpenPage($id);
 	&OpenDefaultText();
 	$string = $Text{'text'};
-	if ($up > 0) {
-		$string =~ s/\<comments\($id,$up\)\>/* $name : $newcomments - <small>$timestamp<\/small>\n\<comments\($id,$up\)\>/;
+	if ($long) {
+		$newcomments =~ s/^[\r\n ]*//g;
+		$newcomments =~ s/[\r\n ]*$//g;
+		$newcomments =~ s/(^|\n)/$1 /g;
+		if ($up > 0) {
+			$string =~ s/(\<longcomments\($id,$up\)\>)/\n$newcomments\n<mysign($name,$timestamp)>\n\n$1/;
+		} else {
+			$string =~ s/(\<longcomments\($id,$up\)\>)/$1\n\n$newcomments\n<mysign($name,$timestamp)>\n/;
+		}
 	} else {
-		$string =~ s/\<comments\($id,$up\)\>/\<comments\($id,$up\)\>\n* $name : $newcomments - <small>$timestamp<\/small>/;
+		if ($up > 0) {
+			$string =~ s/\<comments\($id,$up\)\>/* $name : $newcomments - <small>$timestamp<\/small>\n\<comments\($id,$up\)\>/;
+		} else {
+			$string =~ s/\<comments\($id,$up\)\>/\<comments\($id,$up\)\>\n* $name : $newcomments - <small>$timestamp<\/small>/;
+		}
 	}
+
 	DoPostMain($string, $id, $Text{'summary'}, $Section{'ts'}, 0, 0, $pageid);
 	return;
 }
+
 ### 통채로 추가한 함수들의 끝
 ###############
 
