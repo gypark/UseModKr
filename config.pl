@@ -69,6 +69,8 @@ $RssDays     = 7;               # Default number of days in RSS feed
 $RssTimeZone = 9;				# Time Zone of Server (hour), 0 for GMT, 9 for Korea
 ### 스크립트 뒤에 / or ? 선택 from usemod1.0
 $SlashLinks   = 0;      # 1 = use script/action links, 0 = script?action
+### interwiki 아이콘 사용
+$InterIconDir = "./icons-inter/"; # directory containing interwiki icons
 ##
 ##########################################################
 

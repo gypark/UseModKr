@@ -73,7 +73,7 @@ use vars qw(
 	$LogoPage $CheckTime $LinkDir $IconDir $CountDir $UploadDir $UploadUrl
 	$HiddenPageFile $TemplatePage
 	$InterWikiMoniker $SiteDescription $RssLogoUrl $RssDays $RssTimeZone
-	$SlashLinks
+	$SlashLinks $InterIconDir
 	);
 ###
 ###############
@@ -3571,7 +3571,7 @@ sub InterPageLink {
 	$url = &GetSiteUrl($site);
 ###############
 ### added by gypark
-### interwiki 아이콘 from jof4002
+### interwiki 아이콘
 	my ($image, $url_main);
 	if ($url =~ /\|/) {
 		($url, $image) = split(/\|/, $url, 2);		
@@ -3595,11 +3595,11 @@ sub InterPageLink {
 
 ###############
 ### replaced by gypark
-### interwiki 아이콘 from jof4002
+### interwiki 아이콘
 #	return ("<a href=\"$url\">$name</a>", $punct);
 	my $link_html = '';
 	if (!($image)) {
-		$image = "$IconDir/inter.gif";
+		$image = "$InterIconDir/inter.gif";
 	}
 	$link_html = "<A class='inter' href='$url_main'>" .
 				"<IMG class='inter' src='$image' alt='$site:' title='$site:'>" .
@@ -3666,7 +3666,10 @@ sub GetSiteUrl {
 		if ($status) {
 			%InterSite = split(/\s+/, $data);
 		}
-		$InterSite{'Upload'} = "$UploadUrl\/";
+		if (!defined($InterSite{'Upload'})) {
+### interwiki 아이콘
+			$InterSite{'Upload'} = "$UploadUrl\/|$InterIconDir\/upload.gif";
+		}
 ###
 ###############
 ###############
