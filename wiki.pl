@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.43a";
-$WikiRelease = "2003-03-30";
+$WikiVersion = "0.92K3-ext1.44";
+$WikiRelease = "2003-04-06";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -71,6 +71,7 @@ use vars qw(
 	$ConfigFile $SOURCEHIGHLIGHT @SRCHIGHLANG $LinkFirstChar
 	$EditGuideInExtern $SizeTopFrame $SizeBottomFrame
 	$LogoPage $CheckTime $LinkDir $IconDir $CountDir $UploadDir $UploadUrl
+	$HiddenPageFile
 	);
 ###
 ###############
@@ -91,7 +92,7 @@ use vars qw(%Page %Section %Text %InterSite %SaveUrl %SaveNumUrl
 ### added by gypark
 ### 패치를 위해 추가된 내부 전역 변수
 use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime $Sec_Revision $Sec_Ts
-	$ViewCount $AnchoredFreeLinkPattern %UserInterest);
+	$ViewCount $AnchoredFreeLinkPattern %UserInterest %HiddenPage);
 ###
 ###############
 
@@ -384,6 +385,15 @@ sub InitRequest {
 		return 0;
 	}
 	&InitCookie();         # Reads in user data
+###############
+### added by gypark
+### hide page
+	my ($status, $data) = &ReadFile($HiddenPageFile);
+	if ($status) {
+		%HiddenPage = split(/$FS1/, $data, -1);
+	}
+###
+###############
 	return 1;
 }
 
@@ -474,6 +484,18 @@ sub BrowsePage {
 	my ($fullHtml, $oldId, $allDiff, $showDiff, $openKept);
 	my ($revision, $goodRevision, $diffRevision, $newText);
 
+###############
+### added by gypark
+### hide page
+	if (&PageIsHidden($id)) {
+		print &GetHeader($id, &QuoteHtml($id), $oldId);
+		print Ts('%s is a hidden page', $id);
+		print &GetCommonFooter();
+		return;
+	}
+###
+###############
+		
 	&OpenPage($id);
 	&OpenDefaultText();
 ###############
@@ -895,6 +917,12 @@ sub GetRcHtml {
 		next  if ((!$all) && ($ts < $changetime{$pagename}));
 		next  if (($idOnly ne "") && ($idOnly ne $pagename));
 ###############
+### added by gypark
+### hide page
+		next if (&PageIsHidden($pagename));
+###
+###############
+###############
 ### commented by gypark
 ### RcOldFile 버그 수정
 #		next  if ($ts >= $oldts);
@@ -1034,6 +1062,18 @@ sub DoHistory {
 	my ($id) = @_;
 	my ($html, $canEdit, $row, $newText);
 
+###############
+### added by gypark
+### hide page
+	if (&PageIsHidden($id)) {
+		print &GetHeader($id, &QuoteHtml($id), '');
+		print Ts('%s is a hidden page', $id);
+		print &GetCommonFooter();
+		return;
+	}
+###
+###############
+	
 	print &GetHeader("",&QuoteHtml(Ts('History of %s', $id)), "") . "<br>";
 	&OpenPage($id);
 	&OpenDefaultText();
@@ -1537,6 +1577,13 @@ sub GetEditGuide {
 		}
 		$result .= &ScriptLink("action=pagelock&set=1&id=" . $id, T('lock'));
 		$result .= " | " . &ScriptLink("action=pagelock&set=0&id=" . $id, T('unlock'));
+### hide page by gypark
+		$result .= " | ";
+		if (defined($HiddenPage{$id})) {
+			$result .= T('(hidden)') . " | ";
+		}
+		$result .= &ScriptLink("action=pagehide&set=1&id=" . $id, T('hide'));
+		$result .= " | " . &ScriptLink("action=pagehide&set=0&id=". $id, T('unhide'));
 	}
 ###
 ###############
@@ -2934,6 +2981,14 @@ sub MacroInclude {
 		return "";
 	}
 		
+###############
+### added by gypark
+### hide page
+	if (&PageIsHidden($name)) {
+		return "";
+	}
+###
+###############
 	my $data = &ReadFileOrDie($fname);
 	my %SubPage = split(/$FS1/, $data, -1);  # -1 keeps trailing null fields
 
@@ -4304,6 +4359,15 @@ sub ValidIdOrDie {
 sub UserCanEdit {
 	my ($id, $deepCheck) = @_;
 
+###############
+### added by gypark
+### hide page
+	if (($id ne "") && (&PageIsHidden($id))) {
+		return 0;
+	}
+###
+###############
+	
 	# Optimized for the "everyone can edit" case (don't check passwords)
 	if (($id ne "") && (-f &GetLockedPageFile($id))) {
 		return 1  if (&UserIsAdmin());  # Requires more privledges
@@ -4590,13 +4654,19 @@ sub AllPagesList {
 	my ($rawIndex, $refresh, $status);
 
 	if (!$UseIndex) {
-		return &GenerateAllPagesList();
+### hide page by gypark
+#		return &GenerateAllPagesList();
+		return &GetNotHiddenPages(&GenerateAllPagesList());
+###
 	}
 	$refresh = &GetParam("refresh", 0);
 	if ($IndexInit && !$refresh) {
 		# Note for mod_perl: $IndexInit is reset for each query
 		# Eventually consider some timestamp-solution to keep cache?
-		return @IndexList;
+### hide page by gypark
+#		return @IndexList;
+		return &GetNotHiddenPages(@IndexList);
+###
 	}
 	if ((!$refresh) && (-f $IndexFile)) {
 		($status, $rawIndex) = &ReadFile($IndexFile);
@@ -4604,7 +4674,10 @@ sub AllPagesList {
 			%IndexHash = split(/\s+/, $rawIndex);
 			@IndexList = sort(keys %IndexHash);
 			$IndexInit = 1;
-			return @IndexList;
+### hide page by gypark
+#			return @IndexList;
+			return &GetNotHiddenPages(@IndexList);
+###
 		}
 		# If open fails just refresh the index
 	}
@@ -4619,7 +4692,10 @@ sub AllPagesList {
 	&RequestIndexLock() or return @IndexList;
 	&WriteStringToFile($IndexFile, join(" ", %IndexHash));
 	&ReleaseIndexLock();
-	return @IndexList;
+### hide page by gypark
+#	return @IndexList;
+	return &GetNotHiddenPages(@IndexList);
+###
 }
 
 sub CalcDay {
@@ -4843,6 +4919,9 @@ sub DoOtherRequest {
 ### UploadedFiles 매크로
 		} elsif ($action eq "deleteuploadedfiles") {
 			&DoDeleteUploadedFiles();
+### hide page by gypark
+		} elsif ($action eq "pagehide") {
+			&DoPageHide();
 ###
 ###############
 		} else {
@@ -4962,6 +5041,16 @@ sub DoEdit {
 	$editRows = &GetParam("editrows", 20);
 	$editCols = &GetParam("editcols", 65);
 	print &GetHeader('', &QuoteHtml($header), '');
+###############
+### added by gypark
+### hide page
+	if (&PageIsHidden($id)) {
+		print Ts('%s is a hidden page', $id);
+		print &GetCommonFooter();
+		return;
+	}
+###
+###############
 ###############
 ### added by gypark
 ### view action 추가
@@ -5862,6 +5951,13 @@ sub DoReverse {
 		return;
 	}
 	print &GetHeader('', &QuoteHtml(Ts('Links to %s', $string)), '');
+### hide page by gypark
+	if (&PageIsHidden($string)) {
+		print Ts('%s is a hidden page', $string);
+		print &GetCommonFooter();
+		return;
+	}
+###
 	print '<br>';
 
 	foreach $pagelines (&GetFullLinkList("page=1&inter=1&unique=1&sort=1&exists=2&empty=0&reverse=$string")) {
@@ -5950,6 +6046,12 @@ sub PrintPageList {
 	$count2 = 0;
 
 	foreach $pagename(@_) {
+###############
+### added by gypark
+### hide page
+		next if (&PageIsHidden($pagename));
+###
+###############
 		until (
 			$pagename lt @indexSearch[$count]
 			&& ($count == 0 || $pagename gt @indexSearch[$count-1])
@@ -5993,6 +6095,16 @@ sub PrintPageList {
 ###############
 			print " | " . &ScriptLink("action=pagelock&set=1&id=" . $pagename, T('lock'));
 			print " | " . &ScriptLink("action=pagelock&set=0&id=" . $pagename, T('unlock'));
+###############
+### added by gypark
+### hide page
+			if (defined($HiddenPage{$pagename})) {
+				print " | " . T('(hidden)');
+			}
+			print " | " . &ScriptLink("action=pagehide&set=1&id=" . $pagename, T('hide'));
+			print " | " . &ScriptLink("action=pagehide&set=0&id=" . $pagename, T('unhide'));
+###
+###############
 		}
 		print $q->br;
 		print "\n";
@@ -7327,6 +7439,15 @@ sub GetPageLinksFromFile {
 	my ($name, $pagelink, $interlink, $urllink) = @_;
 	my ($status, $data, %links, @result, $fname);
 
+###############
+### added by gypark
+### hide page
+	if (&PageIsHidden($name)) {
+		return;
+	}
+###
+###############
+
 	@result = ();
 	$fname = &GetLinkFile($name);
 
@@ -7789,6 +7910,67 @@ sub DoInterest {
 	print &GetCommonFooter();
 	return 1;
 
+}
+
+### hide page by gypark
+sub DoPageHide {
+	my ($id);
+
+	print &GetHeader('', T('Hide or Unhide page'), '');
+	return  if (!&UserIsAdminOrError());
+	$id = &GetParam("id", "");
+	if ($id eq "") {
+		print '<p>', T('Missing page id to hide/unhide');
+		return;
+	}
+	return  if (!&ValidIdOrDie($id));       # Later consider nicer error?
+
+	if (&GetParam("set", 1)) {
+		$HiddenPage{$id} = "1";
+	} else {
+		delete $HiddenPage{$id};
+	}
+
+	my $temp = join($FS1, %HiddenPage);
+
+	if (!(&RequestLockDir('pagehide', 4, 3, 0))) {
+		print T('Hiding/Unhiding page failed') . "<br>";
+		print T('Can not get lock for hiding/unhiding');
+		print &GetCommonFooter();
+		return;
+	}
+
+	&WriteStringToFile($HiddenPageFile, $temp);
+	chmod(0600, $HiddenPageFile);
+
+	&ReleaseLockDir('pagehide');
+
+	if (defined ($HiddenPage{$id})) {
+		print '<p>', Ts('%s is hidden.', $id), '<br>';
+	} else {
+		print '<p>', Ts('%s is revealed.', $id), '<br>';
+	}
+	print &GetCommonFooter();
+}
+
+sub PageIsHidden {
+	my ($id) = @_;
+
+	if ((&UserIsAdmin()) || (!(defined $HiddenPage{$id}))) {
+		return 0;
+	} else {
+		return 1;
+	}
+}
+
+sub GetNotHiddenPages {
+	my (@pages) = @_;
+	my @notHiddenPages = ();
+
+	foreach (@pages) {
+		push (@notHiddenPages, $_) if (!(&PageIsHidden($_)));
+	}
+	return @notHiddenPages;
 }
 
 ### 통채로 추가한 함수들의 끝

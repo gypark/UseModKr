@@ -57,7 +57,8 @@ $UploadDir   = "./upload";	# by gypark. file upload
 ### 화일 업로드와 오에카키 저장을 위한 URL (http:// 시작하는 절대경로 사용)
 $UploadUrl   = ""; # by gypark, URL for the directory containing uploaded file
                    # if undefined, it has the same value as $UploadDir
-###
+### hide page
+$HiddenPageFile = "$DataDir/hidden";  # hidden pages list file
 ##
 ##########################################################
 

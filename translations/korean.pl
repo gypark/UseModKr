@@ -659,4 +659,24 @@ Page %s is removed from your Interest Page List
 %s 페이지를 관심있는 페이지 목록에서 제거했습니다
 Interesting Page
 관심있는 페이지
+(hidden)
+(숨겨짐)
+hide
+숨김
+unhide
+드러냄
+Hide or Unhide page
+페이지 숨김 설정 또는 해제
+Missing page id to hide/unhide
+숨김 또는 해제할 페이지 이름이 누락되었습니다...
+%s is hidden.
+%s 페이지의 숨김 속성을 설정했습니다.
+%s is revealed.
+%s 페이지의 숨김 속성을 제거했습니다.
+%s is a hidden page
+%s 는 관리자가 감춘 페이지입니다.
+Hiding/Unhiding page failed
+페이지 감춤/드러냄 명령에 실패했습니다
+Can not get lock for hiding/unhiding
+명령을 수행하기 위한 락을 얻을 수 없습니다
 END_OF_TRANSLATION
