@@ -1283,10 +1283,18 @@ sub GetHeader {
 
 	my $topMsg = "";
 	if ($oldId ne '') {
-		$topMsg .= '('.Ts('redirected from %s',&GetEditLink($oldId, $oldId)).')  ';
+### view action 추가 by gypark
+#		$topMsg .= '('.Ts('redirected from %s',&GetEditLink($oldId, $oldId)).')  ';
+		my $oldpagelink = &GetViewLink($oldId, $oldId);
+		$oldpagelink = &GetEditLink($oldId, $oldId) if (&UserCanEdit($oldId));
+		$topMsg .= '('.Ts('redirected from %s',$oldpagelink).')  ';
 	}
 	if (&GetParam('InFrame','') eq '1') {
-		$topMsg .= '('.Ts('%s includes external page',&GetEditLink($id,$id)).')';
+### view action 추가 by gypark
+#		$topMsg .= '('.Ts('%s includes external page',&GetEditLink($id,$id)).')';
+		my $oldpagelink = &GetViewLink($id, $id);
+		$oldpagelink = &GetEditLink($id, $id) if (&UserCanEdit($id));
+		$topMsg .= '('.Ts('redirected from %s',$oldpagelink).')  ';
 	}
 	$result .= $q->h3($topMsg) if (($oldId ne '') || (&GetParam('InFrame','') eq '1'));
 ###
