@@ -5138,7 +5138,7 @@ function help(s)
 					&GetTextArea('newtext', $newText, $editRows, $editCols),
 					"<p>\n";
 	}
-	print "<hr noshade size=1>\n";
+	print "<hr class='footer'>\n";
 	if ($preview) {
 		print "<h2>", T('Preview:'), "</h2>\n";
 		if ($isConflict) {
@@ -5297,8 +5297,7 @@ sub DoEditPrefs {
 	print '<br>', &GetFormCheck('linkrandom', 0,
 												T('Add "Random Page" link to link bar'));
 	print '<br>', $q->submit(-name=>'Save', -value=>T('Save')), "\n";
-	print "<hr>\n";
-	print &GetGotoBar('');
+	print "<hr class='footer'>\n";
 	print $q->endform;
 	print &GetMinimumFooter();
 }
@@ -5619,8 +5618,7 @@ sub DoEnterLogin {
 ###
 ###############
 	print '<br>', $q->submit(-name=>'Login', -value=>T('Login')), "\n";
-	print "<hr>\n";
-	#print &GetGotoBar('');
+	print "<hr class='footer'>\n";
 	print $q->endform;
 ###############
 ### added by gypark
@@ -5719,7 +5717,7 @@ sub DoLogin {
 
 ###
 ###############
-	print "<hr>\n";
+	print "<hr class='footer'>\n";
 	#print &GetGotoBar('');
 	print $q->endform;
 	print &GetMinimumFooter();
@@ -5749,7 +5747,7 @@ sub DoLogout {
 		print Ts('Logout for user ID %s complete.', $UserID);
 	}
 
-	print "<hr>\n";
+	print "<hr class='footer'>\n";
 	%UserCookie = %SetCookie;
 	$UserID = "";
 	#print &GetGotoBar('');
@@ -6029,7 +6027,7 @@ sub GetFullLinkList {
 			"inter", 0,
 			"url", 0,
 			"exists", 2,
-			"empty", 1,
+			"empty", 0,
 			"search", "",
 			"reverse", ""
 	);
