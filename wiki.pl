@@ -2398,28 +2398,30 @@ sub MacroRandom() {
 }
 
 sub MacroInclude {
-###############
-### replaced by gypark
-### include 문서 안에 toc 제거
-#	my ($name) = @_;
 	my ($name, $opt) = @_;
-###
-###############
 
-	&OpenPage($name);
-	if (!defined($Page{"text_default"})) {
+	if ($OpenPageName eq $name) { # Recursive Include 방지
 		return "";
 	}
-	&OpenSection("text_default");
-	%Text = split(/$FS3/, $Section{'data'}, -1);
-###############
-### added by gypark
-### include 문서 안에 toc 제거
-	$Text{'text'} =~ s/<toc>/$FS_lt."toc".$FS_gt/gei if ($opt eq "notoc");
-###
-###############
-	return $Text{'text'};
-#	return &WikiToHTML($Text{'text'});
+	
+	my $fname = &GetPageFile($name);	# 존재하지 않는 파일이면 그냥 리턴
+	if (!(-f $fname)) {
+		return "";
+	}
+		
+	my $data = &ReadFileOrDie($fname);
+	my %SubPage = split(/$FS1/, $data, -1);  # -1 keeps trailing null fields
+
+	if (!defined($SubPage{"text_default"})) {
+		return "";
+	}
+
+	my %SubSection = split(/$FS2/, $SubPage{"text_default"}, -1);
+	my %TextInclude = split(/$FS3/, $SubSection{'data'}, -1);
+	
+	# includenotoc 의 경우
+ 	$TextInclude{'text'} =~ s/<toc>/$FS_lt."toc".$FS_gt/gei if ($opt eq "notoc");
+	return $TextInclude{'text'};
 }
 
 # end
