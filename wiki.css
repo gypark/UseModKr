@@ -561,6 +561,28 @@ TD.calendartoday
 
 }
 
+TD.calendarthispage
+{
+	line-height:100%;
+	border-top:1px solid black;
+	border-left:1px solid black;
+	border-bottom:1px solid silver;
+	border-right:1px solid silver;
+	background-color:#F8F8F8;
+	color:black;
+}
+
+TD.calendartodaythispage
+{
+	line-height:100%;
+	border-top:1px solid black;
+	border-left:1px solid black;
+	border-bottom:1px solid silver;
+	border-right:1px solid silver;
+	background: yellow;
+	color: black;
+}
+
 TD.calendar A:link,
 TD.calendar A:visited,
 TD.calendar A:active,

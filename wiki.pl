@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.60e";
-$WikiRelease = "2004-05-15";
+$WikiVersion = "0.92K3-ext1.60f";
+$WikiRelease = "2004-05-21";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -3444,6 +3444,9 @@ sub MacroCalendar {
 				$span_style = "text-decoration: underline; ";
 			} else {
 				$td_class = "calendar";
+			}
+			if ($pageid eq $cal_mainpage.$cal_page) {
+				$td_class .= "thispage";
 			}
 
 			if ((-f &GetPageFile($cal_mainpage . $cal_page)) && (!&PageIsHidden($cal_mainpage . $cal_page))) {
