@@ -1436,7 +1436,7 @@ sub GetHtmlHeader {
 ###############
 ### added by gypark
 ### 헤더 출력 개선
-	$html .= qq(<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=euc-kr">\n);
+	$html .= qq(<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=$HttpCharset">\n);
 	$html .= qq(<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">\n);
 ###
 ###############

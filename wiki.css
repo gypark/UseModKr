@@ -230,7 +230,6 @@ img {
 /* ISBN 링크시 책표지 */
 IMG.isbn {
 	border: 1px solid silver;
-	/* 책 표지가 없을 경우 나타날 이미지 */
 }
 
 /* 페이지 소스 보기 텍스트영역 */
