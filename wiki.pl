@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.61d";
-$WikiRelease = "2004-08-27";
+$WikiVersion = "0.92K3-ext1.62";
+$WikiRelease = "2004-10-04";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -4323,6 +4323,7 @@ sub ISBNLink {
 ###############
 ### replaced by gypark
 ### ISBNLink 개선
+### 국내 서적은 알라딘으로
 	my ($noCoverIcon, $iconNum) = ("icons/isbn-nocover.jpg", ($num % 5));
 	$noCoverIcon = "icons/isbn-nocover-$iconNum.jpg"
 		if (-f "icons/isbn-nocover-$iconNum.jpg");
@@ -4344,19 +4345,28 @@ sub ISBNLink {
 			"alt='".T('Go to the on-line bookstore')." ISBN:$rawprint'>".
 			"</a>";
 	}
-###
+
+### 외국 서적은 아마존으로
+	return "<a href='http://www.amazon.com/exec/obidos/ISBN=$num'>" .
+		"<IMG class='isbn' ".
+		"$ImageTag src='http://images.amazon.com/images/P/$num.01.MZZZZZZZ.gif' ".
+		"OnError='src=\"$noCoverIcon\"' ".
+		"alt='".T('Go to the on-line bookstore')." ISBN:$rawprint'>".
+		"</a>";
+
+#	$first  = "<a href=\"http://shop.barnesandnoble.com/bookSearch/"
+#						. "isbnInquiry.asp?isbn=$num\">";
+#	$second = "<a href=\"http://www.amazon.com/exec/obidos/"
+#						. "ISBN=$num\">" . T('alternate') . "</a>";
+#	$third  = "<a href=\"http://www.pricescan.com/books/"
+#						. "BookDetail.asp?isbn=$num\">" . T('search') . "</a>";
+#	$html  = $first . "ISBN " . $rawprint . "</a> ";
+#	$html .= "($second, $third)";
+#	$html .= " "  if ($rawnum =~ / $/);  # Add space if old ISBN had space.
+#	return $html;
+### 
 ###############
 
-	$first  = "<a href=\"http://shop.barnesandnoble.com/bookSearch/"
-						. "isbnInquiry.asp?isbn=$num\">";
-	$second = "<a href=\"http://www.amazon.com/exec/obidos/"
-						. "ISBN=$num\">" . T('alternate') . "</a>";
-	$third  = "<a href=\"http://www.pricescan.com/books/"
-						. "BookDetail.asp?isbn=$num\">" . T('search') . "</a>";
-	$html  = $first . "ISBN " . $rawprint . "</a> ";
-	$html .= "($second, $third)";
-	$html .= " "  if ($rawnum =~ / $/);  # Add space if old ISBN had space.
-	return $html;
 }
 
 sub SplitUrlPunct {
