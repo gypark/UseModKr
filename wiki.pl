@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.14";
+$WikiVersion = "0.92K3-ext1.15";
 $WikiRelease = "2002-12-30";
 
 $HashKey = "salt"; # 2-character string
@@ -4425,6 +4425,14 @@ sub DoOtherRequest {
 			&DoUnlock();
 		} elsif ($action eq "index") {
 			&DoIndex();
+###############
+### added by gypark
+### titleindex action 추가
+### from Bab2's patch
+		} elsif ($action eq "titleindex") {
+			&DoTitleIndex();
+###
+###############
 		} elsif ($action eq "help") {				# luke added
 			&DoHelp();								# luke added
 		} elsif ($action eq "preview") {			# luke added
@@ -5090,6 +5098,22 @@ sub UpdatePrefNumber {
 	$UserData{$param} = $temp;
 	# Later consider returning status?
 }
+
+###############
+### added by gypark
+### titleindex action 추가
+### from Bab2's patch
+sub DoTitleIndex {
+	my (@list);
+	my $index;
+	print "Content-type: text/plain\n\n";
+	@list = &AllPagesList();
+	foreach $index (@list) {
+		print $index."\r\n";
+	}
+}
+###
+###############
 
 sub DoIndex {
 	print &GetHeader('', T('Index of all pages'), '');
