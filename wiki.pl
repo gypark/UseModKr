@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.77";
+$WikiVersion = "0.92K3-ext1.78";
 $WikiRelease = "2005-02-27";
 
 $HashKey = "salt"; # 2-character string
@@ -6432,7 +6432,12 @@ sub DoSearch {
 	@x = &SearchTitleAndBody($string);
 	&PrintPageList(@x);
 
-	if ($#x eq -1) {
+### 검색 결과 하단에 새 페이지 만들기 항상 출력
+#	if ($#x eq -1) {
+	$string = &FreeToNormal($string) if ($FreeLinks);
+	if ((&ValidId($string) eq "") && (not -f &GetPageFile($string))) {
+		print "<hr>";
+###
 		print &ScriptLink("action=edit&id=$string", Ts('Create a new page : %s', $string));
 	}
 
