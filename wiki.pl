@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.60";
-$WikiRelease = "2004-03-12";
+$WikiVersion = "0.92K3-ext1.60a";
+$WikiRelease = "2004-03-22";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -8844,7 +8844,7 @@ sub DoComments {
 		}
 	}
 
-	DoPostMain($string, $id, $Text{'summary'}, $Section{'ts'}, 0, 0, $pageid);
+	DoPostMain($string, $id, "", $Section{'ts'}, 0, 0, $pageid);
 	return;
 }
 
