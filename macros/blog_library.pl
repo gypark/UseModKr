@@ -90,12 +90,14 @@ sub BlogGetListOrder {
 	}
 
 	my @list;
-	my ($page, $date);
+	my ($page, $pagename, $date);
 	foreach my $item (@tocitem_List) {
-		if ($item =~ /\[\[(.+?)\]\] (\d+)-(\d+)-(\d+)/) {
+		if ($item =~ /\[\[(.+?)(\|.*)?\]\] (\d+)-(\d+)-(\d+)/) {
 			$page = $1;
-			$date = sprintf("%4d-%02d-%02d",$2,$3,$4);
-			push(@list, "$page!$date");
+			$pagename = $2;
+			$date = sprintf("%4d-%02d-%02d",$3,$4,$5);
+			$pagename =~ s/^\|//;
+			push(@list, "$page$FS1$pagename$FS1$date");
 		}
 	}
  	return ("1", @list);
@@ -122,15 +124,17 @@ sub BlogGetListPeriod {
 	}
 
 	my @list;
-	my ($page, $date);
+	my ($page, $pagename, $date);
 	foreach my $item (@tocitem_List) {
-		if ($item =~ /\[\[(.+?)\]\] (\d+)-(\d+)-(\d+)/) {
+		if ($item =~ /\[\[(.+?)(\|.*)?\]\] (\d+)-(\d+)-(\d+)/) {
 			$page = $1;
-			$date = sprintf("%4d%02d%02d",$2,$3,$4);
+			$pagename = $2;
+			$date = sprintf("%4d%02d%02d",$3,$4,$5);
 			last if ($date < $startdate);
 			if ($date <= $enddate) {
-				$date = sprintf("%4d-%02d-%02d",$2,$3,$4);
-				push(@list, "$page!$date");
+				$date = sprintf("%4d-%02d-%02d",$3,$4,$5);
+				$pagename =~ s/^\|//;
+				push(@list, "$page$FS1$pagename$FS1$date");
 			}
 		}
 	}

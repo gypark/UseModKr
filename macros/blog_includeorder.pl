@@ -39,8 +39,8 @@ sub MacroBlogIncludeOrder {
 	my $txt;
 	my ($page, $date);
 	foreach my $item (@tocitem_List) {
-		if ($item =~ /^(.+)!(.+)$/) {
-			($page, $date) = ($1, $2);
+		if ($item =~ /^(.+)$FS1(.*)$FS1(.+)$/) {
+			($page, $date) = ($1, $3);
 		}
 		$page =~ s|^/|$toc_mainpage/|;
 		$page = &FreeToNormal($page);

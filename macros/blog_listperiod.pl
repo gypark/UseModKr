@@ -38,14 +38,15 @@ sub MacroBlogListPeriod {
 	# 리스트의 각 페이지를 목록 출력
 	my $txt;
 	$txt = "<UL>";
-	my ($page, $date, $pageid);
+	my ($page, $pagename, $date, $pageid);
 	foreach my $item (@tocitem_List) {
-		if ($item =~ /^(.+)!(.+)$/) {
-			($page, $date) = ($1, $2);
+		if ($item =~ /^(.+)$FS1(.*)$FS1(.+)$/) {
+			($page, $pagename, $date) = ($1, $2, $3);
 		}
 		$pageid = $page;
 		$pageid =~ s|^/|$toc_mainpage/|;
 		$pageid = &FreeToNormal($pageid);
+		$page = $pagename if ($pagename);
 		if ($showdate == 0) {
 			$txt .= "<LI>".&GetPageOrEditLink($pageid,$page);
 		} elsif ($showdate < 0) {
