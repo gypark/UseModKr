@@ -9232,12 +9232,10 @@ sub DoSendTrackBackPing {
 			&OpenDefaultText();
 			my $string = $Text{'text'};
 			my $macro = "\<trackbacksent\>";
-#			if ($string =~ /\<trackbacksent\($id\)\>/) {
 			if ($string =~ /$macro/) {
 				my $timestamp = &CalcDay($Now) . " " . &CalcTime($Now);
 				my $newtrackbacksent = "* $timestamp | " . 
 					(($ping_permalink ne '')?$ping_permalink:$ping_url);
-#				$string =~ s/(\<trackbacksent\($id\)\>)/$newtrackbacksent\n$1/;
 				$string =~ s/($macro)/$newtrackbacksent\n$1/;
 				&DoPostMain($string, $id, &T('New TrackBack Sent'), $Section{'ts'}, 0, 0, "!!");
 			}
@@ -9267,12 +9265,19 @@ sub UserCanSendTrackBackPing {
 	return 0;
 }
 
+sub PageCanReceiveTrackBackPing {
+	my ($id) = @_;
+
+	return 0 if (! -f &GetPageFile($id));
+	return 0 if (defined $HiddenPage{$id});
+	return 0 if (-f &GetLockedPageFile($id));
+
+	return 1;
+}
+
 sub DoReceiveTrackBackPing {
 	my ($id) = @_;
 	my $normal_id = $id;
-
-	my $debug;
-#	$debug = "1->";
 
 	my $url = &GetParam('url');
 	my $title = &GetParam('title', $url);
@@ -9291,43 +9296,30 @@ sub DoReceiveTrackBackPing {
 		$normal_id = &FreeToNormal($id);
 	}
 
-#	$debug .= "url[[$url]]title[[$title]]blog_name[[$blog_name]]id[[$id]]excerpt[[$excerpt]]";
-
 	if ($url eq '') {
-#		$debug .= "2->";
 		&SendTrackBackResponse("1", "No URL (url)");
 	} elsif ($id eq '') {
-#		$debug .= "3->";
 		&SendTrackBackResponse("1", "No Pagename (id)");
-	} elsif (! -f &GetPageFile($normal_id)) {
-#		$debug .= "4($normal_id)->";
-		&SendTrackBackResponse("1", "No wikipage found : $id");
+	} elsif (!&PageCanReceiveTrackBackPing($normal_id)) {
+		&SendTrackBackResponse("1", "Invalid Pagename (Page is missing, or Trackback is not allowed)");
 	} else {
-#		$debug .= "5->";
 		&OpenPage($normal_id);
 		&OpenDefaultText();
 		my $string = $Text{'text'};
 		my $macro = "\<trackbackreceived\>";
-#		if ($string =~ /\<trackbackreceived\($normal_id\)\>/) {
-		if ($string =~ /$macro/) {
-#		$debug .= "6->";
-			my $timestamp = &CalcDay($Now) . " " . &CalcTime($Now);
-			my $newtrackbackreceived = "* " .
-				&Ts('Trackback from %s', "'''<nowiki>$blog_name</nowiki>'''") .
-				" $timestamp\n" .
-				"** " . &T('Title:') . " [$url $title]\n" .
-				"** " . &T('Content:') . " $excerpt";
-#			$string =~ s/(\<trackbackreceived\($normal_id\)\>)/$newtrackbackreceived\n$1/;
-			$string =~ s/($macro)/$newtrackbackreceived\n$1/;
-			&DoPostMain($string, $id, &T('New TrackBack Received'), $Section{'ts'}, 0, 0, "!!");
-			&SendTrackBackResponse(0, "");
-		} else {
-#		$debug .= "7->";
-			&SendTrackBackResponse(1, "Wikipage is not set to receive trackback : $id");
+		if (!($string =~ /$macro/)) {
+			$string .= "\n$macro\n";
 		}
+		my $timestamp = &CalcDay($Now) . " " . &CalcTime($Now);
+		my $newtrackbackreceived = "* " .
+			&Ts('Trackback from %s', "'''<nowiki>$blog_name</nowiki>'''") .
+			" $timestamp\n" .
+			"** " . &T('Title:') . " [$url $title]\n" .
+			"** " . &T('Content:') . " $excerpt";
+		$string =~ s/($macro)/$newtrackbackreceived\n$1/;
+		&DoPostMain($string, $id, &T('New TrackBack Received'), $Section{'ts'}, 0, 0, "!!");
+		&SendTrackBackResponse(0, "");
 	}
-#	$debug .= "\n";
-#	&AppendStringToFile("$DataDir/tblog.txt", $debug);
 }
 
 sub SendTrackBackResponse {
@@ -9370,8 +9362,11 @@ sub GetTrackBackGuide {
 	my $encoded = &EncodeUrl($id);
 	my $url = $FullUrl . &ScriptLinkChar() . "action=trackback&id=$encoded";
 
-	$trackbackguide .= &T('Trackback address of this page:') . " " .
-		(&UrlLink("$url"))[0];
+	if (&PageCanReceiveTrackBackPing($id)) {
+		$trackbackguide .= &T('TrackBack address of this page:') . " " . (&UrlLink("$url"))[0];
+	} else {
+		$trackbackguide .= &T('This page can not receive TrackBack');
+	}
 
 	if (&UserCanSendTrackBackPing($id)) {
 		$FullUrl = $q->url(-full=>1)  if ($FullUrl eq "");

@@ -711,8 +711,10 @@ Send TrackBack Ping
 트랙백 핑 보내기
 Ping successfully sent
 핑을 보내는 데 성공했습니다
-Trackback address of this page:
+TrackBack address of this page:
 이 페이지의 트랙백 주소:
+This page can not receive TrackBack
+이 페이지로는 트랙백을 보낼 수 없습니다
 Trackback from %s
 %s 로부터의 트랙백
 Title:
