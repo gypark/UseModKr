@@ -7,30 +7,19 @@ body {
 	font-size: 9pt;
 	line-height: 160%;
 	text-align:justify;
-/*	scrollbar-face-color: white; */
-/*	scrollbar-face-color: #ffffe0; */
 	scrollbar-face-color: #f0f0f0;
 	scrollbar-shadow-color: #d0d0d0;
 	scrollbar-highlight-color: #ffffff;
 	scrollbar-3dlight-color: #e0e0e0;
 	scrollbar-darkshadow-color: #d0d0d0;
 	scrollbar-track-color: #ffffff;
-/*	scrollbar-track-color: lightyellow; */
 	scrollbar-arrow-color: black;
-/*	background: #ffffe0; */
 	background: #fefefe;
 }
 
 em {
 	font-size: 105%;
 }
-
-/* pre {
-	font-family: dotumche;
-	font-size: 9pt;
-	line-height: 160%;
-	text-align:justify;
-} */
 
 pre {
 	font-family: Lucida Console,Courier New,Courier,monotype;
@@ -52,7 +41,6 @@ pre.code   {
 	margin-top: 8pt;
 	margin-bottom: 8pt;
 	background-color: #fffffa;
-/*	background-color: lightyellow; */
 	white-space:pre;
 	border-style:solid;
 	border-width:1pt;
@@ -71,7 +59,6 @@ pre.syntax {
 	margin-top: 8pt;
 	margin-bottom: 8pt;
 	background-color: #fffffa;
-/*	background-color: lightyellow; */
 	white-space:pre;
 	border-style:solid;
 	border-width:1pt;
@@ -138,7 +125,7 @@ h1 {
 h2 {
 	font-size: 14pt;
 	padding-left:6pt;
-	background: #e6e6fa;
+	background: #f0f0f0;
 	border: solid 1px #d0d0d0;
 }
 
@@ -152,14 +139,14 @@ h3 {
 h4 {
 	font-size: 12pt;
 	padding-left:12pt;
-	background: #ccffff;
+	background: #f0f0f0;
 	border: solid 1px #d0d0d0;
 }
 
 h5 {
 	font-size: 11pt;
 	padding-left:15pt;
-	background: #ddffff;
+	background: #f0f0f0;
 	border: solid 1px #d0d0d0;
 }
 
