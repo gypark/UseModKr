@@ -100,8 +100,8 @@ use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime $Sec_Revision $Sec_Ts);
 ### 보안을 위해서 데이타 저장 공간을 다른 곳으로 지정
 ### 적절히 바꾸어서 사용할 것
 # $DataDir     = "data"; # Main wiki directory
-$DataDir     = "newdata";    # Main wiki directory
-$ConfigFile  = "newconfig.pl"; # path of config file
+$DataDir     = "data";    # Main wiki directory
+$ConfigFile  = "config.pl"; # path of config file
 ###
 ###############
 $UseConfig   = 1;       # 1 = use config file,    0 = do not look for config
