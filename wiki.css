@@ -214,17 +214,6 @@ A.dic:hover
 	text-decoration: underline;
 }
 
-/* memo 매크로 링크 */
-A.memo:link, A.memo:active, A.memo:visited, A.memo:hover {
-	background: transparent;
-	color: blue;
-	text-decoration: none;
-}
-A.memo:hover
-{
-	text-decoration: underline;
-}
-
 /* 기타 */
 SELECT,TEXTAREA
 {
@@ -383,15 +372,6 @@ DIV.editguide {
 	border: none;
 	color: black;
 }
-
-/* 트랙백 URL 안내창 */
-DIV.trackbackguide {
-	text-align: left;
-	background: transparent;
-	border: none;
-	color: black;
-}
-
 
 /* footer */
 DIV.footer {
@@ -639,6 +619,17 @@ DIV.memo {
 	padding:5px;
 }
 
+/* memo 매크로 링크 */
+A.memo:link, A.memo:active, A.memo:visited, A.memo:hover {
+	background: transparent;
+	color: blue;
+	text-decoration: none;
+}
+A.memo:hover
+{
+	text-decoration: underline;
+}
+
 /* footnote */
 DIV.footnote {
 	border-top:1px solid silver;
@@ -650,3 +641,40 @@ A.footnote {
 	vertical-align: super;
 }
 
+/* 트랙백 주고받기 안내창 */
+DIV.trackbackguide {
+	text-align: left;
+	background: transparent;
+	border: none;
+	color: black;
+}
+
+/* 트랙백 주고받기 안내창 링크 */
+A.trackbackguide:link, A.trackbackguide:active, A.trackbackguide:visited, A.trackbackguide:hover {
+	background: transparent;
+	color: blue;
+	text-decoration: none;
+}
+A.trackbackguide:hover
+{
+	text-decoration: underline;
+}
+
+/* 트랙백 리스트 */
+DIV.trackbacklist {
+	background-color:#F8F8F8;
+	color:#000;
+	border:1px solid silver;
+	padding:5px;
+}
+
+/* 트랙백 리스트 링크 */
+A.trackbacklist:link, A.trackbacklist:active, A.trackbacklist:visited, A.trackbacklist:hover {
+	background: transparent;
+	color: blue;
+	text-decoration: none;
+}
+A.trackbacklist:hover
+{
+	text-decoration: underline;
+}

@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.61b";
-$WikiRelease = "2004-07-21";
+$WikiVersion = "0.92K3-ext1.61c";
+$WikiRelease = "2004-07-26";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -2674,7 +2674,8 @@ sub MacroSubst {
 	$txt =~ s/(\&__LT__;longcomments\(([^,]+),([-+]?\d+)\)&__GT__;)/&MacroComments($1,$2,$3,1)/gei;
 ### <memo(제목)></memo> from Jof
 	$MemoID = 0;
-	$txt =~ s/(&__LT__;memo\(([^\n]+?)\)&__GT__;((.)*?)&__LT__;\/memo&__GT__;)/&MacroMemo($1, $2, $3)/geis;
+	$txt =~
+		s/(&__LT__;memo\(([^\n]+?)\)&__GT__;((.)*?)&__LT__;\/memo&__GT__;)/&MacroMemo($1, $2, $3, "memo")/geis;
 ### <footnote(내용)> from Jof
 	$MyFootnoteCounter = 0;
 	$MyFootnotes = "\n" . T('Footnote') . ": <br>\n";
@@ -2738,7 +2739,7 @@ sub MacroTrackbackSent {
 	my $count = ($trackbacks =~ s/((^|\n)\* .*)/$1/g);
 	$title = &Ts('Trackback sent [%s]', $count) if ($count);
 
-	return &MacroMemo("", $title, $trackbacks);
+	return &MacroMemo("", $title, $trackbacks, "trackbacklist");
 }
 
 sub MacroTrackbackReceived {
@@ -2748,7 +2749,7 @@ sub MacroTrackbackReceived {
 	my $count = ($trackbacks =~ s/((^|\n)\* .*\n\*\* .*\n\*\* .*)/$1/g);
 	$title = &Ts('Trackback received [%s]', $count) if ($count);
 
-	return &MacroMemo("", $title, $trackbacks);
+	return &MacroMemo("", $title, $trackbacks, "trackbacklist");
 }
 
 ### img from Jof
@@ -2822,18 +2823,19 @@ sub MacroFootnote {
 
 ### comments from Jof
 sub MacroMemo {
-	my ($itself, $title, $text) = @_;
+	my ($itself, $title, $text, $class) = @_;
 
+	$class = "memo" if ($class eq '');
 	$title = &RemoveLink($title);
 	$MemoID++;
 
 	my $memo_id = "__MEMO__$MemoID";
 
-	return "<A class=\"memo\" href=\"#\" onClick=\"" .
+	return "<A class=\"$class\" href=\"#\" onClick=\"" .
 		"return onMemoToggle('$memo_id');\">" .
 		$title .
 		"</A>" .
-		"<DIV class=\"memo\" id=\"$memo_id\" style=\"display:none\">" .
+		"<DIV class=\"$class\" id=\"$memo_id\" style=\"display:none\">" .
 		$text .
 		"</DIV>";
 }
@@ -9361,6 +9363,7 @@ sub GetTrackbackGuide {
 			$title =~ s/_/ /g;  # Display with spaces
 		}
 		my $excerpt = $Text{'text'};
+		$excerpt =~ s/<.*?>//g;
 		if (length($excerpt) > 255) {
 			$excerpt = substr($excerpt, 0, 252);
 			$excerpt =~ s/(([\x80-\xff].)*)[\x80-\xff]?$/$1/;
@@ -9390,13 +9393,7 @@ sub GetTrackbackGuide {
 			$q->endform;
 	}
 
-	$result .= "<A class=\"trackbackguide\" href=\"#\" onClick=\"" .
-		"return onMemoToggle('__TRACKBACKGUIDE__');\">" .
-		&T('Send Trackback') .
-		"</A>" .
-		"<DIV id=\"__TRACKBACKGUIDE__\" style=\"display:none\">" .
-		$trackbackguide.
-		"</DIV>";
+	$result .= &MacroMemo("", &T('Send Trackback'), $trackbackguide, "trackbackguide");
 
 	$result .= "</DIV>";
 }
