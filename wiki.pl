@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.28c";
-$WikiRelease = "2003-02-24";
+$WikiVersion = "0.92K3-ext1.28d";
+$WikiRelease = "2003-02-25";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -531,7 +531,7 @@ sub DoBrowseRequest {
 		&BrowsePage($id)  if &ValidIdOrDie($id);
 		return 1;
 	} elsif ($action eq 'rc') {
-		&BrowsePage($RCName);
+		&BrowsePage(T($RCName));
 		return 1;
 	} elsif ($action eq 'random') {
 		&DoRandom();
@@ -970,7 +970,7 @@ sub GetRcHtml {
 ### 최근변경내역에 북마크 기능 도입
 ### 최근 변경 내역을 테이블로 출력 패치도 같이 적용
 #			$html .= "<p><strong>" . $date . "</strong><p>\n";
-			$html .= "<td colspan=6 style='border:0;'><br><b>" . $date . "</b>";
+			$html .= "<tr><td colspan=6 style='border:0;'><br><b>" . $date . "</b>";
 			if ($bookmarkuser eq "") {
 				$html .= "<br>&nbsp;</td></tr>\n";
 			} else {
@@ -7099,7 +7099,7 @@ sub DoShowVersion {
 ### 최근변경내역에 북마크 기능 도입
 sub DoBookmark {
 	if (&GetParam('username') eq "") {		# 로그인하지 않은 경우
-		&BrowsePage($RCName);				# 그냥 최근 변경 내역으로 이동
+		&BrowsePage(T($RCName));				# 그냥 최근 변경 내역으로 이동
 		return 1;
 	}
 	if (&GetParam('time') ne "") {
@@ -7108,7 +7108,7 @@ sub DoBookmark {
 		$UserData{'bookmark'} = $Now;
 	}
 	&SaveUserData();
-	&BrowsePage($RCName);
+	&BrowsePage(T($RCName));
 	return 1;
 }
 ###
