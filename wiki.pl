@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.74f";
-$WikiRelease = "2005-02-14";
+$WikiVersion = "0.92K3-ext1.74g";
+$WikiRelease = "2005-02-19";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -6488,7 +6488,7 @@ sub PrintPageList {
 	my @indexSearch=("A".."Z");
 	push (@indexSearch, @han, "豈");
 
-	print "<h2>", Ts('%s pages found:', ($#_ + 1)), "</h2>\n";
+	print "<a name='TOC'></a><h2>", Ts('%s pages found:', ($#_ + 1)), "</h2>\n";
 
 ###############
 ### replaced by gypark
@@ -6548,10 +6548,7 @@ sub PrintPageList {
 				$count2++;
 			}
 # 앵커를 삽입
-			print "\n<a name=\"H_$indexTitle[$count]\"></a>";
-			print $q->h3($indexTitle[$count] 
-					. "&nbsp;<a href=\"#PAGE_TOP\"><img src=\"$IconDir/gotop.gif\" align=\"texttop\" alt=\"" . T('Top') 
-					. "\"></a>");
+			print $q->h3("<a name=\"H_$indexTitle[$count]\" href=\"#TOC\">$indexTitle[$count]</A>"); 
 			$count2 = $count + 1;
 ### gypark 의 색인 패치
 ###############
