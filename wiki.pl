@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.28d";
-$WikiRelease = "2003-02-25";
+$WikiVersion = "0.92K3-ext1.29";
+$WikiRelease = "2003-02-26";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -3594,14 +3594,40 @@ sub GetDiff {
 	}
 	&WriteStringToFile($oldName, $old);
 	&WriteStringToFile($newName, $new);
-	$diff_out = `diff $oldName $newName`;
+###############
+### replaced by gypark
+### diff 출력 개선
+#	$diff_out = `diff $oldName $newName`;
+	$diff_out = `diff -u $oldName $newName`;
+###
+###############
 	&ReleaseDiffLock()  if ($lock);
 	$diff_out =~ s/\\ No newline.*\n//g;   # Get rid of common complaint.
 	# No need to unlink temp files--next diff will just overwrite.
 	return $diff_out;
 }
 
+###############
+### added by gypark
+### diff 출력 개선
 sub DiffToHTML {
+	my ($html) = @_;
+	if ($html =~ /^---/) {
+		return &DiffToHTMLunified($html);
+	} else {
+		return &DiffToHTMLplain($html);
+	}
+}
+###
+###############
+
+###############
+### replaced by gypark
+### diff 출력 개선
+# sub DiffToHTML {
+sub DiffToHTMLplain {
+###
+###############
 	my ($html) = @_;
 	my ($tChanged, $tRemoved, $tAdded);
 
@@ -3617,6 +3643,63 @@ sub DiffToHTML {
 	$html =~ s/\n((>.*\n)+)/&ColorDiff($1,"cfffcf")/ge;
 	return $html;
 }
+
+###############
+### added by gypark
+### diff 출력 개선
+sub DiffToHTMLunified {
+	my ($html) = @_;
+	my (@lines, $line, $result, $row, $td_option, $in_table, $output_exist);
+
+# 이 패치 이전에 저장된 diff cache 를 위하여
+	if ($html =~ /^\d/) {
+		return &DiffToHTMLold($html);
+	}
+
+
+	@lines = split("\n", $html, -1);
+	shift(@lines);
+	shift(@lines);
+
+	$output_exist = 0;
+	$in_table = 0;
+	foreach $line (@lines) {
+		$row = "";
+
+		$line = &QuoteHtml($line);
+		if ($line =~ /^@@ (.*)@@.*$/) {
+			if ($in_table) {
+				$in_table = 0;
+				$result .= "</table>\n";
+			}
+			$result .= "\n<br><table style='border: solid 1' width='95%'>\n";
+			$output_exist = 1;
+			$in_table = 1;
+			$row = "<b>$1</b>";
+			$td_option = "align='center' bgcolor='#d0d0d0'";
+		} elsif ($line =~ /^ (.*)$/) {
+			$row = $1;
+			$row =~ s/ /&nbsp;/g;
+			$row = "= ".$row;
+			$td_option="";
+		} elsif ($line =~ /^-(.*)$/) {
+			$row = $1;
+			$row =~ s/ /&nbsp;/g;
+			$row = "- ".$row;
+			$td_option="bgcolor='#ffffaf'";
+		} elsif ($line =~ /^\+(.*)$/) {
+			$row = $1;
+			$row =~ s/ /&nbsp;/g;
+			$row = "+ ".$row;
+			$td_option="bgcolor='#cfffcf'";
+		}
+		$result .= "<tr><td style='border: 0;' $td_option>$row</td></tr>\n";
+	}
+	$result .= "</table>\n" if ($output_exist);
+	return $result;
+}
+###
+###############
 
 sub ColorDiff {
 	my ($diff, $color) = @_;
