@@ -61,7 +61,7 @@ use vars qw(@RcDays @HtmlPairs @HtmlSingle
 	$FooterNote $EditNote $MaxPost $NewText $NotifyDefault $HttpCharset
 	$UserGotoBar $UserGotoBar2 $UserGotoBar3 $UserGotoBar4 
 	$ConfigFile $SOURCEHIGHLIGHT %SRCHIGHLANG $LinkFirstChar $FS_lt $FS_gt
-	$EditGuideInExtern $SizeTopFrame $SizeBottomFrame $ImgUrlPattern);
+	$EditGuideInExtern $SizeTopFrame $SizeBottomFrame);
 ###
 ###############
 
@@ -316,12 +316,6 @@ sub InitLinkPatterns {
 									. "prospero|telnet|gopher";
 	$UrlProtocols .= '|file'  if $NetworkFile;
 	$UrlPattern = "((?:(?:$UrlProtocols):[^\\]\\s\"<>$FS]+)$QDelim)";
-###############
-### added by gypark
-### 개별적인 IMG: 태그
-	$ImgUrlPattern = "IMG:([^<>\n]*)(\n)?$UrlPattern";
-###
-###############
 	$ImageExtensions = "(gif|jpg|png|bmp|jpeg)";
 	$RFCPattern = "RFC\\s?(\\d+)";
 	$ISBNPattern = "ISBN:?([0-9- xX]{10,})";
@@ -1777,7 +1771,7 @@ sub CommonMarkup {
 ###############
 ### added by gypark
 ### 개별적인 IMG: 태그
-		s/$ImgUrlPattern/&StoreImgUrl($1, $3, $useImage)/geo;
+		s/IMG:([^<>\n]*)\n?$UrlPattern/&StoreImgUrl($1, $2, $useImage)/geo;
 ###
 ###############
 		s/$UrlPattern/&StoreUrl($1, $useImage)/geo;
