@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.42b";
-$WikiRelease = "2003-03-25";
+$WikiVersion = "0.92K3-ext1.42c";
+$WikiRelease = "2003-03-27";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -6267,7 +6267,13 @@ sub DoPost {
 	}
 	# Later extract comparison?
 #	if (($UserID > 399) || ($Section{'id'} > 399))  {
-	if (($UserID ne "") || ($Section{'id'} ne ""))  {
+###############
+### replaced by gypark
+### 로그인 하지 않은 경우의 conflict
+#	if (($UserID ne "") || ($Section{'id'} ne ""))  {
+	if ((length($UserID) > 3) || (length($Section{'id'}) > 3)) {
+###
+###############
 		$newAuthor = ($UserID ne $Section{'id'});       # known user(s)
 	} else {
 		$newAuthor = ($Section{'ip'} ne $authorAddr);  # hostname fallback
