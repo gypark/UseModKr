@@ -2,8 +2,6 @@
 # 목차페이지에 새 글 제목과 날짜를 입력하는 폼을 출력
 # 저장 버튼을 누르면 이 매크로 있는 자리에 치환됨
 
-$MacroFunc{"blog_newpost"} = \&blog_newpost;
-
 sub blog_newpost {
 	my ($txt) = @_;
 

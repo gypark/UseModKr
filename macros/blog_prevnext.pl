@@ -1,8 +1,6 @@
 # <blog_prevnext(목차페이지)>
 # 목차페이지를 읽어서, 현재 보고 있는 페이지의 이전 페이지와 다음 페이지의 링크를 출력
 
-$MacroFunc{"blog_prevnext"} = \&blog_prevnext;
-
 sub blog_prevnext {
 	my ($txt) = @_;
 
