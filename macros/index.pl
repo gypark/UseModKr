@@ -40,9 +40,6 @@ sub index {
 					$index .= "$MyIndexEntry{$aliaskey}";
 				}
 			}
-
-			my $remain = join(", ", sort {uc($a) cmp uc($b)} @aliases);
-
 			$index .= "</TD>";
 			$index .= "</TR>" if ($column == $tablecolumn);
 		}
