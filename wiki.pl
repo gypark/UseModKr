@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.42a";
+$WikiVersion = "0.92K3-ext1.42b";
 $WikiRelease = "2003-03-25";
 
 $HashKey = "salt"; # 2-character string
@@ -70,7 +70,7 @@ use vars qw(
 	$UserGotoBar $UserGotoBar2 $UserGotoBar3 $UserGotoBar4 
 	$ConfigFile $SOURCEHIGHLIGHT @SRCHIGHLANG $LinkFirstChar
 	$EditGuideInExtern $SizeTopFrame $SizeBottomFrame
-	$LogoPage $CheckTime $LinkDir $IconDir $CountDir $UploadDir
+	$LogoPage $CheckTime $LinkDir $IconDir $CountDir $UploadDir $UploadUrl
 	);
 ###
 ###############
@@ -368,6 +368,7 @@ sub InitRequest {
 		print $q->redirect(-url=>"http:$ENV{SCRIPT_NAME}?action=upload&error=3");
 		exit 1;
 	}
+	$UploadUrl = $UploadDir if ($UploadUrl eq "");
 ###
 ###############
 	$Now = time;                     # Reset in case script is persistent
@@ -2265,7 +2266,7 @@ sub MacroUploadedFiles {
 		}
 		$txt .= "<TD class='uploadedfiles'>";
 		$txt .= &ScriptLink("reverse=Upload:$_", $uploadsearch) . " ";
- 		$txt .= "<a href='$UploadDir/$_'>$_</a>";
+ 		$txt .= "<a href='$UploadUrl/$_'>$_</a>";
 		$txt .= "</TD>";
 
 		$size = $filesize{$_};
@@ -3158,13 +3159,17 @@ sub GetSiteUrl {
 
 	if (!$InterSiteInit) {
 		$InterSiteInit = 1;
-		($status, $data) = &ReadFile($InterFile);
-		return ""  if (!$status);
-		%InterSite = split(/\s+/, $data);  # Later consider defensive code
 ###############
-### added by gypark
+### replaced by gypark
 ### file upload
-		$InterSite{'Upload'} = "http:$UploadDir\/";
+#		($status, $data) = &ReadFile($InterFile);
+#		return ""  if (!$status);
+#		%InterSite = split(/\s+/, $data);  # Later consider defensive code
+		($status, $data) = &ReadFile($InterFile);
+		if ($status) {
+			%InterSite = split(/\s+/, $data);
+		}
+		$InterSite{'Upload'} = "$UploadUrl\/";
 ###
 ###############
 	}
@@ -7509,7 +7514,7 @@ sub OekakiExit {
 	print T('Following is the Interlink of your file') . "<br>\n";
 	print "<div style='text-align:center; font-size:larger; font-weight:bold;'>\n";
 	print "Upload:$files[0]<br>\n";
-	print "<img style='border: solid 1 gray;' src='$UploadDir/$files[0]'>\n";
+	print "<img style='border: solid 1 gray;' src='$UploadUrl/$files[0]'>\n";
 	print "</div>\n";
 
 	print "<hr size='1'>";
@@ -7531,7 +7536,7 @@ height [480-40]<input type="text" name="height" size="4" maxlength="3" value="30
 	print "<UL>\n";
 	foreach (@files) {
 		print "<LI>";
-		print "<a href='$UploadDir/$_' target='OekakiPreview'>Upload:$_</a>";
+		print "<a href='$UploadUrl/$_' target='OekakiPreview'>Upload:$_</a>";
 		print " (".&TimeToText($filemtime{$_}).")</LI>\n";
 	}
 	print "</UL>\n";

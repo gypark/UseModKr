@@ -52,7 +52,12 @@ $LogoPage   = "";	# this page will be displayed when no parameter
 $CheckTime = 0;   # 1 = mesure the processing time (requires Time::HiRes module), 0 = do not 
 ### 내부 아이콘이 저장된 디렉토리
 $IconDir = "./icons/";	# directory containing icon files
-### 
+### 화일 업로드와 오에카키 저장을 위한 디렉토리 (내부 경로를 사용)
+$UploadDir   = "./upload";	# by gypark. file upload
+### 화일 업로드와 오에카키 저장을 위한 URL (http:// 시작하는 절대경로 사용)
+$UploadUrl   = ""; # by gypark, URL for the directory containing uploaded file
+                   # if undefined, it has the same value as $UploadDir
+###
 ##
 ##########################################################
 
@@ -116,7 +121,6 @@ $RcOldFile   = "$DataDir/oldrclog"; # Old RecentChanges logfile
 $IndexFile   = "$DataDir/pageidx";  # List of all pages
 $LinkDir     = "$DataDir/link";    # by gypark. Stores the links of each page
 $CountDir    = "$DataDir/count";	# by gypark. Stores view-counts
-$UploadDir   = "$DataDir/upload";	# by gypark. file upload
 
 # added by luke
 
