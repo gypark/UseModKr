@@ -2778,13 +2778,15 @@ sub MacroColorBk {
 ### footnote from Jof
 sub MacroFootnote {
 	my ($note) = @_;
-	
+
 	$MyFootnoteCounter++;
+	$note =~ s/"/&quot;/g;
 	$MyFootnotes .= "<A name='#FN_$MyFootnoteCounter' href='#FNR_$MyFootnoteCounter'>$MyFootnoteCounter</A>" .
 					". $note" .
 					"<br>\n";
-	return "<A class='footnote' title='" . T('Footnote') . "$MyFootnoteCounter. $note' ".
-			"name='#FNR_$MyFootnoteCounter' href='#FN_$MyFootnoteCounter'>$MyFootnoteCounter</A>";
+
+	return "<A class='footnote' name='#FNR_$MyFootnoteCounter' href='#FN_$MyFootnoteCounter' title=\"$note\">".
+			"$MyFootnoteCounter</A>";
 }
 
 ### comments from Jof
