@@ -8731,7 +8731,7 @@ RSS
 
 sub GetHtmlRcLine {
 ### 현재는 사용되지 않음
-	return "";
+	die "GetHtmlRcLine -- must not be executed!!!";
 }
 
 ### 통채로 추가한 함수들의 끝
