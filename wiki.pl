@@ -7601,7 +7601,7 @@ sub OekakiSave {
 
 # Á¾·á
 # print &GetHttpHeader();
-	print &GetHtmlHeader("$SiteName : ", T('Oekaki Save'), "");
+	print &GetHtmlHeader("$SiteName : ". T('Oekaki Save'), "");
 	print "success\n";
 	print $q->end_html();
 
