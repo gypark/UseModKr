@@ -2382,8 +2382,8 @@ sub WikiToHTML {
 ###############
 ### added by gypark
 ### WikiHeading °³¼± from Jof
-#	$pageText =~ s/&__LT__;toc&__GT__;/$TableOfContents/gi;
-	$pageText =~ s/&__LT__;toc&__GT__;/<a name="toc"><\/a>$TableOfContents/gi;
+	$pageText =~ s/&__LT__;toc&__GT__;/<a name="toc"><\/a>$TableOfContents/i;
+	$pageText =~ s/&__LT__;toc&__GT__;/$TableOfContents/gi;
 ###
 ###############
 
