@@ -677,4 +677,10 @@ Missing page id to hide/unhide
 %s 는 관리자가 감춘 페이지입니다.
 Hiding/Unhiding page failed
 페이지 감춤/드러냄 명령에 실패했습니다
+Name
+이름
+Comment
+답글
+Submit
+달기
 END_OF_TRANSLATION

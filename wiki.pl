@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.44b";
-$WikiRelease = "2003-04-22";
+$WikiVersion = "0.92K3-ext1.45";
+$WikiRelease = "2003-08-30";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -92,7 +92,8 @@ use vars qw(%Page %Section %Text %InterSite %SaveUrl %SaveNumUrl
 ### added by gypark
 ### 패치를 위해 추가된 내부 전역 변수
 use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime $Sec_Revision $Sec_Ts
-	$ViewCount $AnchoredFreeLinkPattern %UserInterest %HiddenPage);
+	$ViewCount $AnchoredFreeLinkPattern %UserInterest %HiddenPage
+	$pageid);
 ###
 ###############
 
@@ -484,6 +485,12 @@ sub BrowsePage {
 	my ($fullHtml, $oldId, $allDiff, $showDiff, $openKept);
 	my ($revision, $goodRevision, $diffRevision, $newText);
 
+###############
+### added by gypark
+### comments from Jof
+	$pageid = $id;
+###
+###############
 ###############
 ### added by gypark
 ### hide page
@@ -2238,6 +2245,8 @@ sub MacroSubst {
 	$txt =~ s/(\&__LT__;uploadedfiles\&__GT__;)/&MacroUploadedFiles($1)/gei;
 ### <MyInterest(username)>
 	$txt =~ s/(\&__LT__;myinterest(\(([^\n]+)\))?\&__GT__;)/&MacroMyInterest($1, $3)/gei;
+### <comments(숫자)>
+	$txt =~ s/(\&__LT__;comments\(([^,]+),([-+]?\d+)\)&__GT__;)/&MacroComments($1,$2,$3)/gei;
 ###
 ###############
 	return $txt;
@@ -2278,6 +2287,40 @@ sub MacroIncludeSubst {
 ###############
 ### added by gypark
 ### 추가한 매크로의 동작부
+### comments from Jof
+sub MacroComments {
+	my ($itself,$id,$up) = @_;	
+	my $idvalue;
+	my $temp;
+
+	$temp = $id;
+	$temp =~ s/,$//;
+	$temp = &RemoveLink($temp);
+	$temp = &FreeToNormal($temp);
+	if (&ValidId($temp) ne "") {
+		return $itself;
+	}
+	$id = "$temp";
+
+	if (($UserID ne "113") && ($UserID ne "112")) {
+		$idvalue = "[[$UserID]]";
+	}
+
+	return
+		"<form name=comments><input type=\"hidden\" name=\"action\" value=\"comments\">".
+		"<input type=\"hidden\" name=\"id\" value=\"$id\">" .
+		"<input type=\"hidden\" name=\"pageid\" value=\"$pageid\">" .
+		"<input type=\"hidden\" name=\"up\" value=\"$up\">" .
+		T('Name') .
+		": <input name='name' class=text type=text size=10 value=\"$idvalue\"> " .
+		T('Comment') . 
+		": <input name='comment' class=text type=text size=60 value=\"\">" . "&nbsp;" .
+		"<input type=submit value=\"" .
+		T('Submit') .
+		"\">".
+		"</form>";
+}
+
 ### MyInterest
 sub MacroMyInterest {
 	my ($itself, $username) = (@_);
@@ -3372,11 +3415,15 @@ EnDoFwIkIcOdE`;
 
 ### 글을 작성한 직후에 수행되는 매크로들
 sub ProcessPostMacro {
-	my ($string) = @_;
+	my ($string, $id) = @_;
 
 	### 여기에 사용할 매크로들을 나열한다
 	$string = &PostMacroMySign($string);
-
+	### comments from Jof
+	if (length($id) != 0) {
+		$string =~ s/<comments\(([-+]?\d+)\)>/<comments($id,$1)>/g;
+	}
+### 
 	return $string;
 }
 
@@ -4926,6 +4973,9 @@ sub DoOtherRequest {
 ### hide page by gypark
 		} elsif ($action eq "pagehide") {
 			&DoPageHide();
+### comment from Jof
+		} elsif ($action eq "comments") {
+			&DoComments($id) if &ValidIdOrDie($id);
 ###
 ###############
 		} else {
@@ -6381,16 +6431,43 @@ sub GetPageLinks {
 	return @links;
 }
 
+###############
+### added by gypark
+### comments from Jof
 sub DoPost {
-	my ($editDiff, $old, $newAuthor, $pgtime, $oldrev, $preview, $user);
 	my $string = &GetParam("text", undef);
 	my $id = &GetParam("title", "");
 	my $summary = &GetParam("summary", "");
 	my $oldtime = &GetParam("oldtime", "");
 	my $oldconflict = &GetParam("oldconflict", "");
-	my $isEdit = 0;
+	DoPostMain($string, $id, $summary, $oldtime, $oldconflict, 0);
+	return;
+}
+###
+###############
+
+
+###############
+### replaced by gypark
+### comments from Jof
+# sub DoPost {
+# 	my ($editDiff, $old, $newAuthor, $pgtime, $oldrev, $preview, $user);
+# 	my $string = &GetParam("text", undef);
+# 	my $id = &GetParam("title", "");
+# 	my $summary = &GetParam("summary", "");
+# 	my $oldtime = &GetParam("oldtime", "");
+# 	my $oldconflict = &GetParam("oldconflict", "");
+#  	my $isEdit = 0;
+# 	my $editTime = $Now;
+# 	my $authorAddr = $ENV{REMOTE_ADDR};
+
+sub DoPostMain {
+	my ($string, $id, $summary, $oldtime, $oldconflict, $isEdit, $rebrowseid) = @_;
+	my ($editDiff, $old, $newAuthor, $pgtime, $oldrev, $preview, $user);
 	my $editTime = $Now;
 	my $authorAddr = $ENV{REMOTE_ADDR};
+###
+###############
 
 	if (!&UserCanEdit($id, 1)) {
 		# This is an internal interface--we don't need to explain
@@ -6419,7 +6496,8 @@ sub DoPost {
 ###############
 ### added by gypark
 ### <mysign> 등 글작성 직후 수행할 매크로
-	$string = &ProcessPostMacro($string);
+### comments 구현을 위해 $id 추가, from Jof
+	$string = &ProcessPostMacro($string, $id);
 ###
 ###############
 	# Lock before getting old page to prevent races
@@ -6516,6 +6594,14 @@ sub DoPost {
 		unlink($IndexFile);  # Regenerate index on next request
 	}
 	&ReleaseLock();
+###############
+### added by gypark
+### comments from Jof
+	if (length($rebrowseid) != 0) {
+		$id = $rebrowseid;
+	}
+###
+###############
 	&ReBrowsePage($id, "", 1);
 }
 
@@ -8002,6 +8088,27 @@ sub WriteBinaryToFile {
 	close(OUT);
 }
 
+### comments from Jof
+sub DoComments {
+	my ($id) = @_;	
+	my $pageid = &GetParam("pageid", "");
+	my $name = &GetParam("name", "");
+	my $newcomments = &GetParam("comment", "");
+	my $up   = &GetParam("up", "");
+	my ($timestamp) = CalcDay($Now) . " " . CalcTime($Now);
+	my $string;
+	
+	&OpenPage($id);
+	&OpenDefaultText();
+	$string = $Text{'text'};
+	if ($up > 0) {
+		$string =~ s/\<comments\($id,$up\)\>/* $name : $newcomments - <small>$timestamp<\/small>\n\<comments\($id,$up\)\>/;
+	} else {
+		$string =~ s/\<comments\($id,$up\)\>/\<comments\($id,$up\)\>\n* $name : $newcomments - <small>$timestamp<\/small>/;
+	}
+	DoPostMain($string, $id, $Text{'summary'}, $Section{'ts'}, 0, 0, $pageid);
+	return;
+}
 ### 통채로 추가한 함수들의 끝
 ###############
 
