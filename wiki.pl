@@ -8729,6 +8729,10 @@ RSS
 	return ($headItem, $item);
 }
 
+sub GetHtmlRcLine {
+### 현재는 사용되지 않음
+	return "";
+}
 
 ### 통채로 추가한 함수들의 끝
 ###############
