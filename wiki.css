@@ -196,6 +196,13 @@ A.inter:hover
 	text-decoration: underline;
 }
 
+IMG.inter
+{
+	width: 16;
+	height: 16;
+	border: none;
+}
+
 /* 사전 링크 */
 A.dic:link, A.dic:active, A.dic:visited, A.dic:hover {
 	background: transparent;
