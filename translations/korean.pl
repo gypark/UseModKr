@@ -550,7 +550,7 @@ set bookmark
 cant create directory %s
 %s 디렉토리를 생성할 수 없습니다
 Editing Help :
-도움말 :
+편집 도움말 :
 Make Page
 페이지 만들기
 Text Formatting
