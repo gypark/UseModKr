@@ -51,6 +51,8 @@ Page generated %s
 (수정)
 (diff)
 (변경사항)
+(diff [d])
+(변경사항 [d])
 changes
 번 변경됨
 History of %s

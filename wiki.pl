@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.72a";
-$WikiRelease = "2005-01-24";
+$WikiVersion = "0.92K3-ext1.73";
+$WikiRelease = "2005-02-05";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -100,7 +100,8 @@ use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime $Sec_Revision $Sec_Ts
 	$ViewCount $AnchoredFreeLinkPattern %UserInterest %HiddenPage
 	$pageid $IsPDA $MemoID
 	$QuotedFullUrl
-	%MacroFunc %MacroFile);
+	%MacroFunc %MacroFile
+	$UseShortcut $UseShortcutPage);
 ###
 ###############
 
@@ -248,6 +249,9 @@ $NamedAnchors   = 1;        # 0 = no anchors, 1 = enable anchors, 2 = enable but
 umask 0;
 
 $TableOfContents = "";
+# 단축키
+$UseShortcut = 1;
+$UseShortcutPage = 1;
 
 # The "main" program, called at the end of this script file.
 sub DoWikiRequest {
@@ -1862,7 +1866,7 @@ sub GetHeader {
 ### page 처음에 bottom 으로 가는 링크를 추가
 ### #EXTERN
 	if (&GetParam('InFrame','') eq '') {
-		$result .= "\n<div align=\"right\"><a accesskey=\"z\" name=\"PAGE_TOP\" href=\"#PAGE_BOTTOM\">". T('Bottom') . "</a></div>\n";
+		$result .= "\n<div align=\"right\"><a accesskey=\"z\" name=\"PAGE_TOP\" href=\"#PAGE_BOTTOM\">". T('Bottom')." [b]" . "</a></div>\n";
 	}
 ###
 ###############
@@ -1974,13 +1978,66 @@ sub GetHtmlHeader {
 			if ($FreeLinks) {
 				$id = &FreeToNormal($id);
 			}
-			$bodyExtra .= qq(ondblclick="location.href='$ScriptName?action=edit&id=$id'");
+			$bodyExtra .= qq( ondblclick="location.href='$ScriptName?action=edit&id=$id'" );
 		}
 	}
-
 ###
 ###############
 
+### 단축키
+	my $headExtra;
+	if ($UseShortcut) {
+		my $shortCutUrl = "$ScriptName".&ScriptLinkChar();
+		my $shortCutLogin = &LoginUser()?"logout":"login";
+		my $shortCutHome = &FreeToNormal($HomePage);
+
+		$headExtra .= <<EOH;
+<script>
+<!--
+var key = new Array();
+
+key['f'] = "${shortCutUrl}$shortCutHome";
+key['i'] = "${shortCutUrl}action=index";
+key['r'] = "${shortCutUrl}action=rc";
+key['l'] = "${shortCutUrl}action=$shortCutLogin";
+
+key['t'] = "#PAGE_TOP";
+key['b'] = "#PAGE_BOTTOM";
+
+EOH
+
+		if ($UseShortcutPage) {
+			my $shortCutId = $q->param('id');
+			$shortCutId = $id if ($shortCutId eq '');
+			my $shortCutRevision = &GetParam('revision','');
+
+			$headExtra .= <<EOH;
+key['e'] = "${shortCutUrl}action=edit&id=$shortCutId";
+key['v'] = "${shortCutUrl}action=edit&id=$shortCutId&revision=$shortCutRevision";
+key['h'] = "${shortCutUrl}action=history&id=$shortCutId";
+key['d'] = "${shortCutUrl}action=browse&diff=5&id=$shortCutId";
+
+EOH
+		}
+
+		$headExtra .= <<EOH;
+function GetKeyStroke(KeyStroke) {
+	if ( (event.srcElement.tagName != 'INPUT') && (event.srcElement.tagName != 'TEXTAREA') ) {
+		isNetscape=(document.layers);
+		eventChooser = (isNetscape) ? KeyStorke.which : event.keyCode;
+		which = String.fromCharCode(eventChooser).toLowerCase();
+		for (var i in key)
+			if (which == i) window.location.href = key[i];
+	}
+}
+
+document.onkeypress = GetKeyStroke;
+-->
+</script>
+EOH
+	}
+	$html .= $headExtra;
+		
 	# Insert any other body stuff (like scripts) into $bodyExtra here
 	# (remember to add a space at the beginning to separate from prior text)
 	$html .= "</HEAD><BODY $bodyExtra>\n";
@@ -2068,7 +2125,7 @@ sub GetEditGuide {
 ###############
 	}
 	if ($UseDiff) {
-		$result .= ' ' . &ScriptLinkDiff(4, $id, T('(diff)'), $rev);
+		$result .= ' ' . &ScriptLinkDiff(4, $id, T('(diff [d])'), $rev);
 	}
 
 	$result .= '<br>';
@@ -2092,7 +2149,7 @@ sub GetEditGuide {
 	}
 ###
 ###############
-	$result .= &GetHistoryLink($id, T('History'));
+	$result .= &GetHistoryLink($id, T('History')." [h]");
 	if ($rev ne '') {
 		$result .= ' | ';
 		$result .= &GetPageLinkText($id, T('View current revision'));
@@ -2103,9 +2160,9 @@ sub GetEditGuide {
 	if (&UserCanEdit($id, 1)) {
 		if ($rev ne '') {
 			$result .= &GetOldPageLink('edit',   $id, $rev,
-						 Ts('Edit revision %s of this page', $rev));
+						 Ts('Edit revision %s of this page', $rev)." [v]");
 		} else {
-			$result .= &GetEditLink($id, T('Edit text of this page'));
+			$result .= &GetEditLink($id, T('Edit text of this page')." [e]");
 		}
 	} else {
 ###############
@@ -2178,7 +2235,7 @@ sub GetMinimumFooter {
 	if ($CheckTime) {
 		$result .= "<i>" . sprintf("%8.3f",&tv_interval($StartTime)) . " sec </i>";
 	}
-	$result .= "<a accesskey=\"x\" name=\"PAGE_BOTTOM\" href=\"#PAGE_TOP\">" . T('Top') . "</a></DIV>\n" . $q->end_html;
+	$result .= "<a accesskey=\"x\" name=\"PAGE_BOTTOM\" href=\"#PAGE_TOP\">" . T('Top')." [t]" . "</a></DIV>\n" . $q->end_html;
 ### 
 
 	return $result;
@@ -2212,9 +2269,9 @@ sub GetGotoBar {
 	$bartext = "\n<TABLE class='gotobar' width='100%'>";
 	$bartext .= &GetFormStart();
 	$bartext .= "<TR class='gotobar'>\n<TD class='gotohomepage'>";
-	$bartext .= &GetPageLink($HomePage);
-	$bartext .= "</TD>\n<TD class='gotoindex'>" . &ScriptLink("action=index", T('Index'));
-	$bartext .= "</TD>\n<TD class='gotorecentchanges'>" . &GetPageLink(T($RCName));
+	$bartext .= &GetPageLink($HomePage).&GetPageLinkText($HomePage, " [f]");
+	$bartext .= "</TD>\n<TD class='gotoindex'>" . &ScriptLink("action=index", T('Index')." [i]");
+	$bartext .= "</TD>\n<TD class='gotorecentchanges'>" . &GetPageLink(T($RCName)).&ScriptLink("action=rc", " [r]");
 	if ($id =~ m|/|) {
 		$main = $id;
 		$main =~ s|/.*||;  # Only the main page name (remove subpage)
@@ -2252,12 +2309,12 @@ sub GetGotoBar {
 	$bartext .= "</TD>\n<TD class='gotolinks'>" . &ScriptLink("action=links", T('Links'));
 #	if (($UserID eq "113") || ($UserID eq "112")) {
 	if (!&LoginUser()) {
-		$bartext .= "</TD>\n<TD class='gotologin'>" . &ScriptLink("action=login", T('Login'));
+		$bartext .= "</TD>\n<TD class='gotologin'>" . &ScriptLink("action=login", T('Login')." [l]");
 	}
 	else {
 		$bartext .= "</TD>\n<TD class='gotologin'>".
 			&GetPageLink(&GetParam('username'));
-		$bartext .= "</TD>\n<TD class='gotologin'>" . &ScriptLink("action=logout", T('Logout'));
+		$bartext .= "</TD>\n<TD class='gotologin'>" . &ScriptLink("action=logout", T('Logout'). " [l]");
 	}
 	$bartext .= "</TD>\n<TD class='gotosearch'>" . &GetSearchForm();
 	if ($UserGotoBar ne '') {
@@ -5249,11 +5306,13 @@ sub DoOtherRequest {
 	my ($id, $action, $text, $search);
 
 	$ClickEdit = 0;									# luke added
+	$UseShortcutPage = 0;		# 단축키
 	$action = &GetParam("action", "");
 	$id = &GetParam("id", "");
 	if ($action ne "") {
 		$action = lc($action);
 		if ($action eq "edit") {
+			$UseShortcut = 0;	# 단축키
 			&DoEdit($id, 0, 0, "", 0)  if &ValidIdOrDie($id);
 		} elsif ($action eq "unlock") {
 			&DoUnlock();
@@ -5264,12 +5323,15 @@ sub DoOtherRequest {
 ### titleindex action 추가
 ### from Bab2's patch
 		} elsif ($action eq "titleindex") {
+			$UseShortcut = 0;
 			&DoTitleIndex();
 ###
 ###############
 		} elsif ($action eq "help") {				# luke added
+			$UseShortcut = 0;
 			&DoHelp();								# luke added
 		} elsif ($action eq "preview") {			# luke added
+			$UseShortcut = 0;
 			&DoPreview();							# luke added
 		} elsif ($action eq "links") {
 			&DoLinks();
@@ -5301,9 +5363,11 @@ sub DoOtherRequest {
 			&DoBookmark();
 ### file upload
 		} elsif ($action eq "upload") {
+			$UseShortcut = 0;
 			&DoUpload();
 ### oekaki
 		} elsif ($action eq "oekaki") {
+			$UseShortcut = 0;
 			&DoOekaki();
 ### 관심 페이지
 		} elsif ($action eq "interest") {
@@ -5319,6 +5383,7 @@ sub DoOtherRequest {
 			&DoComments($id) if &ValidIdOrDie($id);
 ### rss from usemod1.0
 		} elsif ($action eq "rss") {
+			$UseShortcut = 0;
 			&DoRss();
 ### Trackback
 		} elsif ($action eq "send_ping") {
@@ -5329,6 +5394,7 @@ sub DoOtherRequest {
 ###############
 		} else {
 			# Later improve error reporting
+			$UseShortcut = 0;
 			&ReportError(Ts('Invalid action parameter %s', $action));
 		}
 		return;
@@ -5367,6 +5433,7 @@ sub DoOtherRequest {
 	# Handle posted pages
 	if (&GetParam("oldtime", "") ne "") {
 		$id = &GetParam("title", "");
+		$UseShortcut = 0;
 		&DoPost()  if &ValidIdOrDie($id);
 		return;
 	}
@@ -5632,7 +5699,9 @@ function oekaki()
 		if ($EditNote ne '') {
 			print T($EditNote) . '<br>';  # Allow translation
 		}
-		print $q->submit(-name=>'Save', -value=>T('Save')), "\n";
+### 단축키
+#		print $q->submit(-name=>'Save', -value=>T('Save')), "\n";
+		print $q->submit(-accesskey=>'r', -name=>'Save', -value=>T('Save')), "\n";
 		$userName = &GetParam("username", "");
 		if ($userName ne "") {
 			print ' (', T('Your user name is'), ' ',
@@ -5645,7 +5714,8 @@ function oekaki()
 ### replaced by gypark 
 ### 미리보기 버튼에 번역함수 적용
 	# print q(<input type="button" name="prev1" value="Popup Preview" onclick="javascript:preview();">); # luke added
-		print q(<input type="button" name="prev1" value="). 
+#단축키		print q(<input type="button" name="prev1" value="). 
+		print q(<input accesskey="p" type="button" name="prev1" value="). 
 			T('Popup Preview') . 
 			q(" onclick="javascript:preview();">); # luke added
 ###
@@ -5654,11 +5724,13 @@ function oekaki()
 ###############
 ### added by gypark
 ### file upload
-		print " ".q(<input type="button" name="prev1" value="). 
+#단축키		print " ".q(<input type="button" name="prev1" value="). 
+		print " ".q(<input accesskey="u" type="button" name="prev1" value="). 
 			T('Upload File') . 
 			q(" onclick="javascript:upload();">);
 ### oekaki
-		print " ".q(<input type="button" name="prev1" value="). 
+#단축키		print " ".q(<input type="button" name="prev1" value="). 
+		print " ".q(<input accesskey="o" type="button" name="prev1" value="). 
 			T('Oekaki') . 
 			q(" onclick="javascript:oekaki();">);
 ###
