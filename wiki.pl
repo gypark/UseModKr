@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.25";
-$WikiRelease = "2003-02-16";
+$WikiVersion = "0.92K3-ext1.26";
+$WikiRelease = "2003-02-23";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -90,7 +90,7 @@ use vars qw(%Page %Section %Text %InterSite %SaveUrl %SaveNumUrl
 ###############
 ### added by gypark
 ### 패치를 위해 추가된 내부 전역 변수
-use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime);
+use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime $Sec_Revision $Sec_Ts);
 ###
 ###############
 
@@ -562,6 +562,13 @@ sub BrowsePage {
 			&OpenKeptRevision($revision);
 		}
 	}
+###############
+### added by gypark
+### 매크로가 들어간 페이지의 편집가이드 문제 해결
+	$Sec_Revision = $Section{'revision'};
+	$Sec_Ts = $Section{'ts'};
+###
+###############
 	$newText = $Text{'text'};     # For differences
 	# Handle a single-level redirect
 	$oldId = &GetParam('oldid', '');
@@ -1537,7 +1544,7 @@ sub GetHtmlHeader {
 			if ($FreeLinks) {
 				$id = &FreeToNormal($id);
 			}
-			$bodyExtra .= qq(ondblclick="location.href='$ScriptName?action=edit&id=$id'");
+			$bodyExtra .= qq(ondblclick="location.href='$ScriptName?action=edit&id=$id'") if (&UserCanEdit($id,0));
 		}
 	}
 
@@ -1601,14 +1608,26 @@ sub GetEditGuide {
 # 
 # 	$result .= "</div>";
 
-	if ($Section{'revision'} > 0) {
+###############
+### replaced by gypark
+### 매크로가 들어간 페이지의 편집가이드 문제 해결
+#	if ($Section{'revision'} > 0) {
+	if ($Sec_Revision > 0) {
+###
+###############
 		$result .= '<br>';
 		if ($rev eq '') {  # Only for most current rev
 			$result .= T('Last edited');
 		} else {
 			$result .= T('Edited');
 		}
-		$result .= ' ' . &TimeToText($Section{ts});
+###############
+### replaced by gypark
+### 매크로가 들어간 페이지의 편집가이드 문제 해결
+#		$result .= ' ' . &TimeToText($Section{ts});
+		$result .= ' ' . &TimeToText($Sec_Ts);
+###
+###############
 	}
 	if ($UseDiff) {
 		$result .= ' ' . &ScriptLinkDiff(4, $id, T('(diff)'), $rev);
