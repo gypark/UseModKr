@@ -108,6 +108,7 @@ li {
 /* °¡·Î¼± */
 hr {
 	border: 1px solid darkred;
+	background-color: darkred;
 	height: 1px;
 	margin: 0px;
 }
