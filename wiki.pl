@@ -8234,9 +8234,9 @@ sub DoComments {
 	} else {
 		$newcomments =~ s/(----+)/<nowiki>$1<\/nowiki>/g;
 		if ($up > 0) {
-			$string =~ s/\<comments\($id,$up\)\>/*''' $name ''' : $newcomments - <small>$timestamp<\/small>\n\<comments\($id,$up\)\>/;
+			$string =~ s/\<comments\($id,$up\)\>/* ''' $name ''' : $newcomments - <small>$timestamp<\/small>\n\<comments\($id,$up\)\>/;
 		} else {
-			$string =~ s/\<comments\($id,$up\)\>/\<comments\($id,$up\)\>\n*''' $name ''' : $newcomments - <small>$timestamp<\/small>/;
+			$string =~ s/\<comments\($id,$up\)\>/\<comments\($id,$up\)\>\n* ''' $name ''' : $newcomments - <small>$timestamp<\/small>/;
 		}
 	}
 
