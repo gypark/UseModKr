@@ -5517,7 +5517,7 @@ sub DoEditPrefs {
 ### 빈 페이지 링크 스타일을 환경 설정에서 결정
 ### from Bab2's patch
 	print '<br>', &GetFormCheck('linkstyle', $LinkFirstChar,
-			T('Use wikiX style for the links to empty pages'));
+			T('Make link at the first character of an empty page'));
 ###
 ###############
 	print '<br>', &GetFormCheck('linkrandom', 0,

@@ -568,3 +568,10 @@ SPAN.mysign
 	background: transparent;
 }
 
+/* comments */
+DIV.comments {
+	background-color:#F8F8F8;
+	color:#000;
+	border:1px solid silver;
+	padding:5px;
+}

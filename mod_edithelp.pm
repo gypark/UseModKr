@@ -316,7 +316,7 @@ TABLE: bgcolor=yellow cellpadding=2 cellspacing=5 border=1 width=90% align=cente
 ########### Macro
 
 $HelpText[4] = q|
-매크로는 꺽쇠로 둘러싸인 이런 저런 목적의 키워드입니다. * 위키 링크와 헷갈리므로 대소문자를 섞어 쓰지 않도록 하셔야 합니다.
+매크로는 꺽쇠로 둘러싸인 이런 저런 목적의 키워드입니다. 위키 링크와 헷갈리므로 대소문자를 섞어 쓰지 않도록 하셔야 합니다.
 
 === <nowiki><date>, <time>, <datetime></nowiki> ===
 {{{
