@@ -1,4 +1,5 @@
 sub action_comments {
+	use strict;
 	my $id = &GetParam("id", "");	
 	my $pageid = &GetParam("pageid", "");
 	my $name = &GetParam("name", "");
@@ -9,7 +10,20 @@ sub action_comments {
 	my $long = &GetParam("long", "");
 
 	&ValidIdOrDie($id);
-	
+
+	# 블로그 지원을 위한 꽁수
+	my ($blogrcpage, $blogrccomment);
+	if ($id =~ m/(.+)(\/|%2f|%2F)(.+)/) {
+		$blogrcpage = "$1/BlogRc";
+	} else {
+		$blogrcpage = "BlogRc";
+	}
+	if (-f &GetPageFile($blogrcpage)) {
+		$blogrccomment = $newcomments;
+	} else {
+		$blogrcpage = "";
+	}
+
 	# thread
 	my $threadindent = &GetParam("threadindent", "");
 	my $abs_up = abs($up);
@@ -82,6 +96,47 @@ sub action_comments {
 
 	if (((!&UserCanEdit($id,1)) && (($abs_up < 100) || ($abs_up > $threshold2))) || (&UserIsBanned())) {		# 에디트 불가
 		$pageid = "";
+	}
+
+# 블로그 지원을 위한 꽁수
+	if ($pageid && $blogrcpage) {
+		$blogrccomment =~ s/(\r?\n)/ /g;
+		$blogrccomment =~ s/\[/{/g;
+		$blogrccomment =~ s/\]/}/g;
+		if (length($blogrccomment) > 33) {
+			$blogrccomment = substr($blogrccomment, 0, 30);
+			$blogrccomment =~ s/(([\x80-\xff].)*)[\x80-\xff]?$/$1/;
+			$blogrccomment .= "...";
+		}
+		$blogrccomment = &QuoteHtml($blogrccomment);
+		$blogrccomment =~ s/----+/---/g;
+		$blogrccomment =~ s/^ *//;
+		$blogrccomment = "C) $blogrccomment";
+
+		my ($fname, $status, $data);
+		$fname = &GetPageFile($blogrcpage);
+		if (-f $fname) {
+			($status, $data) = &ReadFile($fname);
+			if ($status) {
+				my %temp_Page = split(/$FS1/, $data, -1);
+				my %temp_Section = split(/$FS2/, $temp_Page{'text_default'}, -1);
+				my %temp_Text = split(/$FS3/, $temp_Section{'data'}, -1);
+				my $blogrc_Text = $temp_Text{'text'};
+
+				my $date = &CalcDayNow();
+				if ($date =~ /(\d+)-(\d+)-(\d+)/) {
+					$date = sprintf("%4d-%02d-%02d",$1,$2,$3);
+				}
+				if ($blogrc_Text =~ /^\*/m) {
+					$blogrc_Text =~ s/^\*/* [[$id|$blogrccomment]] $date\n*/m;
+				} else {
+					$blogrc_Text .= "\n* [[$id|$blogrccomment]] $date";
+				}
+				my $backup = $Section{'ts'};
+				&DoPostMain($blogrc_Text, $blogrcpage, "", $temp_Section{'ts'}, 0, 1, "!!");
+				$Section{'ts'} = $backup;
+			}
+		}
 	}
 
 	DoPostMain($string, $id, "*", $Section{'ts'}, 0, 0, $pageid);

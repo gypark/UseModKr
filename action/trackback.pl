@@ -7,6 +7,20 @@ sub action_trackback {
 	my $title = &GetParam('title', $url);
 	my $blog_name = &GetParam('blog_name');
 	my $excerpt = &GetParam('excerpt');
+
+# 블로그 지원을 위한 꽁수
+	my ($blogrcpage, $blogrccomment);
+	if ($id =~ m/(.+)(\/|%2f|%2F)(.+)/) {
+		$blogrcpage = "$1/BlogRc";
+	} else {
+		$blogrcpage = "BlogRc";
+	}
+	if (-f &GetPageFile($blogrcpage)) {
+		$blogrccomment = $excerpt;
+	} else {
+		$blogrcpage = "";
+	}
+
 	if (length($excerpt) > 255) {
 		$excerpt = substr($excerpt, 0, 252);
 		$excerpt =~ s/(([\x80-\xff].)*)[\x80-\xff]?$/$1/;
@@ -43,6 +57,48 @@ sub action_trackback {
 			"** " . &T('Title:') . " [$url $title]\n" .
 			"** " . &T('Content:') . " $excerpt";
 		$string =~ s/($macro)/$newtrackbackreceived\n$1/;
+
+# 블로그 지원을 위한 꽁수
+		if ($blogrcpage) {
+			$blogrccomment =~ s/(\r?\n)/ /g;
+			$blogrccomment =~ s/\[/{/g;
+			$blogrccomment =~ s/\]/}/g;
+			if (length($blogrccomment) > 33) {
+				$blogrccomment = substr($blogrccomment, 0, 30);
+				$blogrccomment =~ s/(([\x80-\xff].)*)[\x80-\xff]?$/$1/;
+				$blogrccomment .= "...";
+			}
+			$blogrccomment = &QuoteHtml($blogrccomment);
+			$blogrccomment =~ s/----+/---/g;
+			$blogrccomment =~ s/^ *//;
+			$blogrccomment = "T) $blogrccomment";
+
+			my ($fname, $status, $data);
+			$fname = &GetPageFile($blogrcpage);
+			if (-f $fname) {
+				($status, $data) = &ReadFile($fname);
+				if ($status) {
+					my %temp_Page = split(/$FS1/, $data, -1);
+					my %temp_Section = split(/$FS2/, $temp_Page{'text_default'}, -1);
+					my %temp_Text = split(/$FS3/, $temp_Section{'data'}, -1);
+					my $blogrc_Text = $temp_Text{'text'};
+
+					my $date = &CalcDayNow();
+					if ($date =~ /(\d+)-(\d+)-(\d+)/) {
+						$date = sprintf("%4d-%02d-%02d",$1,$2,$3);
+					}
+					if ($blogrc_Text =~ /^\*/m) {
+						$blogrc_Text =~ s/^\*/* [[$id|$blogrccomment]] $date\n*/m;
+					} else {
+						$blogrc_Text .= "\n* [[$id|$blogrccomment]] $date";
+					}
+					my $backup = $Section{'ts'};
+					&DoPostMain($blogrc_Text, $blogrcpage, "", $temp_Section{'ts'}, 0, 1, "!!");
+					$Section{'ts'} = $backup;
+				}
+			}
+		}
+
 		&DoPostMain($string, $id, &T('New Trackback Received'), $Section{'ts'}, 0, 0, "!!");
 		&SendTrackbackResponse(0, "");
 	}
