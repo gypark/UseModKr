@@ -59,6 +59,8 @@ $UploadUrl   = ""; # by gypark, URL for the directory containing uploaded file
                    # if undefined, it has the same value as $UploadDir
 ### hide page
 $HiddenPageFile = "$DataDir/hidden";  # hidden pages list file
+### template page
+$TemplatePage = "TemplatePage"; # name of template page for creating new page
 ##
 ##########################################################
 

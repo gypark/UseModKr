@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.48c";
-$WikiRelease = "2003-09-15";
+$WikiVersion = "0.92K3-ext1.49";
+$WikiRelease = "2003-09-16";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -71,7 +71,7 @@ use vars qw(
 	$ConfigFile $SOURCEHIGHLIGHT @SRCHIGHLANG $LinkFirstChar
 	$EditGuideInExtern $SizeTopFrame $SizeBottomFrame
 	$LogoPage $CheckTime $LinkDir $IconDir $CountDir $UploadDir $UploadUrl
-	$HiddenPageFile
+	$HiddenPageFile $TemplatePage
 	);
 ###
 ###############
@@ -4176,6 +4176,20 @@ sub OpenNewText {
 	} else {
 		$Text{'text'} = T('Describe the new page here.') . "\n";
 	}
+
+###############
+### added by gypark
+### template page
+	if (($TemplatePage) && (&GetParam("action","") eq "edit")) {
+		my $temp;
+		$temp = &GetTemplatePageText(&GetParam("id",""));
+		if ($temp ne "") {
+			$Text{'text'} = $temp;
+		}
+	}
+###
+###############
+
 	$Text{'text'} .= "\n"  if (substr($Text{'text'}, -1, 1) ne "\n");
 	$Text{'minor'} = 0;      # Default as major edit
 	$Text{'newauthor'} = 1;  # Default as new author
@@ -8244,6 +8258,40 @@ sub DoComments {
 	return;
 }
 
+sub GetTemplatePageText {
+	my ($newpage) = @_;
+	my ($id);
+	my $templatePage = "";
+	my ($fname, $status, $data);
+
+	if ($newpage eq "") {
+		return "";
+	}
+
+	if ($newpage =~ /^(.*)\/(.*)/) {
+		$templatePage = $1 . "/";
+	}
+	$templatePage .= $TemplatePage;
+
+	$fname = &GetPageFile($templatePage);
+	if (!(-f $fname)) {
+		$fname = &GetPageFile($TemplatePage);
+	}
+	if (!(-f $fname)) {
+		return "";
+	}
+
+	($status, $data) = &ReadFile($fname);
+	if (!$status) {
+		return "";
+	}
+
+	my %temp_Page = split(/$FS1/, $data, -1);
+	my %temp_Section = split(/$FS2/, $temp_Page{'text_default'}, -1);
+	my %temp_Text = split(/$FS3/, $temp_Section{'data'}, -1);
+
+	return $temp_Text{'text'};
+}
 ### 통채로 추가한 함수들의 끝
 ###############
 
