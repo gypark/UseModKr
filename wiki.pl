@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.34";
+$WikiVersion = "0.92K3-ext1.34a";
 $WikiRelease = "2003-03-06";
 
 $HashKey = "salt"; # 2-character string
@@ -1529,7 +1529,7 @@ sub GetEditGuide {
 ###############
 ### added by gypark
 ### page count
-	$result .= "$ViewCount ".T('hits')." | " if ($ViewCount ne "");
+	$result .= Ts('%s hits', $ViewCount)." | " if ($ViewCount ne "");
 ###
 ###############
 	$result .= &GetHistoryLink($id, T('History'));
