@@ -8258,6 +8258,7 @@ sub DoComments {
 	return;
 }
 
+### template page
 sub GetTemplatePageText {
 	my ($newpage) = @_;
 	my ($id);
