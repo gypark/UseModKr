@@ -8,10 +8,10 @@
 
 sub plugin_vim {
     my ($content, @opt) = @_;
-	my $log;
 	my $vim = "vim";		# PATH of vim
 	my $tohtml = "syntax/2html.vim";
 	my $text;
+	my $status;
 
 	my @syntax = ("php","c","python","jsp","sh","cpp",
           "java","ruby","forth","fortran","perl",
@@ -22,7 +22,7 @@ sub plugin_vim {
 	my %syntax = map { $_ => 1 } @syntax;
 
 	my $type = "nosyntax";
-	foreach $opt (@opt) {
+	foreach my $opt (@opt) {
 		if ($syntax{$opt}) {
 			$type = $opt;
 		} elsif ($opt eq "number") {
@@ -44,7 +44,6 @@ sub plugin_vim {
 
 	my $hashhtml = "$hash.html";
 	my $VimDir = "$UploadDir/vim";
-	my $VimUrl = "$UploadUrl/vim";
 
 	if (-f "$VimDir/$hashhtml" && not -z "$VimDir/$hashhtml") {
 		# 이미 생성되어 캐쉬에 있음
@@ -82,7 +81,6 @@ sub plugin_vim {
 		open STDERR, ">&SAVEERR";
 
 # html 가공 및 옮김
-		my $status;
 		($status, $text) = &ReadFile("$tmpo");
 		if (!$status) {
 			return undef;
@@ -99,7 +97,6 @@ sub plugin_vim {
 		rmdir ($hashdir) or return "[rmdir fail]";
 	}
 
-	my $status;
 	($status, $text) = &ReadFile("$VimDir/$hashhtml");
 	if (!$status) {
 		return undef;
