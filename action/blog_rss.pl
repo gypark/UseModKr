@@ -69,7 +69,7 @@ EOF
 			if ($RssChannelField{$field} ne "") {
 				$rssHeader .= 
 					"<$field>".
-					(($NeedCdata{$field})?"<![CDATA[".$RssChannelField{$field}."]]>":$RssChannelField{$field}).
+					(($NeedCdata{$field})?("<![CDATA[".$RssChannelField{$field}."]]>"):($RssChannelField{$field})).
 					"</$field>".
 					"\n";
 			}
@@ -228,10 +228,10 @@ sub BlogRssGetUserDefinedValue {
 		$text_item .= $1;
 	}
 
-	while ($text_channel =~ /<(.+?)>(.+)?<\/\1>/gs) {
+	while ($text_channel =~ /<(.+?)>(.+?)<\/\1>/gs) {
 		$RssChannelField{$1} = $2;
 	}
-	while ($text_item =~ /<(.+?)>(.+)?<\/\1>/gs) {
+	while ($text_item =~ /<(.+?)>(.+?)<\/\1>/gs) {
 		if ($where eq "list") {
 			$RssItemFieldInList{$1} = $2;
 		} else {
