@@ -1066,7 +1066,7 @@ sub DoHistory {
 ### added by gypark
 ### hide page
 	if (&PageIsHidden($id)) {
-		print &GetHeader($id, &QuoteHtml($id), '');
+		print &GetHeader("",&QuoteHtml(Ts('History of %s', $id)), "");
 		print Ts('%s is a hidden page', $id);
 		print &GetCommonFooter();
 		return;
@@ -7965,7 +7965,7 @@ sub DoPageHide {
 sub PageIsHidden {
 	my ($id) = @_;
 
-	if ((&UserIsAdmin()) || (!(defined $HiddenPage{$id}))) {
+	if ((!(defined $HiddenPage{$id})) || (&UserIsAdmin())) {
 		return 0;
 	} else {
 		return 1;
