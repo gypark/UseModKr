@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.73";
+$WikiVersion = "0.92K3-ext1.73b";
 $WikiRelease = "2005-02-05";
 
 $HashKey = "salt"; # 2-character string
@@ -3590,7 +3590,6 @@ sub StorePlugin {
 	my $plugin_file = "";;
 
 	$command = &UnquoteHtmlForPageContent($command);
-	$content = &UnquoteHtmlForPageContent($content);
 
 	@opt = split (/\s/, $command);
 	$name = shift @opt;
@@ -3618,8 +3617,8 @@ sub StorePlugin {
 	}
 
 	my $func = "plugin_$name";
-
-	my $txt = &{\&$func}($content, @opt);
+	my $content_unquoted = &UnquoteHtmlForPageContent($content);
+	my $txt = &{\&$func}($content_unquoted, @opt);
 	if (not defined $txt) {		# 플러그인이 undef 반환
 		return &StoreRaw("\n<PRE class='code'>").
 			&StoreRaw("\n<font color='red'>Error occurred while processing: $name</font>\n").
