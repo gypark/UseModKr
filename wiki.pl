@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.46a";
-$WikiRelease = "2003-09-01";
+$WikiVersion = "0.92K3-ext1.46b";
+$WikiRelease = "2003-09-02";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -3617,7 +3617,7 @@ sub StoreHotTrack {
 	my ($id) = @_;
 
 	return "<a href=\"http://www.hottracks.co.kr/cgi-bin/hottracks.storefront/Product/View/$id\">" .
-	"<img src=\"http://210.123.8.23/hottracks/cdimg/$id.jpg\"></a>";
+		"<img src=\"http://image.hottracks.co.kr/hottracks/cdimg/$id.jpg\" alt=\"$id\"></a>";
 }
 
 # luke add end
