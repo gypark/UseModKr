@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.61-beta5";
+$WikiVersion = "0.92K3-ext1.61-beta6";
 $WikiRelease = "2004-07-19";
 
 $HashKey = "salt"; # 2-character string
@@ -5550,6 +5550,10 @@ sub GetParam {
 	my $result;
 
 	$result = $q->param($name);
+### POST 로 넘어올 경우의 데이타 처리
+	if (!defined($result)) {
+		$result = $q->url_param($name);
+	}
 	if (!defined($result)) {
 		if (defined($UserData{$name})) {
 			$result = $UserData{$name};
