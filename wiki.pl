@@ -84,7 +84,6 @@ use vars qw(%Page %Section %Text %InterSite %SaveUrl %SaveNumUrl
 ### 적절히 바꾸어서 사용할 것
 # $DataDir     = "data"; # Main wiki directory
 $DataDir     = "../../../wiki_data/__gypark__";    # Main wiki directory
-$DataDir     = "newdata";
 $ConfigFile  = "../../../wiki_data/__gypark__.pl"; # path of config file
 ###
 ###############
