@@ -5701,7 +5701,7 @@ function oekaki()
 		}
 ### 단축키
 #		print $q->submit(-name=>'Save', -value=>T('Save')), "\n";
-		print $q->submit(-accesskey=>'r', -name=>'Save', -value=>T('Save')), "\n";
+		print $q->submit(-accesskey=>'r', -name=>'Save', -value=>T('Save')." [alt+r]"), "\n";
 		$userName = &GetParam("username", "");
 		if ($userName ne "") {
 			print ' (', T('Your user name is'), ' ',
@@ -5709,14 +5709,11 @@ function oekaki()
 		} else {
 			print ' (', Ts('Visit %s to set your user name.', &GetPrefsLink()), ') ';
 		}
-	#print $q->submit(-name=>'Preview', -value=>T('Preview'));	# luke delete
 ###############
 ### replaced by gypark 
 ### 미리보기 버튼에 번역함수 적용
-	# print q(<input type="button" name="prev1" value="Popup Preview" onclick="javascript:preview();">); # luke added
-#단축키		print q(<input type="button" name="prev1" value="). 
 		print q(<input accesskey="p" type="button" name="prev1" value="). 
-			T('Popup Preview') . 
+			T('Popup Preview')." [alt+p]" . 
 			q(" onclick="javascript:preview();">); # luke added
 ###
 ###############
@@ -5724,14 +5721,12 @@ function oekaki()
 ###############
 ### added by gypark
 ### file upload
-#단축키		print " ".q(<input type="button" name="prev1" value="). 
 		print " ".q(<input accesskey="u" type="button" name="prev1" value="). 
-			T('Upload File') . 
+			T('Upload File')." [alt+u]" . 
 			q(" onclick="javascript:upload();">);
 ### oekaki
-#단축키		print " ".q(<input type="button" name="prev1" value="). 
 		print " ".q(<input accesskey="o" type="button" name="prev1" value="). 
-			T('Oekaki') . 
+			T('Oekaki')." [alt+o]" . 
 			q(" onclick="javascript:oekaki();">);
 ###
 ###############
