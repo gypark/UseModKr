@@ -23,7 +23,7 @@ sub action_blog_newpost {
 		$pageid = "";
 	}
 
-	&DoPostMain($string, $id, "*", $Section{'ts'}, 0, 0, $pageid);
+	&DoPostMain($string, $id, "*", $Section{'ts'}, 0, 1, $pageid);
 	return;
 }
 
