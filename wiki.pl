@@ -2775,7 +2775,7 @@ sub MacroIncludeSubst {
 	my $macroname;
 	my ($MacrosDir, $MyMacrosDir) = ("./macros/", "./mymacros/");
 	foreach my $dir ($MacrosDir, $MyMacrosDir) {
-		foreach my $macrofile (glob("$dir/include*.pl")) {
+		foreach my $macrofile (glob("$dir/*include*.pl")) {
 			if ($macrofile =~ m|$dir/([^/]*).pl|) {
 				$macroname = $1;
 				$MacroFile{"$macroname"} = $macrofile;
