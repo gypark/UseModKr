@@ -2554,12 +2554,10 @@ sub MacroFootnote {
 	my ($note) = @_;
 	
 	$MyFootnoteCounter++;
-	$MyFootnotes .= "<A name='#FN_$MyFootnoteCounter'>" .
-					"<A href='#FNR_$MyFootnoteCounter'>$MyFootnoteCounter</A>" .
-					"[$note]" .
+	$MyFootnotes .= "<A name='#FN_$MyFootnoteCounter' href='#FNR_$MyFootnoteCounter'>$MyFootnoteCounter</A>" .
+					". $note" .
 					"<br>\n";
-	return "<A name='#FNR_$MyFootnoteCounter'>" .
-			"<A class='footnote' href='#FN_$MyFootnoteCounter'>$MyFootnoteCounter</A>";
+	return "<A class='footnote' name='#FNR_$MyFootnoteCounter' href='#FN_$MyFootnoteCounter'>$MyFootnoteCounter</A>";
 }
 
 ### comments from Jof
