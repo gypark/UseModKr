@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.15";
-$WikiRelease = "2002-12-30";
+$WikiVersion = "0.92K3-ext1.16";
+$WikiRelease = "2003-01-02";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -1492,7 +1492,22 @@ sub GetMinimumFooter {
 
 sub GetFormStart {
 	#return $q->startform("POST", "$ScriptName", "");
-	return $q->startform("POST", "$ScriptName", "application/x-www-form-urlencoded");
+
+###############
+### replaced by gypark
+### form 에 이름을 넣을 수 있도록 함
+#	return $q->startform("POST", "$ScriptName", "application/x-www-form-urlencoded");
+
+	my ($name) = @_;
+
+	if ($name eq '') {
+		return $q->startform("POST", "$ScriptName", "application/x-www-form-urlencoded");
+	} else {
+#		return $q->startform("POST", "$ScriptName", "application/x-www-form-urlencoded");
+		return $q->startform(-method=>"POST", -action=>"$ScriptName", -enctype=>"application/x-www-form-urlencoded" ,-name=>"$name") ;
+	}
+###
+###############
 }
 
 sub GetGotoBar {
@@ -4625,7 +4640,13 @@ function help(s)
 	print &HelpLink(5, "이모티콘") . "<br>\n";
 ###
 ###############
-	print &GetFormStart();
+###############
+### replaced by gypark
+### 편집모드에 들어갔을때 포커스가 편집창에 있도록 한다
+#	print &GetFormStart();
+	print &GetFormStart("form_edit");
+###
+###############
 
 	print &GetHiddenValue("title", $id), "\n",
 				&GetHiddenValue("oldtime", $pageTime), "\n",
@@ -4708,8 +4729,7 @@ function help(s)
 ### 편집모드에 들어갔을때 포커스가 편집창에 있도록 한다
 	print "\n<script language=\"JavaScript\" type=\"text/javascript\">\n"
 		. "<!--\n"
-# 만약 소스코드를 수정하여 폼들의 순서가 바뀐다면 아래의 [1] 부분을 알맞게 고쳐야 함
-		. "document.forms[1].text.focus();\n"
+		. "document.form_edit.text.focus();\n"
 		. "//-->\n"
 		. "</script>\n";
 ###
@@ -5139,7 +5159,13 @@ sub DoNewLogin {
 
 sub DoEnterLogin {
 	print &GetHeader('', T('Login'), "");
-	print &GetFormStart();
+###############
+### replaced by gypark
+### 사용자 아이디를 입력하는 란에 포커스를 준다
+#	print &GetFormStart();
+	print &GetFormStart("form_login");
+###
+###############
 	print &ScriptLink("action=newlogin", T('Create new UserName') . "<br>");
 	print &GetHiddenValue('enter_login', 1), "\n";
 	print '<br>', T('UserName:'), ' ',
@@ -5157,7 +5183,7 @@ sub DoEnterLogin {
 ### 사용자 아이디를 입력하는 란에 포커스를 준다
 	print "\n<script language=\"JavaScript\" type=\"text/javascript\">\n"
 		. "<!--\n"
-		. "document.forms[1].p_userid.focus();\n"
+		. "document.form_login.p_userid.focus();\n"
 		. "//-->\n"
 		. "</script>\n";
 ###
