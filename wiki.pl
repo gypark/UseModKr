@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.66-beta2";
+$WikiVersion = "0.92K3-ext1.66";
 $WikiRelease = "2005-01-09";
 
 $HashKey = "salt"; # 2-character string
@@ -2879,7 +2879,7 @@ sub MacroComments {
 		$submit_button .
 		$q->endform;
 
-	if ($threadindent >= 1) {
+	if ($threadindent >= 1) {	# "새글쓰기"도 감추고 싶다면 1 대신 0으로 할 것
 		my $memotitle = ($threadindent == 0)?T('Write New Thread'):T('Write Comment');
 		$txt = &MacroMemo("", $memotitle, $txt, "threadmemo");
 	} elsif ($threadindent == 0) {
@@ -8254,6 +8254,8 @@ sub DoComments {
 	my ($timestamp) = CalcDay($Now) . " " . CalcTime($Now);
 	my $string;
 	my $long = &GetParam("long", "");
+
+	# thread
 	my $threadindent = &GetParam("threadindent", "");
 	my $abs_up = abs($up);
 	my ($threshold1, $threshold2) = (100000000, 1000000000);
@@ -8293,28 +8295,13 @@ sub DoComments {
 			$newup = $Now;
 		}
 
-# 답글이 아래로 가는 방식
-		$comment_tail = "<thread($id,$newup," . ($threadindent+1) . ")>\n" .
-			"<threadhere($id,$newup," . ($threadindent+1) . ")>";
+		$comment_tail = "<thread($id,$newup," . ($threadindent+1) . ")>";
 
-		if ($abs_up < $threshold1) {		# 첫 글
-			if ($up > 0) {
-				$string =~ s/(\<thread\($id,$up(,\d+)?\)\>)/$comment_indent$newcomments <mysign($name,$timestamp)>\n$comment_tail\n\n$1/;
-			} else {
-				$string =~ s/(\<thread\($id,$up(,\d+)?\)\>)/$1\n\n$comment_indent$newcomments <mysign($name,$timestamp)>\n$comment_tail/;
-			}
-		} else {							# 리플
-			$string =~ s/(\<threadhere\($id,$up,$threadindent\)\>)/\n$comment_indent$newcomments <mysign($name,$timestamp)>\n$comment_tail\n$1/;
+		if (($up > 0) && ($up < $threshold1)) {		# 위로 달리는 새글
+			$string =~ s/(\<thread\($id,$up(,\d+)?\)\>)/$comment_indent$newcomments <mysign($name,$timestamp)>\n$comment_tail\n\n$1/;
+		} else {									# 리플 or 아래로 달리는 새글
+			$string =~ s/(\<thread\($id,$up(,\d+)?\)\>)/$1\n\n$comment_indent$newcomments <mysign($name,$timestamp)>\n$comment_tail/;
 		}
-
-# 답글이 위로 가는 방식
-# 		$comment_tail = "<thread($id,$newup," . ($threadindent+1) . ")>";
-# 
-# 		if (($up > 0) && ($up < $threshold1)) {
-# 			$string =~ s/(\<thread\($id,$up(,\d+)?\)\>)/$comment_indent$newcomments <mysign($name,$timestamp)>\n$comment_tail\n\n$1/;
-# 		} else {
-# 			$string =~ s/(\<thread\($id,$up(,\d+)?\)\>)/$1\n\n$comment_indent$newcomments <mysign($name,$timestamp)>\n$comment_tail/;
-# 		}
 	} elsif ($long) {				# longcomments
 		$newcomments =~ s/^\s*//g;
 		$newcomments =~ s/\s*$//g;
