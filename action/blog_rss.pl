@@ -6,27 +6,27 @@ my @ChannelField = ('title','link','description','language',
 		'ttl','image','rating','textInput','skipHours','skipDays');
 my @ItemField = ('title','link','description','author','category',
 		'comments','enclosure','guid','pubDate','source');
-my %NeedCdata = map { $_ => 1 } ('description');
+my %NeedCdata = map { $_ => 1 } ('description');	# CDATA 로 묶어 줘야 할 필드
 my (%RssChannelField, %RssItemFieldInList, %RssItemField, $ListPageAuthor);
 
 sub action_blog_rss {
 	use strict;
-	my $listpage = &GetParam("listpage","");
-	my $blogpage = &GetParam("blogpage","");
-	my $num_items = &GetParam("items",15);			# xml파일에 포함되는 글 갯수
-	my $update_period = &GetParam("update",60);		# xml파일 갱신 주기(단위:분). 0이면 항상 새로 생성
+	my $listpage = &GetParam("listpage","");		# 참조할 목차 페이지
+	my $blogpage = &GetParam("blogpage","");		# RSS의 link항목에 들어갈 페이지
+	my $num_items = &GetParam("items",15);			# xml파일의 item 갯수
 
 	my $xml = "";
 
-	my $cachefile = $blogpage."_".$listpage;
+	my $cachefile = $listpage."__".$blogpage."__".$num_items;
 	$cachefile =~ s/(\W)/uc sprintf "_%02x", ord($1)/eg;
 	$cachefile = "$TempDir/rss_$cachefile.xml";
 
-# cache 파일이 있고 마지막 갱신 이후 $update_period(분)이 지나지 않은 경우 
-# cache 파일을 읽어서 출력
 	if (-f $cachefile) {
-		my $mtime = (stat($cachefile))[9];
-		if (($Now - $mtime) < ($update_period * 60)) {
+		# cache 파일의 마지막 수정 시각 이후에 사이트에 변동이 없는 경우
+		# cache 파일을 읽어서 출력
+		my $cache_mtime = (stat($cachefile))[9];
+		my $rclog_mtime = (stat($RcFile))[9];
+		if ($cache_mtime > $rclog_mtime) {
 			my ($status, $data) = &ReadFile($cachefile);
 			if ($status) {
 				$xml = $data;
@@ -34,11 +34,11 @@ sub action_blog_rss {
 		}
 	}
 
-# xml을 새로 생성함
 	if ($xml eq "") {
+		# xml을 새로 생성함
 		my ($rssHeader, $rssBody, $rssFooter);
 
-# 디폴트 값을 먼저 설정
+# 채널 정보의 디폴트 값을 먼저 설정
 # 사이트 제목
 		$RssChannelField{'title'} = &QuoteHtml($SiteName);
 # 사이트 링크
@@ -47,7 +47,7 @@ sub action_blog_rss {
 		$RssChannelField{'link'} = $QuotedFullUrl;
  		$RssChannelField{'link'} .= &ScriptLinkChar() . $blogpage if ($blogpage);
 # 사이트 설명
-		$RssChannelField{'description'} = &QuoteHtml($SiteDescription);
+		$RssChannelField{'description'} = $SiteDescription;
 # 언어 - how to detect?
 		$RssChannelField{'language'} = "ko";
 # xml작성 시각
@@ -148,6 +148,7 @@ sub BlogRssGetItems {
 # 아이템 필드 초기화
 		%RssItemField = %RssItemFieldInList;
 
+# 아이템 정보의 디폴트 값을 먼저 설정
 		&OpenPage($pageid);
 		&OpenDefaultText();
 # 제목
@@ -158,17 +159,13 @@ sub BlogRssGetItems {
 		my $description = $Text{'text'};
 		$description =~ s/<noinclude>.*?<\/noinclude>//igs;
 		$description =~ s/<blog_rss>.*?<\/blog_rss>//igs;
-		$description = &QuoteHtml($description);
 		$description =~ s/\n/<br \/>\n/g;
  		$RssItemField{'description'} = $description;
-# 작성자 - 편법으로, list 페이지의 작성자를 각 글의 작성자로 간주
-		my $author;
-		if ($RssItemFieldInList{'author'}) {
-			$author = $RssItemFieldInList{'author'};
-		} else {
-			$author = $ListPageAuthor;
+# 작성자 - 목차 페이지에 명시되어 있으면 그 값 사용.
+#          없으면 목차 페이지의 마지막 수정자의 아이디를 사용.
+		if (not $RssItemField{'author'}) {
+			$RssItemField{'author'} = $ListPageAuthor;
 		}
-		$RssItemField{'author'} = &QuoteHtml($author);
 # 카테고리 - 대책없음
 # 		$RssItemField{'category'} = "";
 # 작성시각
