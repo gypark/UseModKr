@@ -633,4 +633,6 @@ If you want to paint a new picture
 또다른 그림을 그리고 싶다면
 If the picture above is not what you had painted, find your picture from the follwing list
 위에 있는 그림이 귀하가 그린 것이 아니라면, 아래의 목록에서 그림을 찾아 보세요
+Oekaki Save
+오에카키 저장
 END_OF_TRANSLATION
