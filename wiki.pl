@@ -348,6 +348,12 @@ sub DoCacheBrowse {
 	if (($query eq "") && ($ENV{'REQUEST_METHOD'} eq "GET")) {
 		$query = $HomePage;  # Allow caching of home page.
 	}
+###############
+### added by gypark
+### 인자가 없을 때 HomePage 를 embed 형식으로 출력
+	return 0 if ($query eq $HomePage);
+###
+###############
 	if (!($query =~ /^$LinkPattern$/)) {
 		if (!($FreeLinks && ($query =~ /^$FreeLinkPattern$/))) {
 			return 0;  # Only use cache for simple links
