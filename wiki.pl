@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.53a";
-$WikiRelease = "2003-10-07";
+$WikiVersion = "0.92K3-ext1.54";
+$WikiRelease = "2003-10-09";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -987,6 +987,13 @@ sub GetRcHtml {
 
 ###############
 ### added by gypark
+### 최근 변경 내역과 rss 에 아이템 갯수 지정 옵션
+	my $num_items = &GetParam("items", 0);
+	my $num_printed = 0;
+###
+###############
+###############
+### added by gypark
 ### 최근변경내역에 북마크 기능 도입
 	my $bookmark;
 	my $bookmarkuser = &GetParam('username', "");
@@ -1068,6 +1075,13 @@ sub GetRcHtml {
 ### added by gypark
 ### hide page
 		next if (&PageIsHidden($pagename));
+###
+###############
+###############
+### added by gypark
+### 최근 변경 내역과 rss 에 아이템 갯수 지정 옵션
+		$num_printed++;
+		last if (($num_items > 0) && ($num_printed > $num_items));
 ###
 ###############
 ###############
@@ -8674,10 +8688,16 @@ sub GetRc {
 	my %extra = ();
 	my %changetime = ();
 	my %pagecount = ();
-
 	# Slice minor edits
 	$showedit = &GetParam("rcshowedit", $ShowEdits);
 	$showedit = &GetParam("showedit", $showedit);
+###############
+### added by gypark
+### 최근 변경 내역과 rss 에 아이템 갯수 지정 옵션
+	my $num_items = &GetParam("items", 0);
+	my $num_printed = 0;
+###
+###############
 	if ($showedit != 1) {
 		my @temprc = ();
 		foreach $rcline (@outrc) {
@@ -8720,6 +8740,13 @@ sub GetRc {
 		next  if (($idOnly ne "") && ($idOnly ne $pagename));
 ### hide page
 		next if (&PageIsHidden($pagename));
+###############
+### added by gypark
+### 최근 변경 내역과 rss 에 아이템 갯수 지정 옵션
+		$num_printed++;
+		last if (($num_items > 0) && ($num_printed > $num_items));
+###
+###############
 		%extra = split(/$FS2/, $extraTemp, -1);
 		if ($date ne &CalcDay($ts)) {
 			$date = &CalcDay($ts);
