@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.41a";
-$WikiRelease = "2003-03-16";
+$WikiVersion = "0.92K3-ext1.41b";
+$WikiRelease = "2003-03-17";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -7356,9 +7356,11 @@ sub UploadFile {
 	if ($file =~ m/\//) {
 		$file =~ m/(.*)\/([^\/]*)/;
 		$filename = $2;
-	} else {
+	} elsif ($file =~ m/\\/) {
 		$file =~ m/(.*)\\([^\\]*)/;
 		$filename = $2;
+	} else {
+		$filename = $file;
 	}
 
 	if (($filename eq "") || ($filename =~ /\0/)) {
