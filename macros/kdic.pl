@@ -1,5 +1,3 @@
-$MacroFunc{"kdic"} = \&kdic;
-
 sub kdic {
 	my ($txt) = @_;
 

@@ -1,5 +1,3 @@
-$MacroFunc{"time"} = \&time;
-
 sub time {
 	my ($txt) = @_;
 

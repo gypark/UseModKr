@@ -1,5 +1,3 @@
-$MacroFunc{"pagecount"} = \&pagecount;
-
 sub pagecount {
 	my ($txt) = @_;
 

@@ -1,5 +1,3 @@
-$MacroFunc{"wantedpages"} = \&wantedpages;
-
 sub wantedpages {
 	my ($txt) = @_;
 

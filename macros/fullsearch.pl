@@ -1,5 +1,3 @@
-$MacroFunc{"fullsearch"} = \&fullsearch;
-
 sub fullsearch {
 	my ($txt) = @_;
 

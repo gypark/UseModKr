@@ -1,6 +1,4 @@
 # <prevupnext(페이지)> 매크로
-$MacroFunc{"prevupnext"} = \&prevupnext;
-
 sub prevupnext {
 	my ($txt) = @_;
 

@@ -1,5 +1,3 @@
-$MacroFunc{"footnote"} = \&footnote;
-
 my $MyFootnoteCounter;
 my $MyFootnotes;
 

@@ -1,5 +1,3 @@
-$MacroFunc{"userlist"} = \&userlist;
-
 sub userlist {
 	my ($txt) = @_;
 

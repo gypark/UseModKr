@@ -1,5 +1,3 @@
-$MacroFunc{"mysign"} = \&mysign;
-
 sub mysign {
 	my ($txt) = @_;
 

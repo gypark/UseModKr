@@ -1,5 +1,3 @@
-$MacroFunc{"orphanedpages"} = \&orphanedpages;
-
 sub orphanedpages {
 	my ($txt) = @_;
 

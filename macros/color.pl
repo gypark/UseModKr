@@ -1,5 +1,3 @@
-$MacroFunc{"color"} = \&color;
-
 sub color {
 	my ($txt) = @_;
 

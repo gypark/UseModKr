@@ -1,5 +1,3 @@
-$MacroFunc{"mostpopular"} = \&mostpopular;
-
 sub mostpopular {
 	my ($txt) = @_;
 

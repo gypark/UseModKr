@@ -1,5 +1,3 @@
-$MacroFunc{"date"} = \&date;
-
 sub date {
 	my ($txt) = @_;
 

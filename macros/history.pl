@@ -1,5 +1,3 @@
-$MacroFunc{"history"} = \&history;
-
 sub history {
 	my ($txt) = @_;
 

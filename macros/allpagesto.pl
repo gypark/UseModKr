@@ -1,5 +1,3 @@
-$MacroFunc{"allpagesto"} = \&allpagesto;
-
 sub allpagesto {
 	my ($txt) = @_;
 

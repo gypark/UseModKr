@@ -1,5 +1,3 @@
-$MacroFunc{"vote"} = \&vote;
-
 sub vote {
 	my ($txt) = @_;
 

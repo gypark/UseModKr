@@ -1,5 +1,3 @@
-$MacroFunc{"calendar"} = \&calendar;
-
 sub calendar {
 	my ($txt) = @_;
 

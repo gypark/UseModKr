@@ -1,5 +1,3 @@
-$MacroFunc{"anchor"} = \&anchor;
-
 sub anchor {
 	my ($txt) = @_;
 

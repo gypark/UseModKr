@@ -1,5 +1,3 @@
-$MacroFunc{"index"} = \&index;
-
 my $MyIndexCounter;
 my %MyIndexEntry;
 my %MyIndexAlias;

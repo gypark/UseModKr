@@ -1,5 +1,3 @@
-$MacroFunc{"wikiversion"} = \&wikiversion;
-
 sub wikiversion {
 	my ($txt) = @_;
 

@@ -1,5 +1,3 @@
-$MacroFunc{"myinterest"} = \&myinterest;
-
 sub myinterest {
 	my ($txt) = @_;
 

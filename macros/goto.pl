@@ -1,5 +1,3 @@
-$MacroFunc{"goto"} = \&goto;
-
 sub goto {
 	my ($txt) = @_;
 

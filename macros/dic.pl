@@ -1,5 +1,3 @@
-$MacroFunc{"dic"} = \&dic;
-
 sub dic {
 	my ($txt) = @_;
 

@@ -1,5 +1,3 @@
-$MacroFunc{"jdic"} = \&jdic;
-
 sub jdic {
 	my ($txt) = @_;
 

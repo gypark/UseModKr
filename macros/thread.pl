@@ -1,5 +1,3 @@
-$MacroFunc{"thread"} = \&thread;
-
 sub thread {
 	my ($txt) = @_;
 

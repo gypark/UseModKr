@@ -1,5 +1,3 @@
-$MacroFunc{"titlesearch"} = \&titlesearch;
-
 sub titlesearch {
 	my ($txt) = @_;
 

@@ -1,5 +1,3 @@
-$MacroFunc{"allpagesfrom"} = \&allpagesfrom;
-
 sub allpagesfrom {
 	my ($txt) = @_;
 

@@ -1,5 +1,3 @@
-$MacroFunc{"randompage"} = \&randompage;
-
 sub randompage {
 	my ($txt) = @_;
 
