@@ -5,6 +5,7 @@ sub thread {
 
 	$txt =~ s/(&__LT__;thread\(([^,]+),([-+]?\d+),(\d+)\)&__GT__;)/&MacroThread($1,$2,$3,1,$4)/gei;
 	$txt =~ s/(&__LT__;thread\(([^,]+),([-+]?\d+)\)&__GT__;)/&MacroThread($1,$2,$3,1,0)/gei;
+	$txt =~ s/(&__LT__;thread&__GT__;((.)*?)&__LT__;\/thread&__GT__;)/&MacroThreadBlock($2)/geis;
 
 	return $txt;
 }
@@ -21,6 +22,15 @@ sub MacroThread {
 		$txt = "<DIV class='threadnew'>";
 	}
 	$txt .= &MacroComments($itself, $id, $up, $long, $threadindent)."</DIV>";
+
+	return $txt;
+}
+
+sub MacroThreadBlock {
+	my ($blocktext) = @_;
+	my $txt;
+
+	$txt = "<DIV class='threaditem'>" . $blocktext . "</DIV>";
 
 	return $txt;
 }

@@ -8281,17 +8281,10 @@ sub DoComments {
 		$newcomments =~ s/(\n)\s*(\r?\n)/$1$2/g;
 		$newcomments =~ s/(\r?\n)/ \\\\$1/g;
 
-		my ($comment_indent, $comment_tail) = ("", "");
+		my ($comment_head, $comment_tail) = ("", "");
 		my $newup;
 
-		if ($threadindent >= 1) {
-			for (1 .. $threadindent) {
-				$comment_indent .= ":";
-			}
-			$comment_indent .= " ";
-		}
-
-		if (($abs_up >= 100) && ($abs_up <= $threshold2)) {	# 커멘트 권한
+		if (($abs_up >= 100) && ($abs_up <= $threshold2)) {	# 커멘트 권한 상속
 			$newup = $Now - $threshold2;
 		} else {
 			$newup = $Now;
@@ -8299,10 +8292,20 @@ sub DoComments {
 
 		$comment_tail = "<thread($id,$newup," . ($threadindent+1) . ")>";
 
+		if ($threadindent >= 1) {
+			for (1 .. $threadindent) {
+				$comment_head .= ":";
+			}
+			$comment_head .= " ";
+		} else {	# 새글
+			$comment_head = "<thread>\n";
+			$comment_tail .= "\n</thread>";
+		}
+
 		if (($up > 0) && ($up < $threshold1)) {		# 위로 달리는 새글
-			$string =~ s/(\<thread\($id,$up(,\d+)?\)\>)/$comment_indent$newcomments <mysign($name,$timestamp)>\n$comment_tail\n\n$1/;
+			$string =~ s/(\<thread\($id,$up(,\d+)?\)\>)/$comment_head$newcomments <mysign($name,$timestamp)>\n$comment_tail\n\n$1/;
 		} else {									# 리플 or 아래로 달리는 새글
-			$string =~ s/(\<thread\($id,$up(,\d+)?\)\>)/$1\n\n$comment_indent$newcomments <mysign($name,$timestamp)>\n$comment_tail/;
+			$string =~ s/(\<thread\($id,$up(,\d+)?\)\>)/$1\n\n$comment_head$newcomments <mysign($name,$timestamp)>\n$comment_tail/;
 		}
 	} elsif ($long) {				# longcomments
 		$newcomments =~ s/^\s*//g;
