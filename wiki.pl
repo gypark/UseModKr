@@ -2324,7 +2324,8 @@ sub MacroComments {
 	}
 
 	return
-		"<form name=comments><input type=\"hidden\" name=\"action\" value=\"comments\">".
+		"<form name=\"comments\" method=\"POST\">" .
+		"<input type=\"hidden\" name=\"action\" value=\"comments\">".
 		"<input type=\"hidden\" name=\"id\" value=\"$id\">" .
 		"<input type=\"hidden\" name=\"pageid\" value=\"$pageid\">" .
 		"<input type=\"hidden\" name=\"up\" value=\"$up\">" .
