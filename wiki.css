@@ -226,6 +226,16 @@ img {
 	border: solid 0px #fffff0;
 }
 
+/* 페이지 소스 보기 텍스트영역 */
+TEXTAREA.view
+{
+	font: normal normal normal 10pt/160% dotumche, courier, monospace;
+	border: 1px solid silver;
+	padding: 0.2em 0.5em 0.2em 0.5em;
+	background: #F9F9F9;
+	color: black;
+}
+
 /**********
  * 페이지 상,하단
  **********/

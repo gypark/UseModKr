@@ -561,4 +561,12 @@ Macro
 매크로
 Emoticon
 이모티콘
+View revision %s of this page
+%s 번째 수정본 소스 보기
+View text of this page
+페이지 소스 보기
+Viewing %s
+%s 페이지의 소스 보기
+Viewing revision %s of
+%s 번째 수정본 소스 보기 :
 END_OF_TRANSLATION

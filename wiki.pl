@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.32";
-$WikiRelease = "2003-03-04";
+$WikiVersion = "0.92K3-ext1.33";
+$WikiRelease = "2003-03-05";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -852,7 +852,7 @@ sub GetRcHtml {
 				"<TR class='rc'>".
 				"<TD colspan=6 class='rcdate'><b>" . $date . "</b>";
 			if ($bookmarkuser eq "") {
-				$html .= "<br>&nbsp;</TD></TR>\n";
+				$html .= "</TD></TR>\n";
 			} else {
 				$html .= "  [" .&ScriptLink("action=bookmark&time=$ts",T('set bookmark')) ."]"
 					. "</TD></TR>\n";
@@ -1426,7 +1426,9 @@ sub GetHtmlHeader {
 			if ($FreeLinks) {
 				$id = &FreeToNormal($id);
 			}
-			$bodyExtra .= qq(ondblclick="location.href='$ScriptName?action=edit&id=$id'") if (&UserCanEdit($id,0));
+			my $action = "view";
+			$action = "edit" if (&UserCanEdit($id,0));
+			$bodyExtra .= qq(ondblclick="location.href='$ScriptName?action=$action&id=$id'");
 		}
 	}
 
@@ -1529,12 +1531,24 @@ sub GetEditGuide {
 	if (&UserCanEdit($id, 0)) {
 		if ($rev ne '') {
 			$result .= &GetOldPageLink('edit',   $id, $rev,
-																 Ts('Edit revision %s of this page', $rev));
+					 Ts('Edit revision %s of this page', $rev));
 		} else {
 			$result .= &GetEditLink($id, T('Edit text of this page'));
 		}
 	} else {
-		$result .= T('This page is read-only');
+###############
+### replaced by gypark
+### view action 추가
+#		$result .= T('This page is read-only');
+		if ($rev ne '') {
+			$result .= &GetOldPageLink('view',   $id, $rev,
+					 Ts('View revision %s of this page', $rev));
+		} else {
+			$result .= &GetViewLink($id, T('View text of this page'));
+		}
+###
+###############
+
 	}
 	$result .= "</DIV>";
 
@@ -4455,6 +4469,13 @@ sub DoOtherRequest {
 		$action = lc($action);
 		if ($action eq "edit") {
 			&DoEdit($id, 0, 0, "", 0)  if &ValidIdOrDie($id);
+###############
+### added by gypark
+### "view" action 추가
+		} elsif ($action eq "view") {
+			&DoView($id);
+###
+###############
 		} elsif ($action eq "unlock") {
 			&DoUnlock();
 		} elsif ($action eq "index") {
@@ -4769,6 +4790,7 @@ function help(s)
 
 sub GetTextArea {
 	my ($name, $text, $rows, $cols) = @_;
+
 ###############
 ### added by gypark
 ### &lt; 와 &gt; 가 들어가 있는 페이지를 수정할 경우 자동으로 부등호로 바뀌어
@@ -6845,6 +6867,61 @@ sub GetPageLinksFromFile {
 
 	return @result;
 }
+
+### view action 추가
+sub DoView {
+	my ($id) = @_;
+	my ($header, $viewRows, $viewCols, $revision, $pageSource);
+
+	&OpenPage($id);
+	&OpenDefaultText();
+	$header = Ts('Viewing %s', $id);
+	# Old revision handling
+	$revision = &GetParam('revision', '');
+	$revision =~ s/\D//g;  # Remove non-numeric chars
+	if ($revision ne '') {
+		&OpenKeptRevisions('text_default');
+		if (!defined($KeptRevisions{$revision})) {
+			$revision = '';
+			# Later look for better solution, like error message?
+		} else {
+			&OpenKeptRevision($revision);
+			$header = Ts('Viewing revision %s of', $revision) . " $id";
+		}
+	}
+	$pageSource = $Text{'text'};
+	$viewRows = &GetParam("editrows", 20);
+	$viewCols = &GetParam("editcols", 65);
+
+	print &GetHeader('', &QuoteHtml($header), '');
+	if ($revision ne '') {
+		print "\n<b>"
+					. Ts('Viewing old revision %s.', $revision)
+					. '</b><br>'
+	}
+	print $q->textarea(-class=>'view', -accesskey=>'i', -name=>'text', 
+				-default=>$pageSource, -rows=>$viewRows, -columns=>$viewCols, 
+				-override=>1, -style=>'width:100%', -wrap=>'virtual', 
+				-readonly=>'true');
+	print "<br>";
+
+	print "<hr class='footer'>\n";
+	print Ts('Return to %s' , &GetPageLink($id)) . " | ";
+	print &GetHistoryLink($id, T('View other revisions')) . "<br>\n";
+	print &GetMinimumFooter();
+}
+
+sub GetViewLink {
+	my ($id, $name) = @_;
+
+	if ($FreeLinks) {
+		$id = &FreeToNormal($id);
+		$name =~ s/_/ /g;
+	}
+	return &ScriptLink("action=view&id=$id", $name);
+}
+
+
 ###
 ###############
 
