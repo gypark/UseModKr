@@ -443,7 +443,7 @@ Open in a New Window
 새 창으로 열기
 Popup Preview
 미리 보기
-View difference
+Compare
 변경 비교
 Current Revision
 현재 버전

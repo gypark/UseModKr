@@ -1100,7 +1100,7 @@ FORMEOF
 	}
 	print $html;
 	if( $UseDiff ) {
-		my $label = T('View difference');
+		my $label = T('Compare');
 		print "<tr><td align='center'><input type='submit' value='$label'/>  </td><td>&nbsp;</td></table></form>\n";
 		print "<hr>\n";
 		print &GetDiffHTML( &GetParam('defaultdiff',1), $id, '', '', $newText );
@@ -2633,7 +2633,7 @@ sub MacroHistory {
 	foreach (reverse sort {$a <=> $b} keys %KeptRevisions) {
 		if (++$i > $n) {
 			$html .= "<tr><td align='center'><input type='submit' value='" 
-					. T('View difference') . "'/>  </td><td>&nbsp;</td></table></form>\n";
+					. T('Compare') . "'/>  </td><td>&nbsp;</td></table></form>\n";
 			return $html;
 		}
 		next  if ($_ eq "");  # (needed?)
@@ -2646,7 +2646,7 @@ sub MacroHistory {
 ###############
 	}
 	$html .= "<tr><td align='center'><input type='submit' value='"
-				. T('View difference') . "'/>  </td><td>&nbsp;</td></table></form>\n";
+				. T('Compare') . "'/>  </td><td>&nbsp;</td></table></form>\n";
 	return $html;
 }
 
