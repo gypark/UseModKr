@@ -2736,7 +2736,7 @@ sub MacroFullSearch()
 sub MacroDate() { return &CalcDay(time); }
 sub MacroTime() { return &CalcTime(time); }
 sub MacroDateTime() { return &CalcDay(time) . " " . &CalcTime(time); }
-sub MacroAnchor() {	return "<a name=\"\#@_\">"; }
+sub MacroAnchor() {	return "<a name=\"\#@_\"></a>"; }
 
 sub MacroPageCount() {
 	my @pageList = &AllPagesList();
