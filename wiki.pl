@@ -312,7 +312,7 @@ sub InitLinkPatterns {
 	#   5.  A $FS (field separator) character    (kept in output)
 	#   6.  A double double-quote ("")           (removed from output)
 
-	$UrlProtocols = "http|https|ftp|afs|news|nntp|mid|cid|mailto|wais|"
+	$UrlProtocols = "http|https|ftp|afs|news|nntp|mid|cid|mailto|wais|mms|"
 									. "prospero|telnet|gopher";
 	$UrlProtocols .= '|file'  if $NetworkFile;
 	$UrlPattern = "((?:(?:$UrlProtocols):[^\\]\\s\"<>$FS]+)$QDelim)";
