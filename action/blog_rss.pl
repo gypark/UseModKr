@@ -2,8 +2,8 @@ sub action_blog_rss {
 	use strict;
 	my $listpage = &GetParam("listpage","");
 	my $blogpage = &GetParam("blogpage","");
-	my $num_items = 15;			# xml파일에 포함되는 글 갯수
-	my $update_period = 60;		# xml파일 갱신 주기(단위:분). 0이면 항상 새로 생성
+	my $num_items = &GetParam("items",15);			# xml파일에 포함되는 글 갯수
+	my $update_period = &GetParam("update",60);		# xml파일 갱신 주기(단위:분). 0이면 항상 새로 생성
 
 	my $xml = "";
 
