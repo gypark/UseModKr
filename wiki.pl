@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.61-beta2";
+$WikiVersion = "0.92K3-ext1.61-beta3";
 $WikiRelease = "2004-07-19";
 
 $HashKey = "salt"; # 2-character string
@@ -2117,6 +2117,7 @@ sub GetEditGuide {
 
 		my $excerpt = substr($Text{'text'},0,255);
 		$excerpt =~ s/(([\x80-\xff].)*)[\x80-\xff]?$/$1/;
+		$excerpt =~ s/(\r?\n)/&nbsp;/g;
 		$excerpt = &QuoteHtml($excerpt);
 		$excerpt =~ s/"/&quot;/g;
 
@@ -2709,7 +2710,7 @@ sub MacroSubst {
 	$txt =~ s/&__LT__;color\(([^,)]+),([^\n]+?)\)&__GT__;/&MacroColor($1, $2)/gei;
 ### <trackbacksent> <trackbackreceived>
 	$txt =~ s/&__LT__;trackbacksent&__GT__;/&MacroTrackBackSent()/gei;
-	$txt =~ s/&__LT__;trackbackreceived&__GT__;/&MacroTrackBackReceived()/gei;
+	$txt =~ s/(&__LT__;trackbackreceived\((.*?)\)&__GT__;)/&MacroTrackBackReceived($1,$2)/gei;
 ###
 ###############
 	return $txt;
@@ -2758,8 +2759,16 @@ sub MacroTrackBackSent {
 }
 
 sub MacroTrackBackReceived {
+	my ($itself, $id) = @_;
+	
+	$id = &RemoveLink($id);
+	my $temp = &FreeToNormal($id) if ($FreeLinks);
+
+	if (&ValidId($temp) ne '') {
+		return $itself;
+	}
 	$FullUrl = $q->url(-full=>1)  if ($FullUrl eq "");
-	my $url = $FullUrl . &ScriptLinkChar() . "action=trackback&id=$OpenPageName";
+	my $url = $FullUrl . &ScriptLinkChar() . "action=trackback&id=$temp";
 	return &T('Trackback address of this page:') . " " . (&UrlLink("$url"))[0];
 }
 
@@ -4129,6 +4138,8 @@ sub ProcessPostMacro {
 	if (length($id) != 0) {
 		$string =~ s/(^|\n)<((long)?comments)\(([-+]?\d+)\)>([\r\f]*\n)/$1<$2($id,$4)>$5/gim;
 	}
+	### trackback
+	$string =~ s/<(trackbackreceived)>/<$1($id)>/gi;
 ### 
 	return $string;
 }
@@ -9267,7 +9278,7 @@ sub DoReceiveTrackBackPing {
 		$excerpt =~ s/(([\x80-\xff].)*)[\x80-\xff]?$/$1/;
 		$excerpt .= "...";
 	}
-	$excerpt =~ s/[\r\n]/ /g;
+	$excerpt =~ s/(\r?\n)/&nbsp;/g;
 	$excerpt = &QuoteHtml($excerpt);
 	$excerpt = "<nowiki>$excerpt</nowiki>";
 
@@ -9282,17 +9293,17 @@ sub DoReceiveTrackBackPing {
 	} elsif (! -f &GetPageFile($normal_id)) {
 		&SendTrackBackResponse("1", "No wikipage found : $id");
 	} else {
-		&OpenPage($id);
+		&OpenPage($normal_id);
 		&OpenDefaultText();
 		my $string = $Text{'text'};
-		if ($string =~ /\<trackbackreceived\>/) {
+		if ($string =~ /\<trackbackreceived\($normal_id\)\>/) {
 			my $timestamp = &CalcDay($Now) . " " . &CalcTime($Now);
 			my $newtrackbackreceived = "* " .
 				&Ts('Trackback from %s', "'''<nowiki>$blog_name</nowiki>'''") .
 				" $timestamp\n" .
 				"** " . &T('Title:') . " [$url $title]\n" .
 				"** " . &T('Content:') . " $excerpt";
-			$string =~ s/(\<trackbackreceived\>)/$1\n$newtrackbackreceived/;
+			$string =~ s/(\<trackbackreceived\($normal_id\)\>)/$1\n$newtrackbackreceived/;
 			&DoPostMain($string, $id, &T('New TrackBack Received'), $Section{'ts'}, 0, 0, "!!");
 			&SendTrackBackResponse(0, "");
 		} else {
