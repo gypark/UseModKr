@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.42d";
-$WikiRelease = "2003-03-27";
+$WikiVersion = "0.92K3-ext1.43";
+$WikiRelease = "2003-03-29";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -91,7 +91,7 @@ use vars qw(%Page %Section %Text %InterSite %SaveUrl %SaveNumUrl
 ### added by gypark
 ### 패치를 위해 추가된 내부 전역 변수
 use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime $Sec_Revision $Sec_Ts
-	$ViewCount $AnchoredFreeLinkPattern);
+	$ViewCount $AnchoredFreeLinkPattern %UserInterest);
 ###
 ###############
 
@@ -825,11 +825,13 @@ sub GetRcHtml {
 ### 최근변경내역에 북마크 기능 도입
 	my $bookmark;
 	my $bookmarkuser = &GetParam('username', "");
-	my ($rcnew, $rcupdated, $rcdiff, $rcdeleted) = (
+	my ($rcnew, $rcupdated, $rcdiff, $rcdeleted, $rcinterest) = (
 			"<img style='border:0' src='$IconDir/rc-new.gif'>",
 			"<img style='border:0' src='$IconDir/rc-updated.gif'>",
 			"<img style='border:0' src='$IconDir/rc-diff.gif'>",
-			"<img style='border:0' src='$IconDir/rc-deleted.gif'>"
+			"<img style='border:0' src='$IconDir/rc-deleted.gif'>",
+### 관심 페이지
+			"<img style='border:0' src='$IconDir/rc-interest.gif' alt='".T('Interesting Page')."'>",
 	);
 	$bookmark = &GetParam('bookmark',-1);
 ###
@@ -998,7 +1000,11 @@ sub GetRcHtml {
 #		$html .= ". . . . . $author\n";  # Make dots optional?
 #	}
 #	$html .= "</UL>\n" if ($inlist);
-		$html .= "<TR class='rc'><TD class='rc'>&nbsp;&nbsp;&nbsp;</TD>"
+		$html .= "<TR class='rc'>"
+			. "<TD class='rc'>"
+### 관심 페이지
+			. ((defined ($UserInterest{$pagename}))?"$rcinterest":"&nbsp;&nbsp;")
+			. "</TD>"
 			. "<TD class='rc'>$link </TD>"
 			. "<TD class='rcpage'>" . &GetPageOrEditLink($pagename) . "</TD>"
 			. "<TD class='rctime'>" . &CalcTime($ts) . "</TD>"
@@ -1601,6 +1607,19 @@ sub GetEditGuide {
 	$result .= Ts('%s hit' . (($ViewCount > 1)?'s':'') , $ViewCount)." | " if ($ViewCount ne "");
 ###
 ###############
+###############
+### added by gypark
+### 관심 페이지
+	if (&GetParam('username') ne "") {
+		if (defined($UserInterest{$id})) {
+			$result .= &ScriptLink("action=interest&mode=remove&id=$id", T('Remove from interest list'));
+		} else {
+			$result .= &ScriptLink("action=interest&mode=add&id=$id", T('Add to my interest list'));
+		}
+		$result .= " | ";
+	}
+###
+###############
 	$result .= &GetHistoryLink($id, T('History'));
 	if ($rev ne '') {
 		$result .= ' | ';
@@ -2170,6 +2189,8 @@ sub MacroSubst {
 	$txt =~ s/(\&__LT__;mostpopular\(([-+]?\d+),([-+]?\d+)\)\&__GT__;)/&MacroMostPopular($1,$2, $3)/gei;
 ### <UploadedFiles>
 	$txt =~ s/(\&__LT__;uploadedfiles\&__GT__;)/&MacroUploadedFiles($1)/gei;
+### <MyInterest(username)>
+	$txt =~ s/(\&__LT__;myinterest(\(([^\n]+)\))?\&__GT__;)/&MacroMyInterest($1, $3)/gei;
 ###
 ###############
 	return $txt;
@@ -2210,6 +2231,38 @@ sub MacroIncludeSubst {
 ###############
 ### added by gypark
 ### 추가한 매크로의 동작부
+### MyInterest
+sub MacroMyInterest {
+	my ($itself, $username) = (@_);
+	my ($data, $status, @pages);
+	my (%tempUserData, %tempUserInterest);
+	my $txt = "";
+
+	if ($username eq "") {
+		if (&GetParam('username') eq "") {
+			return "";
+		} else {
+			$username = &GetParam('username');
+		}
+	}
+
+	%tempUserData = ();
+	($status, $data) = &ReadFile(&UserDataFilename($username));
+	if (!$status) {
+		return "";
+	}
+	%tempUserData = split(/$FS1/, $data, -1);  # -1 keeps trailing null fields
+	%tempUserInterest = split(/$FS2/, $tempUserData{'interest'}, -1);
+	
+	@pages = sort (keys (%tempUserInterest));
+
+	foreach (@pages) {
+		$txt .= ".... "  if ($_ =~ m|/|);
+		$txt .= &GetPageLink($_)."<br>";
+	}
+
+	return $txt;
+}
 
 ### UploadedFiles
 sub MacroUploadedFiles {
@@ -4170,6 +4223,12 @@ sub LoadUserData {
 		return;
 	}
 	%UserData = split(/$FS1/, $data, -1);  # -1 keeps trailing null fields
+###############
+### added by gypark
+### 관심 페이지
+	%UserInterest = split(/$FS2/, $UserData{'interest'}, -1);
+###
+###############
 }
 
 sub UserDataFilename {
@@ -4778,6 +4837,9 @@ sub DoOtherRequest {
 ### oekaki
 		} elsif ($action eq "oekaki") {
 			&DoOekaki();
+### 관심 페이지
+		} elsif ($action eq "interest") {
+			&DoInterest();
 ###
 ###############
 ###############
@@ -7683,6 +7745,62 @@ sub GetLastPrefix {
 	return $prefix ."_";
 }
 
+### 관심 페이지
+sub DoInterest {
+	my ($title, $temp);
+	my $mode = &GetParam('mode');
+	my $id = &GetParam('id');
+	my $failMsg = T('Fail to access Interest Page List');
+
+	if (&GetParam('username') eq "") {
+		print &GetHeader('', $failMsg, '');
+		print T('You must login to do this action');
+		print &GetCommonFooter();
+		return;
+	}
+	if ($mode eq "add") {
+		$title = T('Add a page to Interest Page List');
+	} elsif (&GetParam('mode') eq "remove") {
+		$title = T('Remove a page from Interest Page List');
+	} else {
+		print &GetHeader('', $failMsg, '');
+		print Ts('Invalid action parameter %s', $mode);
+		print &GetCommonFooter();
+		return;
+	}
+
+	$temp = &ValidId($id);
+	if ($temp ne "") {
+		print &GetHeader('', $failMsg, '');
+		print $temp;
+		print &GetCommonFooter();
+		return;
+	}
+	
+	if (!(-f &GetPageFile($id))) {
+		print &GetHeader('', $failMsg, '');
+		print Ts('Page %s does not exist', $id);
+		print &GetCommonFooter();
+		return;
+	}
+
+	print &GetHeader('', $title, '');
+	if ($mode eq "add") {
+		$UserInterest{$id} = "1";
+		print Ts('Page %s is added to your Interest Page List', $id);
+	} else {
+		delete $UserInterest{$id};
+		print Ts('Page %s is removed from your Interest Page List', $id);
+	}
+
+	$UserData{'interest'} = join($FS2, %UserInterest);
+	&SaveUserData();
+	print "<hr size='1'>";
+	print Ts('Return to %s' , &GetPageLink($id));
+	print &GetCommonFooter();
+	return 1;
+
+}
 
 ### 통채로 추가한 함수들의 끝
 ###############

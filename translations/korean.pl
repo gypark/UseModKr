@@ -639,4 +639,24 @@ Oekaki save
 오에카키 저장
 Oekaki exit
 오에카키 종료
+Add to my interest list
+관심있는 페이지로 등록
+Remove from interest list
+관심있는 페이지에서 제거
+Fail to access Interest Page List
+관심있는 페이지 목록 수정 실패
+You must login to do this action
+이 명령을 수행하기 위해서는 로그인을 해야 합니다
+Add a page to Interest Page List
+관심있는 페이지 목록에 추가
+Remove a page from Interest Page List
+관심있는 페이지 목록에서 제거
+Page %s does not exist
+%s 페이지가 존재하지 않습니다
+Page %s is added to your Interest Page List
+%s 페이지를 관심있는 페이지 목록에 추가했습니다
+Page %s is removed from your Interest Page List
+%s 페이지를 관심있는 페이지 목록에서 제거했습니다
+Interesting Page
+관심있는 페이지
 END_OF_TRANSLATION
