@@ -833,10 +833,11 @@ sub GetRcHtml {
 ### 최근변경내역에 북마크 기능 도입
 	my $bookmark;
 	my $bookmarkuser = &GetParam('username', "");
-	my ($rcnew, $rcupdated, $rcdiff) = (
+	my ($rcnew, $rcupdated, $rcdiff, $rcdeleted) = (
 			"<img style='border:0' src='icons/rc-new.gif'>",
 			"<img style='border:0' src='icons/rc-updated.gif'>",
-			"<img style='border:0' src='icons/rc-diff.gif'>"
+			"<img style='border:0' src='icons/rc-diff.gif'>",
+			"<img style='border:0' src='icons/rc-deleted.gif'>"
 	);
 	$bookmark = &GetParam('bookmark',-1);
 ###
@@ -966,7 +967,9 @@ sub GetRcHtml {
 ### replaced by gypark
 ### 최근변경내역에 북마크 기능 도입
 #			$link .= &ScriptLinkDiff(4, $pagename, $tDiff, "") . "  ";
-			if (($bookmarkuser eq "") || ($ts <= $bookmark)) {
+			if (!(-f &GetPageFile($pagename))) {
+				$link .= $rcdeleted;
+			} elsif (($bookmarkuser eq "") || ($ts <= $bookmark)) {
 				$link .= &ScriptLinkDiff(4, $pagename, $rcdiff, "") . "  ";
 			} elsif ($extra{'tscreate'} > $bookmark) {
 				$link .= $rcnew . "  ";
@@ -6903,7 +6906,6 @@ sub DoBookmark {
 }
 ###
 ###############
-
 
 ### 통채로 추가한 함수들의 끝
 ###############
