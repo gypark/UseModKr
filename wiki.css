@@ -214,6 +214,17 @@ A.dic:hover
 	text-decoration: underline;
 }
 
+/* memo 매크로 링크 */
+A.memo:link, A.memo:active, A.memo:visited, A.memo:hover {
+	background: transparent;
+	color: blue;
+	text-decoration: none;
+}
+A.memo:hover
+{
+	text-decoration: underline;
+}
+
 /* 기타 */
 SELECT,TEXTAREA
 {

@@ -2547,7 +2547,7 @@ sub MacroMemo {
 
 	$id = &RemoveLink($id);
 
-	return "<A href=\"#none\" onClick=\"if (document.all['$id'].style.display=='block') " .
+	return "<A class=\"memo\" href=\"#none\" onClick=\"if (document.all['$id'].style.display=='block') " .
 		"{document.all['$id'].style.display='none'} " .
 		"else " .
 		"{document.all['$id'].style.display='block'}\">" .
