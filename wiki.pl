@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.48a";
-$WikiRelease = "2003-09-09";
+$WikiVersion = "0.92K3-ext1.48b";
+$WikiRelease = "2003-09-10";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -8234,9 +8234,9 @@ sub DoComments {
 	} else {
 		$newcomments =~ s/(----+)/<nowiki>$1<\/nowiki>/g;
 		if ($up > 0) {
-			$string =~ s/\<comments\($id,$up\)\>/* $name : $newcomments - <small>$timestamp<\/small>\n\<comments\($id,$up\)\>/;
+			$string =~ s/\<comments\($id,$up\)\>/*''' $name ''' : $newcomments - <small>$timestamp<\/small>\n\<comments\($id,$up\)\>/;
 		} else {
-			$string =~ s/\<comments\($id,$up\)\>/\<comments\($id,$up\)\>\n* $name : $newcomments - <small>$timestamp<\/small>/;
+			$string =~ s/\<comments\($id,$up\)\>/\<comments\($id,$up\)\>\n*''' $name ''' : $newcomments - <small>$timestamp<\/small>/;
 		}
 	}
 
