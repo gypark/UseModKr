@@ -698,7 +698,7 @@ TrackBack URL:
 Permalink URL (optional):
 해당 글의 URL (선택사항):
 Send Ping
-보내기
+트랙백 핑 보내기
 You are not allowed to send TrackBack ping of this page
 이 페이지의 트랙백 핑을 보낼 권한이 없습니다
 No Ping URL
