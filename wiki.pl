@@ -3529,8 +3529,7 @@ sub StorePlugin {
 	my ($command, $content) = @_;
 	my $name;
 	my @opt;
-	my $html;
-	my $plugin_file;
+	my $plugin_file = "";;
 
 	$command = &UnquoteHtmlForPageContent($command);
 	$content = &UnquoteHtmlForPageContent($content);
@@ -3538,35 +3537,39 @@ sub StorePlugin {
 	@opt = split (/\s/, $command);
 	$name = shift @opt;
 
-
 	if (-f "$MyPluginDir/$name.pl") {
 		$plugin_file = "$MyPluginDir/$name.pl";
 	} elsif (-f "$PluginDir/$name.pl") {
 		$plugin_file = "$PluginDir/$name.pl";
 	}
 
-	if ($plugin_file ne '') {
-		require "$plugin_file";
-	
-		my $func = "plugin_$name";
-
-		my $txt = &{\&$func}($content, @opt);
-		if (not defined $txt) {
-			$html = &StoreRaw("\n<PRE class='code'>").
-				&StoreRaw("\n<font color='red'>Plugin execution failed: $name</font>\n").
-				&StoreCodeRaw($content).
-				&StoreRaw("\n<\/PRE>") . "\n";
-		} else {
-			$html = &StoreRaw($txt);
-		}
-	} else {
-		$html = &StoreRaw("\n<PRE class='code'>").
+	if ($plugin_file eq "") {	# 플러그인이 없음
+		return &StoreRaw("\n<PRE class='code'>").
 			&StoreRaw("\n<font color='red'>No such plugin found: $name</font>\n").
 			&StoreCodeRaw($content).
 			&StoreRaw("\n<\/PRE>") . "\n";
 	}
 
-	return $html;
+	my $loadplugin = eval "require '$plugin_file'";
+
+	if (not $loadplugin) {		# 플러그인 로드에 실패
+		return &StoreRaw("\n<PRE class='code'>").
+			&StoreRaw("\n<font color='red'>Failed to load plugin: $name</font>\n").
+			&StoreCodeRaw($content).
+			&StoreRaw("\n<\/PRE>") . "\n";
+	}
+
+	my $func = "plugin_$name";
+
+	my $txt = &{\&$func}($content, @opt);
+	if (not defined $txt) {		# 플러그인이 undef 반환
+		return &StoreRaw("\n<PRE class='code'>").
+			&StoreRaw("\n<font color='red'>Error occurred while processing: $name</font>\n").
+			&StoreCodeRaw($content).
+			&StoreRaw("\n<\/PRE>") . "\n";
+	}
+
+	return &StoreRaw($txt);
 }
 ###
 ###############
