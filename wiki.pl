@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.18";
-$WikiRelease = "2003-02-03";
+$WikiVersion = "0.92K3-ext1.19";
+$WikiRelease = "2003-02-11";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -1949,6 +1949,8 @@ sub MacroSubst {
 	$txt =~ s/\&__LT__;wantedpages\&__GT__;/&MacroWantedPages()/gei;
 ### <userlist>
 	$txt =~ s/\&__LT__;userlist\&__GT__;/&MacroUserList()/gei;
+### <includetoday([page,] year, month, day)>
+	$txt =~ s/\&__LT__;includeday\(([^,\n]+,)?([-+]?\d+)\)&__GT__;/&MacroIncludeDay($1, $2)/gei;
 ###
 ###############
 	return $txt;
@@ -1987,6 +1989,44 @@ sub MacroIncludeSubst {
 ###############
 ### added by gypark
 ### 추가한 매크로의 동작부
+### <IncludeDay>
+sub MacroIncludeDay {
+	my ($mainpage, $day_offset) = @_;
+	my $page = "";
+	my $temp;
+
+	# main page 처리
+	if ($mainpage ne "") {
+		$temp = $mainpage;
+		$temp =~ s/,$//;
+		$temp = &RemoveLink($temp);
+		$temp = &FreeToNormal($temp);
+		if (&ValidId($temp) ne "") {
+			return "&lt;includeday($mainpage$day_offset)&gt;";
+		}
+		$temp =~ s/\/.*$//;
+		$page = "$temp/";
+	}
+
+	# 날짜의 변위 계산 
+	$temp = $Now + ($day_offset * 86400);
+	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($temp);
+
+	$page .= ($year + 1900) . "-";
+
+	if ($mon + 1 < 10) {
+		$page .= "0";
+	}
+	$page .= ($mon + 1) . "-";
+
+	if ($mday < 10) {
+		$page .= "0";
+	}
+	$page .= "$mday";
+
+	return &MacroInclude($page);
+}
+
 ### <UserList>
 sub MacroUserList {
 	my (@userlist, $result);
