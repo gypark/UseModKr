@@ -619,12 +619,14 @@ sub BrowsePage {
 ### added by gypark
 ### 최근변경내역에 북마크 기능 도입
 		if ($showDiff == 5) { 
-			$diffRevision = $Page{'revision'} - 1;
-			my $userBookmark = &GetParam('bookmark',-1);
-			while (($diffRevision > 1) && 
-				(defined($RevisionTs{$diffRevision})) && 
-				($RevisionTs{$diffRevision} > $userBookmark)) {
-				$diffRevision--;
+			if (&GetParam('username',"") ne "") {
+				$diffRevision = $Page{'revision'} - 1;
+				my $userBookmark = &GetParam('bookmark',-1);
+				while (($diffRevision > 1) && 
+					(defined($RevisionTs{$diffRevision})) && 
+					($RevisionTs{$diffRevision} > $userBookmark)) {
+					$diffRevision--;
+				}
 			}
 			$showDiff = &GetParam("defaultdiff", 1);
 		}
