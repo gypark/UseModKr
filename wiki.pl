@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.52";
-$WikiRelease = "2003-10-04";
+$WikiVersion = "0.92K3-ext1.53";
+$WikiRelease = "2003-10-06";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -8582,8 +8582,32 @@ sub GetTemplatePageText {
 	my %temp_Page = split(/$FS1/, $data, -1);
 	my %temp_Section = split(/$FS2/, $temp_Page{'text_default'}, -1);
 	my %temp_Text = split(/$FS3/, $temp_Section{'data'}, -1);
+### template macro
+	my $return_text = &TemplateMacroSubst($newpage, $temp_Text{'text'});
 
-	return $temp_Text{'text'};
+	return $return_text;
+}
+
+### template macro
+sub TemplateMacroSubst {
+	my ($newpage, $text) = @_;
+	my ($newpage_main, $newpage_sub);
+
+### null
+	$text =~ s/<template_null>//gi;
+
+### pagename, mainpagename, subpagename
+	if ($newpage =~ /^(.*)\/(.*)/) {
+		($newpage_main, $newpage_sub) = ($1, $2);
+	} else {
+		($newpage_main, $newpage_sub) = ($newpage, "");
+	}
+
+	$text =~ s/<template_pagename>/$newpage/gi;
+	$text =~ s/<template_mainpagename>/$newpage_main/gi;
+	$text =~ s/<template_subpagename>/$newpage_sub/gi;
+
+	return "$text";
 }
 
 ### rss from usemod1.0
