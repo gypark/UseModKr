@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.28a";
+$WikiVersion = "0.92K3-ext1.28b";
 $WikiRelease = "2003-02-24";
 
 $HashKey = "salt"; # 2-character string
@@ -2860,6 +2860,15 @@ sub WikiLinesToHtml {
 			if (@htmlStack) {  # Non-empty stack
 				$oldCode = pop(@htmlStack);
 				if ($oldCode ne $code) {
+###############
+### added by gypark
+### 줄 중간 || 문제 해결
+### from Jof4002's patch
+					if ($oldCode eq "TABLE") {
+						$TableMode = 0;
+					}
+###
+###############
 					$pageHtml .= "</$oldCode><$code>\n";
 				}
 				push(@htmlStack, $code);
