@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.41";
+$WikiVersion = "0.92K3-ext1.41a";
 $WikiRelease = "2003-03-16";
 
 $HashKey = "salt"; # 2-character string
@@ -2254,9 +2254,8 @@ sub MacroUploadedFiles {
 			$txt .= "</TD>";
 		}
 		$txt .= "<TD class='uploadedfiles'>";
-		$txt .= &ScriptLink("search=Upload:$_", $uploadsearch) . " ";
-
-		$txt .= "<a href='$UploadDir/$_'>$_</a>";
+		$txt .= &ScriptLink("reverse=Upload:$_", $uploadsearch) . " ";
+ 		$txt .= "<a href='$UploadDir/$_'>$_</a>";
 		$txt .= "</TD>";
 
 		$size = $filesize{$_};
@@ -3079,7 +3078,6 @@ sub InterPageLink {
 
 	$name = $id;
 	($site, $remotePage) = split(/:/, $id, 2);
-	
 	$url = &GetSiteUrl($site);
 	return ("", $id . $punct)  if ($url eq "");
 	$remotePage =~ s/&amp;/&/g;  # Unquote common URL HTML
@@ -5785,7 +5783,7 @@ sub DoReverse {
 	print &GetHeader('', &QuoteHtml(Ts('Links to %s', $string)), '');
 	print '<br>';
 
-	foreach $pagelines (&GetFullLinkList("page=1&unique=1&sort=1&exists=2&empty=0&reverse=$string")) {
+	foreach $pagelines (&GetFullLinkList("page=1&inter=1&unique=1&sort=1&exists=2&empty=0&reverse=$string")) {
 		my @pages = split(' ', $pagelines);
 		@x = (@x, shift(@pages));
 	}
@@ -5795,7 +5793,10 @@ sub DoReverse {
 	if ($#x eq -1) {
 		print T('No reverse link.') . "<br>";
 	}
-	print "<hr size=\"1\">" . Ts('Return to %s' , &GetPageLink($string)) . "<br>";
+	if (&ValidId($string) eq "") {
+		print "<hr size=\"1\">";
+		print Ts('Return to %s' , &GetPageLink($string)) . "<br>";
+	}
 
 	print &GetCommonFooter();
 }
