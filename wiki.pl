@@ -8261,7 +8261,6 @@ sub DoComments {
 ### template page
 sub GetTemplatePageText {
 	my ($newpage) = @_;
-	my ($id);
 	my $templatePage = "";
 	my ($fname, $status, $data);
 
