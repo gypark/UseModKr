@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.31";
-$WikiRelease = "2003-03-03";
+$WikiVersion = "0.92K3-ext1.32";
+$WikiRelease = "2003-03-04";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -53,7 +53,7 @@ use vars qw(@RcDays @HtmlPairs @HtmlSingle
 	$UseSubpage $UseCache $RawHtml $SimpleLinks $NonEnglish $LogoLeft
 	$KeepDays $HtmlTags $HtmlLinks $UseDiffLog $KeepMajor $KeepAuthor
 	$FreeUpper $EmailNotify $SendMail $EmailFrom $FastGlob $EmbedWiki
-	$ScriptTZ $BracketText $UseAmPm $UseConfig $UseIndex $UseLookup
+	$ScriptTZ $BracketText $UseAmPm $UseIndex $UseLookup
 	$RedirType $AdminPass $EditPass $UseHeadings $NetworkFile $BracketWiki
 	$FreeLinks $WikiLinks $AdminDelete $FreeLinkPattern $RCName $RunCGI
 	$ShowEdits $ThinLine $LinkPattern $InterLinkPattern $InterSitePattern
@@ -68,7 +68,7 @@ use vars qw(@RcDays @HtmlPairs @HtmlSingle
 ### 패치를 위해 추가된 환경설정 변수
 use vars qw(
 	$UserGotoBar $UserGotoBar2 $UserGotoBar3 $UserGotoBar4 
-	$ConfigFile $SOURCEHIGHLIGHT %SRCHIGHLANG $LinkFirstChar
+	$ConfigFile $SOURCEHIGHLIGHT @SRCHIGHLANG $LinkFirstChar
 	$EditGuideInExtern $SizeTopFrame $SizeBottomFrame
 	$LogoPage $CheckTime $LinkDir $IconDir
 	);
@@ -104,125 +104,7 @@ $DataDir     = "data";    # Main wiki directory
 $ConfigFile  = "config.pl"; # path of config file
 ###
 ###############
-$UseConfig   = 1;       # 1 = use config file,    0 = do not look for config
-
-# == Configuration =======================================================
-# Original version from UseModWiki 0.92 (April 21, 2001)
-
-$CookieName  = "WikiWiki";      # Name for this wiki (for multi-wiki sites)
-$SiteName    = "WikiWiki";		# Name of site (used for titles)
-$HomePage    = "WikiHome";      # Home page (change space to _)
-$RCName      = "RecentChanges"; # Name of changes page (change space to _)
-$LogoUrl     = "";     # URL for site logo ("" for no logo)
-$ENV{PATH}   = "/usr/bin/";     # Path used to find "diff"
-$ScriptTZ    = "";              # Local time zone ("" means do not print)
-$RcDefault   = 30;              # Default number of RecentChanges days
-@RcDays      = qw(1 3 7 30 90); # Days for links on RecentChanges
-$KeepDays    = 14;              # Days to keep old revisions
-$SiteBase    = "";              # Full URL for <BASE> header
-$FullUrl     = "";              # Set if the auto-detected URL is wrong
-$RedirType   = 1;               # 1 = CGI.pm, 2 = script, 3 = no redirect
-$AdminPass   = "abcd1234";      # Set to non-blank to enable password(s)
-$EditPass    = "";              # Like AdminPass, but for editing only
-$StyleSheet  = "wiki.css";      # URL for CSS stylesheet (like "/wiki.css")
-$NotFoundPg  = "";              # Page for not-found links ("" for blank pg)
-$EmailFrom   = "wiki";          # Text for "From: " field of email notes.
-$SendMail    = "/usr/sbin/sendmail";  # Full path to sendmail executable
-$FooterNote  = "";              # HTML for bottom of every page
-$EditNote    = "";              # HTML notice above buttons on edit page
-$MaxPost     = 1024 * 210;      # Maximum 210K posts (about 200K for pages)
-$NewText     = "";              # New page text ("" for default message)
-$HttpCharset = "euc-kr";              # Charset for pages, like "iso-8859-2"
-$UserGotoBar = "<a href='/'>Home</a>";   # HTML added to end of goto bar
-###############
-### added by gypark
-### 상단메뉴에 사용자 정의 링크 추가. config.pl 또는 이곳에서 정의해 줄 것
-### 정의되어 있지 않거나 NULL string 으로 정의되어있다면, 
-### 메뉴바에도 나타나지 않는다
-$UserGotoBar2 = "";              # HTML added to end of goto bar
-$UserGotoBar3 = "";              # HTML added to end of goto bar
-$UserGotoBar4 = "";              # HTML added to end of goto bar
-$SOURCEHIGHLIGHT    = "/usr/local/bin/source-highlight";    # path of source-highlight 
-%SRCHIGHLANG = ("cpp", 1, "java", 1, "prolog", 1, "perl", 1, 
-		"php3", 1, "python", 1, "flex", 1, "changelog", 1
-		); # supported languages
-$LinkFirstChar = 0;    # 1 = link on first character,  0 = followed by "?" mark (classical)
-$EditGuideInExtern = 0; # 1 = show edit guide in bottom frame, 0 = don't show
-$SizeTopFrame = 160;
-$SizeBottomFrame = 110;
-$LogoPage   = "";	# this page will be displayed when no parameter
-$CheckTime = 0;   # 1 = mesure the processing time (requires Time::HiRes module), 0 = do not 
-$IconDir = "./icons";
-###
-###############
-
-
-# Major options:
-$UseSubpage  = 1;       # 1 = use subpages,       0 = do not use subpages
-$UseCache    = 0;       # 1 = cache HTML pages,   0 = generate every page
-$EditAllowed = 1;       # 1 = editing allowed,    0 = read-only
-$RawHtml     = 1;       # 1 = allow <HTML> tag,   0 = no raw HTML in pages
-$HtmlTags    = 1;       # 1 = "unsafe" HTML tags, 0 = only minimal tags
-$UseDiff     = 1;       # 1 = use diff features,  0 = do not use diff
-$FreeLinks   = 1;       # 1 = use [[word]] links, 0 = LinkPattern only
-$WikiLinks   = 1;       # 1 = use LinkPattern,    0 = use [[word]] only
-$AdminDelete = 1;       # 1 = Admin only page,    0 = Editor can delete pages
 $RunCGI      = 1;       # 1 = Run script as CGI,  0 = Load but do not run
-$EmailNotify = 0;       # 1 = use email notices,  0 = no email on changes
-$EmbedWiki   = 0;       # 1 = no headers/footers, 0 = normal wiki pages
-
-# Minor options:
-$LogoLeft    = 0;       # 1 = logo on left,       0 = logo on right
-$RecentTop   = 1;       # 1 = recent on top,      0 = recent on bottom
-$UseDiffLog  = 0;       # 1 = save diffs to log,  0 = do not save diffs
-$KeepMajor   = 1;       # 1 = keep major rev,     0 = expire all revisions
-$KeepAuthor  = 1;       # 1 = keep author rev,    0 = expire all revisions
-$ShowEdits   = 0;       # 1 = show minor edits,   0 = hide edits by default
-$HtmlLinks   = 0;       # 1 = allow A HREF links, 0 = no raw HTML links
-$SimpleLinks = 1;       # 1 = only letters,       0 = allow _ and numbers
-$NonEnglish  = 0;       # 1 = extra link chars,   0 = only A-Za-z chars
-$ThinLine    = 1;       # 1 = fancy <hr> tags,    0 = classic wiki <hr>
-$BracketText = 1;       # 1 = allow [URL text],   0 = no link descriptions
-$UseAmPm     = 0;       # 1 = use am/pm in times, 0 = use 24-hour times
-$UseIndex    = 0;       # 1 = use index file,     0 = slow/reliable method
-$UseHeadings = 1;       # 1 = allow = h1 text =,  0 = no header formatting
-$NetworkFile = 1;       # 1 = allow remote file:, 0 = no file:// links
-$BracketWiki = 1;       # 1 = [WikiLnk txt] link, 0 = no local descriptions
-$UseLookup   = 0;       # 1 = lookup host names,  0 = skip lookup (IP only)
-$FreeUpper   = 0;       # 1 = force upper case,   0 = do not force case
-$FastGlob    = 1;       # 1 = new faster code,    0 = old compatible code
-
-# HTML tag lists, enabled if $HtmlTags is set.
-# Scripting is currently possible with these tags,
-# so they are *not* particularly "safe".
-# Tags that must be in <tag> ... </tag> pairs:
-@HtmlPairs = qw(b i u font big small sub sup h1 h2 h3 h4 h5 h6 cite code
-  em s strike strong tt var div center blockquote ol ul dl table caption);
-# Single tags (that do not require a closing /tag)
-@HtmlSingle = qw(br p hr li dt dd tr td th);
-@HtmlPairs = (@HtmlPairs, @HtmlSingle);  # All singles can also be pairs
-
-# == You should not have to change anything below this line. =============
-$IndentLimit = 20;                  # Maximum depth of nested lists
-$PageDir     = "$DataDir/page";     # Stores page data
-$HtmlDir     = "$DataDir/html";     # Stores HTML versions
-$UserDir     = "$DataDir/user";     # Stores user data
-$KeepDir     = "$DataDir/keep";     # Stores kept (old) page data
-$TempDir     = "$DataDir/temp";     # Temporary files and locks
-$LockDir     = "$TempDir/lock";     # DB is locked if this exists
-$InterFile   = "$DataDir/intermap"; # Interwiki site->url map
-$RcFile      = "$DataDir/rclog";    # New RecentChanges logfile
-$RcOldFile   = "$DataDir/rclog.old"; # Old RecentChanges logfile
-$IndexFile   = "$DataDir/pageidx";  # List of all pages
-$LinkDir     = "$DataDir/link";    # Stores the links of each page
-
-# added by luke
-
-$UseEmoticon 	= 1;		# 1 = use emoticon, 0 = not use
-$EmoticonPath 	= "http:emoticon/";	# where emoticon stored
-$ClickEdit	 	= 1;		# 1 = edit page by double click on page, 0 = no use
-$EditPagePos	= 1;		# 1 = bottom, 2 = top, 3 = top & bottom
-$NamedAnchors	= 1;		# 0 = no anchors, 1 = enable anchors, 2 = enable but suppress display
 
 # == End of Configuration =================================================
 
@@ -234,17 +116,13 @@ $TableOfContents = "";
 sub DoWikiRequest {
 ###############
 ### replaced by gypark
-### 보안을 위해서, 설정 화일을 다른 것으로 지정
-### 적절히 바꾸어서 사용할 것
-#	if ($UseConfig && (-f "config.pl")) {
-#		do "config.pl";  # Later consider error checking?
-#	}
- 	if ($UseConfig && (-f $ConfigFile)) {
+### 환경 변수들을 지정하는 루틴을 제거. 무조건 config file 를 읽음.
+ 	if (-f $ConfigFile) {
  		do "$ConfigFile";
+	} else {
+		die "Can not load config file";
 	}
-### 번역 메시지를 사용할 경우는 config.pl 또는 
-### 이 아래에 불러올 화일명을 적는다
-#   do "./translations/trans.pl";
+###
 ###############
 
 ###############
@@ -3085,7 +2963,12 @@ sub StoreCodeRaw {
 sub StoreSyntaxHighlight {
 	my ($lang, $opt , @code) = @_;
 
-	if (!((-x "$SOURCEHIGHLIGHT") && defined($SRCHIGHLANG{$lang}))) {
+	my %LANG;
+	foreach (@SRCHIGHLANG) {
+		$LANG{$_} = "1";
+	}
+	
+	if (!((-x "$SOURCEHIGHLIGHT") && defined($LANG{$lang}))) {
 		return &StoreCodeRaw(@code);
 	}
 
