@@ -164,7 +164,7 @@ $RssDays     = 7;               # Default number of days in RSS feed
 $RssTimeZone = 9;				# Time Zone of Server (hour), 0 for GMT, 9 for Korea
 $SlashLinks   = 0;      # 1 = use script/action links, 0 = script?action
 $InterIconDir = "./icons-inter/"; # directory containing interwiki icons
-$SendPingAllowed = 1;   # 0 - anyone, 1 - who can edit, 2 - who is admin
+$SendPingAllowed = 0;   # 0 - anyone, 1 - who can edit, 2 - who is admin
 
 # Major options:
 $UseSubpage  = 1;       # 1 = use subpages,       0 = do not use subpages
@@ -2684,8 +2684,6 @@ sub MacroSubst {
 	$txt =~ s/&__LT__;color\(([^,)]+),([^,)]+),([^\n]+?)\)&__GT__;/&MacroColorBk($1, $2, $3)/gei;
 	$txt =~ s/&__LT__;color\(([^,)]+),([^\n]+?)\)&__GT__;/&MacroColor($1, $2)/gei;
 ### <trackbacksent> <trackbackreceived>
-#	$txt =~ s/(&__LT__;trackbacksent\((.*?)\)&__GT__;)/&MacroTrackBackSent($1, $2)/gei;
-#	$txt =~ s/(&__LT__;trackbackreceived\((.*?)\)&__GT__;)/&MacroTrackBackReceived($1,$2)/gei;
 	$txt =~ s/(&__LT__;trackbacksent&__GT__;)/&MacroTrackBackSent($1)/gei;
 	$txt =~ s/(&__LT__;trackbackreceived&__GT__;)/&MacroTrackBackReceived($1)/gei;
 ###
@@ -2732,34 +2730,14 @@ sub MacroIncludeSubst {
 ### 추가한 매크로의 동작부
 ### trackback
 sub MacroTrackBackSent {
-#	my ($itself, $id) = @_;
 	my ($itself) = @_;
 
-#	$id = &RemoveLink($id);
-#	my $temp = &FreeToNormal($id) if ($FreeLinks);
-
-#	if (&ValidId($temp) ne '') {
-#		return $itself;
-#	}
 	return "";
 }
 
 sub MacroTrackBackReceived {
-#	my ($itself, $id) = @_;
 	my ($itself) = @_;
 	
-#	$id = &RemoveLink($id);
-#	my $temp = &FreeToNormal($id) if ($FreeLinks);
-#
-#	if (&ValidId($temp) ne '') {
-#		return $itself;
-#	}
-#
-#	$FullUrl = $q->url(-full=>1)  if ($FullUrl eq "");
-#	$temp = &EncodeUrl($temp);
-#	my $url = $FullUrl . &ScriptLinkChar() . "action=trackback&id=$temp";
-#
-#	return &T('Trackback address of this page:') . " " . (&UrlLink("$url"))[0];
 	return "";
 }
 
@@ -4129,10 +4107,6 @@ sub ProcessPostMacro {
 	if (length($id) != 0) {
 		$string =~ s/(^|\n)<((long)?comments)\(([-+]?\d+)\)>([\r\f]*\n)/$1<$2($id,$4)>$5/gim;
 	}
-	### trackback
-#	$string =~ s/(^|\n)<(trackbacksent)>([\r\f]*\n)/$1<$2($id)>$3/gim;
-#	$string =~ s/(^|\n)<(trackbackreceived)>([\r\f]*\n)/$1<$2($id)>$3/gim;
-### 
 	return $string;
 }
 
@@ -5071,7 +5045,6 @@ sub ReportError {
 	my ($errmsg) = @_;
 
 	print $q->header(-charset=>"$HttpCharset"), "<H2>", $errmsg, "</H2>", $q->end_html;
-#	&AppendStringToFile("$DataDir/tblog.txt", $errmsg);
 }
 
 sub ValidId {
@@ -9416,8 +9389,6 @@ sub GetTrackBackGuide {
 		"</DIV>";
 
 	$result .= "</DIV>";
-
-
 }
 ### 통채로 추가한 함수들의 끝
 ###############
