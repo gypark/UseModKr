@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.46";
-$WikiRelease = "2003-08-31";
+$WikiVersion = "0.92K3-ext1.46a";
+$WikiRelease = "2003-09-01";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -2295,6 +2295,8 @@ sub MacroComments {
 	my ($itself,$id,$up) = @_;	
 	my $idvalue;
 	my $temp;
+	my ($readonly_style, $readonly_msg);
+	my $submit_button = "<input type=\"submit\" value=\"" . T('Submit') . "\">";
 
 	$temp = $id;
 	$temp =~ s/,$//;
@@ -2309,18 +2311,23 @@ sub MacroComments {
 		$idvalue = "[[$UserID]]";
 	}
 
+	if ((!&UserCanEdit($id)) && (abs($up) < 100)) {
+		$readonly_style = 'readonly="true" style="background-color: #f0f0f0;"';
+		$readonly_msg = T('Comment is not allowed');
+		$submit_button = "";
+	}
+
 	return
 		"<form name=comments><input type=\"hidden\" name=\"action\" value=\"comments\">".
 		"<input type=\"hidden\" name=\"id\" value=\"$id\">" .
 		"<input type=\"hidden\" name=\"pageid\" value=\"$pageid\">" .
 		"<input type=\"hidden\" name=\"up\" value=\"$up\">" .
 		T('Name') .
-		": <input name='name' class=text type=text size=10 value=\"$idvalue\"> " .
+		": <input name='name' $readonly_style class=text type=text size=10 value=\"$idvalue\"> " .
 		T('Comment') . 
-		": <input name='comment' class=text type=text size=60 value=\"\">" . "&nbsp;" .
-		"<input type=submit value=\"" .
-		T('Submit') .
-		"\">".
+		": <input name='comment' $readonly_style class=text type=text size=60 value=\"$readonly_msg\">" .
+		"&nbsp;" .
+		$submit_button .
 		"</form>";
 }
 
@@ -6478,7 +6485,14 @@ sub DoPostMain {
 ###
 ###############
 
-	if (!&UserCanEdit($id, 1)) {
+
+###############
+### replaced by gypark
+### comments 기능
+#	if (!&UserCanEdit($id, 1)) {
+	if (($rebrowseid eq "") && (!&UserCanEdit($id, 1))) {
+###
+###############
 		# This is an internal interface--we don't need to explain
 		&ReportError(Ts('Editing not allowed for %s.', $id));
 		return;
@@ -6606,7 +6620,7 @@ sub DoPostMain {
 ###############
 ### added by gypark
 ### comments from Jof
-	if (length($rebrowseid) != 0) {
+	if ($rebrowseid ne "") {
 		$id = $rebrowseid;
 	}
 ###

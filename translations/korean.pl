@@ -683,4 +683,6 @@ Comment
 답글
 Submit
 달기
+Comment is not allowed
+답글 달기가 허용되지 않습니다
 END_OF_TRANSLATION
