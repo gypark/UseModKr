@@ -36,11 +36,10 @@ sub plugin_vim {
 	my $hasMD5 = eval "require Digest::MD5;";
 	if ($hasMD5) {
 		$hash = Digest::MD5::md5_base64($content.join('',@opt));
-		$hash =~ s/\W//g;
 	} else {
 		$hash = crypt($content.join('',@opt), $HashKey);
-		$hash =~ s/\W//g;
 	}
+	$hash =~ s/(\W)/uc sprintf "%%%02x", ord($1)/eg;
 
 	my $hashhtml = "$hash.html";
 	my $VimDir = "$UploadDir/vim";

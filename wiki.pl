@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.74c";
+$WikiVersion = "0.92K3-ext1.74d";
 $WikiRelease = "2005-02-12";
 
 $HashKey = "salt"; # 2-character string
@@ -3706,12 +3706,10 @@ sub MakeLaTeX {
 	my $hasMD5 = eval "require Digest::MD5;";
 	if ($hasMD5) {
 		$hash = Digest::MD5::md5_base64($latex);
-		$hash =~ s/\//a/g;
-		$hash =~ s/\W//g;
 	} else {
 		$hash = crypt($latex, $HashKey);
-		$hash =~ s/\W//g;
 	}
+	$hash =~ s/(\W)/uc sprintf "%%%02x", ord($1)/eg;
 
 	# 기본값 설정
 	my $hashimage = "$hash.png";
