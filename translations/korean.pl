@@ -557,6 +557,8 @@ Text Formatting
 문장 구성
 Link and Image
 링크와 이미지
+Table
+표 만들기
 Macro
 매크로
 Emoticon

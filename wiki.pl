@@ -2013,7 +2013,13 @@ sub CommonMarkup {
 		s/\&__LT__;pre\&__GT__;((.|\n)*?)\&__LT__;\/pre\&__GT__;/&StorePre($1, "pre")/ige;
 		s/\&__LT__;code\&__GT__;((.|\n)*?)\&__LT__;\/code\&__GT__;/&StorePre($1, "code")/ige;
 
-		s/\[\#(\w+)\]/&StoreHref(" name=\"$1\"")/ge if $NamedAnchors;
+###############
+### replaced by gypark
+### anchor 에 한글 사용
+#		s/\[\#(\w+)\]/&StoreHref(" name=\"$1\"")/ge if $NamedAnchors;
+		s/\[\#([0-9A-Za-z\xa0-\xff]+)\]/&StoreHref(" name=\"$1\"")/ge if $NamedAnchors;
+###
+###############
 		if ($HtmlTags) {
 			my ($t);
 			foreach $t (@HtmlPairs) {
