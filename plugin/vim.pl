@@ -13,22 +13,13 @@ sub plugin_vim {
 	my $text;
 	my $status;
 
-	my @syntax = ("php","c","python","jsp","sh","cpp",
-          "java","ruby","forth","fortran","perl",
-          "haskell","lisp","st","objc","tcl","lua",
-          "asm","masm","tasm","make",
-          "awk","docbk","diff","html","tex","vim",
-          "xml","dtd","sql","conf","config","nosyntax","apache");
-	my %syntax = map { $_ => 1 } @syntax;
-
 	my $type = "nosyntax";
 	foreach my $opt (@opt) {
-		if ($syntax{$opt}) {
-			$type = $opt;
-		} elsif ($opt eq "number") {
+		if ($opt eq "number") {
 			$option='+"set number" ';
+		} elsif ($opt =~ /^\w+$/) {
+			$type = $opt;
 		}
-
 	}
 
 # html파일의 이름 결정
