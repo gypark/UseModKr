@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.64";
-$WikiRelease = "2004-11-18";
+$WikiVersion = "0.92K3-ext1.65";
+$WikiRelease = "2004-11-29";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -1940,6 +1940,7 @@ sub GetHtmlHeader {
 ### 헤더 출력 개선
 	$html .= qq(<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=$HttpCharset">\n);
 	$html .= qq(<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">\n);
+	$html .= qq(<link rel="alternate" type="application/rss+xml" title="$SiteName" href="http://$ENV{SERVER_NAME}$ENV{SCRIPT_NAME}?action=rss">\n);
 	$html .= qq(<script src="$JavaScript" language="javascript" type="text/javascript"></script>);
 	$html .= "\n";
 ###

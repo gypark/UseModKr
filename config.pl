@@ -86,7 +86,7 @@ $MyMacrosDir = "./mymacros/";	# directory containing user-defined macros
 $UseSubpage  = 1;       # 1 = use subpages,       0 = do not use subpages
 $UseCache    = 0;       # 1 = cache HTML pages,   0 = generate every page
 $EditAllowed = 1;       # 1 = editing allowed,    0 = read-only
-$RawHtml     = 0;       # 1 = allow <HTML> tag,   0 = no raw HTML in pages
+$RawHtml     = 1;       # 1 = allow <HTML> tag,   0 = no raw HTML in pages
 $HtmlTags    = 1;       # 1 = "unsafe" HTML tags, 0 = only minimal tags
 $UseDiff     = 1;       # 1 = use diff features,  0 = do not use diff
 $FreeLinks   = 1;       # 1 = use [[word]] links, 0 = LinkPattern only
