@@ -2674,8 +2674,7 @@ sub MacroSubst {
 	$txt =~ s/(\&__LT__;longcomments\(([^,]+),([-+]?\d+)\)&__GT__;)/&MacroComments($1,$2,$3,1)/gei;
 ### <memo(제목)></memo> from Jof
 	$MemoID = 0;
-	$txt =~
-		s/(&__LT__;memo\(([^\n]+?)\)&__GT__;((.)*?)&__LT__;\/memo&__GT__;)/&MacroMemo($1, $2, $3, "memo")/geis;
+	$txt =~ s/(&__LT__;memo\(([^\n]+?)\)&__GT__;((.)*?)&__LT__;\/memo&__GT__;)/&MacroMemo($1, $2, $3)/geis;
 ### <footnote(내용)> from Jof
 	$MyFootnoteCounter = 0;
 	$MyFootnotes = "\n" . T('Footnote') . ": <br>\n";
@@ -9393,7 +9392,7 @@ sub GetTrackbackGuide {
 			$q->endform;
 	}
 
-	$result .= &MacroMemo("", &T('Send Trackback'), $trackbackguide, "trackbackguide");
+	$result .= &MacroMemo("", &T('Send Trackback'), $trackbackguide, "trackbackguidecontent");
 
 	$result .= "</DIV>";
 }

@@ -622,7 +622,7 @@ DIV.memo {
 /* memo 매크로 링크 */
 A.memo:link, A.memo:active, A.memo:visited, A.memo:hover {
 	background: transparent;
-	color: blue;
+	color: gray;
 	text-decoration: none;
 }
 A.memo:hover
@@ -641,7 +641,7 @@ A.footnote {
 	vertical-align: super;
 }
 
-/* 트랙백 주고받기 안내창 */
+/* 트랙백 주고받기 안내영역 */
 DIV.trackbackguide {
 	text-align: left;
 	background: transparent;
@@ -649,18 +649,23 @@ DIV.trackbackguide {
 	color: black;
 }
 
-/* 트랙백 주고받기 안내창 링크 */
-A.trackbackguide:link, A.trackbackguide:active, A.trackbackguide:visited, A.trackbackguide:hover {
+/* 트랙백 주고받기 가이드 */
+DIV.trackbackguidecontent {
+	background: transparent;
+	border: none;
+}
+
+A.trackbackguidecontent:link, A.trackbackguidecontent:active, A.trackbackguidecontent:visited, A.trackbackguidecontent:hover {
 	background: transparent;
 	color: blue;
 	text-decoration: none;
 }
-A.trackbackguide:hover
+A.trackbackguidecontent:hover
 {
 	text-decoration: underline;
 }
 
-/* 트랙백 리스트 */
+/* trackbacksent, trackbackreceived 매크로 */
 DIV.trackbacklist {
 	background-color:#F8F8F8;
 	color:#000;
@@ -668,7 +673,6 @@ DIV.trackbacklist {
 	padding:5px;
 }
 
-/* 트랙백 리스트 링크 */
 A.trackbacklist:link, A.trackbacklist:active, A.trackbacklist:visited, A.trackbacklist:hover {
 	background: transparent;
 	color: blue;
