@@ -7,7 +7,7 @@ $SiteName    = "Wiki";          # Name of site (used for titles)
 $HomePage    = "HomePage";      # Home page (change space to _)
 $RCName      = "RecentChanges"; # Name of changes page (change space to _)
 $LogoUrl     = "";     # URL for site logo ("" for no logo)
-$ENV{PATH}   = "/usr/bin/";     # Path used to find "diff"
+$ENV{PATH}   = "/bin:/usr/bin/";     # Path used to find "diff"
 $ScriptTZ    = "";              # Local time zone ("" means do not print)
 $RcDefault   = 30;              # Default number of RecentChanges days
 @RcDays      = qw(1 3 7 30 90); # Days for links on RecentChanges
@@ -78,7 +78,8 @@ $JavaScript  = "wikiscript.js";   # URL for JavaScript code (like "/wikiscript.j
 ### 매크로 모듈화
 $MacrosDir = "./macros/";       # directory containing macros
 $MyMacrosDir = "./mymacros/";	# directory containing user-defined macros
-### 
+### LaTeX 변환 지원
+$UseLatex    = 0;		# 1 = Use LaTeX conversion   2 = Don't convert
 ##
 ##########################################################
 

@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.67";
-$WikiRelease = "2005-01-14";
+$WikiVersion = "0.92K3-ext1.68";
+$WikiRelease = "2005-01-15";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -75,6 +75,7 @@ use vars qw(
 	$InterWikiMoniker $SiteDescription $RssLogoUrl $RssDays $RssTimeZone
 	$SlashLinks $InterIconDir $SendPingAllowed $JavaScript
 	$MacrosDir $MyMacrosDir
+	$UseLatex
 	);
 ###
 ###############
@@ -120,7 +121,7 @@ $SiteName    = "Wiki";          # Name of site (used for titles)
 $HomePage    = "HomePage";      # Home page (change space to _)
 $RCName      = "RecentChanges"; # Name of changes page (change space to _)
 $LogoUrl     = "";     # URL for site logo ("" for no logo)
-$ENV{PATH}   = "/usr/bin/";     # Path used to find "diff"
+$ENV{PATH}   = "/usr/bin/:/bin/";     # Path used to find "diff"
 $ScriptTZ    = "";              # Local time zone ("" means do not print)
 $RcDefault   = 30;              # Default number of RecentChanges days
 @RcDays      = qw(1 3 7 30 90); # Days for links on RecentChanges
@@ -169,6 +170,7 @@ $SendPingAllowed = 0;   # 0 - anyone, 1 - who can edit, 2 - who is admin
 $JavaScript  = "wikiscript.js";   # URL for JavaScript code (like "/wikiscript.js")
 $MacrosDir = "./macros/";       # directory containing macros
 $MyMacrosDir = "./mymacros/";	# directory containing user-defined macros
+$UseLatex    = 0;		# 1 = Use LaTeX conversion   2 = Don't convert
 
 # Major options:
 $UseSubpage  = 1;       # 1 = use subpages,       0 = do not use subpages
@@ -2434,6 +2436,18 @@ sub CommonMarkup {
 		s/\&__LT__;code\&__GT__;((.|\n)*?)\&__LT__;\/code\&__GT__;/&StorePre($1, "code")/ige;
 
 ###############
+### added by gypark
+### LaTeX 지원
+		if ($UseLatex) {
+#			s/\$\$((.|\n)*?)\$\$/&StoreRaw(&MakeLaTeX("\$"."$1"."\$", "display"))/ige;
+#			s/\$((.|\n)*?)\$/&StoreRaw(&MakeLaTeX("\$"."$1"."\$", "inline"))/ige;
+			s/\\\[((.|\n)*?)\\\]/&StoreRaw(&MakeLaTeX("\$"."$1"."\$", "display"))/ige;
+			s/\$\$((.|\n)*?)\$\$/&StoreRaw(&MakeLaTeX("\$"."$1"."\$", "inline"))/ige;
+		}
+###
+###############
+
+###############
 ### replaced by gypark
 ### anchor 에 한글 사용
 #		s/\[\#(\w+)\]/&StoreHref(" name=\"$1\"")/ge if $NamedAnchors;
@@ -3542,6 +3556,148 @@ sub StorePre {
 
 	return &StoreRaw("<$tag>" . $html . "</$tag>");
 }
+
+###############
+### added by gypark
+sub UnquoteHtmlForPageContent {
+	my ($html) = @_;
+	$html =~ s/&__GT__;/>/g;
+	$html =~ s/&__LT__;/</g;
+	$html =~ s/&__AMP__;/&/g;
+	return $html;
+}
+###
+###############
+
+###############
+### added by gypark
+### LaTeX 지원
+sub MakeLaTeX {
+	my ($latex,  $type) = @_;
+
+	$latex = &UnquoteHtmlForPageContent($latex);
+
+	# 그림파일의 이름은 텍스트를 해슁하여 결정
+	my $hash;
+	my $hasMD5 = eval "require Digest::MD5;";
+	if ($hasMD5) {
+		$hash = Digest::MD5::md5_base64($latex);
+		$hash =~ s/\//a/g;
+		$hash =~ s/\W//g;
+	} else {
+		$hash = crypt($latex, $HashKey);
+		$hash =~ s/\W//g;
+	}
+
+	# 기본값 설정
+	my $hashimage = "$hash.png";
+	my $imgpath = "";
+	my $LatexDir = "$UploadDir/latex";
+	my $LatexUrl = "$UploadUrl/latex";
+	my $TemplateFile = "$DataDir/latex.template";
+		
+	# 디렉토리 생성
+	&CreateDir($UploadDir);
+	&CreateDir($LatexDir);
+
+	if (-f "$LatexDir/$hashimage" && not -z "$LatexDir/$hashimage") {
+		# 이미 생성되어 캐쉬에 있음
+	} else {
+		# 새로 생성해야 됨
+		my $hashdir = "$TempDir/$hash";
+		my $DefaultTemplate = << 'EOT';
+\documentclass[12pt]{amsart}
+
+% Your can use the desire symbol packages
+% Of course, MikTeX needs to be able to get the 
+% package that you specify
+\usepackage{mathptmx,bm,calrsfs}
+
+% "sboxit" puts two marks on top and bottom of the math
+% equation for ImageMagick to cut out the image
+\def\sboxit#1{%
+\setbox0=\hbox{#1}\hbox{\vbox{\hsize=\wd0\hrule height1pt width2pt%
+\hbox{\vrule width0pt\kern0pt\vbox{%
+\vspace{1pt}\noindent\unhbox0\vspace{1pt}}%
+\kern1pt\vrule width0pt}\hrule height1pt width2pt}}}
+\mathchardef\gt="313E % type $a\gt b$ instead of $a > b$
+\mathchardef\lt="313C % type $a\lt b$ instead of $a < b$
+
+\pagestyle{empty}
+\begin{document}
+\thispagestyle{empty}
+
+% the first hbox make the depth of the equation right
+\sboxit{\hbox to 0pt{\phantom{g}}<math>}
+
+\end{document}
+EOT
+
+		if (not -d $hashdir) {
+			mkdir($hashdir,0775) or return "[Unable to create $hash dir]";
+		}
+
+		if (not -f $TemplateFile) {
+			&WriteStringToFile($TemplateFile, $DefaultTemplate);
+		}
+		
+		my $template = &ReadFile($TemplateFile);
+
+		$template =~ s/<math>/$latex/ige;
+
+		my $pwd = `pwd`;
+		$pwd =~ s/(.*)((\n|\r)*)?/$1/;
+
+		chdir ($hashdir);
+
+		# 원본 tex 생성
+		open (OUTFILE, ">srender.tex");
+		print OUTFILE $template;
+		close OUTFILE;
+
+		open SAVEOUT, ">&STDOUT";
+		open SAVEERR, ">&STDERR";
+		open STDOUT, ">hash.log";
+		open STDERR, ">&STDOUT";
+
+		# 그림 생성
+		qx(latex -interaction=nonstopmode srender.tex);
+		qx(dvips srender.dvi);
+		qx(convert -transparent "white" -density 100x100 -trim -shave 0x2 srender.ps $hashimage);
+
+		close STDOUT;
+		close STDERR;
+		open STDOUT, ">&SAVEOUT";
+		open STDERR, ">&SAVEERR";
+
+		# upload 경로 그림 옮김
+		chdir($pwd);
+		if (-f "$hashdir/$hashimage" && not -z "$hashdir/$hashimage") {
+			my $png = &ReadFile("$hashdir/$hashimage");
+			&WriteStringToFile("$LatexDir/$hashimage", $png);
+		} else {
+			return "[Error retrieving image from $hashdir:$pwd]";
+		}
+		unlink (glob("$hashdir/*")) or return "[[unlink fail]]";
+		rmdir ($hashdir) or return "[[rmdir fail]]";
+	}
+
+	# IMG 태그 출력
+	if ($type eq "inline") {
+		$imgpath = "<IMG border=0 vspace=0 hspace=0 align='middle' ".
+			"src='$LatexUrl/$hashimage' ".
+			"alt=\"\$$latex\$\">";
+	} elsif ($type eq "display") {
+		$imgpath = "<br>".
+			"<IMG border=0 vspace=15 hspace=40 align='middle' ".
+			"src='$LatexUrl/$hashimage' ".
+			"alt=\"$latex\">".
+			"</br>";
+	}
+	return $imgpath;
+}
+###
+###############
 
 sub StoreHref {
 	my ($anchor, $text) = @_;
