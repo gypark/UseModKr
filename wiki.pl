@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.22c";
-$WikiRelease = "2003-02-13";
+$WikiVersion = "0.92K3-ext1.22d";
+$WikiRelease = "2003-02-14";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -835,9 +835,9 @@ sub GetRcHtml {
 	my $bookmark;
 	my $bookmarkuser = &GetParam('username', "");
 	my ($rcnew, $rcupdated, $rcdiff) = (
-			"<img src='icons/rc-new.gif'>",
-			"<img src='icons/rc-updated.gif'>",
-			"<img src='icons/rc-diff.gif'>"
+			"<img style='border:0' src='icons/rc-new.gif'>",
+			"<img style='border:0' src='icons/rc-updated.gif'>",
+			"<img style='border:0' src='icons/rc-diff.gif'>"
 	);
 	$bookmark = &GetParam('bookmark',-1);
 ###
@@ -872,7 +872,14 @@ sub GetRcHtml {
 	}
 	$date = "";
 	$inlist = 0;
-	$html = "";
+###############
+### replaced by gypark
+### 최근 변경 내역을 테이블로 출력
+### from Jof4002's patch
+#	$html = "";
+	$html = "<table style='border:0'>";
+###
+###############
 	$all = &GetParam("rcall", 0);
 	$all = &GetParam("all", $all);
 	$newtop = &GetParam("rcnewtop", $RecentTop);
@@ -896,25 +903,38 @@ sub GetRcHtml {
 		if ($date ne &CalcDay($ts)) {
 			$date = &CalcDay($ts);
 			if ($inlist) {
-				$html .= "</UL>\n";
+###############
+### commented by gypark
+### 최근 변경 내역을 테이블로 출력
+### from Jof4002's patch
+#				$html .= "</UL>\n";
+###
+###############
 				$inlist = 0;
 			}
 ###############
 ### replaced by gypark
 ### 최근변경내역에 북마크 기능 도입
+### 최근 변경 내역을 테이블로 출력 패치도 같이 적용
 #			$html .= "<p><strong>" . $date . "</strong><p>\n";
+			$html .= "<td colspan=6 style='border:0;'><br><b>" . $date . "</b>";
 			if ($bookmarkuser eq "") {
-				$html .= "<p><strong>" . $date . "</strong><p>\n";
+				$html .= "<br>&nbsp;</td></tr>\n";
 			} else {
-				$html .= "<p><strong>" . $date . "</strong> "." ["
-					.&ScriptLink("action=bookmark&time=$ts",T('set bookmark'))
-					."]<p>\n";
+				$html .= "  [" .&ScriptLink("action=bookmark&time=$ts",T('set bookmark')) ."]"
+					. "</td></tr>\n";
 			}
 ###
 ###############
 		}
 		if (!$inlist) {
-			$html .= "<UL>\n";
+###############
+### commented by gypark
+### 최근 변경 내역을 테이블로 출력
+### from Jof4002's patch
+#			$html .= "<UL>\n";
+###
+###############
 			$inlist = 1;
 		}
 		$host = &QuoteHtml($host);
@@ -926,7 +946,8 @@ sub GetRcHtml {
 		$sum = "";
 		if (($summary ne "") && ($summary ne "*")) {
 			$summary = &QuoteHtml($summary);
-			$sum = "<strong>[$summary]</strong> ";
+#			$sum = "<strong>[$summary]</strong> ";
+			$sum = "<span style='color:green'>[$summary]</span> ";
 		}
 		$edit = "";
 		$edit = "<em>$tEdit</em> "  if ($isEdit);
@@ -956,13 +977,32 @@ sub GetRcHtml {
 ###
 ###############
 		}
-		$link .= &GetPageLink($pagename);
-		$html .= "<li>$link ";
-		# Later do new-RC looping here.
-		$html .=  &CalcTime($ts) . " $count$edit" . " $sum";
-		$html .= ". . . . . $author\n";  # Make dots optional?
+###############
+### replaced by gypark
+### 최근 변경 내역을 테이블로 출력
+### from Jof4002's patch
+#		$link .= &GetPageLink($pagename);
+#		$html .= "<li>$link ";
+#		# Later do new-RC looping here.
+#		$html .=  &CalcTime($ts) . " $count$edit" . " $sum";
+#		$html .= ". . . . . $author\n";  # Make dots optional?
+#	}
+#	$html .= "</UL>\n" if ($inlist);
+		$html .= "<tr><td style='border:0'>&nbsp;&nbsp;&nbsp;</td>"
+			. "<td style='border:0'>$link </td>"
+			. "<td style='border:0'>" . &GetPageLink($pagename) . "</td>"
+			. "<td style='border:0'>" . &CalcTime($ts) . "</td>"
+			. "<td style='border:0'>$count$edit</td>"
+			. "<td style='border:0'>$author</td></tr>\n";
+		if ($sum ne "") {
+			$html .= "<tr><td systems='border:0' colspan=2></td>"
+				. "<td colspan=4 style='border:0'>$sum</td></tr>\n";
+		}
 	}
-	$html .= "</UL>\n" if ($inlist);
+	$html .= "</table>";
+
+###
+###############
 	return $html;
 }
 
