@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.59";
+$WikiVersion = "0.92K3-ext1.60";
 $WikiRelease = "2004-03-12";
 
 $HashKey = "salt"; # 2-character string
@@ -2465,6 +2465,13 @@ sub CommonMarkup {
 			$_ = &EmoticonSubst($_);			# luke added
 		}
 
+### img macro from Jof
+		s/\&__LT__;img\(([^,\n\s]*?)\)\&__GT__;/&MacroImgTag($1,0,0,'','')/gei;
+		s/\&__LT__;img\(([^,\n\s]*?),(\d+?),(\d+?)\)\&__GT__;/&MacroImgTag($1,$2,$3,'','')/gei;
+		s/\&__LT__;img\(([^,\n\s]*?),(\d+?),(\d+?),([^,\n]*?)\)\&__GT__;/&MacroImgTag($1,$2,$3,$4,'')/gei;
+		s/\&__LT__;img\(([^,\n\s]*?),(\d+?),(\d+?),([^,\n]*?),([^,\n\s]*?)\)\&__GT__;/&MacroImgTag($1,$2,$3,$4,$5)/gei;
+####
+
 		s/\[$UrlPattern\]/&StoreBracketUrl($1, "")/geo;
 		s/\[$InterLinkPattern\]/&StoreBracketInterPage($1, "")/geo;
 ###############
@@ -2710,6 +2717,53 @@ sub MacroIncludeSubst {
 ###############
 ### added by gypark
 ### 추가한 매크로의 동작부
+### img from Jof
+sub MacroImgTag {
+	my ($url,$width,$height,$caption,$float) = @_;
+	my ($s_width,$s_height,$s_tag,$s_divstyle,$s_caption,$return);
+	
+	$s_width 	= " width=\"$width\"" if ( $width>0 );
+	$s_height	= " height=\"$height\"" if ( $height>0 );
+	$s_tag		= " title=\"$url\"";
+	$s_divstyle	= " style=\"float:$float;\"" if ($float ne '');
+	$s_caption	= "<br><span class=\"imgcaption\">$caption</span>" if ($caption ne '');
+	
+	if ($url =~ /$InterLinkPattern/)
+	{
+		my $id = $url;
+		my ($name, $site, $remotePage, $punct, $image);
+	
+		($id, $punct) = &SplitUrlPunct($id);
+	
+		$name = $id;
+		($site, $remotePage) = split(/:/, $id, 2);
+		$url = &GetSiteUrl($site);
+		if ($url ne "")
+		{
+			$remotePage =~ s/&amp;/&/g;  # Unquote common URL HTML
+			
+			if ($url =~ /\|/) {
+				($url, $image) = split(/\|/, $url, 2);
+			}
+			$url .= $remotePage;
+		}
+	}
+	
+	if ($width > 0 or $height > 0)
+	{
+		$return 	= "<a href=\"$url\"><img src=\"$url\" $s_width $s_height $s_tag border=\"1\" style=\"margin:5px;\"></a>";
+	}
+	else
+	{
+		$return 	= "<img src=\"$url\" $s_tag border=\"1\" style=\"margin:5px;\">";
+	}
+	if (($caption ne '') or ($float ne ''))
+	{
+		$return = "<div align=\"center\" $s_divstyle>$return$s_caption</div>";
+	}
+	return &StoreRaw($return);
+}
+
 ### color from Jof
 sub MacroColor {
 	my ($color, $message) = @_;
@@ -2729,7 +2783,8 @@ sub MacroFootnote {
 	$MyFootnotes .= "<A name='#FN_$MyFootnoteCounter' href='#FNR_$MyFootnoteCounter'>$MyFootnoteCounter</A>" .
 					". $note" .
 					"<br>\n";
-	return "<A class='footnote' name='#FNR_$MyFootnoteCounter' href='#FN_$MyFootnoteCounter'>$MyFootnoteCounter</A>";
+	return "<A class='footnote' title='" . T('Footnote') . "$MyFootnoteCounter. $note' ".
+			"name='#FNR_$MyFootnoteCounter' href='#FN_$MyFootnoteCounter'>$MyFootnoteCounter</A>";
 }
 
 ### comments from Jof
