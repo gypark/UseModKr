@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.29b";
-$WikiRelease = "2003-02-27";
+$WikiVersion = "0.92K3-ext1.30";
+$WikiRelease = "2003-03-02";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -133,7 +133,7 @@ $EditNote    = "";              # HTML notice above buttons on edit page
 $MaxPost     = 1024 * 210;      # Maximum 210K posts (about 200K for pages)
 $NewText     = "";              # New page text ("" for default message)
 $HttpCharset = "euc-kr";              # Charset for pages, like "iso-8859-2"
-$UserGotoBar = "<a href='http://user.chollian.net/~paedros'>Home</a>";              # HTML added to end of goto bar
+$UserGotoBar = "<a href='/'>Home</a>";   # HTML added to end of goto bar
 ###############
 ### added by gypark
 ### 상단메뉴에 사용자 정의 링크 추가. config.pl 또는 이곳에서 정의해 줄 것
@@ -219,7 +219,7 @@ $LinkDir     = "$DataDir/link";    # Stores the links of each page
 # added by luke
 
 $UseEmoticon 	= 1;		# 1 = use emoticon, 0 = not use
-$EmoticonPath 	= "http://user.chollian.net/~paedros/wiki/data/emoticon";	# where emoticon stored
+$EmoticonPath 	= "http:emoticon/";	# where emoticon stored
 $ClickEdit	 	= 1;		# 1 = edit page by double click on page, 0 = no use
 $EditPagePos	= 1;		# 1 = bottom, 2 = top, 3 = top & bottom
 $NamedAnchors	= 1;		# 0 = no anchors, 1 = enable anchors, 2 = enable but suppress display
@@ -668,7 +668,7 @@ sub BrowsePage {
 
 		print $fullHtml;
 		&DoRc();
-		print "<hr  noshade size=1>\n"  if (!&GetParam('embed', $EmbedWiki));
+#		print "<HR class='footer'>\n"  if (!&GetParam('embed', $EmbedWiki));
 		print &GetFooterText($id, $goodRevision);
 		return;
 	}
@@ -930,7 +930,7 @@ sub GetRcHtml {
 ### 최근 변경 내역을 테이블로 출력
 ### from Jof4002's patch
 #	$html = "";
-	$html = "<table style='border:0'>";
+	$html = "<TABLE class='rc'>";
 ###
 ###############
 	$all = &GetParam("rcall", 0);
@@ -970,12 +970,14 @@ sub GetRcHtml {
 ### 최근변경내역에 북마크 기능 도입
 ### 최근 변경 내역을 테이블로 출력 패치도 같이 적용
 #			$html .= "<p><strong>" . $date . "</strong><p>\n";
-			$html .= "<tr><td colspan=6 style='border:0;'><br><b>" . $date . "</b>";
+			$html .= "<TR class='rc'><TD colspan='6' class='rcblank'>&nbsp;</TD></TR>".
+				"<TR class='rc'>".
+				"<TD colspan=6 class='rcdate'><b>" . $date . "</b>";
 			if ($bookmarkuser eq "") {
-				$html .= "<br>&nbsp;</td></tr>\n";
+				$html .= "<br>&nbsp;</TD></TR>\n";
 			} else {
 				$html .= "  [" .&ScriptLink("action=bookmark&time=$ts",T('set bookmark')) ."]"
-					. "</td></tr>\n";
+					. "</TD></TR>\n";
 			}
 ###
 ###############
@@ -1003,7 +1005,7 @@ sub GetRcHtml {
 ### replaced by gypark
 ### 최근 변경 내역을 테이블로 출력
 #			$sum = "<strong>[$summary]</strong> ";
-			$sum = "<span style='color:green'>[$summary]</span> ";
+			$sum = "[$summary]";
 ###
 ###############
 		}
@@ -1048,15 +1050,15 @@ sub GetRcHtml {
 #		$html .= ". . . . . $author\n";  # Make dots optional?
 #	}
 #	$html .= "</UL>\n" if ($inlist);
-		$html .= "<tr><td style='border:0'>&nbsp;&nbsp;&nbsp;</td>"
-			. "<td style='border:0'>$link </td>"
-			. "<td style='border:0'>" . &GetPageOrEditLink($pagename) . "</td>"
-			. "<td style='border:0'>" . &CalcTime($ts) . "</td>"
-			. "<td style='border:0'>$count$edit</td>"
-			. "<td style='border:0'>$author</td></tr>\n";
+		$html .= "<TR class='rc'><TD class='rc'>&nbsp;&nbsp;&nbsp;</TD>"
+			. "<TD class='rc'>$link </TD>"
+			. "<TD class='rcpage'>" . &GetPageOrEditLink($pagename) . "</TD>"
+			. "<TD class='rctime'>" . &CalcTime($ts) . "</TD>"
+			. "<TD class='rccount'>$count$edit</TD>"
+			. "<TD class='rcauthor'>$author</TD></TR>\n";
 		if ($sum ne "") {
-			$html .= "<tr><td systems='border:0' colspan=2></td>"
-				. "<td colspan=4 style='border:0'>&nbsp;&nbsp;$sum</td></tr>\n";
+			$html .= "<TR class='rc'><TD colspan=2 class='rc'></TD>"
+				. "<TD colspan=4 class='rcsummary'>&nbsp;&nbsp;$sum</TD></TR>\n";
 		}
 	}
 	$html .= "</table>";
@@ -1170,7 +1172,7 @@ sub GetHistoryLine {
 sub ScriptLink {
 	my ($action, $text) = @_;
 
-	return "<a href=\"$ScriptName?$action\">$text</a>";
+	return "<A href=\"$ScriptName?$action\">$text</A>";
 }
 
 # luke added
@@ -1413,7 +1415,7 @@ sub GetHeader {
 ###############
 
 	if ((!$embed) && ($LogoUrl ne "")) {
-		$logoImage = "img src=\"$LogoUrl\" alt=\"$altText\" border=0";
+		$logoImage = "IMG class='logoimage' src=\"$LogoUrl\" alt=\"$altText\" border=0";
 		if (!$LogoLeft) {
 			$logoImage .= " align=\"right\"";
 		}
@@ -1433,11 +1435,11 @@ sub GetHeader {
 #		$result .= $q->h1(&GetSearchLink($id));
 ### 역링크 개선
 #		$result .= $q->h1($header . &GetSearchLink($id));
-		$result .= $q->h1($header . &GetReverseLink($id));
+		$result .= $q->h1({-class=>"pagename"}, $header . &GetReverseLink($id));
 ###
 ###############
 	} else {
-		$result .= $q->h1($header . $title);
+		$result .= $q->h1({-class=>"actionname"}, $header . $title);
 	}
 
 ###############
@@ -1561,7 +1563,8 @@ sub GetHtmlHeader {
 
 sub GetEditGuide {
 	my ($id, $rev) = @_;
-	my $result = "<div align=right>";
+	my $result = "\n<HR class='footer'>\n<DIV class='editguide'>";
+#		print "<HR class='footer'>\n"  if (!&GetParam('embed', $EmbedWiki));
 
 ###############
 ### added by gypark
@@ -1655,7 +1658,7 @@ sub GetEditGuide {
 	} else {
 		$result .= T('This page is read-only');
 	}
-	$result .= "</div>";
+	$result .= "</DIV>";
 
 
 ###
@@ -1680,13 +1683,13 @@ sub GetFooterText {
 							 . Ts('Database is stored in temporary directory %s',
 										$DataDir) . '<br>';
 	}
-	$result .= "<hr>";
+	$result .= "<HR class='footer'>";
 	$result .= &GetMinimumFooter();
 	return $result;
 }
 
 sub GetCommonFooter {
-	return "<hr>" .  &GetMinimumFooter();
+	return "<HR class='footer'>" .  &GetMinimumFooter();
 }
 
 sub GetMinimumFooter {
@@ -1709,11 +1712,11 @@ sub GetMinimumFooter {
 	}
 
 ### 처리 시간 측정
-	$result .= "\n<div align='right'>";
+	$result .= "\n<DIV class='footer'>";
 	if ($CheckTime) {
 		$result .= "<i>" . sprintf("%8.3f",&tv_interval($StartTime)) . " sec </i>";
 	}
-	$result .= "<a accesskey=\"x\" name=\"#PAGE_BOTTOM\" href=\"#PAGE_TOP\">" . T('Top') . "</a></div>\n" . $q->end_html;
+	$result .= "<a accesskey=\"x\" name=\"#PAGE_BOTTOM\" href=\"#PAGE_TOP\">" . T('Top') . "</a></DIV>\n" . $q->end_html;
 ### 
 
 	return $result;
@@ -1744,12 +1747,12 @@ sub GetGotoBar {
 	my ($id) = @_;
 	my ($main, $bartext);
 
-	$bartext = "<table width=100% border=0 cellspacing=0 cellpadding=0>";
+	$bartext = "\n<TABLE class='gotobar' width='100%'>";
 	$bartext .= &GetFormStart();
-	$bartext .= "<tr align=center><td>";
+	$bartext .= "<TR class='gotobar'>\n<TD class='gotohomepage'>";
 	$bartext .= &GetPageLink($HomePage);
-	$bartext .= " </td><td> " . &ScriptLink("action=index", T('Index'));
-	$bartext .= " </td><td> " . &GetPageLink(T($RCName));
+	$bartext .= "</TD>\n<TD class='gotoindex'>" . &ScriptLink("action=index", T('Index'));
+	$bartext .= " </TD>\n<TD class='gotorecentchanges'> " . &GetPageLink(T($RCName));
 	if ($id =~ m|/|) {
 		$main = $id;
 		$main =~ s|/.*||;  # Only the main page name (remove subpage)
@@ -1757,7 +1760,7 @@ sub GetGotoBar {
 ### replaceed by gypark
 ### subpage 의 경우, 상위페이지 이름 앞에 아이콘 표시
 #		$bartext .= " </td><td> " . &GetPageLink($main);
-		$bartext .= " </td><td> <img src=\"$IconDir/parentpage.gif\" border=\"0\" alt=\""
+		$bartext .= " </TD>\n<TD class='gotoparentpage'> <img src=\"$IconDir/parentpage.gif\" border=\"0\" alt=\""
 					. T('Main Page:') . " $main\" align=\"absmiddle\">" . &GetPageLink($main);
 ###
 ###############
@@ -1767,38 +1770,37 @@ sub GetGotoBar {
 ### 상단 메뉴 바에 사용자 정의 항목을 추가
 ### UserGotoBar2~4 라는 이름으로 지정해주면 된다
 	if ($UserGotoBar2 ne '') {
-		$bartext .= " </td><td> " . $UserGotoBar2;
+		$bartext .= " </TD>\n<TD class='gotouser'> " . $UserGotoBar2;
 	}
 	if ($UserGotoBar3 ne '') {
-		$bartext .= " </td><td> " . $UserGotoBar3;
+		$bartext .= " </TD>\n<TD class='gotouser'> " . $UserGotoBar3;
 	}
 	if ($UserGotoBar4 ne '') {
-		$bartext .= " </td><td> " . $UserGotoBar4;
+		$bartext .= " </TD>\n<TD class='gotouser'> " . $UserGotoBar4;
 	}
 ###
 ###############
-	$bartext .= " </td><td> " . &GetPrefsLink();
+	$bartext .= " </TD>\n<TD class='gotopref'> " . &GetPrefsLink();
 	if (&GetParam("linkrandom", 0)) {
-		$bartext .= " </td><td> " . &GetRandomLink();
+		$bartext .= " </TD>\n<TD class='gotorandom'> " . &GetRandomLink();
 	}
 	if (&UserIsAdmin()) {
-		$bartext .= " </td><td> " . &ScriptLink("action=editlinks", T('Admin'));
+		$bartext .= " </TD>\n<TD class='gotoadmin'> " . &ScriptLink("action=editlinks", T('Admin'));
 	}
-#	$bartext .= ' </td><td> ' . &GetHistoryLink($id, T('History'));
-	$bartext .= ' </td><td> ' . &ScriptLink("action=links", T('Links'));
+	$bartext .= " </TD>\n<TD class='gotolinks'> " . &ScriptLink("action=links", T('Links'));
 	if (($UserID eq "113") || ($UserID eq "112")) {
-		$bartext .= ' </td><td> ' . &ScriptLink("action=login", T('Login'));
+		$bartext .= " </TD>\n<TD class='gotologin'> " . &ScriptLink("action=login", T('Login'));
 	}
 	else {
-		$bartext .= ' </td><td> ' . &ScriptLink("action=logout", T('Logout'));
+		$bartext .= " </TD>\n<TD class='gotologin'> " . &ScriptLink("action=logout", T('Logout'));
 	}
-	$bartext .= ' </td><td> ' . &GetSearchForm();
+	$bartext .= " </TD>\n<TD class='gotosearch'> " . &GetSearchForm();
 	if ($UserGotoBar ne '') {
-		$bartext .= " </td><td> " . $UserGotoBar;
+		$bartext .= " </TD>\n<TD class='gotouser'> " . $UserGotoBar;
 	}
-	$bartext .= "</td></tr>";
+	$bartext .= "</TD></TR>";
 	$bartext .= $q->endform;
-	$bartext .= "</table><hr>\n";
+	$bartext .= "</TABLE><HR class='gotobar'>\n";
 	return $bartext;
 }
 
@@ -1945,10 +1947,10 @@ sub CommonMarkup {
 ###############
 ### added by gypark
 ### {{{ }}} 처리 
-		s/(^|\n)\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/&StoreRaw("\n<pre class=\"code\">") . &StoreCodeRaw($2) . &StoreRaw("\n<\/pre>") . "\n"/igem;
+		s/(^|\n)\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/&StoreRaw("\n<PRE class=\"code\">") . &StoreCodeRaw($2) . &StoreRaw("\n<\/PRE>") . "\n"/igem;
 
 ### {{{lang|n|t }}} 처리
-		s/(^|\n)\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/&StoreRaw("<pre class=\"syntax\">") . &StoreSyntaxHighlight($2, $4, $5) . &StoreRaw("<\/pre>") . "\n"/igem;
+		s/(^|\n)\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/&StoreRaw("<PRE class=\"syntax\">") . &StoreSyntaxHighlight($2, $4, $5) . &StoreRaw("<\/PRE>") . "\n"/igem;
 ###
 ###############
 
@@ -2227,13 +2229,13 @@ sub MacroIncludeSubst {
 
 ### 세 가지 사전 매크로
 sub MacroEDic {
-	return "<a href='http://dic.naver.com/endic?query=@_' target='dictionary'>@_</a>";
+	return "<a class='dic' href='http://dic.naver.com/endic?query=@_' target='dictionary'>@_</a>";
 }
 sub MacroKDic {
-	return "<a href='http://krdic.naver.com/krdic?query=@_' target='dictionary'>@_</a>";
+	return "<a class='dic' href='http://krdic.naver.com/krdic?query=@_' target='dictionary'>@_</a>";
 }
 sub MacroJDic {
-	return "<a href='http://jpdic.naver.com/jpdic?query=@_' target='dictionary'>@_</a>";
+	return "<a class='dic' href='http://jpdic.naver.com/jpdic?query=@_' target='dictionary'>@_</a>";
 }
 
 ### <IncludeDay>
@@ -2472,7 +2474,7 @@ sub MacroCalendar {
 	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($Now+$TimeZoneOffset);
 	my ($this_year, $this_month, $this_day) = ($year, $mon, $mday);
 	my $cal_time;
-	my $cal_tdstyle;
+	my ($td_class, $span_style);
 	my $temp;
 
 	# 달의 값이 13 이상이면 무효
@@ -2529,23 +2531,21 @@ sub MacroCalendar {
 	}
 
 	# 달력 제목 출력
-	$result .= "<table style=\"border:1 solid lightgrey;\">";
-	$result .= "<caption style=\"padding:0; font-size:9pt; text-decoration:none;\">" 
+	$result .= "<TABLE class='calendar'>";
+	$result .= "<CAPTION class='calendar'>" 
 		."<a href=\"$ScriptName?$cal_mainpage$cal_year-$cal_month\">"
-		."<font color=\"black\"><b>"
 		.(length($cal_mainpage)?"$cal_mainpage<br>":"")
 		."$cal_year-$cal_month"
-		."</b></font>"
 		."</a>"
-		."</caption>";
+		."</CAPTION>";
 
 	# 상단의 요일 출력 
-	$result .= "<tr>";
+	$result .= "<TR class='calendar'>";
 	for (0..6) {
-		$result .= "<th style=\"font-size: 9pt; line-height:100%; border:none;\" align=\"center\">"
-			. "<font color=\"$cal_color[$_]\">$cal_dow[$_]</font></th>";
+		$result .= "<TH class='calendar'>"
+			. "<span style='color:$cal_color[$_]'>$cal_dow[$_]</span></TH>";
 	}
-	$result .= "</tr>";
+	$result .= "</TR>";
 
 	# 인자로 주어진 달의 1일날을 찾음
 	$cal_time = timelocal(0,0,0,1,$cal_month-1,$cal_year);
@@ -2558,7 +2558,7 @@ sub MacroCalendar {
 	my ($temp_month, $temp_day);
 		
 	for (1..6) {
-		$result .= "<tr>";
+		$result .= "<TR class='calendar'>";
 		for (0..6) {
 
 			# 1~9는 01~09로 만듦
@@ -2568,31 +2568,31 @@ sub MacroCalendar {
 			$cal_page = ($year + 1900)."-".($temp_month)."-".($temp_day);
 
 			$cal_result = $mday;
-			$cal_tdstyle = "font-size: 9pt; line-height:100%;";
+			$span_style = "";
 			if (($year == $this_year) && ($mon == $this_month) && ($mday == $this_day)) {
-				$cal_tdstyle .= " border:1 solid lightgrey; background:yellow;";
+				$td_class = "calendartoday";
+				$span_style = "text-decoration: underline; ";
 			} else {
-				$cal_tdstyle .= " border:none;";
+				$td_class = "calendar";
 			}
 
 			if (-f &GetPageFile($cal_mainpage . $cal_page)) {
-				$cal_tdstyle .= " text-decoration:underline; ";
-				$cal_result = "<b>$cal_result</b>";
+				$span_style .= "font-weight: bold; text-decoration: underline; ";
 				$wday = 7;
 			}
 			if ($cal_month != ($mon+1)) {
-				$cal_result = "<small>$cal_result</small>";
+				$span_style .= "font-size: 0.9em; ";
 			}
 
-			$result .= "<td style=\"$cal_tdstyle\" align=\"right\">"
+			$result .= "<td class='$td_class'>"
 				."<a href=\"$ScriptName?$cal_mainpage$cal_page\">"
-				."<font color=\"$cal_color[$wday]\">"
+				."<span style='color:$cal_color[$wday]; $span_style'>"
 				.$cal_result
-				."</font></a></td>";
+				."</span></a></td>";
 			$cal_time += (60 * 60 * 24);
 			($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($cal_time);
 		}
-		$result .= "</tr>";
+		$result .= "</TR>";
 		# 4 또는 5 줄로 끝낼 수 있으면 끝냄
 		last if (($mon+1 > $cal_month) || ($year+1900 > $cal_year));
 	}
@@ -2989,7 +2989,7 @@ sub InterPageLink {
 ### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
 ### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
 #	return ("<a href=\"$url\">$name</a>", $punct);
-	return ("<a href=\"$url\">$name</a><a href=\"$url\" target=\"_blank\"><img src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>", $punct);
+	return ("<A class='inter' href=\"$url\">$name</A><a href=\"$url\" target=\"_blank\"><img src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>", $punct);
 ###
 ###############
 
@@ -3015,7 +3015,7 @@ sub StoreBracketInterPage {
 ### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
 ### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
 #	return &StoreRaw("<a href=\"$url\">[$text]</a>");
-	return &StoreRaw("<a href=\"$url\">[$text]</a><a href=\"$url\" target=\"_blank\"><img src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>");
+	return &StoreRaw("<A class='inter' href=\"$url\">[$text]</A><a href=\"$url\" target=\"_blank\"><img src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>");
 ###
 ###############
 }
@@ -3231,7 +3231,7 @@ sub UrlLink {
 ### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
 ### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
 #	return ("<a href=\"$name\">$name</a>", $punct);
-	return ("<a href=\"$name\">$protocol$name</a><a href=\"$name\" target=\"_blank\"><img src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>", $punct);
+	return ("<A class='outer' href=\"$name\">$protocol$name</A><a href=\"$name\" target=\"_blank\"><img src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>", $punct);
 ###
 ###############
 }
@@ -3248,7 +3248,7 @@ sub StoreBracketUrl {
 ### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
 ### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
 #	return &StoreRaw("<a href=\"$url\">[$text]</a>");
-	return &StoreRaw("<a href=\"$url\">[$text]</a><a href=\"$url\" target=\"_blank\"><img src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>");
+	return &StoreRaw("<A class='outer' href=\"$url\">[$text]</A><a href=\"$url\" target=\"_blank\"><img src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>");
 ###
 ###############
 }
@@ -3656,7 +3656,7 @@ sub DiffToHTMLplain {
 ### diff 출력 개선
 sub DiffToHTMLunified {
 	my ($html) = @_;
-	my (@lines, $line, $result, $row, $td_option, $in_table, $output_exist);
+	my (@lines, $line, $result, $row, $td_class, $in_table, $output_exist);
 
 	@lines = split("\n", $html, -1);
 	shift(@lines);
@@ -3671,32 +3671,32 @@ sub DiffToHTMLunified {
 		if ($line =~ /^@@ (.*)@@.*$/) {
 			if ($in_table) {
 				$in_table = 0;
-				$result .= "</table>\n";
+				$result .= "</TABLE>\n";
 			}
-			$result .= "\n<br><table style='border: solid 1' width='95%'>\n";
+			$result .= "\n<br><TABLE class='diff'>\n";
 			$output_exist = 1;
 			$in_table = 1;
-			$row = "<b>$1</b>";
-			$td_option = "align='center' bgcolor='#d0d0d0'";
+			$row = $1;
+			$td_class = "diffrange";
 		} elsif ($line =~ /^ (.*)$/) {
 			$row = $1;
 			$row =~ s/ /&nbsp;/g;
 			$row = "= ".$row;
-			$td_option="";
+			$td_class = "diff";
 		} elsif ($line =~ /^-(.*)$/) {
 			$row = $1;
 			$row =~ s/ /&nbsp;/g;
 			$row = "- ".$row;
-			$td_option="bgcolor='#ffffaf'";
+			$td_class = "diffremove";
 		} elsif ($line =~ /^\+(.*)$/) {
 			$row = $1;
 			$row =~ s/ /&nbsp;/g;
 			$row = "+ ".$row;
-			$td_option="bgcolor='#cfffcf'";
+			$td_class = "diffadd";
 		}
-		$result .= "<tr><td style='border: 0;' $td_option>$row</td></tr>\n";
+		$result .= "<TR><TD class='$td_class'>$row</TD></TR>\n";
 	}
-	$result .= "</table>\n" if ($output_exist);
+	$result .= "</TABLE>\n" if ($output_exist);
 	return $result;
 }
 ###
@@ -5944,7 +5944,7 @@ sub DoLinks {
 	print &GetHeader('', &QuoteHtml(T('Full Link List')), '');
 	print "<pre>\n";  # Extra lines to get below the logo
 	&PrintLinkList(&GetFullLinkList());
-	print "</pre><hr>\n";
+	print "</pre><HR class='footer'>\n";
 	print &GetMinimumFooter();
 }
 
@@ -6713,9 +6713,9 @@ sub DoEditLinks {
 #											-label=>"Substitute text for rename");
 											-label=>T('Substitute text for rename'));
 	print "<br>", $q->submit(-name=>'Edit'), "\n";
-	print "<hr>\n";
-	print &GetGotoBar("");
+#	print &GetGotoBar("");
 	print $q->endform;
+	print "<HR class='footer'>\n";
 	print &GetMinimumFooter();
 }
 

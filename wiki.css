@@ -250,34 +250,86 @@ IMG.logoimage {
 
 /* 상단 메뉴 바 */
 TABLE.gotobar {
-	border-style: solid;
-	border-color: silver;
-	border-width: 0px 1px 1px 0px;
+	border: none;
 	border-collapse: collapse;
+	text-align: center;
+	vertical-align: middle;
 }
 
 TR.gotobar {
 	height: 24px;
 }
 
-TD.gotobar {
-	border-style: solid;
-	border-color: silver;
-	border-width: 1px 0px 0px 1px;
-	text-align: center;
-	vertical-align: middle;
+TD.gotobar 
+{
+	border: 1px solid silver;
 }
 
-TD.gotobar A:link, 
-TD.gotobar A:visited, 
-TD.gotobar A:active, 
-TD.gotobar A:hover
+TD.gotohomepage
+{
+	border: 1px solid silver;
+}
+
+TD.gotoindex
+{
+	border: 1px solid silver;
+}
+
+TD.gotorecentchanges
+{
+	border: 1px solid silver;
+}
+
+TD.gotoparentpage
+{
+	border: 1px solid silver;
+}
+
+TD.gotouser
+{
+	border: 1px solid silver;
+}
+
+TD.gotopref
+{
+	border: 1px solid silver;
+}
+
+TD.gotorandom
+{
+	border: 1px solid silver;
+}
+
+TD.gotoadmin
+{
+	border: 1px solid silver;
+}
+
+TD.gotolinks
+{
+	border: 1px solid silver;
+}
+
+TD.gotologin
+{
+	border: 1px solid silver;
+}
+
+TD.gotosearch
+{
+	border: 1px solid silver;
+}
+
+TABLE.gotobar A:link, 
+TABLE.gotobar A:visited, 
+TABLE.gotobar A:active, 
+TABLE.gotobar A:hover
 {
 	background: transparent;
 	color: blue;
 	text-decoration: none;
 }
-TD.gotobar A:hover
+TABLE.gotobar A:hover
 {
 	text-decoration: underline;
 }
