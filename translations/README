@@ -18,7 +18,7 @@ Use $HomePage and $RCName, respectively, for them.
 
     do "./translations/korean.pl";          (상대 경로)
 또는
-	do "/home/me/wiki/translations/french.pl";       (절대 경로)
+	do "/home/me/wiki/translations/korean.pl";       (절대 경로)
 
 등과 같이 사용하려는 화일의 경로를 명시해 주면 됩니다.
 
