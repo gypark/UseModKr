@@ -2649,7 +2649,7 @@ sub MacroSubst {
 			
 	foreach my $macro (sort keys %MacroFile) {
 		if ($txt =~ /&__LT__;$macro/i) {
-			require "$MacroFile{$macro}";
+			do "$MacroFile{$macro}";
 		}
 	}
 
