@@ -2120,7 +2120,7 @@ sub GetEditGuide {
 		}
 		my $excerpt = substr($Text{'text'},0,255);
 		$excerpt =~ s/(([\x80-\xff].)*)[\x80-\xff]?$/$1/;
-		$excerpt =~ s/(\r?\n)/&nbsp;/g;
+		$excerpt =~ s/(\r?\n)/ /g;
 		$excerpt = &QuoteHtml($excerpt);
 		$excerpt =~ s/"/&quot;/g;
 
@@ -9283,7 +9283,7 @@ sub DoReceiveTrackBackPing {
 		$excerpt =~ s/(([\x80-\xff].)*)[\x80-\xff]?$/$1/;
 		$excerpt .= "...";
 	}
-	$excerpt =~ s/(\r?\n)/&nbsp;/g;
+	$excerpt =~ s/(\r?\n)/ /g;
 	$excerpt = &QuoteHtml($excerpt);
 	$excerpt = "<nowiki>$excerpt</nowiki>";
 
