@@ -1949,7 +1949,7 @@ sub MacroSubst {
 	$txt =~ s/\&__LT__;wantedpages\&__GT__;/&MacroWantedPages()/gei;
 ### <userlist>
 	$txt =~ s/\&__LT__;userlist\&__GT__;/&MacroUserList()/gei;
-### <includetoday([page,] year, month, day)>
+### <includetoday([page,] day_offset)>
 	$txt =~ s/\&__LT__;includeday\(([^,\n]+,)?([-+]?\d+)\)&__GT__;/&MacroIncludeDay($1, $2)/gei;
 ###
 ###############
