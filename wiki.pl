@@ -8920,7 +8920,7 @@ sub DoReceiveTrackbackPing {
 		&SendTrackbackResponse("1", "No Pagename (id)");
 	} elsif (!&PageCanReceiveTrackbackPing($normal_id)) {
 		&SendTrackbackResponse("1", "Invalid Pagename (Page is missing, or Trackback is not allowed)");
-	} elsif (my $bannedText = &TextIsBanned($excerpt)) {
+	} elsif (my $bannedText = &TextIsBanned($blog_name.$url.$title.$excerpt)) {
 		&SendTrackbackResponse("1", "[$bannedText] is a Banned text");
 	} else {
 		&OpenPage($normal_id);
