@@ -2426,7 +2426,7 @@ sub MacroAllPagesTo {
 		return "&lt;allpagesto($string)&gt;";
 	}
 
-	foreach $pagelines (&GetFullLinkList("sort=1&reverse=$string")) {
+	foreach $pagelines (&GetFullLinkList("empty=0&sort=1&reverse=$string")) {
 		my @pages = split(' ', $pagelines);
 		@x = (@x, shift(@pages));
 	}
@@ -2542,7 +2542,7 @@ sub MacroCalendar {
 	# 상단의 요일 출력 
 	$result .= "<tr>";
 	for (0..6) {
-		$result .= "<th style=\"line-height:100%; border:none;\" align=\"center\">"
+		$result .= "<th style=\"font-size: 9pt; line-height:100%; border:none;\" align=\"center\">"
 			. "<font color=\"$cal_color[$_]\">$cal_dow[$_]</font></th>";
 	}
 	$result .= "</tr>";
@@ -2568,7 +2568,7 @@ sub MacroCalendar {
 			$cal_page = ($year + 1900)."-".($temp_month)."-".($temp_day);
 
 			$cal_result = $mday;
-			$cal_tdstyle = "line-height:100%;";
+			$cal_tdstyle = "font-size: 9pt; line-height:100%;";
 			if (($year == $this_year) && ($mon == $this_month) && ($mday == $this_day)) {
 				$cal_tdstyle .= " border:1 solid lightgrey; background:yellow;";
 			} else {
