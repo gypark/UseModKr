@@ -368,7 +368,6 @@ TABLE.diff
 {
 	border: 1px solid #CCCCCC;
 	width: 95%;
-	font: normal normal normal 9pt/140% Gulimche, Courier, monospace;
 	background: transparent;
 	color: black;
 }
@@ -380,6 +379,7 @@ TR.diff
 
 TD.diff
 {
+	font: normal normal normal 9pt/160% Gulimche, Courier, monospace;
 	border: none;
 }
 
@@ -394,6 +394,7 @@ TD.diffrange
 
 TD.diffremove
 {
+	font: normal normal normal 9pt/160% Gulimche, Courier, monospace;
 	border: none;
 	background: #FFFFCC;
 	color: black;
@@ -401,6 +402,7 @@ TD.diffremove
 
 TD.diffadd
 {
+	font: normal normal normal 9pt/160% Gulimche, Courier, monospace;
 	border: none;
 	background: #CCFFCC;
 	color: black;
