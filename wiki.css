@@ -233,6 +233,7 @@ img {
 /* 페이지 이름 */
 H1.pagename {
 	padding: 5pt 10pt 5pt 10pt;
+	line-height: 110%;
 	text-align: left;
 }
 
@@ -241,6 +242,7 @@ H1.actionname {
 	padding: 5pt 10pt 5pt 10pt;
 	font-style: italic;
 	text-align: left;
+	line-height: 110%;
 }
 
 /* 사이트 로고이미지 */
