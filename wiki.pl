@@ -4840,10 +4840,6 @@ sub DoOtherRequest {
 ### 관심 페이지
 		} elsif ($action eq "interest") {
 			&DoInterest();
-###
-###############
-###############
-### added by gypark
 ### UploadedFiles 매크로
 		} elsif ($action eq "deleteuploadedfiles") {
 			&DoDeleteUploadedFiles();
