@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.58";
+$WikiVersion = "0.92K3-ext1.59";
 $WikiRelease = "2004-03-12";
 
 $HashKey = "salt"; # 2-character string
@@ -1173,7 +1173,7 @@ sub GetRcHtml {
 #		$pagecount{$pagename}++ if ($ts > $bookmark);
 		if ($ts > $bookmark) {
 			$pagecount{$pagename}++;
-			if (!($all) && &LoginUser()) {
+			if (&LoginUser() && !($all)) {
 				if (($summary ne "") && ($summary ne "*")) {
 					$summary = &QuoteHtml($summary);
 					$all_summary{$pagename} = "[$summary]<br>" . $all_summary{$pagename};
@@ -2461,7 +2461,6 @@ sub CommonMarkup {
 			}
 		}
 
-
 		if ($useImage) {
 			$_ = &EmoticonSubst($_);			# luke added
 		}
@@ -2666,6 +2665,9 @@ sub MacroSubst {
 	if ($MyFootnoteCounter > 0) {
 		$txt .= "<DIV class='footnote'>" .  $MyFootnotes .  "</DIV>";
 	}
+### <color(글자색,[배경색,]내용)>
+	$txt =~ s/&__LT__;color\(([^,)]+),([^,)]+),([^\n]+?)\)&__GT__;/&MacroColorBk($1, $2, $3)/gei;
+	$txt =~ s/&__LT__;color\(([^,)]+),([^\n]+?)\)&__GT__;/&MacroColor($1, $2)/gei;
 ###
 ###############
 	return $txt;
@@ -2708,6 +2710,17 @@ sub MacroIncludeSubst {
 ###############
 ### added by gypark
 ### 추가한 매크로의 동작부
+### color from Jof
+sub MacroColor {
+	my ($color, $message) = @_;
+	return "<span style='color:$color;'>$message</span>";
+}
+
+sub MacroColorBk {
+	my ($color, $bgcolor, $message) = @_;
+	return "<span style='color:$color; background-color:$bgcolor'>$message</span>";
+}
+
 ### footnote from Jof
 sub MacroFootnote {
 	my ($note) = @_;
