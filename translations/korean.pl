@@ -755,4 +755,10 @@ Lock Site
 사이트 수정금지
 Unlock Site
 사이트 수정금지 해제
+Editing not allowed: text includes banned text
+수정할 수 없습니다: 금지된 단어가 포함되어 있습니다
+Editing Banned text
+등록 금지 단어 목록 수정
+Updating Banned text
+등록 금지 단어 목록 갱신
 END_OF_TRANSLATION

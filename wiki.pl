@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.76a";
+$WikiVersion = "0.92K3-ext1.77";
 $WikiRelease = "2005-02-27";
 
 $HashKey = "salt"; # 2-character string
@@ -6925,6 +6925,15 @@ sub DoPostMain {
 		return;
 	}
 
+# 금지단어
+	if (my $bannedText = &TextIsBanned($string)) {
+		print &GetHeader("", T('Editing Denied'),"");
+		print Ts('Editing not allowed: text includes banned text');
+		print " [$bannedText]";
+		print &GetCommonFooter();
+		return;
+	}
+
 	if (($id eq 'SampleUndefinedPage') || ($id eq T('SampleUndefinedPage'))) {
 		&ReportError(Ts('%s cannot be defined.', $id));
 		return;
@@ -9054,6 +9063,8 @@ sub DoReceiveTrackbackPing {
 		&SendTrackbackResponse("1", "No Pagename (id)");
 	} elsif (!&PageCanReceiveTrackbackPing($normal_id)) {
 		&SendTrackbackResponse("1", "Invalid Pagename (Page is missing, or Trackback is not allowed)");
+	} elsif (my $bannedText = &TextIsBanned($excerpt)) {
+		&SendTrackbackResponse("1", "[$bannedText] is a Banned text");
 	} else {
 		&OpenPage($normal_id);
 		&OpenDefaultText();
@@ -9161,6 +9172,22 @@ sub GetTrackbackGuide {
 	$result .= &MacroMemo("", &T('Send Trackback'), $trackbackguide, "trackbackguidecontent");
 
 	$result .= "</DIV>";
+}
+
+# 금지단어
+sub TextIsBanned {
+	my ($text) = @_;
+	my ($data, $status);
+
+	($status, $data) = &ReadFile("$DataDir/bantext");
+	return undef if (!$status);
+
+	$data =~ s/\r//g;
+	foreach (split(/\n/, $data)) {
+		next if ((/^\s*$/) || (/^#/));
+		return $& if ($text =~ /$_/i);
+	}
+	return undef;
 }
 ### 통채로 추가한 함수들의 끝
 ###############
