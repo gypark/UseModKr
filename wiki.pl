@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.46b";
-$WikiRelease = "2003-09-02";
+$WikiVersion = "0.92K3-ext1.46c";
+$WikiRelease = "2003-09-03";
 
 $HashKey = "salt"; # 2-character string
 ###
