@@ -96,7 +96,7 @@ $UseDiffLog  = 1;       # 1 = save diffs to log,  0 = do not save diffs
 $KeepMajor   = 1;       # 1 = keep major rev,     0 = expire all revisions
 $KeepAuthor  = 1;       # 1 = keep author rev,    0 = expire all revisions
 $ShowEdits   = 0;       # 1 = show minor edits,   0 = hide edits by default
-$HtmlLinks   = 0;       # 1 = allow A HREF links, 0 = no raw HTML links
+$HtmlLinks   = 1;       # 1 = allow A HREF links, 0 = no raw HTML links
 $SimpleLinks = 0;       # 1 = only letters,       0 = allow _ and numbers
 $NonEnglish  = 0;       # 1 = extra link chars,   0 = only A-Za-z chars
 $ThinLine    = 1;       # 1 = fancy <hr> tags,    0 = classic wiki <hr>
