@@ -22,6 +22,7 @@ sub plugin_vim {
 			$type = $opt;
 		}
 	}
+	$content =~ s/\r//g;
 
 # html파일의 이름 결정
 	my $hash;
