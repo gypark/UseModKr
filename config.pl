@@ -75,14 +75,8 @@ $InterIconDir = "./icons-inter/"; # directory containing interwiki icons
 $SendPingAllowed = 0;   # 0 - anyone, 1 - who can edit, 2 - who is admin
 ### java script 함수들
 $JavaScript  = "wikiscript.js";   # URL for JavaScript code (like "/wikiscript.js")
-### 매크로 모듈화
-$MacrosDir = "./macros/";       # directory containing macros
-$MyMacrosDir = "./mymacros/";	# directory containing user-defined macros
 ### LaTeX 변환 지원
 $UseLatex    = 0;		# 1 = Use LaTeX conversion   2 = Don't convert
-### 외부 plugin 지원
-$PluginDir = "./plugin/";       # directory containing plugins
-$MyPluginDir = "./myplugin/";   # directory containing user-defined plugins
 ##
 ##########################################################
 

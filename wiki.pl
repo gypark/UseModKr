@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.74h";
-$WikiRelease = "2005-02-26";
+$WikiVersion = "0.92K3-ext1.75";
+$WikiRelease = "2005-02-27";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -74,8 +74,6 @@ use vars qw(
 	$HiddenPageFile $TemplatePage
 	$InterWikiMoniker $SiteDescription $RssLogoUrl $RssDays $RssTimeZone
 	$SlashLinks $InterIconDir $SendPingAllowed $JavaScript
-	$MacrosDir $MyMacrosDir
-	$PluginDir $MyPluginDir
 	$UseLatex
 	);
 ###
@@ -170,10 +168,6 @@ $SlashLinks   = 0;      # 1 = use script/action links, 0 = script?action
 $InterIconDir = "./icons-inter/"; # directory containing interwiki icons
 $SendPingAllowed = 0;   # 0 - anyone, 1 - who can edit, 2 - who is admin
 $JavaScript  = "wikiscript.js";   # URL for JavaScript code (like "/wikiscript.js")
-$MacrosDir = "./macros/";       # directory containing macros
-$MyMacrosDir = "./mymacros/";	# directory containing user-defined macros
-$PluginDir = "./plugin/";       # directory containing plugins
-$MyPluginDir = "./myplugin/";   # directory containing user-defined plugins
 $UseLatex    = 0;		# 1 = Use LaTeX conversion   2 = Don't convert
 
 # Major options:
@@ -2732,6 +2726,7 @@ sub MacroSubst {
 
 ### 매크로 모듈화
 	my $macroname;
+	my ($MacrosDir, $MyMacrosDir) = ("./macros/", "./mymacros/");
 	foreach my $dir ($MacrosDir, $MyMacrosDir) {
 		foreach my $macrofile (glob("$dir/*.pl")) {
 			if ($macrofile =~ m|$dir/([^/]*).pl|) {
@@ -3601,6 +3596,7 @@ sub StorePlugin {
 	@opt = split (/\s/, $command);
 	$name = shift @opt;
 
+	my ($PluginDir, $MyPluginDir) = ("./plugin/", "./myplugin/");
 	if (-f "$MyPluginDir/$name.pl") {
 		$plugin_file = "$MyPluginDir/$name.pl";
 	} elsif (-f "$PluginDir/$name.pl") {
@@ -5317,6 +5313,32 @@ sub DoOtherRequest {
 	$id = &GetParam("id", "");
 	if ($action ne "") {
 		$action = lc($action);
+###############
+### replaced by gypark
+### action 모듈화
+		my $action_file = "";
+		my ($MyActionDir, $ActionDir) = ("./myaction/", "./action/");
+		if (-f "$MyActionDir/$action.pl") {
+			$action_file = "$MyActionDir/$action.pl";
+		} elsif (-f "$ActionDir/$action.pl") {
+			$action_file = "$ActionDir/$action.pl";
+		}
+		
+		if ($action_file ne "") {
+			my $loadaction = eval "require '$action_file'";
+
+			if (not $loadaction) {		# action 로드 실패
+				$UseShortcut = 0;
+				&ReportError(Ts('Fail to load action: %s', $action));
+				return;
+			}
+
+			my $func = "action_$action";
+			&{\&$func}();
+			return;
+		}
+###
+###############
 		if ($action eq "edit") {
 			$UseShortcut = 0;	# 단축키
 			&DoEdit($id, 0, 0, "", 0)  if &ValidIdOrDie($id);
