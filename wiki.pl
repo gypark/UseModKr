@@ -349,6 +349,7 @@ sub DoCacheBrowse {
 ###############
 ### replaced by gypark
 ### LogoPage 가 있으면 이것을 embed 형식으로 출력
+#		$query = $HomePage;  # Allow caching of home page.
 		if ($LogoPage eq "") {
 			$query = $HomePage;  # Allow caching of home page.
 		} else {
@@ -358,7 +359,7 @@ sub DoCacheBrowse {
 ###############
 	}
 ###############
-### replaced by gypark
+### added by gypark
 ### LogoPage 가 있으면 이것을 embed 형식으로 출력
 	return 0 if ($query eq $LogoPage);
 ###
