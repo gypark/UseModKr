@@ -3600,6 +3600,8 @@ sub InterPageLink {
 	my $link_html = '';
 	if (!($image)) {
 		$image = "$InterIconDir/default-inter.gif";
+	} elsif (!($image =~ m/\//)) {
+		$image = "$InterIconDir/$image";
 	}
 	$link_html = "<A class='inter' href='$url_main'>" .
 				"<IMG class='inter' src='$image' alt='$site:' title='$site:'>" .
