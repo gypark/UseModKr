@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.38c";
+$WikiVersion = "0.92K3-ext1.38d";
 $WikiRelease = "2003-03-12";
 
 $HashKey = "salt"; # 2-character string
@@ -3325,7 +3325,10 @@ sub ISBNLink {
 ###############
 ### replaced by gypark
 ### ISBNLink 개선
-	my $noCoverIcon = 'icons/isbn-nocover.jpg';
+	my ($noCoverIcon, $iconNum) = ("icons/isbn-nocover.jpg", ($num % 5));
+	$noCoverIcon = "icons/isbn-nocover-$iconNum.jpg"
+		if (-f "icons/isbn-nocover-$iconNum.jpg");
+
 	if ($num =~ /^89/) {
 		return "<a href='http://www.aladdin.co.kr/catalog/book.asp?ISBN=$num'>" .
 			"<IMG class='isbn' ".
