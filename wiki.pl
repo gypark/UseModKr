@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.45";
-$WikiRelease = "2003-08-30";
+$WikiVersion = "0.92K3-ext1.45a";
+$WikiRelease = "2003-08-31";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -3023,6 +3023,9 @@ sub MacroInclude {
 		return "";
 	}
 	
+	$name =~ s|^/|$MainPage/|;
+	$name = &FreeToNormal($name);
+
 	my $fname = &GetPageFile($name);	# 존재하지 않는 파일이면 그냥 리턴
 	if (!(-f $fname)) {
 		return "";
