@@ -68,8 +68,8 @@ sub MacroBlogPrevNext {
 	my $item;
 	my ($thispage, $thispagename, $thisdate);
 	$item = $tocitem_List[$idx];
-	if ($item =~ /\[\[(.+?)\]\] (\d+-\d+-\d+)/) {
-		($thispage, $thispagename, $thisdate) = ($1, $1, $2);
+	if ($item =~ /\[\[(.+?)(\|.*)?\]\] (\d+-\d+-\d+)/) {
+		($thispage, $thispagename, $thisdate) = ($1, $1, $3);
 		$thispage =~ s|^/|$toc_mainpage/|;
 		$thispage = &FreeToNormal($thispage);
 	}
@@ -78,16 +78,16 @@ sub MacroBlogPrevNext {
 	my ($nextpage, $nextpagename, $nextdate);
 	if ($idx > 0) {
 		$item = $tocitem_List[$idx-1];
-		if ($item =~ /\[\[(.+?)\]\] (\d+-\d+-\d+)/) {
-			($prevpage, $prevpagename, $prevdate) = ($1, $1, $2);
+		if ($item =~ /\[\[(.+?)(\|.*)?\]\] (\d+-\d+-\d+)/) {
+			($prevpage, $prevpagename, $prevdate) = ($1, $1, $3);
 			$prevpage =~ s|^/|$toc_mainpage/|;
 			$prevpage = &FreeToNormal($prevpage);
 		}
 	}
 	if ($idx < $#tocitem_List) {
 		$item = $tocitem_List[$idx+1];
-		if ($item =~ /\[\[(.+?)\]\] (\d+-\d+-\d+)/) {
-			($nextpage, $nextpagename, $nextdate) = ($1, $1, $2);
+		if ($item =~ /\[\[(.+?)(\|.*)?\]\] (\d+-\d+-\d+)/) {
+			($nextpage, $nextpagename, $nextdate) = ($1, $1, $3);
 			$nextpage =~ s|^/|$toc_mainpage/|;
 			$nextpage = &FreeToNormal($nextpage);
 		}

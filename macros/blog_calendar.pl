@@ -131,7 +131,7 @@ sub MacroBlogCalendar {
 
 # 해당 날짜에 포스트가 있는 경우
 			my ($page, $pagename) = ("", "");
-			if ($tocitems =~ /^\[\[(.+)\]\] $cal_page$/m) {
+			if ($tocitems =~ /^\[\[(.+?)(\|.*)?\]\] $cal_page$/m) {
 				($page, $pagename) = ($1, $1);
 				$page =~ s|^/|$toc_mainpage/|;
 				$page = &FreeToNormal($page);
