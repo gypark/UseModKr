@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.19";
+$WikiVersion = "0.92K3-ext1.19a";
 $WikiRelease = "2003-02-11";
 
 $HashKey = "salt"; # 2-character string
@@ -1949,8 +1949,6 @@ sub MacroSubst {
 	$txt =~ s/\&__LT__;wantedpages\&__GT__;/&MacroWantedPages()/gei;
 ### <userlist>
 	$txt =~ s/\&__LT__;userlist\&__GT__;/&MacroUserList()/gei;
-### <includetoday([page,] day_offset)>
-	$txt =~ s/\&__LT__;includeday\(([^,\n]+,)?([-+]?\d+)\)&__GT__;/&MacroIncludeDay($1, $2)/gei;
 ###
 ###############
 	return $txt;
@@ -1981,6 +1979,8 @@ sub MacroIncludeSubst {
 	$txt =~ s/<include\((.*)\)>/&MacroInclude($1)/gei;
 ### toc 를 포함하지 않는 includenotoc 매크로 추가
 	$txt =~ s/<includenotoc\((.*)\)>/&MacroInclude($1, "notoc")/gei;
+### includday 매크로
+	$txt =~ s/<includeday\(([^,\n]+,)?([-+]?\d+)\)>/&MacroIncludeDay($1, $2)/gei;
 	return $txt;
 }
 ###
