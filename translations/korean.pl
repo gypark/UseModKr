@@ -703,4 +703,16 @@ Error occurred: %s
 에러가 발생했습니다: %s
 Send TrackBack Ping
 트랙백 핑 보내기
+Ping successfully sent
+핑을 보내는 데 성공했습니다
+Trackback address of this page:
+이 페이지의 트랙백 주소:
+Trackback from %s
+%s 로부터의 트랙백
+Title:
+제목:
+Content:
+내용:
+New TrackBack Received
+트랙백 핑을 받음
 END_OF_TRANSLATION

@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.61-beta1";
-$WikiRelease = "2004-07-18";
+$WikiVersion = "0.92K3-ext1.61-beta2";
+$WikiRelease = "2004-07-19";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -2115,7 +2115,7 @@ sub GetEditGuide {
 		$FullUrl = $q->url(-full=>1)  if ($FullUrl eq "");
 		my $url = $FullUrl . &ScriptLinkChar . $id;
 
-		my $excerpt = substr($Text{'text'},0,252);
+		my $excerpt = substr($Text{'text'},0,255);
 		$excerpt =~ s/(([\x80-\xff].)*)[\x80-\xff]?$/$1/;
 		$excerpt = &QuoteHtml($excerpt);
 		$excerpt =~ s/"/&quot;/g;
@@ -2708,7 +2708,8 @@ sub MacroSubst {
 	$txt =~ s/&__LT__;color\(([^,)]+),([^,)]+),([^\n]+?)\)&__GT__;/&MacroColorBk($1, $2, $3)/gei;
 	$txt =~ s/&__LT__;color\(([^,)]+),([^\n]+?)\)&__GT__;/&MacroColor($1, $2)/gei;
 ### <trackbacksent> <trackbackreceived>
-	$txt =~ s/&__LT__;trackback(sent|received)&__GT__;//gei;
+	$txt =~ s/&__LT__;trackbacksent&__GT__;/&MacroTrackBackSent()/gei;
+	$txt =~ s/&__LT__;trackbackreceived&__GT__;/&MacroTrackBackReceived()/gei;
 ###
 ###############
 	return $txt;
@@ -2751,6 +2752,17 @@ sub MacroIncludeSubst {
 ###############
 ### added by gypark
 ### 추가한 매크로의 동작부
+### trackback
+sub MacroTrackBackSent {
+	return "";
+}
+
+sub MacroTrackBackReceived {
+	$FullUrl = $q->url(-full=>1)  if ($FullUrl eq "");
+	my $url = $FullUrl . &ScriptLinkChar() . "action=trackback&id=$OpenPageName";
+	return &T('Trackback address of this page:') . " " . (&UrlLink("$url"))[0];
+}
+
 ### img from Jof
 sub MacroImgTag {
 	my ($url,$width,$height,$caption,$float) = @_;
@@ -5691,6 +5703,8 @@ sub DoOtherRequest {
 ### TrackBack
 		} elsif ($action eq "send_ping") {
 			&DoSendTrackBackPing();
+		} elsif ($action eq "trackback") {
+			&DoReceiveTrackBackPing();
 ###
 ###############
 		} else {
@@ -7332,7 +7346,7 @@ sub DoPostMain {
 	}
 ###
 ###############
-	&ReBrowsePage($id, "", 1);
+	&ReBrowsePage($id, "", 1) if ($id ne "!!");
 }
 
 sub UpdateDiffs {
@@ -9208,23 +9222,24 @@ sub DoSendTrackBackPing {
 			&OpenPage($id);
 			&OpenDefaultText();
 			my $string = $Text{'text'};
-			my $timestamp = &CalcDay($Now) . " " . &CalcTime($Now);
-			my $newtrackbacksent = "* $timestamp | $ping_url";
-			$string =~ s/(\<trackbacksent\>)/$1\n$newtrackbacksent/;
-			&DoPostMain($string, $id, &T('New TrackBack Sent'), $Section{'ts'}, 0, 0);
+			if ($string =~ /\<trackbacksent\>/) {
+				my $timestamp = &CalcDay($Now) . " " . &CalcTime($Now);
+				my $newtrackbacksent = "* $timestamp | $ping_url";
+				$string =~ s/(\<trackbacksent\>)/$1\n$newtrackbacksent/;
+				&DoPostMain($string, $id, &T('New TrackBack Sent'), $Section{'ts'}, 0, 0, "!!");
+			}
+			$result .= &T('Ping successfully sent');
 		} else {
 			$result .= &Ts('Error occurred: %s', "$code - $message");
 		}
 	}
 
-	if ($result ne "") {
-		print &GetHttpHeader();
-		print &GetHtmlHeader("$SiteName : ". &T('Send TrackBack Ping'), "");
-		print $q->h2(&T('Send TrackBack Ping')) . "\n";
-		print $result;
-		print "<hr size='1'>".Ts('Return to %s' , &GetPageLink($id));
-		print $q->end_html;
-	}
+	print &GetHttpHeader();
+	print &GetHtmlHeader("$SiteName : ". &T('Send TrackBack Ping'), "");
+	print $q->h2(&T('Send TrackBack Ping')) . "\n";
+	print $result;
+	print "<hr size='1'>".Ts('Return to %s' , &GetPageLink($id));
+	print $q->end_html;
 
 	return;
 }
@@ -9239,6 +9254,76 @@ sub UserCanSendTrackBackPing {
 	return 0;
 }
 
+sub DoReceiveTrackBackPing {
+	my $id = &GetParam('id');
+	my $normal_id = $id;
+
+	my $url = &GetParam('url');
+	my $title = &GetParam('title', $url);
+	my $blog_name = &GetParam('blog_name');
+	my $excerpt = &GetParam('excerpt');
+	if (length($excerpt) > 255) {
+		$excerpt = substr($excerpt, 0, 252);
+		$excerpt =~ s/(([\x80-\xff].)*)[\x80-\xff]?$/$1/;
+		$excerpt .= "...";
+	}
+	$excerpt =~ s/[\r\n]/ /g;
+	$excerpt = &QuoteHtml($excerpt);
+	$excerpt = "<nowiki>$excerpt</nowiki>";
+
+	if ($FreeLinks) {
+		$normal_id = &FreeToNormal($id);
+	}
+
+	if ($url eq '') {
+		&SendTrackBackResponse("1", "No URL (url)");
+	} elsif ($id eq '') {
+		&SendTrackBackResponse("1", "No Pagename (id)");
+	} elsif (! -f &GetPageFile($normal_id)) {
+		&SendTrackBackResponse("1", "No wikipage found : $id");
+	} else {
+		&OpenPage($id);
+		&OpenDefaultText();
+		my $string = $Text{'text'};
+		if ($string =~ /\<trackbackreceived\>/) {
+			my $timestamp = &CalcDay($Now) . " " . &CalcTime($Now);
+			my $newtrackbackreceived = "* " .
+				&Ts('Trackback from %s', "'''<nowiki>$blog_name</nowiki>'''") .
+				" $timestamp\n" .
+				"** " . &T('Title:') . " [$url $title]\n" .
+				"** " . &T('Content:') . " $excerpt";
+			$string =~ s/(\<trackbackreceived\>)/$1\n$newtrackbackreceived/;
+			&DoPostMain($string, $id, &T('New TrackBack Received'), $Section{'ts'}, 0, 0, "!!");
+			&SendTrackBackResponse(0, "");
+		} else {
+			&SendTrackBackResponse(1, "Wikipage is not set to receive trackback : $id");
+		}
+	}
+}
+
+sub SendTrackBackResponse {
+	my ($code, $message) = @_;
+
+	if ($code == 0) {
+		print <<END;
+Content-Type: application/xml; charset: iso-8859-1\n
+<?xml version="1.0" encoding="iso-8859-1"?>
+<response>
+<error>0</error>
+</response>
+END
+	} else {
+		print <<END;
+Content-Type: application/xml; charset: iso-8859-1\n
+<?xml version="1.0" encoding="iso-8859-1"?>
+<response>
+<error>$code</error>
+<message>$message</message>
+</response>
+END
+	}
+}
+	
 ### 통채로 추가한 함수들의 끝
 ###############
 
