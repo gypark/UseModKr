@@ -15,8 +15,8 @@ $KeepDays    = 14;              # Days to keep old revisions
 $SiteBase    = "";              # Full URL for <BASE> header
 $FullUrl     = "";              # Set if the auto-detected URL is wrong
 $RedirType   = 1;               # 1 = CGI.pm, 2 = script, 3 = no redirect
-$AdminPass   = "";              # Set to non-blank to enable password(s)
-$EditPass    = "";              # Like AdminPass, but for editing only
+$AdminPass   = "admin";         # Set to non-blank to enable password(s)
+$EditPass    = "edit";          # Like AdminPass, but for editing only
 $StyleSheet  = "wiki.css";      # URL for CSS stylesheet (like "/wiki.css")
 $NotFoundPg  = "";              # Page for not-found links ("" for blank pg)
 $EmailFrom   = "Wiki";          # Text for "From: " field of email notes.

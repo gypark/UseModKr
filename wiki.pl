@@ -7176,6 +7176,7 @@ sub GetPageLinksFromFile {
 ### 통채로 추가한 함수들의 끝
 ###############
 
+
 &DoWikiRequest()  if ($RunCGI && ($_ ne 'nocgi'));   # Do everything.
 1; # In case we are loaded from elsewhere
 # == End of UseModWiki script. ===========================================
