@@ -50,6 +50,8 @@ $SizeBottomFrame = 110;
 $LogoPage   = "";	# this page will be displayed when no parameter
 ### 페이지 처리 시간을 출력한다
 $CheckTime = 0;   # 1 = mesure the processing time (requires Time::HiRes module), 0 = do not 
+### 내부 아이콘이 저장된 디렉토리
+$IconDir = "./icons/";	# directory containing icon files
 ### 
 ##
 ##########################################################

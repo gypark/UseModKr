@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.28";
+$WikiVersion = "0.92K3-ext1.28a";
 $WikiRelease = "2003-02-24";
 
 $HashKey = "salt"; # 2-character string
@@ -70,7 +70,7 @@ use vars qw(
 	$UserGotoBar $UserGotoBar2 $UserGotoBar3 $UserGotoBar4 
 	$ConfigFile $SOURCEHIGHLIGHT %SRCHIGHLANG $LinkFirstChar
 	$EditGuideInExtern $SizeTopFrame $SizeBottomFrame
-	$LogoPage $CheckTime $LinkDir
+	$LogoPage $CheckTime $LinkDir $IconDir
 	);
 ###
 ###############
@@ -152,6 +152,7 @@ $SizeTopFrame = 160;
 $SizeBottomFrame = 110;
 $LogoPage   = "";	# this page will be displayed when no parameter
 $CheckTime = 0;   # 1 = mesure the processing time (requires Time::HiRes module), 0 = do not 
+$IconDir = "./icons";
 ###
 ###############
 
@@ -886,10 +887,10 @@ sub GetRcHtml {
 	my $bookmark;
 	my $bookmarkuser = &GetParam('username', "");
 	my ($rcnew, $rcupdated, $rcdiff, $rcdeleted) = (
-			"<img style='border:0' src='icons/rc-new.gif'>",
-			"<img style='border:0' src='icons/rc-updated.gif'>",
-			"<img style='border:0' src='icons/rc-diff.gif'>",
-			"<img style='border:0' src='icons/rc-deleted.gif'>"
+			"<img style='border:0' src='$IconDir/rc-new.gif'>",
+			"<img style='border:0' src='$IconDir/rc-updated.gif'>",
+			"<img style='border:0' src='$IconDir/rc-diff.gif'>",
+			"<img style='border:0' src='$IconDir/rc-deleted.gif'>"
 	);
 	$bookmark = &GetParam('bookmark',-1);
 ###
@@ -1756,7 +1757,7 @@ sub GetGotoBar {
 ### replaceed by gypark
 ### subpage 의 경우, 상위페이지 이름 앞에 아이콘 표시
 #		$bartext .= " </td><td> " . &GetPageLink($main);
-		$bartext .= " </td><td> <img src=\"./icons/parentpage.gif\" border=\"0\" alt=\""
+		$bartext .= " </td><td> <img src=\"$IconDir/parentpage.gif\" border=\"0\" alt=\""
 					. T('Main Page:') . " $main\" align=\"absmiddle\">" . &GetPageLink($main);
 ###
 ###############
@@ -2299,7 +2300,7 @@ sub MacroWantedPages {
 	my %numOfReverse;
 	my $txt;
 
-	foreach $pageline (&GetFullLinkList("exists=0&sort=0")) {
+	foreach $pageline (&GetFullLinkList("empty=1&exists=0&sort=0")) {
 		my @links = split(' ', $pageline);
 		my $id = shift(@links);
 		foreach $page (@links) {
@@ -2972,7 +2973,7 @@ sub InterPageLink {
 ### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
 ### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
 #	return ("<a href=\"$url\">$name</a>", $punct);
-	return ("<a href=\"$url\">$name</a><a href=\"$url\" target=\"_blank\"><img src=\"./icons/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>", $punct);
+	return ("<a href=\"$url\">$name</a><a href=\"$url\" target=\"_blank\"><img src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>", $punct);
 ###
 ###############
 
@@ -2998,7 +2999,7 @@ sub StoreBracketInterPage {
 ### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
 ### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
 #	return &StoreRaw("<a href=\"$url\">[$text]</a>");
-	return &StoreRaw("<a href=\"$url\">[$text]</a><a href=\"$url\" target=\"_blank\"><img src=\"./icons/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>");
+	return &StoreRaw("<a href=\"$url\">[$text]</a><a href=\"$url\" target=\"_blank\"><img src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>");
 ###
 ###############
 }
@@ -3217,7 +3218,7 @@ sub UrlLink {
 ### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
 ### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
 #	return ("<a href=\"$name\">$name</a>", $punct);
-	return ("<a href=\"$name\">$protocol$name</a><a href=\"$name\" target=\"_blank\"><img src=\"./icons/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>", $punct);
+	return ("<a href=\"$name\">$protocol$name</a><a href=\"$name\" target=\"_blank\"><img src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>", $punct);
 ###
 ###############
 }
@@ -3234,7 +3235,7 @@ sub StoreBracketUrl {
 ### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
 ### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
 #	return &StoreRaw("<a href=\"$url\">[$text]</a>");
-	return &StoreRaw("<a href=\"$url\">[$text]</a><a href=\"$url\" target=\"_blank\"><img src=\"./icons/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>");
+	return &StoreRaw("<a href=\"$url\">[$text]</a><a href=\"$url\" target=\"_blank\"><img src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>");
 ###
 ###############
 }
@@ -5815,7 +5816,7 @@ sub PrintPageList {
 # 앵커를 삽입
 			print "\n<a name=\"H_$indexTitle[$count]\"></a>";
 			print $q->h3($indexTitle[$count] 
-					. "&nbsp;<a href=\"#PAGE_TOP\"><img src=\"icons/gotop.gif\" align=\"texttop\" alt=\"" . T('Top') 
+					. "&nbsp;<a href=\"#PAGE_TOP\"><img src=\"$IconDir/gotop.gif\" align=\"texttop\" alt=\"" . T('Top') 
 					. "\"></a>");
 			$count2 = $count + 1;
 ### gypark 의 색인 패치
