@@ -763,4 +763,6 @@ Updating Banned text
 등록 금지 단어 목록 갱신
 Title will be converted into [[/Title]] automatically.
 제목은 자동으로 [[/제목]]의 형식으로 변환됩니다.
+Monthly View
+월별 보기
 END_OF_TRANSLATION
