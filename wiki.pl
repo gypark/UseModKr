@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.44a";
+$WikiVersion = "0.92K3-ext1.44b";
 $WikiRelease = "2003-04-22";
 
 $HashKey = "salt"; # 2-character string
@@ -7782,7 +7782,7 @@ sub OekakiSave {
 
 # 저장
 	&CreateDir($UploadDir);
-	&WriteStringToFile($target_full, substr($buffer, $p+2));
+	&WriteBinaryToFile($target_full, substr($buffer, $p+2));
 
 # 락을 해제
 	&ReleaseLockDir('oekaki');
@@ -7991,6 +7991,15 @@ sub SaveHiddenPageFile {
 	chmod(0644, $HiddenPageFile);
 
 	return 1;
+}
+
+sub WriteBinaryToFile {
+	my ($file, $string) = @_;
+
+	open (OUT, ">$file") or die(Ts('cant write %s', $file) . ": $!");
+	binmode(OUT);
+	print OUT  $string;
+	close(OUT);
 }
 
 ### 통채로 추가한 함수들의 끝
