@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.80";
-$WikiRelease = "2005-03-02";
+$WikiVersion = "0.92K3-ext1.81";
+$WikiRelease = "2005-03-03";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -2598,12 +2598,7 @@ sub CommonMarkup {
 		s/$ISBNPattern/&StoreISBN($1)/geo;
 		s/CD:\s*(\d+)/&StoreHotTrack($1)/geo;
 
-###############
-### commented by gypark
-### 매크로 처리 시점을 밖으로 빼낸다
 		$_ = &MacroSubst($_); 				# luke added
-###
-###############
 
 ###############
 ### replaced by gypark
@@ -8675,6 +8670,7 @@ sub TemplateMacroSubst {
 	$text =~ s/<template_pagename>/$newpage/gi;
 	$text =~ s/<template_mainpagename>/$newpage_main/gi;
 	$text =~ s/<template_subpagename>/$newpage_sub/gi;
+	$text =~ s/<template_date>/&CalcDay($Now)/gei;
 
 	return "$text";
 }
