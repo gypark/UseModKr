@@ -2,9 +2,13 @@
 
 # 설정들
 $DataDir = "data";
-$TempDir = "$DataDir/temp";
-$UploadDir = "$DataDir/upload";
-$LockDir = "$TempDir/lock";
+$ConfigFile = "config.pl";
+if (-f $ConfigFile) {
+	do "$ConfigFile";
+} else {
+	die "Can not load config file";
+}
+
 $filename = "oekaki.png";
 
 # POST 데이타 읽음
@@ -44,7 +48,7 @@ print "Content-type: text/plain\n\n";
 print "success\n";
 1;
 
-### wiki.pl 에서 따온 함수들
+### wiki.pl 에서 복사한 함수들
 
 ### 화일명이 겹칠 경우 가장 최근 화일의 prefix 를 얻는 함수
 sub GetLastPrefix {
