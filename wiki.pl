@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.13";
-$WikiRelease = "2002-12-23";
+$WikiVersion = "0.92K3-ext1.14";
+$WikiRelease = "2002-12-30";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -1933,6 +1933,8 @@ sub MacroSubst {
 	$txt =~ s/\&__LT__;orphanedpages\(([-+])?(\d+)\)\&__GT__;/&MacroOrphanedPages($1, $2)/gei;
 ### <WatedPages>
 	$txt =~ s/\&__LT__;wantedpages\&__GT__;/&MacroWantedPages()/gei;
+### <userlist>
+	$txt =~ s/\&__LT__;userlist\&__GT__;/&MacroUserList()/gei;
 ###
 ###############
 	return $txt;
@@ -1971,6 +1973,26 @@ sub MacroIncludeSubst {
 ###############
 ### added by gypark
 ### 추가한 매크로의 동작부
+### <UserList>
+sub MacroUserList {
+	my (@userlist, $result);
+	my $usernumber;
+	opendir(USERLIST, $UserDir);
+	@userlist = readdir(USERLIST);
+	close(USERLIST);
+	shift @userlist;
+	shift @userlist;
+	@userlist = sort @userlist;
+	foreach $usernumber (0..(@userlist-1)) {
+		@userlist[$usernumber] =~ s/(.*)\.db/($1)/gei;
+		@userlist[$usernumber] = &StorePageOrEditLink("@userlist[$usernumber]", "@userlist[$usernumber]") . "<br>";
+	}
+
+	$result = "@userlist";
+	
+	return $result;
+}
+
 ### <WantedPages>
 sub MacroWantedPages {
 	my ($pageline, @found, $page);
