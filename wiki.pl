@@ -3599,8 +3599,9 @@ sub InterPageLink {
 #	return ("<a href=\"$url\">$name</a>", $punct);
 	my $link_html = '';
 	if (!($image)) {
-		$image = "$InterIconDir/default-inter.gif";
-	} elsif (!($image =~ m/\//)) {
+		$image = "default-inter.gif";
+	}
+	if (!($image =~ m/\//)) {
 		$image = "$InterIconDir/$image";
 	}
 	$link_html = "<A class='inter' href='$url_main'>" .
@@ -3670,7 +3671,7 @@ sub GetSiteUrl {
 		}
 		if (!defined($InterSite{'Upload'})) {
 ### interwiki 아이콘
-			$InterSite{'Upload'} = "$UploadUrl\/|$InterIconDir\/default-upload.gif";
+			$InterSite{'Upload'} = "$UploadUrl\/|default-upload.gif";
 		}
 ###
 ###############
@@ -3679,10 +3680,10 @@ sub GetSiteUrl {
 ### Local, LocalWiki 인터위키 from usemod 1.0
 ### interwiki 아이콘 같이 적용
 		if (!defined($InterSite{'LocalWiki'})) {
-			$InterSite{'LocalWiki'} = $ScriptName . &ScriptLinkChar() . "|$InterIconDir\/default-local.gif";
+			$InterSite{'LocalWiki'} = $ScriptName . &ScriptLinkChar() . "|default-local.gif";
 		}
 		if (!defined($InterSite{'Local'})) {
-			$InterSite{'Local'} = $ScriptName . &ScriptLinkChar() . "|$InterIconDir\/default-local.gif";
+			$InterSite{'Local'} = $ScriptName . &ScriptLinkChar() . "|default-local.gif";
 		}
 ###
 ###############
