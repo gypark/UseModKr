@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.61";
+$WikiVersion = "0.92K3-ext1.61a";
 $WikiRelease = "2004-07-21";
 
 $HashKey = "salt"; # 2-character string
@@ -73,7 +73,7 @@ use vars qw(
 	$LogoPage $CheckTime $LinkDir $IconDir $CountDir $UploadDir $UploadUrl
 	$HiddenPageFile $TemplatePage
 	$InterWikiMoniker $SiteDescription $RssLogoUrl $RssDays $RssTimeZone
-	$SlashLinks $InterIconDir $SendPingAllowed
+	$SlashLinks $InterIconDir $SendPingAllowed $JavaScript
 	);
 ###
 ###############
@@ -1936,7 +1936,7 @@ sub GetHtmlHeader {
 ### 헤더 출력 개선
 	$html .= qq(<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=$HttpCharset">\n);
 	$html .= qq(<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">\n);
-	$html .= qq(<script src="wikiscript.js" language="javascript" type="text/javascript"></script>);
+	$html .= qq(<script src="$JavaScript" language="javascript" type="text/javascript"></script>);
 	$html .= "\n";
 ###
 ###############

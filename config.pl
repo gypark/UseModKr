@@ -73,6 +73,8 @@ $SlashLinks   = 0;      # 1 = use script/action links, 0 = script?action
 $InterIconDir = "./icons-inter/"; # directory containing interwiki icons
 ### trackback 보내기
 $SendPingAllowed = 0;   # 0 - anyone, 1 - who can edit, 2 - who is admin
+### java script 함수들
+$JavaScript  = "wikiscript.js";   # URL for JavaScript code (like "/wikiscript.js")
 ##
 ##########################################################
 
