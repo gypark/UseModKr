@@ -852,7 +852,7 @@ sub GetRcHtml {
 				"<TR class='rc'>".
 				"<TD colspan=6 class='rcdate'><b>" . $date . "</b>";
 			if ($bookmarkuser eq "") {
-				$html .= "<br>&nbsp;</TD></TR>\n";
+				$html .= "</TD></TR>\n";
 			} else {
 				$html .= "  [" .&ScriptLink("action=bookmark&time=$ts",T('set bookmark')) ."]"
 					. "</TD></TR>\n";
