@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.47";
-$WikiRelease = "2003-09-05";
+$WikiVersion = "0.92K3-ext1.47a";
+$WikiRelease = "2003-09-06";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -2317,39 +2317,77 @@ sub MacroComments {
 		$idvalue = "[[$UserID]]";
 	}
 
-	my ($readonly_style, $readonly_msg);
-	my $submit_button = "<input type=\"submit\" value=\"" . T('Submit') . "\">";
-	if ((!&UserCanEdit($id)) && (abs($up) < 100)) {
-		$readonly_style = 'readonly="true" style="background-color: #f0f0f0;"';
-		$readonly_msg = T('Comment is not allowed');
-		$submit_button = "";
+	my ($hidden_long, $readonly_true, $readonly_style, $readonly_msg);
+	my ($name_field, $comment_field);
+	my $submit_button = $q->submit(-name=>"Submit",-value=>T("Submit"));
+
+	if ($long) {
+		$hidden_long =
+			$q->hidden(-name=>"long",-value=>"1") .
+			"<br>";
 	}
 
-	my $comment_field;
-	if ($long) {
-		$comment_field =
-			"<input type=\"hidden\" name=\"long\" value=\"1\">" .
-			":<br><TEXTAREA name='comment' $readonly_style class=comments rows=10 cols=80>" . 
-			"$readonly_msg" .
-			"</TEXTAREA>";
-	} else {
-		$comment_field =
-			": <INPUT name='comment' $readonly_style class=comments type=text size=60 value=\"$readonly_msg\">";
+	if ((!&UserCanEdit($id)) && (abs($up) < 100)) {		# 에디트 불가
+		$readonly_true = "true";
+		$readonly_style = "background-color: #f0f0f0;";
+		$readonly_msg = T('Comment is not allowed');
+		$submit_button = "";
+		$name_field = $q->textfield(-name=>"name",
+									-class=>"comments",
+									-size=>"10",
+									-maxlength=>"80",
+									-readonly=>"$readonly_true",
+									-style=>"$readonly_style",
+									-default=>"$idvalue");
+		if ($long) {		# longcomments
+			$comment_field = $q->textarea(-name=>"comment",
+									-class=>"comments",
+									-rows=>"10",
+									-cols=>"80",
+									-readonly=>"$readonly_true",
+									-style=>"$readonly_style",
+									-default=>"$readonly_msg");
+		} else {			# comments
+			$comment_field = $q->textfield(-name=>"comment", 
+											-class=>"comments",
+											-size=>"60",
+											-readonly=>"$readonly_true",
+											-style=>"$readonly_style",
+											-default=>"$readonly_msg");
+		}
+	} else {											# 에디트 가능
+		$name_field = $q->textfield(-name=>"name",
+									-class=>"comments",
+									-size=>"10",
+									-maxlength=>"80",
+									-default=>"$idvalue");
+		if ($long) {		# longcomments
+			$comment_field = $q->textarea(-name=>"comment",
+									-class=>"comments",
+									-rows=>"10",
+									-cols=>"80"
+									-default=>"");
+		} else {			# comments
+			$comment_field = $q->textfield(-name=>"comment",
+											-class=>"comments",
+											-size=>"60",
+											-default=>"");
+		}
 	}
 
 	return
-		"<form name=\"comments\" method=\"POST\">" .
-		"<input type=\"hidden\" name=\"action\" value=\"comments\">".
-		"<input type=\"hidden\" name=\"id\" value=\"$id\">" .
-		"<input type=\"hidden\" name=\"pageid\" value=\"$pageid\">" .
-		"<input type=\"hidden\" name=\"up\" value=\"$up\">" .
-		T('Name') .
-		": <INPUT name='name' $readonly_style class=comments type=text size=10 value=\"$idvalue\"> " .
-		T('Comment') . 
-		$comment_field .
-		"&nbsp;" .
+		$q->startform(-name=>"comments",-method=>"POST",-action=>"$ScriptName") .
+		$q->hidden(-name=>"action",-value=>"comments") .
+		$q->hidden(-name=>"id",-value=>"$id") .
+		$q->hidden(-name=>"pageid",-value=>"$pageid") .
+		$q->hidden(-name=>"up",-value=>"$up") .
+		T('Name') . ": " .
+		$name_field . "&nbsp;" .
+		T('Comment') . ": " .
+		$hidden_long .
+		$comment_field . "&nbsp;" .
 		$submit_button .
-		"</form>";
+		$q->endform;
 }
 
 ### MyInterest
@@ -3458,7 +3496,7 @@ sub ProcessPostMacro {
 	$string = &PostMacroMySign($string);
 	### comments from Jof
 	if (length($id) != 0) {
-		$string =~ s/<((long)?)comments\(([-+]?\d+)\)>/<$1comments($id,$3)>/g;
+		$string =~ s/<((long)?comments)\(([-+]?\d+)\)>/<$1($id,$3)>/g;
 	}
 ### 
 	return $string;
@@ -8154,22 +8192,22 @@ sub DoComments {
 	$name = &GetRemoteHost(0) if ($name eq "");
 	$name =~ s/,/./g;
 	$newcomments = &QuoteHtml($newcomments);
-	$newcomments =~ s/(----+)/<nowiki>$1<\/nowiki>/g;
 
 	&OpenPage($id);
 	&OpenDefaultText();
 	$string = $Text{'text'};
 	if ($long) {
-		$newcomments =~ s/^[\r\n ]*//g;
-		$newcomments =~ s/[\r\n ]*$//g;
-		$newcomments =~ s/(^|\n)/$1: /g;
-		$newcomments =~ s/(^|\n)(: +(\r?\n))+/$1$3/mg;
+		$newcomments =~ s/^\s*//g;
+		$newcomments =~ s/\s*$//g;
+		$newcomments =~ s/(\n)\s*(\r?\n)/$1$2/g;
+		$newcomments =~ s/(\r?\n)/ \\\\$1/g;
 		if ($up > 0) {
 			$string =~ s/(\<longcomments\($id,$up\)\>)/\n$newcomments <mysign($name,$timestamp)>\n$1/;
 		} else {
 			$string =~ s/(\<longcomments\($id,$up\)\>)/$1\n$newcomments <mysign($name,$timestamp)>\n/;
 		}
 	} else {
+		$newcomments =~ s/(----+)/<nowiki>$1<\/nowiki>/g;
 		if ($up > 0) {
 			$string =~ s/\<comments\($id,$up\)\>/* $name : $newcomments - <small>$timestamp<\/small>\n\<comments\($id,$up\)\>/;
 		} else {
