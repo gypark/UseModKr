@@ -11,7 +11,7 @@
 body {
 	margin-left: 1%;
 	margin-right: 1%;
-	font: normal normal normal 9pt/160% gulim, "Times New Roman", serif;
+	font: normal normal normal 75%/160% gulim, "Times New Roman", serif;
 	text-align:justify;
 	background: #fefefe;
 	color: black;
@@ -28,7 +28,7 @@ em {
 
 /* 줄 앞에 공백이 있는 경우 생기는 pre */
 pre {
-	font: normal normal normal 9pt/160% dotumche, courier, monospace;
+	font: normal normal normal 100%/160% dotumche, courier, monospace;
 	border: none;
 	padding: 0.5em 0.5em 0.5em 0.5em;
 	white-space: pre;
@@ -38,7 +38,7 @@ pre {
 
 /* {{{ }}} 태그에 의한 pre */
 PRE.code   {
-	font: normal normal normal 9pt/160% dotumche, courier, monospace;
+	font: normal normal normal 100%/160% dotumche, courier, monospace;
 	border: 1px solid silver;
 	padding: 0.5em 0.5em 0.5em 0.5em;
 	white-space:pre;
@@ -51,7 +51,7 @@ PRE.code   {
 
 /* {{{lang }}} 태그에 의한 pre */
 PRE.syntax {
-	font: normal normal normal 9pt/160% dotumche, courier, monospace;
+	font: normal normal normal 100%/160% dotumche, courier, monospace;
 	border: 1px solid silver;
 	padding: 0.5em 0.5em 0.5em 0.5em;
 	white-space:pre;
@@ -64,7 +64,7 @@ PRE.syntax {
 
 /* <code> 태그 */
 code {
-	font: normal normal normal 9pt/160% dotumche, courier, monospace;
+	font: normal normal normal 100%/160% dotumche, courier, monospace;
 	margin-top: 8pt;
 	margin-bottom: 8pt;
 	white-space:pre;
@@ -82,7 +82,7 @@ tr {
 }
 
 th {
-	font: normal normal normal 9pt/160% gulim, "Times New Roman", serif;
+	font: normal normal normal 75%/160% gulim, "Times New Roman", serif;
 	border-style: solid;
 	border-color: silver;
 	border-width: 1px 0px 0px 1px;
@@ -90,7 +90,7 @@ th {
 }
 
 td {
-	font: normal normal normal 9pt/160% gulim, "Times New Roman", serif;
+	font: normal normal normal 75%/160% gulim, "Times New Roman", serif;
 	border-style: solid;
 	border-color: silver;
 	border-width: 1px 0px 0px 1px;
@@ -99,7 +99,7 @@ td {
 
 /* 리스트 */
 li {
-	font: normal normal normal 9pt/160% gulim, "Times New Roman", serif;
+	font: normal normal normal 100%/160% gulim, "Times New Roman", serif;
 	text-align:justify;
 	margin-top: 0.2em;
 	margin-bottom: 0.2em;
@@ -123,12 +123,12 @@ h1,h2,h3,h4,h5 {
 }
 
 h1 {
-	font-size: 18pt;
+	font-size: 200%;
 	padding-left: 3pt;
 }
 
 h2 {
-	font-size: 14pt;
+	font-size: 155%;
 	padding-left:6pt;
 	background: #CCCCCC;
 	color: #000000;
@@ -136,7 +136,7 @@ h2 {
 }
 
 h3 {
-	font-size: 13pt;
+	font-size: 144%;
 	padding-left:9pt;
 	background: #CCCCCC;
 	color: #000000;
@@ -144,7 +144,7 @@ h3 {
 }
 
 h4 {
-	font-size: 12pt;
+	font-size: 133%;
 	padding-left:12pt;
 	background: #CCCCCC;
 	color: #000000;
@@ -152,7 +152,7 @@ h4 {
 }
 
 h5 {
-	font-size: 11pt;
+	font-size: 122%;
 	padding-left:15pt;
 	background: #CCCCCC;
 	color: #000000;
@@ -160,7 +160,7 @@ h5 {
 }
 
 h6 {
-	font-size: 10pt;
+	font-size: 111%;
 }
 
 /* 일반적인 링크 */
@@ -228,7 +228,7 @@ A.memo:hover
 /* 기타 */
 SELECT,TEXTAREA
 {
-	font: normal normal normal 10pt/160% dotumche, courier, monospace;
+	font: normal normal normal 110%/160% dotumche, courier, monospace;
 	border: 1px solid silver;
 	padding: 0.2em 0.5em 0.2em 0.5em;
 	background: white;
@@ -254,7 +254,7 @@ IMG.isbn {
 /* 페이지 소스 보기 텍스트영역 */
 TEXTAREA.view
 {
-	font: normal normal normal 10pt/160% dotumche, courier, monospace;
+	font: normal normal normal 110%/160% dotumche, courier, monospace;
 	border: 1px solid silver;
 	padding: 0.2em 0.5em 0.2em 0.5em;
 	background: #F9F9F9;
@@ -416,7 +416,7 @@ TR.diff
 
 TD.diff
 {
-	font: normal normal normal 9pt/160% Gulimche, Courier, monospace;
+	font: normal normal normal 75%/160% Gulimche, Courier, monospace;
 	border: none;
 }
 
@@ -424,14 +424,14 @@ TD.diffrange
 {
 	text-align: center;
 	border: none;
-	font: italic normal bold 9pt/160% Gulim, "Times New Roman", Serif;
+	font: italic normal bold 75%/160% Gulim, "Times New Roman", Serif;
 	background: #CCCCCC;
 	color: black;
 }
 
 TD.diffremove
 {
-	font: normal normal normal 9pt/160% Gulimche, Courier, monospace;
+	font: normal normal normal 75%/160% Gulimche, Courier, monospace;
 	border: none;
 	background: #FFFFCC;
 	color: black;
@@ -439,7 +439,7 @@ TD.diffremove
 
 TD.diffadd
 {
-	font: normal normal normal 9pt/160% Gulimche, Courier, monospace;
+	font: normal normal normal 75%/160% Gulimche, Courier, monospace;
 	border: none;
 	background: #CCFFCC;
 	color: black;
@@ -462,11 +462,7 @@ TD.rc {
 
 TD.rcdate {
 	border: none;
-	font-size: 10pt;
-}
-
-TD.rcdate A {
-	font-size: 9pt;
+	font-size: 80%;
 }
 
 TD.rcpage {
@@ -524,7 +520,7 @@ CAPTION.calendar A:hover
 	background:transparent;
 	color: black;
 	text-decoration: none;
-	font: normal normal bold 9pt/160% Gulim, Serif;
+	font: normal normal bold 75%/160% Gulim, Serif;
 	margin: 0px 0px 0px 0px;
 }
 CAPTION.calendar A:hover
@@ -536,7 +532,7 @@ TH.calendar
 {
 	border: none;
 	text-align: center;
-	font: bold 9pt/100% Gulimche, Curier, monospace;
+	font: bold 75%/100% Gulimche, Curier, monospace;
 }
 
 TR.calendar
@@ -548,14 +544,14 @@ TD.calendar
 {
 	border: none;
 	text-align: right;
-	font: 9pt/100% Gulimche, Curier, monospace;
+	font: 75%/100% Gulimche, Curier, monospace;
 }
 
 TD.calendartoday
 {
 	border: 1pt solid silver;
 	text-align: right;
-	font: 9pt/100% Gulimche, Curier, monospace;
+	font: 75%/100% Gulimche, Curier, monospace;
 	background: yellow;
 	color: black;
 
