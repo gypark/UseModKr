@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.44";
-$WikiRelease = "2003-04-06";
+$WikiVersion = "0.92K3-ext1.44a";
+$WikiRelease = "2003-04-22";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -7988,7 +7988,7 @@ sub SaveHiddenPageFile {
 	$data = join($FS1, %HiddenPage);
 
 	&WriteStringToFile($HiddenPageFile, $data);
-	chmod(0600, $HiddenPageFile);
+	chmod(0644, $HiddenPageFile);
 
 	return 1;
 }
