@@ -8,15 +8,10 @@ package UseModWiki;
 	"Emoticon",
 	);
 
-sub DoHelp {
-	my $idx = &GetParam("index", "");
-	my $title = T("$HelpItem[$idx]");
-	my $text;
 
-	$text = "== $title ==\n";
+########### Make Page
 
-	if ($idx eq 0) {
-		$text .= qq(
+$HelpText[0] = qq(
 === 한글이름페이지 ===
 
 한글페이지이름 만드는 법입니다.
@@ -51,9 +46,11 @@ sub DoHelp {
 "/"를 하고 페이지 이름을 만들면 현재 편집하고 있는 문서 밑으로 페이지가 만들어집니다. 이 것을 확인하려면 위의 메뉴바에 있는 Index를 눌러보시면 됩니다. 또한 하위페이지로 들어가면 메뉴바에 상위페이지이름이 보인답니다. 지금 위, 아래 메뉴바에 '문서작성법연습'이라고 보이지요?
  [[/연습페이지]]
 라고 입력하면 [[/연습페이지]]라고 보입니다. 그러면 이 페이지의 주소는 문서작성법연습/새페이지만들기연습/연습페이지 라는 이름을 갖게 됩니다. 이름이 너무 길면 딴 곳에서 링크를 걸 때 힘들어지므로 하위페이지는 꼭 필요할 때만 만드세요.
-		);
-	} elsif ($idx eq 1) {
-		$text .= qq|
+);
+
+########### Text Formatting
+
+$HelpText[1] = qq|
 === 글자 장식 ===
 
 UseModWiki는 "따옴표(')"를 사용합니다. (html도 사용할 수 있지만, 다른 위키에서도 쓰이는 방법이니 될 수 있으면 이 방법을 익히세요.)
@@ -139,9 +136,11 @@ Preview나 Save 했을 때 이렇게 보입니다:
 ### 숫자 리스트를 세개 넣었을 때
 ## 숫자리스트를 두개 넣었을 때
 
-		|;
-	} elsif ($idx eq 2) {
-		$text .= qq(
+|;
+
+########### Link and Image
+
+$HelpText[2] = qq(
 === 이미지 넣기 ===
 
 이미지는 그냥 주소만 쓰면 됩니다.
@@ -230,9 +229,11 @@ TABLE: bgcolor=yellow cellpadding=2 cellspacing=5 border=1 width=90% align=cente
 || first || second || third ||
 |||| span four || five ||
 
-		);
-	} elsif ($idx eq 3) {
-		$text .= q|
+);
+
+########### Macro
+
+$HelpText[3] = q|
 매크로는 꺽쇠로 둘러싸인 이런 저런 목적의 키워드입니다. * 위키 링크와 헷갈리므로 대소문자를 섞어 쓰지 않도록 하셔야 합니다.
 
 === <nowiki><date>, <time>, <datetime></nowiki> ===
@@ -281,17 +282,14 @@ See Also: <TitleSearch(망년)>
 페이지를 찾아가는 폼을 출력. 문자열은 디폴트...
 
 <goto(바보)>
-	|;
-	}
 
-	elsif ($idx eq 4) {
-		if ($UseEmoticon eq 0) {
-			$text .= q|
-'''현재 이 홈페이지에서는 이모티콘을 사용하지 않도록 설정되어 있습니다.'''
-'''따라서 아래의 도움말은 적용되지 않습니다.'''
-			|;
-		}
-		$text .= q|
+|;
+
+########### Emoticon
+
+$HelpText[4] = q|
+'''홈페이지 관리자가 이모티콘을 사용하도록 허용한 경우에 적용됩니다'''
+
 이모티콘은 감정표현에 사용되는 작은 그림입니다. <br>
 다음과 같은 문자열 중 하나를 입력하시면 왼쪽의 그림이 자동으로 삽입됩니다.
 
@@ -302,14 +300,10 @@ See Also: <TitleSearch(망년)>
 * :-( <nowiki>:-( :(</nowiki>
 * :-p <nowiki>:-p :-P :p :P</nowiki>
 * ;-) <nowiki>;-) ;)</nowiki>
-	|;
-	}
 
-	$ClickEdit = 0;
-	$UseEmoticon = 1;
-	print &GetHttpHeader();
-	print &GetHtmlHeader(T('Help'). ": $title", "");
-	print &WikiToHTML($text);
-}
+|;
+
+
+############# end of help contents
 
 1;

@@ -4540,11 +4540,25 @@ sub DoPreview {
 }
 
 ###############
-### removed by gypark
+### replaceed by gypark
 ### 도움말 별도의 화일로 분리
-# sub DoHelp {
-# ...
-# }
+sub DoHelp {
+	my $idx = &GetParam("index", "");
+
+	require mod_edithelp;
+	use vars  qw(@HelpItem @HelpText);
+	my $title = T("$HelpItem[$idx]");
+	my $text;
+
+	$text = "== $title ==\n";
+	$text .= $HelpText[$idx];
+
+	$ClickEdit = 0;
+	$UseEmoticon = 1;
+	print &GetHttpHeader();
+	print &GetHtmlHeader(T('Editing Help :'). " $title", "$title");
+	print &WikiToHTML($text);
+}
 ###
 ###############
 
@@ -4571,12 +4585,6 @@ sub DoOtherRequest {
 ###
 ###############
 		} elsif ($action eq "help") {				# luke added
-###############
-### added by gypark
-### 도움말 별도의 화일로 분리
-			require mod_edithelp;
-###
-###############
 			&DoHelp();								# luke added
 		} elsif ($action eq "preview") {			# luke added
 			&DoPreview();							# luke added
