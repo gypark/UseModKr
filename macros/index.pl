@@ -91,7 +91,7 @@ sub MacroIndex {
 		$temp = ", ";
 	}
 
-	$temp .= "<A name='INDEX_$MyIndexCounter' href='#INDEXR_$MyIndexCounter'>$MyIndexCounter</A>";
+	$temp .= "<A class='wordindex' name='INDEX_$MyIndexCounter' href='#INDEXR_$MyIndexCounter'>$MyIndexCounter</A>";
 	$MyIndexEntry{$word} .= $temp;
 
 	$txt = "<A class='wordindex' name='INDEXR_$MyIndexCounter' href='#INDEX_$MyIndexCounter'>".
