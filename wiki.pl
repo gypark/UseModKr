@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.17";
+$WikiVersion = "0.92K3-ext1.17a";
 $WikiRelease = "2003-01-08";
 
 $HashKey = "salt"; # 2-character string
@@ -317,7 +317,7 @@ sub InitLinkPatterns {
 									. "prospero|telnet|gopher";
 	$UrlProtocols .= '|file'  if $NetworkFile;
 	$UrlPattern = "((?:(?:$UrlProtocols):[^\\]\\s\"<>$FS]+)$QDelim)";
-	$ImageExtensions = "(gif|jpg|png|bmp|jpeg)";
+	$ImageExtensions = "(gif|jpg|png|bmp|jpeg|GIF|JPG|PNG|BMP|JPEG)";
 	$RFCPattern = "RFC\\s?(\\d+)";
 	$ISBNPattern = "ISBN:?([0-9- xX]{10,})";
 }
