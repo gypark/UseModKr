@@ -17,7 +17,7 @@ sub MacroThread {
 	if ($threadindent > 0) {
 		my $marginleft = 0;
 		$marginleft = 3.3*($threadindent-1) if ($threadindent > 0);
-		$txt = "<DIV class='threadreply' style='margin-left: $marginleft em'>";
+		$txt = "<DIV class='threadreply' style='margin-left: $marginleft"."em'>";
 	} else {
 		$txt = "<DIV class='threadnew'>";
 	}
