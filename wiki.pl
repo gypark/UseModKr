@@ -4748,19 +4748,18 @@ function help(s)
 	print &GetFormStart("form_edit");
 ###
 ###############
-
-	print &GetHiddenValue("title", $id), "\n",
-				&GetHiddenValue("oldtime", $pageTime), "\n",
-				&GetHiddenValue("oldconflict", $isConflict), "\n";
-	if ($revision ne "") {
-		print &GetHiddenValue("revision", $revision), "\n";
-	}
 ###############
 ### added by gypark
 ### view action Ãß°¡
 	if ($canEdit) {
 ###
 ###############
+		print &GetHiddenValue("title", $id), "\n",
+					&GetHiddenValue("oldtime", $pageTime), "\n",
+					&GetHiddenValue("oldconflict", $isConflict), "\n";
+		if ($revision ne "") {
+			print &GetHiddenValue("revision", $revision), "\n";
+		}
 		print &GetTextArea('text', $oldText, $editRows, $editCols);
 		$summary = &GetParam("summary", "*");
 		print "<p>", T('Summary:') . " ",
