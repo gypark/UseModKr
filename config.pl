@@ -47,8 +47,7 @@ $EditGuideInExtern = 0; # 1 = show edit guide in bottom frame, 0 = don't show
 $SizeTopFrame = 160;
 $SizeBottomFrame = 110;
 
-### 오프라인브라우저용 출력의 메뉴바
-$PalmGotoBar = "";
+### 
 ##
 ##########################################################
 

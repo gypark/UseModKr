@@ -998,7 +998,7 @@ sub GetRcHtml {
 			. "<td style='border:0'>$author</td></tr>\n";
 		if ($sum ne "") {
 			$html .= "<tr><td systems='border:0' colspan=2></td>"
-				. "<td colspan=4 style='border:0'>$sum</td></tr>\n";
+				. "<td colspan=4 style='border:0'>&nbsp;&nbsp;$sum</td></tr>\n";
 		}
 	}
 	$html .= "</table>";
