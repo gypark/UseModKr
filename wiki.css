@@ -692,7 +692,7 @@ DIV.threadnew {
 }
 
 DIV.threadreply {
-	border-top: 1px dashed gray;
+	border-bottom: 1px dashed gray;
 	padding: 5px 5px 5px 0px;
 }
 
