@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.50a";
-$WikiRelease = "2003-09-22";
+$WikiVersion = "0.92K3-ext1.50b";
+$WikiRelease = "2003-09-29";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -2518,7 +2518,7 @@ sub MacroMyInterest {
 
 	foreach (@pages) {
 		$txt .= ".... "  if ($_ =~ m|/|);
-		$txt .= &GetPageLink($_)."<br>";
+		$txt .= &GetPageOrEditLink($_)."<br>";
 	}
 
 	return $txt;
