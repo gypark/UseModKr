@@ -2879,11 +2879,13 @@ sub MacroComments {
 		$submit_button .
 		$q->endform;
 
-	if ($threadindent >= 1) {	# "새글쓰기"도 감추고 싶다면 1 대신 0으로 할 것
-		my $memotitle = ($threadindent == 0)?T('Write New Thread'):T('Write Comment');
-		$txt = &MacroMemo("", $memotitle, $txt, "threadmemo");
-	} elsif ($threadindent == 0) {
-		$txt = T('Write New Thread') . $txt;
+	if ($threadindent ne '') {
+		if ($threadindent >= 1) {	# "새글쓰기"도 감추고 싶다면 1 대신 0으로 할 것
+			my $memotitle = ($threadindent == 0)?T('Write New Thread'):T('Write Comment');
+			$txt = &MacroMemo("", $memotitle, $txt, "threadmemo");
+		} else {
+			$txt = T('Write New Thread') . $txt;
+		}
 	}
 
 	return $txt;
