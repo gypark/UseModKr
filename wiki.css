@@ -683,3 +683,20 @@ A.trackbacklist:hover
 {
 	text-decoration: underline;
 }
+
+/* thread */
+DIV.threadnew {
+	background-color:#F8F8F8;
+	border: 1px solid gray;
+	padding: 5px 5px 5px 5px;
+}
+
+DIV.threadreply {
+	border-top: 1px dashed gray;
+	padding: 5px 5px 5px 0px;
+}
+
+DIV.threadmemo {
+	border:1px solid silver;
+	padding:5px;
+}

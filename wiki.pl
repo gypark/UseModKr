@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.65";
+$WikiVersion = "0.92K3-ext1.66";
 $WikiRelease = "2004-11-29";
 
 $HashKey = "salt"; # 2-character string
@@ -2788,9 +2788,12 @@ sub MacroMemo {
 }
 
 sub MacroComments {
-	my ($itself,$id,$up,$long) = @_;	
+# TEST
+#	my ($itself,$id,$up,$long) = @_;	
+	my ($itself,$id,$up,$long,$threadindent) = @_;	
 	my $idvalue;
 	my $temp;
+	my $txt;
 
 	$temp = $id;
 	$temp =~ s/,$//;
@@ -2862,12 +2865,13 @@ sub MacroComments {
 		}
 	}
 
-	return
+	$txt =
 		$q->startform(-name=>"comments",-method=>"POST",-action=>"$ScriptName") .
 		&GetHiddenValue("action","comments") .
 		&GetHiddenValue("id","$id") .
 		&GetHiddenValue("pageid","$pageid") .
 		&GetHiddenValue("up","$up") .
+		(($threadindent ne '')?&GetHiddenValue("threadindent",$threadindent):"") .
 		T('Name') . ": " .
 		$name_field . "&nbsp;" .
 		T('Comment') . ": " .
@@ -2875,6 +2879,13 @@ sub MacroComments {
 		$comment_field . "&nbsp;" .
 		$submit_button .
 		$q->endform;
+
+	if ($threadindent ne '') {
+		my $memotitle = ($threadindent == 0)?T('Write New Thread'):T('Write Comment');
+		$txt = &MacroMemo("", $memotitle, $txt, "threadmemo");
+	}
+
+	return $txt;
 }
 
 ### UploadedFiles
@@ -8242,6 +8253,7 @@ sub DoComments {
 	my ($timestamp) = CalcDay($Now) . " " . CalcTime($Now);
 	my $string;
 	my $long = &GetParam("long", "");
+	my $threadindent = &GetParam("threadindent", "");
 	
 	if ($newcomments =~ /^\s*$/) {
 		&ReBrowsePage($pageid, "", 0);
@@ -8255,11 +8267,35 @@ sub DoComments {
 	&OpenPage($id);
 	&OpenDefaultText();
 	$string = $Text{'text'};
-	if ($long) {
+
+	if ($threadindent ne '') {
 		$newcomments =~ s/^\s*//g;
 		$newcomments =~ s/\s*$//g;
 		$newcomments =~ s/(\n)\s*(\r?\n)/$1$2/g;
 		$newcomments =~ s/(\r?\n)/ \\\\$1/g;
+
+		my ($comment_indent, $comment_tail) = ("", "");
+		if ($threadindent >= 1) {
+			for (1 .. $threadindent) {
+				$comment_indent .= ":";
+			}
+			$comment_indent .= " ";
+		}
+
+		$comment_tail = "<thread($id,$Now," . ($threadindent+1) . ")>";
+
+		if (($up > 0) && ($up < 1000000000)) {
+			$string =~ s/(\<thread\($id,$up(,\d+)?\)\>)/$comment_indent$newcomments <mysign($name,$timestamp)>\n$comment_tail\n\n$1/;
+		} else {
+			$string =~ s/(\<thread\($id,$up(,\d+)?\)\>)/$1\n\n$comment_indent$newcomments <mysign($name,$timestamp)>\n$comment_tail/;
+		}
+	} elsif ($long) {
+#	if ($long) {
+		$newcomments =~ s/^\s*//g;
+		$newcomments =~ s/\s*$//g;
+		$newcomments =~ s/(\n)\s*(\r?\n)/$1$2/g;
+		$newcomments =~ s/(\r?\n)/ \\\\$1/g;
+
 		if ($up > 0) {
 			$string =~ s/(\<longcomments\($id,$up\)\>)/\n$newcomments <mysign($name,$timestamp)>\n$1/;
 		} else {

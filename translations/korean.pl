@@ -686,7 +686,7 @@ Comment
 Submit
 달기
 Comment is not allowed
-답글 달기가 허용되지 않습니다
+글 달기가 허용되지 않습니다
 Footnote
 각주
 Send Trackback
@@ -731,4 +731,8 @@ No Trackback received
 받은 트랙백 없음
 Trackback received [%s]
 받은 트랙백 [%s]
+Write New Thread
+새 글 쓰기
+Write Comment
+위 글에 의견달기
 END_OF_TRANSLATION
