@@ -3599,7 +3599,7 @@ sub InterPageLink {
 #	return ("<a href=\"$url\">$name</a>", $punct);
 	my $link_html = '';
 	if (!($image)) {
-		$image = "$InterIconDir/inter.gif";
+		$image = "$InterIconDir/default-inter.gif";
 	}
 	$link_html = "<A class='inter' href='$url_main'>" .
 				"<IMG class='inter' src='$image' alt='$site:' title='$site:'>" .
@@ -3668,18 +3668,19 @@ sub GetSiteUrl {
 		}
 		if (!defined($InterSite{'Upload'})) {
 ### interwiki 아이콘
-			$InterSite{'Upload'} = "$UploadUrl\/|$InterIconDir\/upload.gif";
+			$InterSite{'Upload'} = "$UploadUrl\/|$InterIconDir\/default-upload.gif";
 		}
 ###
 ###############
 ###############
 ### added by gypark
 ### Local, LocalWiki 인터위키 from usemod 1.0
+### interwiki 아이콘 같이 적용
 		if (!defined($InterSite{'LocalWiki'})) {
-			$InterSite{'LocalWiki'} = $ScriptName . &ScriptLinkChar();
+			$InterSite{'LocalWiki'} = $ScriptName . &ScriptLinkChar() . "|$InterIconDir\/default-local.gif";
 		}
 		if (!defined($InterSite{'Local'})) {
-			$InterSite{'Local'} = $ScriptName . &ScriptLinkChar();
+			$InterSite{'Local'} = $ScriptName . &ScriptLinkChar() . "|$InterIconDir\/default-local.gif";
 		}
 ###
 ###############
