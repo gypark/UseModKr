@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.70";
-$WikiRelease = "2005-01-16";
+$WikiVersion = "0.92K3-ext1.71";
+$WikiRelease = "2005-01-23";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -75,6 +75,7 @@ use vars qw(
 	$InterWikiMoniker $SiteDescription $RssLogoUrl $RssDays $RssTimeZone
 	$SlashLinks $InterIconDir $SendPingAllowed $JavaScript
 	$MacrosDir $MyMacrosDir
+	$PluginDir $MyPluginDir
 	$UseLatex
 	);
 ###
@@ -170,6 +171,8 @@ $SendPingAllowed = 0;   # 0 - anyone, 1 - who can edit, 2 - who is admin
 $JavaScript  = "wikiscript.js";   # URL for JavaScript code (like "/wikiscript.js")
 $MacrosDir = "./macros/";       # directory containing macros
 $MyMacrosDir = "./mymacros/";	# directory containing user-defined macros
+$PluginDir = "./plugin/";       # directory containing plugins
+$MyPluginDir = "./myplugin/";   # directory containing user-defined plugins
 $UseLatex    = 0;		# 1 = Use LaTeX conversion   2 = Don't convert
 
 # Major options:
@@ -2417,6 +2420,9 @@ sub CommonMarkup {
 ### {{{ }}} 처리 
 		s/(^|\n)\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/&StoreRaw("\n<PRE class=\"code\">") . &StoreCodeRaw($2) . &StoreRaw("\n<\/PRE>") . "\n"/igem;
 
+### plugin
+		s/(^|\n)\{\{\{#!((\w+)( .+)?)\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/&StorePlugin($2,$5)."\n"/igem;
+
 ### {{{lang|n|t }}} 처리
 		s/(^|\n)\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/&StoreRaw("<PRE class=\"syntax\">") . &StoreSyntaxHighlight($2, $4, $5) . &StoreRaw("<\/PRE>") . "\n"/igem;
 ###
@@ -3515,6 +3521,47 @@ EnDoFwIkIcOdE`;
 	}
 	return $result;
 }
+
+###############
+### added by gypark
+### 외부 plugin 지원
+sub StorePlugin {
+	my ($command, $content) = @_;
+	my $name;
+	my @opt;
+	my $html;
+	my $plugin_file;
+
+	$command = &UnquoteHtmlForPageContent($command);
+	$content = &UnquoteHtmlForPageContent($content);
+
+	@opt = split (/\s/, $command);
+	$name = shift @opt;
+
+
+	if (-f "$MyPluginDir/$name.pl") {
+		$plugin_file = "$MyPluginDir/$name.pl";
+	} elsif (-f "$PluginDir/$name.pl") {
+		$plugin_file = "$PluginDir/$name.pl";
+	}
+
+	if ($plugin_file ne '') {
+		require "$plugin_file";
+	
+		my $func = "plugin_$name";
+
+		my $txt = &{\&$func}($content, @opt);
+		$html = &StoreRaw($txt);
+	} else {
+		$html = &StoreRaw("\n<PRE class='code'>").
+			&StoreCodeRaw($content).
+			&StoreRaw("\n<\/PRE>") . "\n";
+	}
+
+	return $html;
+}
+###
+###############
 
 ### 글을 작성한 직후에 수행되는 매크로들
 sub ProcessPostMacro {

@@ -80,6 +80,9 @@ $MacrosDir = "./macros/";       # directory containing macros
 $MyMacrosDir = "./mymacros/";	# directory containing user-defined macros
 ### LaTeX 변환 지원
 $UseLatex    = 0;		# 1 = Use LaTeX conversion   2 = Don't convert
+### 외부 plugin 지원
+$PluginDir = "./plugin/";       # directory containing plugins
+$MyPluginDir = "./myplugin/";   # directory containing user-defined plugins
 ##
 ##########################################################
 
