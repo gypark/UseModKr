@@ -604,3 +604,14 @@ DIV.memo {
 	padding:5px;
 }
 
+/* footnote */
+DIV.footnote {
+	border-top:1px solid silver;
+	padding:5px;
+}
+
+A.footnote {
+	font-size: 80%;
+	vertical-align: super;
+}
+
