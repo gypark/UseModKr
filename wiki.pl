@@ -1660,7 +1660,7 @@ sub WikiToHTML {
 #	$pageText =~ s/\\\\ *\r?\n/<BR>/g;		# double backslash for forced <BR> - comes in handy for <LI>
 #	$pageText =~ s/\\ *\r?\n/ /g;			# Join lines with backslash at end
 
-	$pageText =~ s/\\\\ *\r?\n/ &__DOUBLEBACKSLASH__;/g;		# double backslash for forced <BR> - comes in handy for <LI>
+	$pageText =~ s/\\\\ *\r?\n/&__DOUBLEBACKSLASH__;/g;		# double backslash for forced <BR> - comes in handy for <LI>
 	$pageText =~ s/\\ *\r?\n/&__SINGLEBACKSLASH__;/g;			# Join lines with backslash at end
 
 ###
