@@ -482,6 +482,7 @@ TD.rcblank {
  **********/
 TABLE.calendar
 {
+	width: 145;
 	border: 1pt solid silver;
 	background: white;
 	color: black;

@@ -61,6 +61,14 @@ $UploadUrl   = ""; # by gypark, URL for the directory containing uploaded file
 $HiddenPageFile = "$DataDir/hidden";  # hidden pages list file
 ### template page
 $TemplatePage = "TemplatePage"; # name of template page for creating new page
+### rss from usemod 1.0
+$InterWikiMoniker = '';         # InterWiki moniker for this wiki. (for RSS)
+$SiteDescription  = $SiteName;  # Description of this wiki. (for RSS)
+$SiteDescription  = "I love you";  # Description of this wiki. (for RSS)
+$RssLogoUrl  = '';              # Optional image for RSS feed
+$RssDays     = 7;               # Default number of days in RSS feed
+### 스크립트 뒤에 / or ? 선택 from usemod1.0
+$SlashLinks   = 0;      # 1 = use script/action links, 0 = script?action
 ##
 ##########################################################
 

@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.50b";
-$WikiRelease = "2003-09-29";
+$WikiVersion = "0.92K3-ext1.51";
+$WikiRelease = "2003-10-03";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -72,6 +72,8 @@ use vars qw(
 	$EditGuideInExtern $SizeTopFrame $SizeBottomFrame
 	$LogoPage $CheckTime $LinkDir $IconDir $CountDir $UploadDir $UploadUrl
 	$HiddenPageFile $TemplatePage
+	$InterWikiMoniker $SiteDescription $RssLogoUrl $RssDays
+	$SlashLinks
 	);
 ###
 ###############
@@ -93,7 +95,8 @@ use vars qw(%Page %Section %Text %InterSite %SaveUrl %SaveNumUrl
 ### 패치를 위해 추가된 내부 전역 변수
 use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime $Sec_Revision $Sec_Ts
 	$ViewCount $AnchoredFreeLinkPattern %UserInterest %HiddenPage
-	$pageid $IsPDA);
+	$pageid $IsPDA
+	$QuotedFullUrl);
 ###
 ###############
 
@@ -120,8 +123,8 @@ sub DoWikiRequest {
 ###############
 ### replaced by gypark
 ### 환경 변수들을 지정하는 루틴을 제거. 무조건 config file 를 읽음.
- 	if (-f $ConfigFile) {
- 		do "$ConfigFile";
+	if (-f $ConfigFile) {
+		do "$ConfigFile";
 	} else {
 		die "Can not load config file";
 	}
@@ -479,7 +482,7 @@ sub DoBrowseRequest {
 		if ($IsPDA) {
 			my $temp_id = T("$RCName");
 			print &GetHeader($temp_id, &QuoteHtml($temp_id), "");
-			&DoRc();
+			&DoRc(1);
 			print $q->end_html;
 		} else {
 			&BrowsePage(T($RCName));
@@ -647,7 +650,7 @@ sub BrowsePage {
 		}
 
 		print $fullHtml;
-		&DoRc();
+		&DoRc(1);
 #		print "<HR class='footer'>\n"  if (!&GetParam('embed', $EmbedWiki));
 		print &GetFooterText($id, $goodRevision);
 		return;
@@ -716,10 +719,28 @@ sub BrowseExternUrl {
 ###############
 
 sub DoRc {
+###############
+### added by gypark
+### rss from usemod1.0
+	my ($rcType) = @_;
+	my $showHTML;
+###
+###############
 	my ($fileData, $rcline, $i, $daysago, $lastTs, $ts, $idOnly);
 	my (@fullrc, $status, $oldFileData, $firstTs, $errorText);
 	my $starttime = 0;
 	my $showbar = 0;
+
+###############
+### added by gypark
+### rss from usemod1.0
+	if (0 == $rcType) {
+		$showHTML = 0;
+	} else {
+		$showHTML = 1;
+	}
+###
+###############
 
 ###############
 ### pda clip by gypark
@@ -736,24 +757,56 @@ sub DoRc {
 		$starttime = $q->cookie($CookieName ."-RC");
 	} elsif (&GetParam("from", 0)) {
 		$starttime = &GetParam("from", 0);
-		print "<h2>" . Ts('Updates since %s', &TimeToText($starttime))
-					. "</h2>\n";
+###############
+### replaced by gypark
+### rss from usemod1.0
+#		print "<h2>" . Ts('Updates since %s', &TimeToText($starttime))
+#					. "</h2>\n";
+		if ($showHTML) {
+			print "<h2>" . Ts('Updates since %s', &TimeToText($starttime))
+						. "</h2>\n";
+		}
+###
+###############
 	} else {
 		$daysago = &GetParam("days", 0);
 		$daysago = &GetParam("rcdays", 0)  if ($daysago == 0);
 		if ($daysago) {
 			$starttime = $Now - ((24*60*60)*$daysago);
-			print "<h2>" . Ts('Updates in the last %s day'
-						 . (($daysago != 1)?"s":""), $daysago) . "</h2>\n";
+###############
+### replaced by gypark
+### rss from usemod1.0
+#			print "<h2>" . Ts('Updates in the last %s day'
+#						 . (($daysago != 1)?"s":""), $daysago) . "</h2>\n";
+			if ($showHTML) {
+				print "<h2>" . Ts('Updates in the last %s day'
+							 . (($daysago != 1)?"s":""), $daysago) . "</h2>\n";
+			}
+###
+###############
 			# Note: must have two translations (for "day" and "days")
 			# Following comment line is for translation helper script
 			# Ts('Updates in the last %s days', '');
 		}
 	}
 	if ($starttime == 0) {
-		$starttime = $Now - ((24*60*60)*$RcDefault);
-	 	print "<h2>" . Ts('Updates in the last %s day'
-			. (($RcDefault != 1)?"s":""), $RcDefault) . "</h2>\n";
+###############
+### replaced by gypark
+### rss from usemod1.0
+#		$starttime = $Now - ((24*60*60)*$RcDefault);
+#	 	print "<h2>" . Ts('Updates in the last %s day'
+#			. (($RcDefault != 1)?"s":""), $RcDefault) . "</h2>\n";
+		if (0 == $rcType) {
+			$starttime = $Now - ((24*60*60)*$RssDays);
+		} else {
+			$starttime = $Now - ((24*60*60)*$RcDefault);
+		}
+		if ($showHTML) {
+			print "<h2>" . Ts('Updates in the last %s day'
+				. (($RcDefault != 1)?"s":""), $RcDefault) . "</h2>\n";
+		}
+###
+###############
 		# Translation of above line is identical to previous version
 	}
 ###############
@@ -799,13 +852,25 @@ sub DoRc {
 	$lastTs++  if (($Now - $lastTs) > 5);  # Skip last unless very recent
 
 	$idOnly = &GetParam("rcidonly", "");
-	if ($idOnly ne "") {
+###############
+### replaced by gypark
+### rss from usemod1.0
+#	if ($idOnly ne "") {
+	if ($idOnly && &showHTML) {
+###
+###############
 		print '<b>(' . Ts('for %s only', &ScriptLink($idOnly, $idOnly))
 					. ')</b><br>';
 	}
 ###############
 ### pda clip by gypark
 	if (!($IsPDA)) {
+###
+###############
+###############
+### added by gypark
+### rss from usemod1.0
+	if ($showHTML) {
 ###
 ###############
 	foreach $i (@RcDays) {
@@ -840,6 +905,12 @@ sub DoRc {
 ### 
 ###############
 ###############
+### added by gypark
+### rss from usemod1.0
+	}
+###
+###############
+###############
 ### pda clip by gypark
 	}
 ###
@@ -860,16 +931,35 @@ sub DoRc {
 		($ts) = split(/$FS3/, $fullrc[$i]);
 		last if ($ts >= $starttime);
 	}
-	if ($i == @fullrc) {
+###############
+### replaced by gypark
+### rss from usemod1.0
+#	if ($i == @fullrc) {
+	if ($i == @fullrc && $showHTML) {
+###
+###############
 		print '<br><strong>' . Ts('No updates since %s',
 											&TimeToText($starttime)) . "</strong><br>\n";
 	} else {
 		splice(@fullrc, 0, $i);  # Remove items before index $i
 		# Later consider an end-time limit (items older than X)
-		print &GetRcHtml(@fullrc);
+###############
+### replaced by gypark
+### rss from usemod1.0
+#		print &GetRcHtml(@fullrc);
+#	}
+#	print '<p>' . Ts('Page generated %s', &TimeToText($Now)), "<br>\n";
+		if (0 == $rcType) {
+			print &GetRcRss(@fullrc);
+		} else {
+			print &GetRcHtml(@fullrc);
+		}
 	}
-	print '<p>' . Ts('Page generated %s', &TimeToText($Now)), "<br>\n";
-
+	if ($showHTML) {
+		print '<p>' . Ts('Page generated %s', &TimeToText($Now)), "<br>\n";
+	}
+###
+###############
 }
 
 sub GetRcHtml {
@@ -1215,11 +1305,11 @@ sub GetHistoryLine {
 	$expirets = $Now - ($KeepDays * 24 * 60 * 60);
 
 	if ($UseDiff) {
- 		my ($c1, $c2);
- 		$c1 = 'checked="checked"' if 1 == $row;
- 		$c2 = 'checked="checked"' if 0 == $row;
- 		$html .= "<tr><td align='center'><input type='radio' name='diffrevision' value='$rev' $c1/> ";
- 		$html .= "<input type='radio' name='revision' value='$rev' $c2/></td><td>";
+		my ($c1, $c2);
+		$c1 = 'checked="checked"' if 1 == $row;
+		$c2 = 'checked="checked"' if 0 == $row;
+		$html .= "<tr><td align='center'><input type='radio' name='diffrevision' value='$rev' $c1/> ";
+		$html .= "<input type='radio' name='revision' value='$rev' $c2/></td><td>";
 	}
 	if (0 == $row) { # current revision
 ###############
@@ -1250,11 +1340,24 @@ sub GetHistoryLine {
 }
 
 # ==== HTML and page-oriented functions ====
+###############
+### added by gypark
+### 스크립트 뒤에 / or ? 선택 from usemod1.0
+sub ScriptLinkChar {
+	if ($SlashLinks) {
+		return '/';
+	}
+	return '?';
+}
+
 sub ScriptLink {
 	my ($action, $text) = @_;
 
-	return "<A href=\"$ScriptName?$action\">$text</A>";
+#	return "<A href=\"$ScriptName?$action\">$text</A>";
+	return "<a href=\"$ScriptName" . &ScriptLinkChar() . "$action\">$text</a>";
 }
+###
+###############
 
 # luke added
 
@@ -1314,15 +1417,33 @@ sub GetEditLink {
 	return &ScriptLink("action=edit&id=$id", $name);
 }
 
+###############
+### replaced by gypark
+### from usemod1.0
+# sub GetOldPageLink {
+# 	my ($kind, $id, $revision, $name) = @_;
+# 
+# 	if ($FreeLinks) {
+# 		$id = &FreeToNormal($id);
+# 		$name =~ s/_/ /g;
+# 	}
+# 	return &ScriptLink("action=$kind&id=$id&revision=$revision", $name);
+# }
+sub GetOldPageParameters {
+	my ($kind, $id, $revision) = @_;
+
+	$id = &FreeToNormal($id) if $FreeLinks;
+	return "action=$kind&id=$id&revision=$revision";
+}
+
 sub GetOldPageLink {
 	my ($kind, $id, $revision, $name) = @_;
 
-	if ($FreeLinks) {
-		$id = &FreeToNormal($id);
-		$name =~ s/_/ /g;
-	}
-	return &ScriptLink("action=$kind&id=$id&revision=$revision", $name);
+	$name =~ s/_/ /g if $FreeLinks;
+	return &ScriptLink(&GetOldPageParameters($kind, $id, $revision), $name);
 }
+###
+###############
 
 sub GetPageOrEditAnchoredLink {
 	my ($id, $anchor, $name) = @_;
@@ -2390,7 +2511,7 @@ sub MacroIncludeSubst {
 ### toc 를 포함하지 않는 includenotoc 매크로 추가
 	$txt =~ s/(^|\n)<includenotoc\((.*)\)>([\r\f]*\n)/$1 . &MacroInclude($2, "notoc") . $3/geim;
 ### includeday 매크로
- 	$txt =~ s/(^|\n)(<includeday\(([^,\n]+,)?([-+]?\d+)\)>)([\r\f]*\n)/$1 . &MacroIncludeDay($2, $3, $4) . $5/geim;
+	$txt =~ s/(^|\n)(<includeday\(([^,\n]+,)?([-+]?\d+)\)>)([\r\f]*\n)/$1 . &MacroIncludeDay($2, $3, $4) . $5/geim;
 ### includedays 매크로
 	$txt =~ s/(^|\n)(<includedays\(([^,\n]+,)?([-+]?\d+),([-+]?\d+)\)>)([\r\f]*\n)/$1 . &MacroIncludeDay($2, $3, $4, $5) . $6/geim;
 	return $txt;
@@ -2579,7 +2700,7 @@ sub MacroUploadedFiles {
 		}
 		$txt .= "<TD class='uploadedfiles'>";
 		$txt .= &ScriptLink("reverse=Upload:$_", $uploadsearch) . " ";
- 		$txt .= "<a href='$UploadUrl/$_'>$_</a>";
+		$txt .= "<a href='$UploadUrl/$_'>$_</a>";
 		$txt .= "</TD>";
 
 		$size = $filesize{$_};
@@ -3246,7 +3367,7 @@ sub MacroInclude {
 	my %TextInclude = split(/$FS3/, $SubSection{'data'}, -1);
 	
 	# includenotoc 의 경우
- 	$TextInclude{'text'} =~ s/<toc>/$FS_lt."toc".$FS_gt/gei if ($opt eq "notoc");
+	$TextInclude{'text'} =~ s/<toc>/$FS_lt."toc".$FS_gt/gei if ($opt eq "notoc");
 	# noinclude 처리 from Jof
 	$TextInclude{'text'} =~ s/<noinclude>(.)*?<\/noinclude>//igs;
 
@@ -3302,13 +3423,13 @@ sub WikiLinesToHtml {
 # 			$TableMode = 1;
 # 			$depth = 1;
 
- 		} elsif (s/^((\|\|)*)(\|(&__LT__;|&__GT__;|\|)((v(\d*))?))(.*)\|\|\s*$/"<TR VALIGN='CENTER' ALIGN='CENTER'>"
- 				. "<TD align=\"$td_align{$4}\" colspan=\""
- 				. ((length($1)\/2)+1) . ((length($5))?"\" ROWSPAN=\"" . ((length($7))?"$7":"2"):"") . "\">"
- 				. $8 . "<\/TD><\/TR>\n"/e) {
- 			$code = 'TABLE';
- 			$TableMode = 1;
- 			$depth = 1;
+		} elsif (s/^((\|\|)*)(\|(&__LT__;|&__GT__;|\|)((v(\d*))?))(.*)\|\|\s*$/"<TR VALIGN='CENTER' ALIGN='CENTER'>"
+				. "<TD align=\"$td_align{$4}\" colspan=\""
+				. ((length($1)\/2)+1) . ((length($5))?"\" ROWSPAN=\"" . ((length($7))?"$7":"2"):"") . "\">"
+				. $8 . "<\/TD><\/TR>\n"/e) {
+			$code = 'TABLE';
+			$TableMode = 1;
+			$depth = 1;
 
 ###
 ###############
@@ -5195,6 +5316,9 @@ sub DoOtherRequest {
 ### comment from Jof
 		} elsif (($action eq "comments") || ($action eq "longcomments")) {
 			&DoComments($id) if &ValidIdOrDie($id);
+### rss from usemod1.0
+		} elsif ($action eq "rss") {
+			&DoRss();
 ###
 ###############
 		} else {
@@ -5640,7 +5764,7 @@ sub DoEditPrefs {
 	$recentName = $RCName;
 	$recentName =~ s/_/ /g;
 	&DoNewLogin()  if ($UserID eq "");
-    print &GetHeader('', T('Editing Preferences'), "");
+	print &GetHeader('', T('Editing Preferences'), "");
 	print &GetFormStart();
 	print GetHiddenValue("edit_prefs", 1), "\n";
 	print '<b>' . T('User Information:') . "</b>\n";
@@ -6809,7 +6933,13 @@ sub DoPostMain {
 	&SaveLinkFile($id);
 ###
 ###############
-	&WriteRcLog($id, $summary, $isEdit, $editTime, $user, $Section{'host'});
+###############
+### replaced by gypark
+### rss from usemod1.0
+#	&WriteRcLog($id, $summary, $isEdit, $editTime, $user, $Section{'host'});
+	&WriteRcLog($id, $summary, $isEdit, $editTime, $user, $Section{'host'}, $Section{'revision'});
+###
+###############
 	if ($UseCache) {
 		UnlinkHtmlCache($id);          # Old cached copy is invalid
 		if ($Page{'revision'} < 2) {   # If this is a new page...
@@ -7001,7 +7131,13 @@ sub DoUnlock {
 
 # Note: all diff and recent-list operations should be done within locks.
 sub WriteRcLog {
-	my ($id, $summary, $isEdit, $editTime, $name, $rhost) = @_;
+###############
+### replaced by gypark
+### rss from usemod1.0
+#	my ($id, $summary, $isEdit, $editTime, $name, $rhost) = @_;
+	my ($id, $summary, $isEdit, $editTime, $name, $rhost, $revision) = @_;
+###
+###############
 	my ($extraTemp, %extra);
 
 	%extra = ();
@@ -7011,7 +7147,8 @@ sub WriteRcLog {
 ### added by gypark
 ### 최근변경내역에 북마크 기능 도입
 	$extra{'tscreate'} = $Page{'tscreate'};
-###
+### rss from usemod 1.0
+	$extra{'revision'} = $revision if ($revision ne "");
 ###############
 
 	$extraTemp = join($FS2, %extra);
@@ -8395,6 +8532,204 @@ sub GetTemplatePageText {
 
 	return $temp_Text{'text'};
 }
+
+### rss from usemod1.0
+sub DoRss {
+	print "Content-type: text/xml\n\n";
+	&DoRc(0);
+}
+
+sub GetRcRss {
+	my ($rssHeader, $headList, $items);
+
+	# Normally get URL from script, but allow override
+	$FullUrl = $q->url(-full=>1)  if ($FullUrl eq "");
+	$QuotedFullUrl = &QuoteHtml($FullUrl);
+	$SiteDescription = &QuoteHtml($SiteDescription);
+
+	my $ChannelAbout = &QuoteHtml($FullUrl . &ScriptLinkChar()
+		. $ENV{QUERY_STRING});
+	$rssHeader = <<RSS ;
+<?xml version="1.0" encoding="$HttpCharset"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns="http://purl.org/rss/1.0/"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:wiki="http://purl.org/rss/1.0/modules/wiki/"
+>
+    <channel rdf:about="$ChannelAbout">
+        <title>${\(&QuoteHtml($SiteName))}</title>
+        <link>${\($QuotedFullUrl . &QuoteHtml("?$RCName"))}</link>
+        <description>${\(&QuoteHtml($SiteDescription))}</description>
+        <wiki:interwiki>
+            <rdf:Description link="$QuotedFullUrl">
+                <rdf:value>$InterWikiMoniker</rdf:value>
+            </rdf:Description>
+        </wiki:interwiki>
+        <items>
+            <rdf:Seq>
+RSS
+	($headList, $items) = &GetRc(0, @_);
+	$rssHeader .= $headList;
+	return <<RSS ;
+$rssHeader
+            </rdf:Seq>
+        </items>
+    </channel>
+    <image rdf:about="${\(&QuoteHtml($RssLogoUrl))}">
+        <title>${\(&QuoteHtml($SiteName))}</title>
+        <url>$RssLogoUrl</url>
+        <link>$QuotedFullUrl</link>
+    </image>
+$items
+</rdf:RDF>
+RSS
+}
+
+sub GetRc {
+	my $rcType = shift;
+	my @outrc = @_;
+	my ($rcline, $date, $newtop, $author, $inlist, $result);
+	my ($showedit, $link, $all, $idOnly, $headItem, $item);
+	my ($ts, $pagename, $summary, $isEdit, $host, $kind, $extraTemp);
+	my ($rcchangehist, $tEdit, $tChanges, $tDiff);
+	my ($headList, $historyPrefix, $diffPrefix);
+	my %extra = ();
+	my %changetime = ();
+	my %pagecount = ();
+
+	# Slice minor edits
+	$showedit = &GetParam("rcshowedit", $ShowEdits);
+	$showedit = &GetParam("showedit", $showedit);
+	if ($showedit != 1) {
+		my @temprc = ();
+		foreach $rcline (@outrc) {
+			($ts, $pagename, $summary, $isEdit, $host) = split(/$FS3/, $rcline);
+			if ($showedit == 0) {  # 0 = No edits
+				push(@temprc, $rcline)  if (!$isEdit);
+			} else {               # 2 = Only edits
+				push(@temprc, $rcline)  if ($isEdit);
+			}
+		}
+		@outrc = @temprc;
+	}
+# Optimize param fetches out of main loop
+	$rcchangehist = &GetParam("rcchangehist", 1);
+# Optimize translations out of main loop
+	$tEdit    = T('(edit)');
+	$tDiff    = T('(diff)');
+	$tChanges = T('changes');
+	$diffPrefix = $QuotedFullUrl . &QuoteHtml("?action=browse\&diff=4\&id=");
+	$historyPrefix = $QuotedFullUrl . &QuoteHtml("?action=history\&id=");
+	foreach $rcline (@outrc) {
+		($ts, $pagename) = split(/$FS3/, $rcline);
+		$pagecount{$pagename}++;
+		$changetime{$pagename} = $ts;
+	}
+	$date = "";
+	$all = &GetParam("rcall", 0);
+	$all = &GetParam("all", $all);
+	$newtop = &GetParam("rcnewtop", $RecentTop);
+	$newtop = &GetParam("newtop", $newtop);
+	$idOnly = &GetParam("rcidonly", "");
+	$inlist = 0;
+	$headList = '';
+	$result = '';
+	@outrc = reverse @outrc if ($newtop);
+	foreach $rcline (@outrc) {
+		($ts, $pagename, $summary, $isEdit, $host, $kind, $extraTemp)
+			= split(/$FS3/, $rcline);
+		next  if ((!$all) && ($ts < $changetime{$pagename}));
+		next  if (($idOnly ne "") && ($idOnly ne $pagename));
+		%extra = split(/$FS2/, $extraTemp, -1);
+		if ($date ne &CalcDay($ts)) {
+			$date = &CalcDay($ts);
+			if (1 == $rcType) {  # HTML
+				# add date, properly closing lists first
+				if ($inlist) {
+					$result .= "</UL>\n";
+					$inlist = 0;
+				}
+				$result .= "<p><strong>" . $date . "</strong></p>\n";
+				if (!$inlist) {
+					$result .= "<UL>\n";
+					$inlist = 1;
+				}
+			}
+		}
+		if (0 == $rcType) {  # RSS
+			($headItem, $item) = &GetRssRcLine($pagename, $ts, $host,
+						$extra{'name'}, $extra{'id'}, $summary, $isEdit,
+						$pagecount{$pagename}, $extra{'revision'},
+						$diffPrefix, $historyPrefix);
+			$headList .= $headItem;
+			$result   .= $item;
+		} else {  # HTML
+			$result .= &GetHtmlRcLine($pagename, $ts, $host, $extra{'name'},
+						$extra{'id'}, $summary, $isEdit,
+						$pagecount{$pagename}, $extra{'revision'},
+						$tEdit, $tDiff, $tChanges, $all, $rcchangehist);
+		}
+	}
+	if (1 == $rcType) {
+		$result .= "</UL>\n"  if ($inlist);  # Close final tag
+	}
+	return ($headList, $result);  # Just ignore headList for HTML
+}
+
+sub GetRssRcLine {
+	my ($pagename, $timestamp, $host, $userName, $userID, $summary,
+		$isEdit, $pagecount, $revision, $diffPrefix, $historyPrefix) = @_;
+	my ($itemID, $description, $authorLink, $author, $status,
+		$importance, $date, $item, $headItem);
+
+	# Add to list of items in the <channel/>
+	$itemID = $FullUrl . &ScriptLinkChar()
+			. &GetOldPageParameters('browse', $pagename, $revision);
+	$itemID = &QuoteHtml($itemID);
+	$headItem = "                <rdf:li rdf:resource=\"$itemID\"/>\n";
+# Add to list of items proper.
+	if (($summary ne "") && ($summary ne "*")) {
+		$description = &QuoteHtml($summary);
+	}
+	$host = &QuoteHtml($host);
+	if ($userName) {
+		$author = &QuoteHtml($userName);
+		$authorLink = "link=\"$QuotedFullUrl?$author\"";
+	} else {
+		$author = $host;
+	}
+	$status = (1 == $revision) ? 'new' : 'updated';
+	$importance = $isEdit ? 'minor' : 'major';
+	$timestamp += $TimeZoneOffset;
+	my ($sec, $min, $hour, $mday, $mon, $year) = localtime($timestamp);
+	$year += 1900;
+	$date = sprintf("%4d-%02d-%02dT%02d:%02d:%02d+%02d:00",
+		$year, $mon+1, $mday, $hour, $min, $sec, $TimeZoneOffset/(60*60));
+	$pagename = &QuoteHtml($pagename);
+	# Write it out longhand
+	$item = <<RSS ;
+    <item rdf:about="$itemID">
+        <title>$pagename</title>
+        <link>$QuotedFullUrl?$pagename</link>
+        <description>$description</description>
+        <dc:date>$date</dc:date>
+        <dc:contributor>
+            <rdf:Description wiki:host="$host" $authorLink>
+                <rdf:value>$author</rdf:value>
+            </rdf:Description>
+        </dc:contributor>
+        <wiki:status>$status</wiki:status>
+        <wiki:importance>$importance</wiki:importance>
+        <wiki:diff>$diffPrefix$pagename</wiki:diff>
+        <wiki:version>$revision</wiki:version>
+        <wiki:history>$historyPrefix$pagename</wiki:history>
+    </item>
+RSS
+	return ($headItem, $item);
+}
+
+
 ### 통채로 추가한 함수들의 끝
 ###############
 
