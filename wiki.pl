@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.22e";
+$WikiVersion = "0.92K3-ext1.23";
 $WikiRelease = "2003-02-14";
 
 $HashKey = "salt"; # 2-character string
@@ -968,7 +968,7 @@ sub GetRcHtml {
 ### 최근변경내역에 북마크 기능 도입
 #			$link .= &ScriptLinkDiff(4, $pagename, $tDiff, "") . "  ";
 			if (!(-f &GetPageFile($pagename))) {
-				$link .= $rcdeleted;
+				$link .= &GetHistoryLink($pagename, $rcdeleted);
 			} elsif (($bookmarkuser eq "") || ($ts <= $bookmark)) {
 				$link .= &ScriptLinkDiff(4, $pagename, $rcdiff, "") . "  ";
 			} elsif ($extra{'tscreate'} > $bookmark) {
@@ -992,7 +992,7 @@ sub GetRcHtml {
 #	$html .= "</UL>\n" if ($inlist);
 		$html .= "<tr><td style='border:0'>&nbsp;&nbsp;&nbsp;</td>"
 			. "<td style='border:0'>$link </td>"
-			. "<td style='border:0'>" . &GetPageLink($pagename) . "</td>"
+			. "<td style='border:0'>" . &GetPageOrEditLink($pagename) . "</td>"
 			. "<td style='border:0'>" . &CalcTime($ts) . "</td>"
 			. "<td style='border:0'>$count$edit</td>"
 			. "<td style='border:0'>$author</td></tr>\n";
@@ -3689,7 +3689,19 @@ sub SaveKeepSection {
 	my $file = &KeepFileName();
 	my $data;
 
-	return  if ($Section{'revision'} < 1);  # Don't keep "empty" revision
+###############
+### replaced by gypark
+### 페이지 삭제 시에 keep 화일은 보존해 둠
+#	return  if ($Section{'revision'} < 1);  # Don't keep "empty" revision
+	if ($Section{'revision'} < 1) {
+		if (-f $file) {
+			unlink($file) || die "error while removing obsolete keep file [$file]";
+		}
+		return;
+	}
+###
+###############
+
 	$Section{'keepts'} = $Now;
 	$data = $FS1 . join($FS2, %Section);
 	&CreatePageDir($KeepDir, $OpenPageName);
@@ -6618,10 +6630,25 @@ sub DeletePage {
 		return;
 	}
 
+###############
+### added by gypark
+### 페이지 삭제 시에 keep 화일은 보존해 둠
+	&OpenPage($page);
+	&OpenDefaultText();
+	&SaveKeepSection();
+	&ExpireKeepFile();
+###
+###############
 	$fname = &GetPageFile($page);
 	unlink($fname)  if (-f $fname);
-	$fname = $KeepDir . "/" . &GetPageDirectory($page) .  "/$page.kp";
-	unlink($fname)  if (-f $fname);
+###############
+### commented by gypark
+### 페이지 삭제 시에 keep 화일은 보존해 둠
+#	$fname = $KeepDir . "/" . &GetPageDirectory($page) .  "/$page.kp";
+#	unlink($fname)  if (-f $fname);
+###
+###############
+
 #########################################################3
 ### added by gypark
 ### lck 화일도 같이 삭제
