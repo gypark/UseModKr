@@ -1529,7 +1529,7 @@ sub GetEditGuide {
 ###############
 ### added by gypark
 ### page count
-		$result .= "$ViewCount ".T('hits')." | " if ($ViewCount ne "");
+	$result .= "$ViewCount ".T('hits')." | " if ($ViewCount ne "");
 ###
 ###############
 	$result .= &GetHistoryLink($id, T('History'));
