@@ -64,7 +64,6 @@ $TemplatePage = "TemplatePage"; # name of template page for creating new page
 ### rss from usemod 1.0
 $InterWikiMoniker = '';         # InterWiki moniker for this wiki. (for RSS)
 $SiteDescription  = $SiteName;  # Description of this wiki. (for RSS)
-$SiteDescription  = "";         # Description of this wiki. (for RSS)
 $RssLogoUrl  = '';              # Optional image for RSS feed
 $RssDays     = 7;               # Default number of days in RSS feed
 $RssTimeZone = 9;				# Time Zone of Server (hour), 0 for GMT, 9 for Korea
