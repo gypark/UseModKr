@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.27a";
+$WikiVersion = "0.92K3-ext1.28";
 $WikiRelease = "2003-02-24";
 
 $HashKey = "salt"; # 2-character string
@@ -2179,6 +2179,10 @@ sub MacroSubst {
 	$txt =~ s/\&__LT__;wantedpages\&__GT__;/&MacroWantedPages()/gei;
 ### <userlist>
 	$txt =~ s/\&__LT__;userlist\&__GT__;/&MacroUserList()/gei;
+### 사전매크로
+	$txt =~ s/\&__LT__;dic\(([^)]+)\)\&__GT__;/&MacroEDic($1)/gei;
+	$txt =~ s/\&__LT__;kdic\(([^)]+)\)\&__GT__;/&MacroKDic($1)/gei;
+	$txt =~ s/\&__LT__;jdic\(([^)]+)\)\&__GT__;/&MacroJDic($1)/gei;
 ###
 ###############
 	return $txt;
@@ -2219,6 +2223,18 @@ sub MacroIncludeSubst {
 ###############
 ### added by gypark
 ### 추가한 매크로의 동작부
+
+### 세 가지 사전 매크로
+sub MacroEDic {
+	return "<a href='http://dic.naver.com/endic?query=@_' target='dictionary'>@_</a>";
+}
+sub MacroKDic {
+	return "<a href='http://krdic.naver.com/krdic?query=@_' target='dictionary'>@_</a>";
+}
+sub MacroJDic {
+	return "<a href='http://jpdic.naver.com/jpdic?query=@_' target='dictionary'>@_</a>";
+}
+
 ### <IncludeDay>
 sub MacroIncludeDay {
 	my ($mainpage, $day_offset) = @_;
