@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.29a";
+$WikiVersion = "0.92K3-ext1.29b";
 $WikiRelease = "2003-02-27";
 
 $HashKey = "salt"; # 2-character string
@@ -3137,17 +3137,14 @@ sub ProcessPostMacro {
 ### <mysign> 매크로 처리
 sub PostMacroMySign {
 	my ($string) = @_;
-	my ($authorAddr) = $ENV{REMOTE_ADDR};
-	my ($timestamp) = CalcDay($Now) . " " . CalcTime($Now);
+	my ($timestamp) = &TimeToText($Now);
 	my ($author) = &GetParam('username');
 
 	if ($author ne "") {
 	# 이 시점에서 [[ ]] 를 붙이는 것이 옳은가 확인할 것
 		$author = "[[$author]]";
 	} else {
-		$author = $authorAddr;
-# 아래의 주석을 해제하면 ip 끝자리를 xxx 로 표시한다
-#		$author =~ s/\d+$/xxx/;
+		$author = &GetRemoteHost(0);
 	}
 	# 여기서는 그냥 mysign(이름,시간)으로만 변경
 	$string =~ s/<mysign>/<mysign($author,$timestamp)>/g; 

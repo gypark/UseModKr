@@ -1,203 +1,486 @@
-/* 
+/*******************************
 	wiki.css
-*/
+	CSS for UseModWiki 0.92K3-ext1.30 or later version.
+	raymundo@kebi.com
+	2002. 03. 01.
+*******************************/
 
+/********************
+ * 사이트 전체
+ ********************/
 body {
-	font-family:gulim;
-	font-size: 9pt;
-	line-height: 160%;
+	margin-left: 1%;
+	margin-right: 1%;
+	font: normal normal normal 9pt/160% gulim, "Times New Roman", serif;
 	text-align:justify;
-	scrollbar-face-color: #f0f0f0;
-	scrollbar-shadow-color: #d0d0d0;
-	scrollbar-highlight-color: #ffffff;
-	scrollbar-3dlight-color: #e0e0e0;
-	scrollbar-darkshadow-color: #d0d0d0;
-	scrollbar-track-color: #ffffff;
-	scrollbar-arrow-color: black;
 	background: #fefefe;
+	color: black;
 }
 
+/********************
+ * 페이지 본문
+ ********************/
+
+/* ''text'' */
 em {
 	font-size: 105%;
 }
 
+/* 줄 앞에 공백이 있는 경우 생기는 pre */
 pre {
-	font-family: Lucida Console,Courier New,Courier,monotype;
-	font-family: dotumche, Courier, monotype;
-	font-size: 9pt;
-	margin-top: 8pt;
-	margin-bottom: 8pt;
-	white-space:pre;
-	padding:5px;
-	line-height: 160%;
+	font: normal normal normal 9pt/160% dotumche, courier, monospace;
+	border: none;
+	padding: 0.5em 0.5em 0.5em 0.5em;
+	white-space: pre;
 	text-align:justify;
-	width:90%;
+	width: 90%;
 }
 
-pre.code   {
-	font-family: Lucida Console,Courier New,Courier,monotype;
-	font-family: dotumche, Courier, monotype;
-	font-size: 9pt;
-	margin-top: 8pt;
-	margin-bottom: 8pt;
-	background-color: #fffffa;
+/* {{{ }}} 태그에 의한 pre */
+PRE.code   {
+	font: normal normal normal 9pt/160% dotumche, courier, monospace;
+	border: 1px solid silver;
+	padding: 0.5em 0.5em 0.5em 0.5em;
 	white-space:pre;
-	border-style:solid;
-	border-width:1pt;
-	border-color:#d0d0d0;
-	color:#111111;
-	padding:5px;
-	line-height: 160%;
 	text-align:justify;
 	width:90%;
+
+	background: #fffffa;
+	color: black;
 }
 
-pre.syntax {
-	font-family: Lucida Console,Courier New,Courier,monotype;
-	font-family: dotumche, Courier, monotype;
-	font-size: 9pt;
-	margin-top: 8pt;
-	margin-bottom: 8pt;
-	background-color: #fffffa;
+/* {{{lang }}} 태그에 의한 pre */
+PRE.syntax {
+	font: normal normal normal 9pt/160% dotumche, courier, monospace;
+	border: 1px solid silver;
+	padding: 0.5em 0.5em 0.5em 0.5em;
 	white-space:pre;
-	border-style:solid;
-	border-width:1pt;
-	border-color:#d0d0d0;
-	color:#111111;
-	padding:5px;
-	line-height: 160%;
 	text-align:justify;
 	width:90%;
+
+	background: #fffffa;
+	color: black;
 }
 
-
-
+/* <code> 태그 */
 code {
-	font-family: Lucida Console,Courier New,Courier,monotype;
-	font-family: dotumche, Courier, monotype;
-	font-size: 9pt;
+	font: normal normal normal 9pt/160% dotumche, courier, monospace;
 	margin-top: 8pt;
 	margin-bottom: 8pt;
 	white-space:pre;
 }
 
-tr { line-height: 20px; }
-
-li { 
-	font-family:gulim; 
-	line-height: 160%; 
-	text-align:justify; 
-	margin-top:1pt; 
-	margin-bottom:2pt; 
-}
-A:link, A:active, A:visited { font-family: gulim; color: blue; text-decoration: none; }
-/* A:hover { color: #ffffff; background-color: black; text-decoration: none; } */
-A:hover { text-decoration: underline; }
-
-SELECT,TEXTAREA { font-family: dotumche; font-size: 10pt; line-height: 140%; border:1 solid BLACK; background-color:WHITE; color:BLACK;}
-
-INPUT.text {
-	border:1 solid BLACK;
-	background-color:WHITE;
-	color:BLACK;
-	padding: 0px;
-	margin-top: 0pt;
-	margin-bottom: 0pt;
-	height: 12pt;
+/* 테이블 */
+table {
+	border-style: solid;
+	border-color: silver;
+	border-width: 0px 1px 1px 0px;
 }
 
-hr { border: 1px solid darkred; }
+tr {
+	line-height: 20px;
+}
 
+th {
+	font: normal normal normal 9pt/160% gulim, "Times New Roman", serif;
+	border-style: solid;
+	border-color: silver;
+	border-width: 1px 0px 0px 1px;
+	padding: 2px;
+}
+
+td {
+	font: normal normal normal 9pt/160% gulim, "Times New Roman", serif;
+	border-style: solid;
+	border-color: silver;
+	border-width: 1px 0px 0px 1px;
+	padding: 2px;
+}
+
+/* 리스트 */
+li {
+	font: normal normal normal 9pt/160% gulim, "Times New Roman", serif;
+	text-align:justify;
+	margin-top: 0.2em;
+	margin-bottom: 0.2em;
+	width: 50%
+}
+
+/* 가로선 */
+hr {
+	border: 1px solid darkred;
+	margin: 0px;
+}
+
+/* 헤딩 */
 h1,h2,h3,h4,h5 {
-	font-family: Arial, Helvetica,sans-serif;
-	padding: 4px;
+	font-family: Arial, Helvetica, sans-serif;
 	margin-top: 10pt;
 	margin-bottom: 8pt;
-	width: 100%;
-	color: #000000;
+	padding-top: 0.3em;
+	padding-bottom: 0.3em;
 }
 
 h1 {
-	font-size: 16pt;
+	font-size: 18pt;
 	padding-left: 3pt;
 }
 
 h2 {
 	font-size: 14pt;
 	padding-left:6pt;
-	background: #f0f0f0;
-	border: solid 1px #d0d0d0;
+	background: #CCCCCC;
+	color: #000000;
+	border: solid 1px black;
 }
 
 h3 {
 	font-size: 13pt;
 	padding-left:9pt;
-	background: #f0f0f0;
-	border: solid 1px #d0d0d0;
+	background: #CCCCCC;
+	color: #000000;
+	border: solid 1px black;
 }
 
 h4 {
 	font-size: 12pt;
 	padding-left:12pt;
-	background: #f0f0f0;
-	border: solid 1px #d0d0d0;
+	background: #CCCCCC;
+	color: #000000;
+	border: solid 1px black;
 }
 
 h5 {
 	font-size: 11pt;
 	padding-left:15pt;
-	background: #f0f0f0;
-	border: solid 1px #d0d0d0;
+	background: #CCCCCC;
+	color: #000000;
+	border: solid 1px black;
 }
 
 h6 {
 	font-size: 10pt;
 }
 
-
-table {
-	border: solid 1px #d0d0d0; 
-	border-top-width: 0px;
-	border-bottom-width: 1px;
-	border-left-width: 0px;
-	border-right-width: 1px;
-	padding: 5px;
-	spacing: 0px;
+/* 일반적인 링크 */
+A:link, A:active, A:visited, A:hover {
+	background: transparent;
+	color: blue;
+	text-decoration: none;
 }
 
-table.normal {
-	border-top-width: 0px;
-	border-bottom-width: 1px;
-	border-left-width: 0px;
-	border-right-width: 1px;
+A:hover {
+	text-decoration: underline;
 }
 
-td {
-	font-size: 9pt;
-	line-height: 160%;
-	border-style: groove;
-	border: solid 1px #d0d0d0;
-	border-top-width: 1px;
-	border-bottom-width: 0px;
-	border-left-width: 1px;
-	border-right-width: 0px;
-	padding: 2px;
-	spacing: 0px;
+/* 외부 URL */
+A.outer:link, A.outer:active, A.outer:visited, A.outer:hover {
+	background: transparent;
+	color: blue;
+	text-decoration: none;
+}
+A.outer:hover
+{
+	text-decoration: underline;
 }
 
-th {
-	font-size: 9pt;
-	line-height: 160%;
-	border-style: groove;
-	border: solid 1px #d0d0d0;
-	border-top-width: 1px;
-	border-bottom-width: 0px;
-	border-left-width: 1px;
-	border-right-width: 0px;
-	padding: 2px;
-	spacing: 0px;
+/* InterWiki */
+A.inter:link, A.inter:active, A.inter:visited A.inter:hover {
+	background: transparent;
+	color: blue;
+	text-decoration: none;
+}
+A.inter:hover
+{
+	text-decoration: underline;
+}
+
+/* 사전 링크 */
+A.dic:link, A.dic:active, A.dic:visited A.dic:hover {
+	background: transparent;
+	color: blue;
+	text-decoration: none;
+}
+A.dic:hover
+{
+	text-decoration: underline;
+}
+
+/* 기타 */
+SELECT,TEXTAREA
+{
+	font: normal normal normal 10pt/160% dotumche, courier, monospace;
+	border: 1px solid silver;
+	padding: 0.2em 0.5em 0.2em 0.5em;
+	background: white;
+	color: black;
+}
+
+INPUT.text {
+	border: 1px solid black;
+	background: white;
+	color:BLACK;
+	height: 1.3em;
 }
 
 img {
 	border: solid 0px #fffff0;
 }
+
+/**********
+ * 페이지 상,하단
+ **********/
+
+/* 페이지 이름 */
+H1.pagename {
+	padding: 5pt 10pt 5pt 10pt;
+	text-align: left;
+}
+
+/* 액션 이름 */
+H1.actionname {
+	padding: 5pt 10pt 5pt 10pt;
+	font-style: italic;
+	text-align: left;
+}
+
+/* 사이트 로고이미지 */
+IMG.logoimage {
+	border: none;
+}
+
+/* 상단 메뉴 바 */
+TABLE.gotobar {
+	border-style: solid;
+	border-color: silver;
+	border-width: 0px 1px 1px 0px;
+	border-collapse: collapse;
+}
+
+TR.gotobar {
+	height: 24px;
+}
+
+TD.gotobar {
+	border-style: solid;
+	border-color: silver;
+	border-width: 1px 0px 0px 1px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+TD.gotobar A:link, 
+TD.gotobar A:visited, 
+TD.gotobar A:active, 
+TD.gotobar A:hover
+{
+	background: transparent;
+	color: blue;
+	text-decoration: none;
+}
+TD.gotobar A:hover
+{
+	text-decoration: underline;
+}
+
+HR.gotobar {
+	border-color: silver;
+	height: 2px;
+}
+
+/* 편집 가이드 */
+DIV.editguide {
+	text-align: right;
+	background: transparent;
+	border: none;
+	color: black;
+}
+
+/* footer */
+DIV.footer {
+	text-align: right;
+	background: transparent;
+	color: gray;
+}
+
+HR.footer {
+	border-color: silver;
+	height: 2px;
+}
+
+
+/**********
+ * diff 출력
+ **********/
+
+TABLE.diff
+{
+	border: 1px solid #CCCCCC;
+	width: 95%;
+	font: normal normal normal 9pt/140% Gulimche, Courier, monospace;
+	background: transparent;
+	color: black;
+}
+
+TR.diff
+{
+	border: none;
+}
+
+TD.diff
+{
+	border: none;
+}
+
+TD.diffrange
+{
+	text-align: center;
+	border: none;
+	font: italic normal bold 9pt/200% Gulim, "Times New Roman", Serif;
+	background: #CCCCCC;
+	color: black;
+}
+
+TD.diffremove
+{
+	border: none;
+	background: #FFFFCC;
+	color: black;
+}
+
+TD.diffadd
+{
+	border: none;
+	background: #CCFFCC;
+	color: black;
+}
+
+/**********
+ * 최근변경내역 
+ **********/
+TABLE.rc {
+	border: none;
+}
+
+TR.rc {
+	border: none;
+}
+
+TD.rc {
+	border: none;
+}
+
+TD.rcdate {
+	border: none;
+	font-size: 10pt;
+}
+
+TD.rcdate A {
+	font-size: 9pt;
+}
+
+TD.rcpage {
+	border: none;
+}
+
+TD.rctime {
+	border: none;
+}
+
+TD.rccount {
+	border: none;
+}
+
+TD.rcauthor {
+	border: none;
+}
+
+TD.rcsummary {
+	border: none;
+	background: transparent;
+	color: green;
+}
+
+TD.rcblank {
+	border: none;
+}
+
+/**********
+ * Calendar 
+ **********/
+TABLE.calendar
+{
+	border: 1pt solid silver;
+	background: white;
+	color: black;
+}
+
+CAPTION.calendar
+{
+	background: transparent;
+	color: black;
+	border: none;
+	padding: 0;
+	line-height: 100%;
+}
+
+CAPTION.calendar A:link,
+CAPTION.calendar A:visited,
+CAPTION.calendar A:active		
+CAPTION.calendar A:hover
+{
+	border: none;
+	background:transparent;
+	color: black;
+	text-decoration: none;
+	font: normal normal bold 9pt/160% Gulim, Serif;
+	margin: 0px 0px 0px 0px;
+}
+CAPTION.calendar A:hover
+{
+	text-decoration: underline;
+}
+
+TH.calendar
+{
+	border: none;
+	text-align: center;
+	font: bold 9pt/100% Gulimche, Curier, monospace;
+}
+
+TR.calendar
+{
+	border: none;
+}
+
+TD.calendar
+{
+	border: none;
+	text-align: right;
+	font: 9pt/100% Gulimche, Curier, monospace;
+}
+
+TD.calendartoday
+{
+	border: 1pt solid silver;
+	text-align: right;
+	font: 9pt/100% Gulimche, Curier, monospace;
+	background: yellow;
+	color: black;
+
+}
+
+TD.calendar A:link,
+TD.calendar A:visited,
+TD.calendar A:active,
+TD.calendar A:hover
+{
+	background:transparent;
+	text-decoration:none
+}
+TD.calendar A:hover
+{
+	text-decoration: underline;
+}
+
+
