@@ -2503,6 +2503,7 @@ sub WikiLinesToHtml {
 ### from Jof4002's patch
 #				$pageHtml .=  "</TR>\n";
 #				$tag = "table"
+
 				$TableMode = 0;
 ###
 ###############
