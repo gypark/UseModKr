@@ -3725,7 +3725,7 @@ EOT
 			my $png = &ReadFile("$hashdir/$hashimage");
 			&WriteStringToFile("$LatexDir/$hashimage", $png);
 		} else {
-			return "[Error retrieving image from $hashdir:$pwd]";
+			return "[Error retrieving image from hashdir]";
 		}
 		unlink (glob("$hashdir/*")) or return "[[unlink fail]]";
 		rmdir ($hashdir) or return "[[rmdir fail]]";
