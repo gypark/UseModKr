@@ -2284,13 +2284,13 @@ sub RemoveLink {
 sub MacroIncludeSubst {
 	my ($txt) = @_;
 
-	$txt =~ s/(^|\n)<include\((.*)\)>([ \t\r\f]*\n)/$1 . &MacroInclude($2) . $3/geim;
+	$txt =~ s/(^|\n)<include\((.*)\)>([\r\f]*\n)/$1 . &MacroInclude($2) . $3/geim;
 ### toc 를 포함하지 않는 includenotoc 매크로 추가
-	$txt =~ s/(^|\n)<includenotoc\((.*)\)>([ \t\r\f]*\n)/$1 . &MacroInclude($2, "notoc") . $3/geim;
+	$txt =~ s/(^|\n)<includenotoc\((.*)\)>([\r\f]*\n)/$1 . &MacroInclude($2, "notoc") . $3/geim;
 ### includeday 매크로
- 	$txt =~ s/(^|\n)(<includeday\(([^,\n]+,)?([-+]?\d+)\)>)([ \t\r\f]*\n)/$1 . &MacroIncludeDay($2, $3, $4) . $5/geim;
+ 	$txt =~ s/(^|\n)(<includeday\(([^,\n]+,)?([-+]?\d+)\)>)([\r\f]*\n)/$1 . &MacroIncludeDay($2, $3, $4) . $5/geim;
 ### includedays 매크로
-	$txt =~ s/(^|\n)(<includedays\(([^,\n]+,)?([-+]?\d+),([-+]?\d+)\)>)([ \t\r\f]*\n)/$1 . &MacroIncludeDay($2, $3, $4, $5) . $6/geim;
+	$txt =~ s/(^|\n)(<includedays\(([^,\n]+,)?([-+]?\d+),([-+]?\d+)\)>)([\r\f]*\n)/$1 . &MacroIncludeDay($2, $3, $4, $5) . $6/geim;
 	return $txt;
 }
 ###
@@ -3521,7 +3521,7 @@ sub ProcessPostMacro {
 	$string = &PostMacroMySign($string);
 	### comments from Jof
 	if (length($id) != 0) {
-		$string =~ s/<((long)?comments)\(([-+]?\d+)\)>/<$1($id,$3)>/g;
+		$string =~ s/(^|\n)<((long)?comments)\(([-+]?\d+)\)>([\r\f]*\n)/$1<$2($id,$4)>$5/gim;
 	}
 ### 
 	return $string;
@@ -3540,7 +3540,7 @@ sub PostMacroMySign {
 		$author = &GetRemoteHost(0);
 	}
 	# 여기서는 그냥 mysign(이름,시간)으로만 변경
-	$string =~ s/<mysign>/<mysign($author,$timestamp)>/g; 
+	$string =~ s/<mysign>([\r\f]*\n)/<mysign($author,$timestamp)>$1/gim; 
 
 	return $string;
 }
