@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.24";
-$WikiRelease = "2003-02-15";
+$WikiVersion = "0.92K3-ext1.25";
+$WikiRelease = "2003-02-16";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -70,7 +70,7 @@ use vars qw(
 	$UserGotoBar $UserGotoBar2 $UserGotoBar3 $UserGotoBar4 
 	$ConfigFile $SOURCEHIGHLIGHT %SRCHIGHLANG $LinkFirstChar
 	$EditGuideInExtern $SizeTopFrame $SizeBottomFrame
-	$LogoPage
+	$LogoPage $CheckTime
 	);
 ###
 ###############
@@ -90,7 +90,7 @@ use vars qw(%Page %Section %Text %InterSite %SaveUrl %SaveNumUrl
 ###############
 ### added by gypark
 ### 패치를 위해 추가된 내부 전역 변수
-use vars qw(%RevisionTs $FS_lt $FS_gt);
+use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime);
 ###
 ###############
 
@@ -151,6 +151,7 @@ $EditGuideInExtern = 0; # 1 = show edit guide in bottom frame, 0 = don't show
 $SizeTopFrame = 160;
 $SizeBottomFrame = 110;
 $LogoPage   = "";	# this page will be displayed when no parameter
+$CheckTime = 0;   # 1 = mesure the processing time (requires Time::HiRes module), 0 = do not 
 ###
 ###############
 
@@ -1671,7 +1672,15 @@ sub GetMinimumFooter {
 	if ($FooterNote ne '') {
 		$result .= T($FooterNote);  # Allow local translations
 	}
-	$result .= "\n<div align=\"right\"><a accesskey=\"x\" name=\"#PAGE_BOTTOM\" href=\"#PAGE_TOP\">" . T('Top') . "</a></div>\n" . $q->end_html;
+
+### 처리 시간 측정
+	$result .= "\n<div align='right'>";
+	if ($CheckTime) {
+		$result .= "<i>" . sprintf("%8.3f",tv_interval($StartTime)) . " sec </i>";
+	}
+	$result .= "<a accesskey=\"x\" name=\"#PAGE_BOTTOM\" href=\"#PAGE_TOP\">" . T('Top') . "</a></div>\n" . $q->end_html;
+### 
+
 	return $result;
 ###
 ###############
@@ -6975,6 +6984,21 @@ sub DoBookmark {
 
 ### 통채로 추가한 함수들의 끝
 ###############
+
+###############
+### added by gypark
+### 처리 시간 측정
+if ($CheckTime) {
+	eval "use Time::HiRes qw( usleep ualarm gettimeofday tv_interval )";
+	if ($@) { 
+		$CheckTime = 0; 
+	} else {
+		$StartTime = [gettimeofday()];
+	}
+}
+###
+###############
+
 &DoWikiRequest()  if ($RunCGI && ($_ ne 'nocgi'));   # Do everything.
 1; # In case we are loaded from elsewhere
 # == End of UseModWiki script. ===========================================
