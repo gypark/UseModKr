@@ -3599,6 +3599,9 @@ sub GetDiff {
 ### diff 출력 개선
 #	$diff_out = `diff $oldName $newName`;
 	$diff_out = `diff -u $oldName $newName`;
+	if ($diff_out eq "") {
+		$diff_out = `diff $oldName $newName`;
+	}
 ###
 ###############
 	&ReleaseDiffLock()  if ($lock);
@@ -3650,12 +3653,6 @@ sub DiffToHTMLplain {
 sub DiffToHTMLunified {
 	my ($html) = @_;
 	my (@lines, $line, $result, $row, $td_option, $in_table, $output_exist);
-
-# 이 패치 이전에 저장된 diff cache 를 위하여
-	if ($html =~ /^\d/) {
-		return &DiffToHTMLold($html);
-	}
-
 
 	@lines = split("\n", $html, -1);
 	shift(@lines);
