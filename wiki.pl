@@ -2408,7 +2408,11 @@ sub MacroMostPopular {
 	foreach $page (&AllPagesList()) {
 		$countfile = &GetCountFile($page);
 		($status, $count) = &ReadFile($countfile);
-		$pgcount{$page} = $count if ($status);
+		if ($status) {
+			$pgcount{$page} = $count;
+		} else {
+			$pgcount{$page} = 0;
+		}
 	}
 
 	@pages = sort {
@@ -7080,7 +7084,11 @@ sub DeletePage {
 ### page count 화일도 같이 삭제
 	$fname = &GetCountFile($page);
 	unlink ($fname) if (-f $fname);
-###
+### hide page by gypark
+	if (defined($HiddenPage{$page})) {
+		delete $HiddenPage{$page};
+		&SaveHiddenPageFile();
+	}
 #########################################################3
 ###############
 ### added by gypark
@@ -7342,6 +7350,12 @@ sub RenamePage {
 		&CreatePageDir($CountDir, $new);  # It might not exist yet
 		rename($oldcnt, $newcnt) || die "error while renaming count file";
 	}
+### hide page by gypark
+	if (defined($HiddenPage{$old})) {
+		delete $HiddenPage{$old};
+		$HiddenPage{$new} = "1";
+		&SaveHiddenPageFile();
+	}
 ###
 ###############
 
@@ -7462,7 +7476,10 @@ sub GetPageLinksFromFile {
 	}
 
 	%links = split($FS1, $data, -1);
-	push (@result, split($FS2, $links{'pagelinks'}, -1)) if ($pagelink);
+### hide page by gypark
+#	push (@result, split($FS2, $links{'pagelinks'}, -1)) if ($pagelink);
+	push (@result, &GetNotHiddenPages(split($FS2, $links{'pagelinks'}, -1))) if ($pagelink);
+###
 	push (@result, split($FS2, $links{'interlinks'}, -1)) if ($interlink);
 	push (@result, split($FS2, $links{'urllinks'}, -1)) if ($urllink);
 
@@ -7931,19 +7948,11 @@ sub DoPageHide {
 		delete $HiddenPage{$id};
 	}
 
-	my $temp = join($FS1, %HiddenPage);
-
-	if (!(&RequestLockDir('pagehide', 4, 3, 0))) {
-		print T('Hiding/Unhiding page failed') . "<br>";
-		print T('Can not get lock for hiding/unhiding');
+	if (!(&SaveHiddenPageFile())) {
+		print T('Hiding/Unhiding page failed');
 		print &GetCommonFooter();
 		return;
 	}
-
-	&WriteStringToFile($HiddenPageFile, $temp);
-	chmod(0600, $HiddenPageFile);
-
-	&ReleaseLockDir('pagehide');
 
 	if (defined ($HiddenPage{$id})) {
 		print '<p>', Ts('%s is hidden.', $id), '<br>';
@@ -7971,6 +7980,17 @@ sub GetNotHiddenPages {
 		push (@notHiddenPages, $_) if (!(&PageIsHidden($_)));
 	}
 	return @notHiddenPages;
+}
+
+sub SaveHiddenPageFile {
+	my $data;
+
+	$data = join($FS1, %HiddenPage);
+
+	&WriteStringToFile($HiddenPageFile, $data);
+	chmod(0600, $HiddenPageFile);
+
+	return 1;
 }
 
 ### 통채로 추가한 함수들의 끝
