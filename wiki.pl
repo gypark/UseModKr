@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.61c";
-$WikiRelease = "2004-07-26";
+$WikiVersion = "0.92K3-ext1.61d";
+$WikiRelease = "2004-08-27";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -5589,6 +5589,8 @@ sub DoPreview {
 #	print &WikiToHTML(&GetParam("text", undef));
 
 	my ($textPreview) = &GetParam("text", undef);
+	$MainPage = &GetParam("id", ".");
+	$MainPage =~ s|/.*||;
 	print &WikiToHTML(&ProcessPostMacro($textPreview));
 ###
 ###############
@@ -5889,6 +5891,7 @@ function preview()
 
 	var body = '<html><head><title>Wiki Preview</title><meta http-equiv="Content-Type" content="text/html; charset=euc-kr"></head>';
 	body += '<body><form method="post" action="$ScriptName">';
+	body += '<input type="hidden" name="id" value="$id">';
 	body += '<input type="hidden" name="action" value="preview"><input type=hidden name="text"></form></body></html>';
 
 	w.document.open();
