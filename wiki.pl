@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.60c";
-$WikiRelease = "2004-04-13";
+$WikiVersion = "0.92K3-ext1.60d";
+$WikiRelease = "2004-04-26";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -4656,17 +4656,14 @@ sub DiffToHTMLunified {
 		} elsif ($line =~ /^ (.*)$/) {
 			$row = $1;
 			$row =~ s/ /&nbsp;/g;
-			$row = "= ".$row;
 			$td_class = "diff";
 		} elsif ($line =~ /^-(.*)$/) {
 			$row = $1;
 			$row =~ s/ /&nbsp;/g;
-			$row = "- ".$row;
 			$td_class = "diffremove";
 		} elsif ($line =~ /^\+(.*)$/) {
 			$row = $1;
 			$row =~ s/ /&nbsp;/g;
-			$row = "+ ".$row;
 			$td_class = "diffadd";
 		}
 		$result .= "<TR><TD class='$td_class'>$row</TD></TR>\n";
