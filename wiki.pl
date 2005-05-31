@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.85";
-$WikiRelease = "2005-04-06";
+$WikiVersion = "0.92K3-ext1.86";
+$WikiRelease = "2005-05-31";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -4823,6 +4823,7 @@ sub UserIsEditor {
 
 	return 1  if (&UserIsAdmin());             # Admin includes editor
 	return 0  if ($EditPass eq "");
+	return 1  if (&LoginUser() and ($EditPass eq "LOGIN"));
 	$userPassword = &GetParam("adminpw", "");  # Used for both
 	return 0  if ($userPassword eq "");
 	foreach (split(/\s+/, $EditPass)) {
