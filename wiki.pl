@@ -3925,7 +3925,7 @@ sub StoreISBN {
 
 sub ISBNLink {
 	my ($rawnum) = @_;
-	my ($rawprint, $html, $num, $first, $second, $third, $hyphened);
+	my ($rawprint, $html, $num, $first, $second, $third, $fourth, $hyphened);
 
 	$num = $rawnum;
 	$rawprint = $rawnum;
@@ -3935,19 +3935,26 @@ sub ISBNLink {
 		return "ISBN $rawnum";
 	}
 
-### 국내 서적
+### 책표지가 없는 경우
 	my ($noCoverIcon, $iconNum) = ("icons/isbn-nocover.jpg", ($num % 5));
 	$noCoverIcon = "icons/isbn-nocover-$iconNum.jpg"
 		if (-f "icons/isbn-nocover-$iconNum.jpg");
 
+### 국내 서적
 	if ($num =~ /^89/) {
-		$first = "http://www.aladdin.co.kr/Cover/$num\_1.jpg";
-		$second = "http://www.aladdin.co.kr/Cover/$num\_1.gif";
+		my $siteurl = "http://www.aladdin.co.kr/Cover";
+		$first = "$siteurl/$num\_1.jpg";
+		$second = "$siteurl/$num\_1.gif";
+		$third = "$siteurl/$num\_1.JPG";
+		$fourth = "$siteurl/$num\_1.GIF";
 		return "<a href=\"http://www.aladdin.co.kr/catalog/book.asp?ISBN=$num\">".
 			"<IMG class='isbn' ".
 			"$ImageTag ".
 			"src='$first' ".
-			"OnError=\"if (src=='$first') src='$second'; else src='$noCoverIcon';\" ".
+			"OnError=\"if (src=='$first') src='$second'; ".
+			"else if (src=='$second') src='$third'; ".
+			"else if (src=='$third') src='$fourth'; ".
+			"else src='$noCoverIcon';\" ".
 			"alt='".T('Go to the on-line bookstore')." ISBN:$rawprint'>".
 			"</a>";
 	}
