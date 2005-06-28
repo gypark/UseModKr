@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.86";
-$WikiRelease = "2005-05-31";
+$WikiVersion = "0.92K3-ext1.87";
+$WikiRelease = "2005-06-28";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -3934,26 +3934,24 @@ sub ISBNLink {
 	if (length($num) != 10) {
 		return "ISBN $rawnum";
 	}
-	#$hyphened = $num;	
-	#$hyphened =~ s/(..)(.....)(..)(.)/\1-\2-\3-\4/;
 
-###############
-### replaced by gypark
-### ISBNLink 개선
-### 국내 서적은 알라딘으로
+### 국내 서적
 	my ($noCoverIcon, $iconNum) = ("icons/isbn-nocover.jpg", ($num % 5));
 	$noCoverIcon = "icons/isbn-nocover-$iconNum.jpg"
 		if (-f "icons/isbn-nocover-$iconNum.jpg");
 
 	if ($num =~ /^89/) {
-		return "<a href='http://www.aladdin.co.kr/catalog/book.asp?ISBN=$num'>" .
+		$first = "http://www.aladdin.co.kr/Cover/$num\_1.jpg";
+		$second = "http://www.aladdin.co.kr/Cover/$num\_1.gif";
+		return "<a href=\"http://www.aladdin.co.kr/catalog/book.asp?ISBN=$num\">".
 			"<IMG class='isbn' ".
-			"$ImageTag src='http://www.aladdin.co.kr/Cover/$num\_1.gif' ".
-			"OnError='src=\"$noCoverIcon\"' ".
+			"$ImageTag ".
+			"src='$first' ".
+			"OnError=\"if (src=='$first') src='$second'; else src='$noCoverIcon';\" ".
 			"alt='".T('Go to the on-line bookstore')." ISBN:$rawprint'>".
 			"</a>";
 	}
-### 일본 서적은 별도로 링크
+### 일본 서적
 	if ($num =~ /^4/) {
 		return "<a href='http://bookweb.kinokuniya.co.jp/guest/cgi-bin/wshosea.cgi?W-ISBN=$num'>" .
 			"<IMG class='isbn' ".
@@ -3962,8 +3960,7 @@ sub ISBNLink {
 			"alt='".T('Go to the on-line bookstore')." ISBN:$rawprint'>".
 			"</a>";
 	}
-
-### 외국 서적은 아마존으로
+### 그 외 서적
 	return "<a href='http://www.amazon.com/exec/obidos/ISBN=$num'>" .
 		"<IMG class='isbn' ".
 		"$ImageTag src='http://images.amazon.com/images/P/$num.01.MZZZZZZZ.gif' ".
@@ -3971,16 +3968,6 @@ sub ISBNLink {
 		"alt='".T('Go to the on-line bookstore')." ISBN:$rawprint'>".
 		"</a>";
 
-#	$first  = "<a href=\"http://shop.barnesandnoble.com/bookSearch/"
-#						. "isbnInquiry.asp?isbn=$num\">";
-#	$second = "<a href=\"http://www.amazon.com/exec/obidos/"
-#						. "ISBN=$num\">" . T('alternate') . "</a>";
-#	$third  = "<a href=\"http://www.pricescan.com/books/"
-#						. "BookDetail.asp?isbn=$num\">" . T('search') . "</a>";
-#	$html  = $first . "ISBN " . $rawprint . "</a> ";
-#	$html .= "($second, $third)";
-#	$html .= " "  if ($rawnum =~ / $/);  # Add space if old ISBN had space.
-#	return $html;
 ### 
 ###############
 
