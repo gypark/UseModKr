@@ -8753,6 +8753,9 @@ sub GetRssRcLine {
 	my ($itemID, $description, $authorLink, $author, $status,
 		$importance, $date, $item, $headItem);
 
+# encode pagename (ext1.88)
+	$pagename = &EncodeUrl($pagename);
+
 	# Add to list of items in the <channel/>
 	$itemID = $FullUrl . &ScriptLinkChar()
 			. &GetOldPageParameters('browse', $pagename, $revision);
