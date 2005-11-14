@@ -8753,7 +8753,7 @@ sub GetRssRcLine {
 	my ($itemID, $description, $authorLink, $author, $status,
 		$importance, $date, $item, $headItem);
 
-# encode Hangul pagename for URL (ext1.88)
+# encode pagename for URL (ext1.88)
 	my $encoded_pagename = &EncodeUrl($pagename);
 
 	# Add to list of items in the <channel/>
