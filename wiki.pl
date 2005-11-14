@@ -8753,12 +8753,12 @@ sub GetRssRcLine {
 	my ($itemID, $description, $authorLink, $author, $status,
 		$importance, $date, $item, $headItem);
 
-# encode pagename (ext1.88)
-	$pagename = &EncodeUrl($pagename);
+# encode pagename for URL (ext1.88)
+	my $encoded_pagename = &EncodeUrl($pagename);
 
 	# Add to list of items in the <channel/>
 	$itemID = $FullUrl . &ScriptLinkChar()
-			. &GetOldPageParameters('browse', $pagename, $revision);
+			. &GetOldPageParameters('browse', $encoded_pagename, $revision);
 	$itemID = &QuoteHtml($itemID);
 	$headItem = "                <rdf:li rdf:resource=\"$itemID\"/>\n";
 # Add to list of items proper.
@@ -8785,7 +8785,7 @@ sub GetRssRcLine {
 	$item = <<RSS ;
     <item rdf:about="$itemID">
         <title>$pagename</title>
-        <link>$QuotedFullUrl?$pagename</link>
+        <link>$QuotedFullUrl?$encoded_pagename</link>
         <description>$description</description>
         <dc:date>$date</dc:date>
 		<dc:creator>$author</dc:creator>
@@ -8796,9 +8796,9 @@ sub GetRssRcLine {
         </dc:contributor>
         <wiki:status>$status</wiki:status>
         <wiki:importance>$importance</wiki:importance>
-        <wiki:diff>$diffPrefix$pagename</wiki:diff>
+        <wiki:diff>$diffPrefix$encoded_pagename</wiki:diff>
         <wiki:version>$revision</wiki:version>
-        <wiki:history>$historyPrefix$pagename</wiki:history>
+        <wiki:history>$historyPrefix$encoded_pagename</wiki:history>
     </item>
 RSS
 	return ($headItem, $item);
