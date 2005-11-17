@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.88";
-$WikiRelease = "2005-11-14";
+$WikiVersion = "0.92K3-ext1.89";
+$WikiRelease = "2005-11-17";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -2712,6 +2712,9 @@ sub MacroSubst {
 ### <UploadedFiles>
 	$txt =~ s/(\&__LT__;uploadedfiles\&__GT__;)/&MacroUploadedFiles($1)/gei;
 ### <comments(숫자)>
+    # 페이지 이름을 쓰지 않음
+	$txt =~ s/(&__LT__;(long)?comments\()([-+]?\d+)(\)&__GT__;)/$1$pageid,$3$4/gi;
+
 	$txt =~ s/(\&__LT__;comments\(([^,]+),([-+]?\d+)\)&__GT__;)/&MacroComments($1,$2,$3)/gei;
 ### <noinclude> </noinclude> from Jof
 	$txt =~ s/\&__LT__;(\/)?noinclude\&__GT__;//gei;
@@ -3108,13 +3111,18 @@ sub MacroInclude {
 
 	my %SubSection = split(/$FS2/, $SubPage{"text_default"}, -1);
 	my %TextInclude = split(/$FS3/, $SubSection{'data'}, -1);
-	
-	# includenotoc 의 경우
-	$TextInclude{'text'} =~ s/<toc>/$FS_lt."toc".$FS_gt/gei if ($opt eq "notoc");
-	# noinclude 처리 from Jof
-	$TextInclude{'text'} =~ s/<noinclude>(.)*?<\/noinclude>//igs;
+	my $txt = $TextInclude{'text'};
 
-	return $TextInclude{'text'};
+	# includenotoc 의 경우
+	$txt =~ s/<toc>/$FS_lt."toc".$FS_gt/gei if ($opt eq "notoc");
+	# noinclude 처리 from Jof
+	$txt =~ s/<noinclude>(.)*?<\/noinclude>//igs;
+
+	# comments 시리즈의 경우 페이지 아이디를 추가해줌
+	$txt =~ s/(<(long)?comments\()([-+]?\d+)(\)>)/$1$name,$3$4/gi;
+	$txt =~ s/(<thread\()([-+]?\d+(,\d+)?)(\)>)/$1$name,$2$4/gi;
+
+	return $txt;
 }
 
 # end
@@ -3589,10 +3597,7 @@ sub ProcessPostMacro {
 
 	### 여기에 사용할 매크로들을 나열한다
 	$string = &PostMacroMySign($string);
-	### comments from Jof
-	if (length($id) != 0) {
-		$string =~ s/(^|\n)<((long)?comments)\(([-+]?\d+)\)>([\r\f]*\n)/$1<$2($id,$4)>$5/gim;
-	}
+
 	return $string;
 }
 

@@ -1,6 +1,9 @@
 sub thread {
 	my ($txt) = @_;
 
+    # 페이지 이름을 쓰지 않음
+	$txt =~ s/(&__LT__;thread\()([-+]?\d+(,\d+)?)(\)&__GT__;)/$1$pageid,$2$4/gi;
+
 	$txt =~ s/(&__LT__;thread\(([^,]+),([-+]?\d+),(\d+)\)&__GT__;)/&MacroThread($1,$2,$3,1,$4)/gei;
 	$txt =~ s/(&__LT__;thread\(([^,]+),([-+]?\d+)\)&__GT__;)/&MacroThread($1,$2,$3,1,0)/gei;
 	$txt =~ s/(&__LT__;thread&__GT__;((.)*?)&__LT__;\/thread&__GT__;)/&MacroThreadBlock($2)/geis;

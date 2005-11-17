@@ -57,7 +57,7 @@ sub action_comments {
 			$newup = $Now;
 		}
 
-		$comment_tail = "<thread($id,$newup," . ($threadindent+1) . ")>";
+		$comment_tail = "<thread($newup," . ($threadindent+1) . ")>";
 
 		if ($threadindent >= 1) {
 			for (1 .. $threadindent) {
@@ -68,29 +68,32 @@ sub action_comments {
 # 			$comment_head = "<thread>\n";
 # 			$comment_tail .= "\n</thread>";
 		}
+		my $thread_pattern = "\\<thread\\($id,$up(,\\d+)?\\)\\>|\\<thread\\($up(,\\d+)?\\)\\>";
 
 		if (($up > 0) && ($up < $threshold1)) {		# 위로 달리는 새글
-			$string =~ s/(\<thread\($id,$up(,\d+)?\)\>)/$comment_head$newcomments <mysign($name,$timestamp)>\n$comment_tail\n\n$1/;
+			$string =~ s/($thread_pattern)/$comment_head$newcomments <mysign($name,$timestamp)>\n$comment_tail\n\n$1/;
 		} else {									# 리플 or 아래로 달리는 새글
-			$string =~ s/(\<thread\($id,$up(,\d+)?\)\>)/$1\n\n$comment_head$newcomments <mysign($name,$timestamp)>\n$comment_tail/;
+			$string =~ s/($thread_pattern)/$1\n\n$comment_head$newcomments <mysign($name,$timestamp)>\n$comment_tail/;
 		}
 	} elsif ($long) {				# longcomments
 		$newcomments =~ s/^\s*//g;
 		$newcomments =~ s/\s*$//g;
 		$newcomments =~ s/(\n)\s*(\r?\n)/$1$2/g;
 		$newcomments =~ s/(\r?\n)/ \\\\$1/g;
+		my $longcomments_pattern = "\\<longcomments\\($id,$up\\)\\>|\\<longcomments\\($up\\)\\>";
 
 		if ($up > 0) {
-			$string =~ s/(\<longcomments\($id,$up\)\>)/\n$newcomments <mysign($name,$timestamp)>\n$1/;
+			$string =~ s/($longcomments_pattern)/\n$newcomments <mysign($name,$timestamp)>\n$1/;
 		} else {
-			$string =~ s/(\<longcomments\($id,$up\)\>)/$1\n$newcomments <mysign($name,$timestamp)>\n/;
+			$string =~ s/($longcomments_pattern)/$1\n$newcomments <mysign($name,$timestamp)>\n/;
 		}
 	} else {						# comments
 		$newcomments =~ s/(----+)/<nowiki>$1<\/nowiki>/g;
+		my $comments_pattern = "\\<comments\\($id,$up\\)\\>|\\<comments\\($up\\)\\>";
 		if ($up > 0) {
-			$string =~ s/\<comments\($id,$up\)\>/* ''' $name ''' : $newcomments - <small>$timestamp<\/small>\n\<comments\($id,$up\)\>/;
+			$string =~ s/($comments_pattern)/* ''' $name ''' : $newcomments - <small>$timestamp<\/small>\n$1/;
 		} else {
-			$string =~ s/\<comments\($id,$up\)\>/\<comments\($id,$up\)\>\n* ''' $name ''' : $newcomments - <small>$timestamp<\/small>/;
+			$string =~ s/($comments_pattern)/$1\n* ''' $name ''' : $newcomments - <small>$timestamp<\/small>/;
 		}
 	}
 
