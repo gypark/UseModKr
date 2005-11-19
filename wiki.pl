@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.89";
-$WikiRelease = "2005-11-17";
+$WikiVersion = "0.92K3-ext1.90";
+$WikiRelease = "2005-11-19";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -2755,6 +2755,7 @@ sub MacroSubst {
 sub RemoveLink {
 	my ($string) = @_;
 
+	$string = &RestoreSavedText($string);
 	$string =~ s/<a href[^>]*>(\?<\/a>)?//ig;
 	$string =~ s/<\/?b>//ig;
 	$string =~ s/<\/a>//ig;
@@ -3086,6 +3087,7 @@ sub MacroInclude {
 		return "";
 	}
 	
+	$name =~ s/^\[\[(.*)\]\]$/$1/;
 	$name =~ s|^/|$MainPage/|;
 	$name = &FreeToNormal($name);
 

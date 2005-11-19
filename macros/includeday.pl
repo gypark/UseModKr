@@ -27,11 +27,15 @@ sub MacroIncludeDay {
 	if ($mainpage ne "") {
 		$temp = $mainpage;
 		$temp =~ s/,$//;
-		$temp = &RemoveLink($temp);
-		$temp = &FreeToNormal($temp);
-		if (&ValidId($temp) ne "") {
-			return $itself;
-		}
+		$temp =~ s/^\[\[(.*)\]\]$/$1/;
+
+# include 는 다른 마크업보다 먼저 처리되기 때문에 아래 단락은 필요 없다
+#		$temp = &RemoveLink($temp);
+#		$temp = &FreeToNormal($temp);
+#		if (&ValidId($temp) ne "") {
+#			return $itself;
+#		}
+
 		$temp =~ s/\/.*$//;
 		$mainpage = $temp . "/";
 	}

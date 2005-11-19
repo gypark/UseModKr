@@ -13,7 +13,7 @@ sub MacroGoto {
 
 	return
 		"<form name=goto><input type=\"hidden\" name=\"action\" value=\"browse\" id=\"hidden-box\">".
-		"<input name='id' type='text' size=10 value=$string>" . "&nbsp;" .
+		"<input name='id' type='text' size=10 value='$string'>" . "&nbsp;" .
 		"<input type=submit value=\"". T('Go') . "\">".
 		"</form>";
 }
