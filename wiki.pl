@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.90";
-$WikiRelease = "2005-11-19";
+$WikiVersion = "0.92K3-ext1.90a";
+$WikiRelease = "2005-11-28";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -8929,7 +8929,7 @@ sub GetTrackbackGuide {
 
 	if (&UserCanSendTrackbackPing($id)) {
 		$FullUrl = $q->url(-full=>1)  if ($FullUrl eq "");
-		my $url = $FullUrl . &ScriptLinkChar . $id;
+		my $url = $FullUrl . &ScriptLinkChar . $encoded;
 		my $title = $id;
 		if ($FreeLinks) {
 			$title =~ s/_/ /g;  # Display with spaces
