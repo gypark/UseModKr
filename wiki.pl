@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.90a";
-$WikiRelease = "2005-11-28";
+$WikiVersion = "0.92K3-ext1.90b";
+$WikiRelease = "2005-12-01";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -6505,7 +6505,7 @@ sub PrintPageList {
 ###############
 		until (
 			$pagename lt @indexSearch[$count]
-			&& ($count == 0 || $pagename gt @indexSearch[$count-1])
+			&& ($count == 0 || $pagename ge @indexSearch[$count-1])
 		) {
 			$count++;
 			$titleIsPrinted = 0;
