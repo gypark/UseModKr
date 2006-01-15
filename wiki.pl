@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.90b";
-$WikiRelease = "2005-12-01";
+$WikiVersion = "0.92K3-ext1.91";
+$WikiRelease = "2006-01-15";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -8254,8 +8254,8 @@ sub OekakiExit {
 <div align="center">
 <form action="$ScriptName" method="POST">
 <input type="hidden" name="action" value="oekaki">
-width [640-40]<input type="text" name="width" size="4" maxlength="3" value="300">
-height [480-40]<input type="text" name="height" size="4" maxlength="3" value="300">
+width [1000-40]<input type="text" name="width" size="4" maxlength="4" value="300">
+height [1000-40]<input type="text" name="height" size="4" maxlength="4" value="300">
 <input type="submit" value="OK">
 </form>
 </div>
@@ -8274,26 +8274,31 @@ height [480-40]<input type="text" name="height" size="4" maxlength="3" value="30
 }
 
 sub OekakiSave {
-	my ($buffer, $p, $filename, $prefix, $target_full);
+	my ($buffer, $filename, $prefix, $target_full);
 
 # POST 데이타 읽음
 	read (STDIN, $buffer, $ENV{'CONTENT_LENGTH'});
-	$p = index($buffer, "\r");
 
-# 각종 에러 처리
-	if (!($buffer =~ m/^\0\0\0\0\r\n/)) {
-		die("Invalid POST data");
+# 데이터 검사
+	my $mark = "Content-type:image/0";
+	if (!($buffer =~ m|$mark|)) {
+		die ("Invalid POST data");
 	}
 
-	if ($p < 0) {
-		my $size = length($buffer);
-		die("Data size $size");
+# png 데이터의 처음 부분의 index 결정
+	my $start = index($buffer, $mark);
+	$start = index($buffer, "\r\n", $start+1);
+	$start = index($buffer, "\r\n", $start+1);
+	if ($start < 0) {
+		die ("Can't find PNG data");
 	}
+	$start += 2;
 
-# 현재는 제대로 동작하지 않는다
-#	if (!(&UserCanEdit("",1))) {
-#		die T('Oekaki is not allowed');
-#	}
+# png 데이터 결정
+	my $png_data = substr($buffer, $start);
+
+			&WriteStringToFile("$TempDir/test3_buffer.png", $buffer);
+			&WriteBinaryToFile("$TempDir/test3_data.png", $png_data);
 
 # 락을 획득
 	if (!(&RequestLockDir('oekaki', 4, 3, 0))) {
@@ -8307,7 +8312,7 @@ sub OekakiSave {
 
 # 저장
 	&CreateDir($UploadDir);
-	&WriteBinaryToFile($target_full, substr($buffer, $p+2));
+	&WriteBinaryToFile($target_full, $png_data);
 
 # 락을 해제
 	&ReleaseLockDir('oekaki');
@@ -8325,13 +8330,13 @@ sub OekakiPaint {
 	);
 
 	$imageWidth = 40 if ($imageWidth < 40);
-	$imageWidth = 640 if ($imageWidth > 640);
+	$imageWidth = 1000 if ($imageWidth > 1000);
 	$imageHeight = 40 if ($imageHeight < 40);
-	$imageHeight = 480 if ($imageHeight > 480);
+	$imageHeight = 1000 if ($imageHeight > 1000);
 
 	my ($appletWidth, $appletHeight) = (
-		(($imageWidth < 300)?400:($imageWidth+100)),
-		(($imageHeight < 300)?420:($imageHeight+120))
+		(($imageWidth < 300)?700:($imageWidth+400)),
+		(($imageHeight < 300)?600:($imageHeight+300))
 	);
 
 	print qq|
@@ -8346,37 +8351,43 @@ colors=document.paintbbs.getColors();
 <div align="center">
 <form action="$ScriptName" method="POST">
 <input type="hidden" name="action" value="oekaki">
-width [640-40]<input type="text" name="width" size="4" maxlength="3" value="$imageWidth">
-height [480-40]<input type="text" name="height" size="4" maxlength="3" value="$imageHeight">
+width [1000-40]<input type="text" name="width" size="4" maxlength="4" value="$imageWidth">
+height [1000-40]<input type="text" name="height" size="4" maxlength="4" value="$imageHeight">
 <input type="submit" value="OK">
 </form>
 </div>
 
 <p align="center">
-<applet codebase="./" code="pbbs.PaintBBS.class" archive="./PaintBBS.jar" name="paintbbs" width="$appletWidth" height="$appletHeight">
-<param name="jp" value="false">
-<param name="image_width" value="$imageWidth">
-<param name="image_height" value="$imageHeight">
 
-<param name="image_bkcolor" value="#ffffff">
+<applet name="oekakibbs" codebase="./" code="a.p.class" archive="./oekakibbs.jar" width="$appletWidth" height="$appletHeight" mayscript>
+<param name="cgi" value="$ScriptName?action=oekaki&mode=save">
+<param name="url" value="$ScriptName?action=oekaki&mode=exit">
 
-<param name="undo" value="60">
-<param name="undo_in_mg" value="12">
-
-<param name="color_text" value="#505078">
-<param name="color_bk" value="#9999bb">
-<param name="color_bk2" value="#8888aa">
-
-<param name="color_icon" value="#ccccff">
-<param name="color_iconselect" value="#202030">
-
-<param name="url_save" value="$ScriptName?action=oekaki&mode=save">
-<param name="url_exit" value="$ScriptName?action=oekaki&mode=exit">
-
-<param name="poo" value="true">
+<param name="popup" value="0">
+<param name="tooltype" value="full">
+<param name="anime" value="0">
+<param name="animesimple" value="1">
+<param name="tooljpgpng" value="0">
+<param name="tooljpg" value="0">
+<param name="picw" value="$imageWidth">
+<param name="pich" value="$imageHeight">
+<param name="baseC" value="888888">
+<param name="brightC" value="aaaaaa">
+<param name="darkC" value="666666">
+<param name="backC" value="000000">
+<param name="mask" value="12">
+<param name="toolpaintmode" value="1">
+<param name="toolmask" value="1">
+<param name="toollayer" value="1">
+<param name="toolalpha" value="1">
+<param name="toolwidth" value="200">
 <param name="target" value="_self">
-</applet></p>
+<param name="catalog" value="0">
+<param name="catalogwidth" value="100">
+<param name="catalogheight" value="100">
+</applet>
 
+</p>
 |;
 }
 
