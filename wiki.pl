@@ -8297,9 +8297,6 @@ sub OekakiSave {
 # png µ•¿Ã≈Õ ∞·¡§
 	my $png_data = substr($buffer, $start);
 
-			&WriteStringToFile("$TempDir/test3_buffer.png", $buffer);
-			&WriteBinaryToFile("$TempDir/test3_data.png", $png_data);
-
 # ∂Ù¿ª »πµÊ
 	if (!(&RequestLockDir('oekaki', 4, 3, 0))) {
 		die("can not get lock");
