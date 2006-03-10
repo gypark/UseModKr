@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.91";
-$WikiRelease = "2006-01-15";
+$WikiVersion = "0.92K3-ext1.92";
+$WikiRelease = "2006-03-10";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -2913,7 +2913,7 @@ sub MacroComments {
 
 	my ($hidden_long, $readonly_true, $readonly_style, $readonly_msg);
 	my ($name_field, $comment_field);
-	my $submit_button = $q->submit(-name=>"Submit",-value=>T("Submit"));
+	my $submit_button;
 
 	if ($long) {
 		$hidden_long = &GetHiddenValue("long","1") . "<br>";
@@ -2923,7 +2923,6 @@ sub MacroComments {
 		$readonly_true = "true";
 		$readonly_style = "background-color: #f0f0f0;";
 		$readonly_msg = T('Comment is not allowed');
-		$submit_button = "";
 		$name_field = $q->textfield(-name=>"name",
 									-class=>"comments",
 									-size=>"10",
@@ -2947,6 +2946,7 @@ sub MacroComments {
 											-style=>"$readonly_style",
 											-default=>"$readonly_msg");
 		}
+		$submit_button = "";
 	} else {											# 에디트 가능
 		$name_field = $q->textfield(-name=>"name",
 									-class=>"comments",
@@ -2965,6 +2965,7 @@ sub MacroComments {
 											-size=>"60",
 											-default=>"");
 		}
+		$submit_button = $q->submit(-name=>"Submit",-value=>T("Submit"));
 	}
 
 	$txt =

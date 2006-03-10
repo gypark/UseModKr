@@ -8,6 +8,7 @@ sub action_comments {
 	my ($timestamp) = CalcDay($Now) . " " . CalcTime($Now);
 	my $string;
 	my $long = &GetParam("long", "");
+	my $anchor;
 
 	&ValidIdOrDie($id);
 
@@ -36,6 +37,7 @@ sub action_comments {
 		
 	$name = &GetRemoteHost(0) if ($name eq "");
 	$name =~ s/,/./g;
+	my $mysign = "<mysign($name,$timestamp)>";
 	$newcomments = &QuoteHtml($newcomments);
 
 	&OpenPage($id);
@@ -68,12 +70,40 @@ sub action_comments {
 # 			$comment_head = "<thread>\n";
 # 			$comment_tail .= "\n</thread>";
 		}
-		my $thread_pattern = "\\<thread\\($id,$up(,\\d+)?\\)\\>|\\<thread\\($up(,\\d+)?\\)\\>";
+
+		my $thread_pattern = "\\<thread\\($id,$up(,$threadindent)?\\)\\>|\\<thread\\($up(,$threadindent)?\\)\\>";
+
+		### 리플을 작성 시각 순으로 배치되게 함.
+		if ($threadindent >= 1) {
+			my @thread_tags = ($string =~ /(<thread\(\d+,\d+\)>)/g);
+			my $idx = 0;
+			# 답글을 달았던 자리의 매크로를 찾고
+			while ($idx <= $#thread_tags) {
+				last if ($thread_tags[$idx] eq "<thread($up,$threadindent)>");
+				$idx++;
+			}
+			$idx = $#thread_tags if ($idx > $#thread_tags);
+			if ($thread_tags[$idx] =~ /<thread\((\d+),(\d+)\)>/) {
+				$anchor = "#".$1;
+			}
+			# 그 아래에서 실제로 바꿔치기할 매크로를 찾음
+			while ($idx <= $#thread_tags-1) {
+				$thread_tags[$idx+1] =~ /<thread\((\d+),(\d+)\)>/;
+				if ($2 <= $threadindent) {
+					last;
+				}
+				$anchor = "#".$1;
+				$idx++;
+			}
+			$thread_pattern = $thread_tags[$idx];
+			$thread_pattern =~ s/(\(|\))/\\$1/g;
+		}
+
 
 		if (($up > 0) && ($up < $threshold1)) {		# 위로 달리는 새글
-			$string =~ s/($thread_pattern)/$comment_head$newcomments <mysign($name,$timestamp)>\n$comment_tail\n\n$1/;
+			$string =~ s/($thread_pattern)/$comment_head$newcomments $mysign\n$comment_tail\n\n$1/;
 		} else {									# 리플 or 아래로 달리는 새글
-			$string =~ s/($thread_pattern)/$1\n\n$comment_head$newcomments <mysign($name,$timestamp)>\n$comment_tail/;
+			$string =~ s/($thread_pattern)/$1\n\n$comment_head$newcomments $mysign\n$comment_tail/;
 		}
 	} elsif ($long) {				# longcomments
 		$newcomments =~ s/^\s*//g;
@@ -83,9 +113,9 @@ sub action_comments {
 		my $longcomments_pattern = "\\<longcomments\\($id,$up\\)\\>|\\<longcomments\\($up\\)\\>";
 
 		if ($up > 0) {
-			$string =~ s/($longcomments_pattern)/\n$newcomments <mysign($name,$timestamp)>\n$1/;
+			$string =~ s/($longcomments_pattern)/\n$newcomments $mysign\n$1/;
 		} else {
-			$string =~ s/($longcomments_pattern)/$1\n$newcomments <mysign($name,$timestamp)>\n/;
+			$string =~ s/($longcomments_pattern)/$1\n$newcomments $mysign\n/;
 		}
 	} else {						# comments
 		$newcomments =~ s/(----+)/<nowiki>$1<\/nowiki>/g;
@@ -142,7 +172,7 @@ sub action_comments {
 		}
 	}
 
-	DoPostMain($string, $id, "*", $Section{'ts'}, 0, 0, $pageid);
+	DoPostMain($string, $id, "*", $Section{'ts'}, 0, 0, "$pageid$anchor");
 	return;
 }
 

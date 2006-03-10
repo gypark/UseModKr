@@ -18,11 +18,14 @@ sub MacroThread {
 	if ($threadindent > 0) {
 		my $marginleft = 0;
 		$marginleft = 3.3*($threadindent-1) if ($threadindent > 0);
-		$txt = "<DIV class='threadreply' style='margin-left: $marginleft"."em'>";
+		$txt .= "<DIV class='threadreply' style='margin-left: $marginleft"."em'>";
 	} else {
-		$txt = "<DIV class='threadnew'>";
+		$txt .= "<DIV class='threadnew'>";
 	}
 	$txt .= &MacroComments($itself, $id, $up, $long, $threadindent)."</DIV>";
+	if ($threadindent >= 1) {
+		$txt .= "<A name='$up'></A>";
+	}
 
 	return $txt;
 }
