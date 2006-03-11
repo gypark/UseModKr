@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.93";
-$WikiRelease = "2006-03-11";
+$WikiVersion = "0.92K3-ext1.94";
+$WikiRelease = "2006-03-12";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -3435,7 +3435,9 @@ sub GetSiteUrl {
 #		%InterSite = split(/\s+/, $data);  # Later consider defensive code
 		($status, $data) = &ReadFile($InterFile);
 		if ($status) {
-			%InterSite = split(/\s+/, $data);
+### intermap에 #을 사용한 주석 추가 지원
+#			%InterSite = split(/\s+/, $data);
+			%InterSite = map { s/\s*#.*//; split /\s+/; } grep { /^[^ #]/ } split /\n/, $data;
 		}
 		if (!defined($InterSite{'Upload'})) {
 ### interwiki 아이콘
