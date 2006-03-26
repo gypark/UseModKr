@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.95";
+$WikiVersion = "0.92K3-ext1.95a";
 $WikiRelease = "2006-03-26";
 
 $HashKey = "salt"; # 2-character string
@@ -6803,6 +6803,7 @@ sub GetPageLinks {
 ### {{{ }}} 내의 내용은 태그로 간주하지 않음
 	$text =~ s/(^|\n)\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/ \n/igm;
 	$text =~ s/(^|\n)\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/ \n/igm;
+	$text =~ s/(^|\n)\{\{\{#!((\w+)( .+)?)[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/ \n/igm;
 ###
 ###############
 	if ($interlink) {
