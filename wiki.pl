@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.94a";
-$WikiRelease = "2006-03-12";
+$WikiVersion = "0.92K3-ext1.95";
+$WikiRelease = "2006-03-26";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -3521,11 +3521,13 @@ sub StoreSyntaxHighlight {
 @code
 EnDoFwIkIcOdE`;
 
-# source-highlight 출력물 앞뒤의 pre 태그와 tt 태그를 뺀다
-	shift @html;
-	shift @html;
-	pop @html;
-	pop @html;
+# source-highlight 출력물 앞뒤의 버전정보, pre 태그, tt 태그를 뺀다
+	my $html = join($FS1, @html);
+	$html =~ s/^<!-- Generator: GNU source-highlight.*?-->//s;
+	$html =~ s/^.*?<pre>.*?<tt>//s;
+	$html =~ s/<\/tt>.*?<\/pre>(\r?\n)*$//s;
+	$html =~ s/(\r?\n)*?$//s;
+	@html = split(/$FS1/, $html);
 
 	my ($line, $result);
 
