@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.95a";
-$WikiRelease = "2006-03-26";
+$WikiVersion = "0.92K3-ext1.95b";
+$WikiRelease = "2006-03-29";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -3008,9 +3008,7 @@ sub MacroUploadedFiles {
 	}
 
 	opendir (DIR, "$UploadDir") || die Ts('cant opening %s', $UploadDir) . ": $!";
-	@files = readdir(DIR);
-	shift @files;
-	shift @files;
+	@files = grep { !/^\.\.?$/ } readdir(DIR);
 	close (DIR);
 
 	$totalSize = 0;
@@ -8228,9 +8226,7 @@ sub OekakiExit {
 	my (@allfiles, @files, %filemtime);
 
 	opendir (DIR, "$UploadDir") || die Ts('cant opening %s', $UploadDir) . ": $!";
-	@allfiles = readdir(DIR);
-	shift @allfiles;
-	shift @allfiles;
+	@allfiles = grep { !/^\.\.?$/ } readdir(DIR);
 	close(DIR);
 
 	foreach (@allfiles) {
