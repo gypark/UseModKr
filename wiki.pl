@@ -3036,7 +3036,7 @@ sub MacroUploadedFiles {
 	$txt .= "<TH class='uploadedfiles'><b>".T('File Name')."</b></TH>".
 		"<TH class='uploadedfiles'><b>".T('Size (byte)')."</b></TH>".
 		"<TH class='uploadedfiles'><b>".T('Date')."</b></TH>";
-	$txt .= "</TR>";
+	$txt .= "</TR>\n";
 
 
 	foreach (@files) {
@@ -3057,7 +3057,7 @@ sub MacroUploadedFiles {
 		}
 		$txt .= "<TD class='uploadedfiles' align='right'>$size</TD>";
 		$txt .= "<TD class='uploadedfiles'>".&TimeToText($filemtime{$_})."</TD>";
-		$txt .= "</TR>";
+		$txt .= "</TR>\n";
 	}
 	$txt .= "<TR class='uploadedfiles'>";
 	$txt .= "<TD class='uploadedfiles'>&nbsp;</TD>" if ($canDelete);
@@ -3070,7 +3070,7 @@ sub MacroUploadedFiles {
 	$txt .= "<TD class='uploadedfiles' align='right'>";
 	$txt .= "<b>$totalSize</b>";
 	$txt .= "</TD>";
-	$txt .= "<TD class='uploadedfiles'>&nbsp;</TD>";
+	$txt .= "<TD class='uploadedfiles'>&nbsp;</TD></TR>\n";
 
 	$txt .= "</TABLE>";
 	$txt .= $q->submit(T('Delete Checked Files')) if ($canDelete);
