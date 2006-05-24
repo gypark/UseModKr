@@ -13,14 +13,13 @@ function onMemoToggle(id)
 }
 
 // 작성 취소 시 확인
-var previous_text, current_text;
-var closeok = false;
+var previous_text = "", current_text = "", conflict = false, closeok = false;
 function chk_close(e, str) {
 	if (!e) e = event;
 	if (!closeok) {
 		current_text = document.form_edit.text.value;
 
-		if (previous_text != current_text) {
+		if (conflict || (previous_text != current_text)) {
 			e.returnValue = str;
 		}
 	}

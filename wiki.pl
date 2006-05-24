@@ -1987,7 +1987,10 @@ sub GetHtmlHeader {
 ###############
 
 ### 작성 취소시 확인
-	if ((lc(&GetParam("action","")) eq "edit") && (&UserCanEdit($id,1))) {
+	if (
+			(&GetParam("oldtime", "") ne "") || 
+			((lc(&GetParam("action","")) eq "edit") && (&UserCanEdit($id,1)))
+	   ) {
 		my $close_string = T('If you leave current page, the contents you are writing will not be stored.');
 		$bodyExtra .= qq( onbeforeunload="chk_close(event, '$close_string')" );
 	}
@@ -5773,7 +5776,8 @@ function oekaki()
 ### 편집모드에 들어갔을때 포커스가 편집창에 있도록 한다
 	print "\n<script language=\"JavaScript\" type=\"text/javascript\">\n"
 		. "<!--\n"
-		. "previous_text = document.form_edit.text.value;"
+		. "previous_text = document.form_edit.text.value;\n"
+		. (($isConflict)?"conflict = true;\n":"")
 		. "document.form_edit.text.focus();\n"
 		. "//-->\n"
 		. "</script>\n";
