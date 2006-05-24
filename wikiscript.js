@@ -19,5 +19,4 @@ function chk_close(e, str) {
 	if (!closeok) {
 		e.returnValue = str;
 	}
-	closeok = false;
 }

@@ -5582,7 +5582,7 @@ function preview()
 function help(s)
 {
 	var w = window.open(s, "Help", "width=500,height=400, resizable=1, scrollbars=1");
-	closeok=false;
+	closeok = false;
 	w.focus();
 }
 //-->
