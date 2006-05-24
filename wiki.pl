@@ -5649,7 +5649,8 @@ function oekaki()
 ### replaced by gypark
 ### 편집모드에 들어갔을때 포커스가 편집창에 있도록 한다
 #	print &GetFormStart();
-	print $q->startform(-method=>"POST", -action=>"$ScriptName", -enctype=>"application/x-www-form-urlencoded" ,-name=>"form_edit", -onSubmit=>"closeok=true; return true;") ;
+	print $q->startform(-method=>"POST", -action=>"$ScriptName", -enctype=>"application/x-www-form-urlencoded",
+			-name=>"form_edit", -onSubmit=>"closeok=true; return true;");
 ###
 ###############
 ###############
