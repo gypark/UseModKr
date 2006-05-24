@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.96";
+$WikiVersion = "0.92K3-ext1.96a";
 $WikiRelease = "2006-05-24";
 
 $HashKey = "salt"; # 2-character string
@@ -5773,6 +5773,7 @@ function oekaki()
 ### 편집모드에 들어갔을때 포커스가 편집창에 있도록 한다
 	print "\n<script language=\"JavaScript\" type=\"text/javascript\">\n"
 		. "<!--\n"
+		. "previous_text = document.form_edit.text.value;"
 		. "document.form_edit.text.focus();\n"
 		. "//-->\n"
 		. "</script>\n";
