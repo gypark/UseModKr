@@ -765,4 +765,6 @@ Title will be converted into [[/Title]] automatically.
 제목은 자동으로 [[/제목]]의 형식으로 변환됩니다.
 Monthly View
 월별 보기
+If you leave current page, the contents you are writing will not be stored.
+이 페이지를 벗어나면 작성중이던 글이 지워집니다.
 END_OF_TRANSLATION

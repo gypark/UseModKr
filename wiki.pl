@@ -1552,7 +1552,9 @@ sub HelpLink {
 	my ($id, $text) = @_;
 	my $url = "$ScriptName?action=help&index=$id";
 
-	return "<a href=\"javascript:help('$url')\">$text</a>";
+### 작성 취소 시 확인
+#	return "<a href=\"javascript:help('$url')\">$text</a>";
+	return "<a onclick=\"closeok=true;\" href=\"javascript:help('$url')\">$text</a>";
 }
 
 # end
@@ -1983,6 +1985,12 @@ sub GetHtmlHeader {
 	}
 ###
 ###############
+
+### 작성 취소시 확인
+	if ((lc(&GetParam("action","")) eq "edit") && (&UserCanEdit($id,1))) {
+		my $close_string = T('If you leave current page, the contents you are writing will not be stored.');
+		$bodyExtra .= qq( onbeforeunload="chk_close(event, '$close_string')" );
+	}
 
 ### 단축키
 	my $headExtra;
@@ -5574,6 +5582,7 @@ function preview()
 function help(s)
 {
 	var w = window.open(s, "Help", "width=500,height=400, resizable=1, scrollbars=1");
+	closeok=false;
 	w.focus();
 }
 //-->
@@ -5637,7 +5646,7 @@ function oekaki()
 ### replaced by gypark
 ### 편집모드에 들어갔을때 포커스가 편집창에 있도록 한다
 #	print &GetFormStart();
-	print &GetFormStart("form_edit");
+	print $q->startform(-method=>"POST", -action=>"$ScriptName", -enctype=>"application/x-www-form-urlencoded" ,-name=>"form_edit", -onSubmit=>"closeok=true; return true;") ;
 ###
 ###############
 ###############

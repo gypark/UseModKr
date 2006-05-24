@@ -11,3 +11,13 @@ function onMemoToggle(id)
 	}
 	return false;
 }
+
+// 작성 취소 시 확인
+var closeok = false;
+function chk_close(e, str) {
+	if (!e) e = event;
+	if (!closeok) {
+		e.returnValue = str;
+	}
+	closeok = false;
+}
