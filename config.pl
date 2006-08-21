@@ -23,7 +23,7 @@ $EmailFrom   = "Wiki";          # Text for "From: " field of email notes.
 $SendMail    = "/usr/sbin/sendmail";  # Full path to sendmail executable
 $FooterNote  = "";              # HTML for bottom of every page
 $EditNote    = "";              # HTML notice above buttons on edit page
-$MaxPost     = 1024 * 1024 * 1;  # Maximum 210K posts (about 200K for pages)
+$MaxPost     = 1024 * 1024 * 3;  # Maximum 210K posts (about 200K for pages)
 $NewText     = "";              # New page text ("" for default message)
 $HttpCharset = "euc-kr";              # Charset for pages, like "iso-8859-2"
 $UserGotoBar = "<a href='/'>Home</a>";              # HTML added to end of goto bar
