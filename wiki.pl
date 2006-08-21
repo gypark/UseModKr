@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.96c";
+$WikiVersion = "0.92K3-ext1.97";
 $WikiRelease = "2006-08-21";
 
 $HashKey = "salt"; # 2-character string
@@ -76,6 +76,7 @@ use vars qw(
 	$SlashLinks $InterIconDir $SendPingAllowed $JavaScript
 	$UseLatex
 	$UserHeader
+	$AntiSpam	
 	);
 ###
 ###############
@@ -171,6 +172,7 @@ $SendPingAllowed = 0;   # 0 - anyone, 1 - who can edit, 2 - who is admin
 $JavaScript  = "wikiscript.js";   # URL for JavaScript code (like "/wikiscript.js")
 $UseLatex    = 0;		# 1 = Use LaTeX conversion   2 = Don't convert
 $UserHeader  = '';              # Optional HTML header additional content
+$AntiSpam = '';			# String used in anti-spam check (for comments)
 
 # Major options:
 $UseSubpage  = 1;       # 1 = use subpages,       0 = do not use subpages
@@ -2923,7 +2925,7 @@ sub MacroComments {
 	}
 
 	my ($hidden_long, $readonly_true, $readonly_style, $readonly_msg);
-	my ($name_field, $comment_field);
+	my ($name_field, $comment_field, $antispam_field);
 	my $submit_button;
 
 	if ($long) {
@@ -2936,11 +2938,18 @@ sub MacroComments {
 		$readonly_msg = T('Comment is not allowed');
 		$name_field = $q->textfield(-name=>"name",
 									-class=>"comments",
-									-size=>"10",
+									-size=>"15",
 									-maxlength=>"80",
 									-readonly=>"$readonly_true",
 									-style=>"$readonly_style",
 									-default=>"$idvalue");
+		$antispam_field = $q->textfield(-name=>"antispam",
+									-class=>"comments",
+									-size=>"15",
+									-maxlength=>"80",
+									-readonly=>"$readonly_true",
+									-style=>"$readonly_style",
+									-default=>"");
 		if ($long) {		# longcomments
 			$comment_field = $q->textarea(-name=>"comment",
 									-class=>"comments",
@@ -2950,9 +2959,9 @@ sub MacroComments {
 									-style=>"$readonly_style",
 									-default=>"$readonly_msg");
 		} else {			# comments
-			$comment_field = $q->textfield(-name=>"comment", 
+			$comment_field = "<BR>".$q->textfield(-name=>"comment", 
 											-class=>"comments",
-											-size=>"60",
+											-size=>"80",
 											-readonly=>"$readonly_true",
 											-style=>"$readonly_style",
 											-default=>"$readonly_msg");
@@ -2961,9 +2970,14 @@ sub MacroComments {
 	} else {											# 에디트 가능
 		$name_field = $q->textfield(-name=>"name",
 									-class=>"comments",
-									-size=>"10",
+									-size=>"15",
 									-maxlength=>"80",
 									-default=>"$idvalue");
+		$antispam_field = $q->textfield(-name=>"antispam",
+									-class=>"comments",
+									-size=>"15",
+									-maxlength=>"80",
+									-default=>"");
 		if ($long) {		# longcomments
 			$comment_field = $q->textarea(-name=>"comment",
 									-class=>"comments",
@@ -2971,14 +2985,15 @@ sub MacroComments {
 									-cols=>"80"
 									-default=>"");
 		} else {			# comments
-			$comment_field = $q->textfield(-name=>"comment",
+			$comment_field = "<BR>".$q->textfield(-name=>"comment",
 											-class=>"comments",
-											-size=>"60",
+											-size=>"80",
 											-default=>"");
 		}
 		$submit_button = $q->submit(-name=>"Submit",-value=>T("Submit"));
 	}
 
+	my $antispam_info = Ts("Please fill '%s' in this filed", $AntiSpam);
 	$txt =
 		$q->startform(-name=>"comments",-method=>"POST",-action=>"$ScriptName") .
 		&GetHiddenValue("action","comments") .
@@ -2988,6 +3003,8 @@ sub MacroComments {
 		(($threadindent ne '')?&GetHiddenValue("threadindent",$threadindent):"") .
 		T('Name') . ": " .
 		$name_field . "&nbsp;" .
+		(($AntiSpam ne '')?T('Anti-Spam') . " ($antispam_info): " . $antispam_field:"") .
+		"&nbsp;" .
 		T('Comment') . ": " .
 		$hidden_long .
 		$comment_field . "&nbsp;" .

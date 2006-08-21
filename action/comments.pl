@@ -10,6 +10,7 @@ sub action_comments {
 	my $long = &GetParam("long", "");
 	my $anchor;
 	my $match = 0;
+	my $antispam = &GetParam("antispam", "");
 
 	&ValidIdOrDie($id);
 
@@ -31,7 +32,7 @@ sub action_comments {
 	my $abs_up = abs($up);
 	my ($threshold1, $threshold2) = (100000000, 1000000000);
 	
-	if ($newcomments =~ /^\s*$/) {
+	if ((lc($antispam) ne lc($AntiSpam)) || ($newcomments =~ /^\s*$/)) {
 		&ReBrowsePage($pageid, "", 0);
 		return;
 	}

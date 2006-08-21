@@ -79,6 +79,8 @@ $JavaScript  = "wikiscript.js";   # URL for JavaScript code (like "/wikiscript.j
 $UseLatex    = 0;		# 1 = Use LaTeX conversion   2 = Don't convert
 ### 사용자 정의 헤더
 $UserHeader  = '';              # Optional HTML header additional content
+### 스팸 방지용 스트링
+$AntiSpam = '';			# String used in anti-spam check (for comments)
 
 ##
 ##########################################################

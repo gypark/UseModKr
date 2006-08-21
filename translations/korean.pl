@@ -767,4 +767,8 @@ Monthly View
 월별 보기
 If you leave current page, the contents you are writing will not be stored.
 이 페이지를 벗어나면 작성중이던 글이 지워집니다.
+Anti-Spam
+스팸방지
+Please fill '%s' in this filed
+다음 칸에 '%s'을 입력하세요
 END_OF_TRANSLATION
