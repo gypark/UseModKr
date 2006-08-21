@@ -9,6 +9,7 @@ sub action_comments {
 	my $string;
 	my $long = &GetParam("long", "");
 	my $anchor;
+	my $match = 0;
 
 	&ValidIdOrDie($id);
 
@@ -99,6 +100,9 @@ sub action_comments {
 			$thread_pattern =~ s/(\(|\))/\\$1/g;
 		}
 
+		if ($string =~ /($thread_pattern)/) {
+			$match = 1;
+		}
 
 		if (($up > 0) && ($up < $threshold1)) {		# 위로 달리는 새글
 			$string =~ s/($thread_pattern)/$comment_head$newcomments $mysign\n$comment_tail\n\n$1/;
@@ -112,6 +116,9 @@ sub action_comments {
 		$newcomments =~ s/(\r?\n)/ \\\\$1/g;
 		my $longcomments_pattern = "\\<longcomments\\($id,$up\\)\\>|\\<longcomments\\($up\\)\\>";
 
+		if ($string =~ /($longcomments_pattern)/) {
+			$match = 1;
+		}
 		if ($up > 0) {
 			$string =~ s/($longcomments_pattern)/\n$newcomments $mysign\n$1/;
 		} else {
@@ -120,6 +127,10 @@ sub action_comments {
 	} else {						# comments
 		$newcomments =~ s/(----+)/<nowiki>$1<\/nowiki>/g;
 		my $comments_pattern = "\\<comments\\($id,$up\\)\\>|\\<comments\\($up\\)\\>";
+
+		if ($string =~ /($comments_pattern)/) {
+			$match = 1;
+		}
 		if ($up > 0) {
 			$string =~ s/($comments_pattern)/* ''' $name ''' : $newcomments - <small>$timestamp<\/small>\n$1/;
 		} else {
@@ -132,7 +143,7 @@ sub action_comments {
 	}
 
 # 블로그 지원을 위한 꽁수
-	if ($pageid && $blogrcpage) {
+	if ($pageid && $blogrcpage && $match) {
 		$blogrccomment =~ s/(\r?\n)/ /g;
 		$blogrccomment =~ s/\[/{/g;
 		$blogrccomment =~ s/\]/}/g;
