@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.97";
+$WikiVersion = "0.92K3-ext1.97a";
 $WikiRelease = "2006-08-21";
 
 $HashKey = "salt"; # 2-character string
@@ -3004,8 +3004,8 @@ sub MacroComments {
 		T('Name') . ": " .
 		$name_field . "&nbsp;" .
 		(($AntiSpam ne '')?T('Anti-Spam') . " ($antispam_info): " . $antispam_field:"") .
-		"&nbsp;" .
-		T('Comment') . ": " .
+#		"&nbsp;" .
+#		T('Comment') . ": " .
 		$hidden_long .
 		$comment_field . "&nbsp;" .
 		$submit_button .
