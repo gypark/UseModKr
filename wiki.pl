@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.97a";
-$WikiRelease = "2006-08-21";
+$WikiVersion = "0.92K3-ext1.98";
+$WikiRelease = "2006-12-10";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -9027,6 +9027,25 @@ sub TextIsBanned {
 	}
 	return undef;
 }
+
+# UTF-8 -> EUC-KR
+sub encode_korean {
+	my ($str, $from, $to) = @_;
+
+	eval { require Encode; };
+	unless($@) {
+		$str = Encode::encode($to, Encode::decode($from, $str));
+	} else {
+		eval { require Text::Iconv; };
+		unless($@) {
+			my $converter = Text::Iconv->new($from, $to);
+			$str = $converter->convert($str);
+		}
+	}
+	return $str;
+}
+
+
 ### 통채로 추가한 함수들의 끝
 ###############
 

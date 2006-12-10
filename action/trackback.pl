@@ -8,6 +8,13 @@ sub action_trackback {
 	my $blog_name = &GetParam('blog_name');
 	my $excerpt = &GetParam('excerpt');
 
+# UTF-8 -> EUC-KR 전환
+	if ($ENV{'CONTENT_TYPE'} and ($ENV{'CONTENT_TYPE'} =~ m/utf-8/i)) {
+		$title = encode_korean($title, 'utf-8', 'euc-kr');
+		$blog_name = encode_korean($blog_name, 'utf-8', 'euc-kr');
+		$excerpt = encode_korean($excerpt, 'utf-8', 'euc-kr');
+	}
+
 # 블로그 지원을 위한 꽁수
 	my ($blogrcpage, $blogrccomment);
 	if ($id =~ m/(.+)(\/|%2f|%2F)(.+)/) {
