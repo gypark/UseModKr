@@ -10,7 +10,7 @@ sub action_adminmenu {
 		"<p>".&ScriptLink("action=editlock&set=1",T('Lock Site')).
 		" | ".&ScriptLink("action=editlock&set=0",T('Unlock Site')).
 		"<p>".&ScriptLink("action=unlock",T('Removing edit lock')).
-		"<p>".&ScriptLink("action=replace",T('Replace strings in all pages')).
+		"<p>".&ScriptLink("action=replacetext",T('Replace strings in all pages')).
 		"\n";
 
 	print &GetCommonFooter();
