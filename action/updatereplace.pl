@@ -22,9 +22,10 @@ sub action_updatereplace {
 		"<b>$newStr</b>".
 		"\".<br>\n";
 
-	my ($name, @found);
-	foreach $name (&AllPagesList()) {
-		&OpenPage($name);
+	my ($page, $num);
+	$num = 0;
+	foreach $page (&AllPagesList()) {
+		&OpenPage($page);
 		&OpenDefaultText();
 		my $newText = $Text{'text'};
 
@@ -36,9 +37,10 @@ sub action_updatereplace {
 
 		if ($newText ne $Text{'text'}) {
 # ġȯ
-			print "Processing $name ...<br>\n";
+			$num++;
+			print "[$num] Processing $page ...<br>\n";
 
-			DoPostMain($newText, $name, "*", $Section{'ts'}, 0, 1, "!!");
+			DoPostMain($newText, $page, "*", $Section{'ts'}, 0, 1, "!!");
 		}
 	}
 
