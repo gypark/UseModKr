@@ -771,4 +771,8 @@ Anti-Spam
 스팸방지
 Please fill '%s' in this filed
 다음 칸에 '%s'을 입력하세요
+Replace strings in all pages
+모든 페이지의 문자열 일괄 치환
+Replacing strings in all pages
+문자열 치환 중
 END_OF_TRANSLATION
