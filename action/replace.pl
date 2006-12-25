@@ -1,5 +1,5 @@
 # replace action
-# 금지단어
+# 일괄치환
 sub action_replace {
 	print &GetHeader("", T('Replace strings in all pages'), "");
 	return if (!&UserIsAdminOrError());
