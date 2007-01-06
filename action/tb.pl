@@ -1,6 +1,7 @@
-sub action_trackback {
+sub action_tb {
 	use strict;
 	my $id = &GetParam("id","");
+	$id =~ s/\s+$//;
 	my $normal_id = $id;
 
 	my $url = &GetParam('url');
