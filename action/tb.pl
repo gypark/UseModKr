@@ -8,6 +8,16 @@ sub action_tb {
 	my $title = &GetParam('title', $url);
 	my $blog_name = &GetParam('blog_name');
 	my $excerpt = &GetParam('excerpt');
+# tcode
+	my $tcode = &GetParam('tc',"");
+	my ($code_today, $code_yesterday);
+	$code_today = &simple_crypt($id.&CalcDay($Now));
+	$code_yesterday = &simple_crypt($id.&CalcDay($Now - 86400));
+
+	if (($tcode ne $code_today) && ($tcode ne $code_yesterday)) { # spam
+		&SendTrackbackResponse("1", "SPAM trackback");
+		return;
+	}
 
 # UTF-8 -> EUC-KR ÀüÈ¯
 	if ($ENV{'CONTENT_TYPE'} and ($ENV{'CONTENT_TYPE'} =~ m/utf-8/i)) {

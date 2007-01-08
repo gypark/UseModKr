@@ -16,7 +16,7 @@ sub action_comments {
 # ccode
 	my $ccode = &GetParam("ccode", "");
 	my ($code_today, $code_yesterday);
-	$code_today = &simple_crypt($id.&CalcDayNow());
+	$code_today = &simple_crypt($id.&CalcDay($Now));
 	$code_yesterday = &simple_crypt($id.&CalcDay($Now - 86400));
 
 	if (($ccode ne $code_today) && ($ccode ne $code_yesterday)) { # spam
