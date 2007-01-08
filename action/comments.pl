@@ -10,9 +10,19 @@ sub action_comments {
 	my $long = &GetParam("long", "");
 	my $anchor;
 	my $match = 0;
-	my $antispam = &GetParam("antispam", "");
 
-	&ValidIdOrDie($id);
+	return if (!&ValidIdOrDie($id));
+
+# ccode
+	my $ccode = &GetParam("ccode", "");
+	my ($code_today, $code_yesterday);
+	$code_today = &simple_crypt($id.&CalcDayNow());
+	$code_yesterday = &simple_crypt($id.&CalcDay($Now - 86400));
+
+	if (($ccode ne $code_today) && ($ccode ne $code_yesterday)) { # spam
+		&ReportError("SPAM comment");
+		return;
+	}
 
 	# 블로그 지원을 위한 꽁수
 	my ($blogrcpage, $blogrccomment);
@@ -32,7 +42,7 @@ sub action_comments {
 	my $abs_up = abs($up);
 	my ($threshold1, $threshold2) = (100000000, 1000000000);
 	
-	if ((lc($antispam) ne lc($AntiSpam)) || ($newcomments =~ /^\s*$/)) {
+	if ($newcomments =~ /^\s*$/) {
 		&ReBrowsePage($pageid, "", 0);
 		return;
 	}
