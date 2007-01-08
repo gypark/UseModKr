@@ -9040,9 +9040,8 @@ sub simple_crypt {
 	my ($orig) = @_;
 
 	my $encrypt = crypt($orig, $HashKey);
-	$encrypt =~ s/^..//;
 
-	return $encrypt;
+	return substr($encrypt, 2);
 }
 
 
