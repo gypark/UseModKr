@@ -8949,7 +8949,7 @@ sub GetTrackbackGuide {
 	$FullUrl = $q->url(-full=>1)  if ($FullUrl eq "");
 	my $encoded = &EncodeUrl($id);
 # TCode
-	my $tcode = &simple_crypt($encoded.&CalcDay($Now));
+	my $tcode = &simple_crypt($id.&CalcDay($Now));
 	my $url = $FullUrl . &ScriptLinkChar() . "action=tb&tc=$tcode&id=$encoded";
 
 	if (&PageCanReceiveTrackbackPing($id)) {
