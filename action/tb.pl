@@ -11,8 +11,8 @@ sub action_tb {
 # tcode
 	my $tcode = &GetParam('tc',"");
 	my ($code_today, $code_yesterday);
-	$code_today = &simple_crypt($id.&CalcDay($Now));
-	$code_yesterday = &simple_crypt($id.&CalcDay($Now - 86400));
+	$code_today = &simple_crypt(length($id).substr(&CalcDay($Now),5));
+	$code_yesterday = &simple_crypt(length($id).substr(&CalcDay($Now - 86400),5));
 
 	if (($tcode ne $code_today) && ($tcode ne $code_yesterday)) { # spam
 		&SendTrackbackResponse("1", "SPAM trackback");

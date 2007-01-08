@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.102";
-$WikiRelease = "2007-01-08";
+$WikiVersion = "0.92K3-ext1.102a";
+$WikiRelease = "2007-01-09";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -2927,7 +2927,7 @@ sub MacroComments {
 	my $submit_button;
 
 # CCode
-	my $ccode = &simple_crypt($id.&CalcDay($Now));
+	my $ccode = &simple_crypt(length($id).substr(&CalcDay($Now),5));
 
 	if ($long) {
 		$hidden_long = &GetHiddenValue("long","1") . "<br>";
@@ -8949,7 +8949,8 @@ sub GetTrackbackGuide {
 	$FullUrl = $q->url(-full=>1)  if ($FullUrl eq "");
 	my $encoded = &EncodeUrl($id);
 # TCode
-	my $tcode = &simple_crypt($id.&CalcDay($Now));
+	my $tcode = &simple_crypt(length($id).substr(&CalcDay($Now),5));
+
 	my $url = $FullUrl . &ScriptLinkChar() . "action=tb&tc=$tcode&id=$encoded";
 
 	if (&PageCanReceiveTrackbackPing($id)) {
