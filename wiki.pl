@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.102a";
-$WikiRelease = "2007-01-09";
+$WikiVersion = "0.92K3-ext1.103";
+$WikiRelease = "2007-01-10";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -5669,6 +5669,10 @@ function oekaki()
 		if ($revision ne "") {
 			print &GetHiddenValue("revision", $revision), "\n";
 		}
+# ECode
+		my $ecode = &simple_crypt(length($id).substr(&CalcDay($Now),5));
+		print &GetHiddenValue("ecode","$ecode")."\n";
+###
 		print &GetTextArea('text', $oldText, $editRows, $editCols);
 		$summary = &GetParam("summary", "*");
 		print "<p>", T('Summary:') . " ",
@@ -6857,6 +6861,17 @@ sub DoPost {
 	my $summary = &GetParam("summary", "");
 	my $oldtime = &GetParam("oldtime", "");
 	my $oldconflict = &GetParam("oldconflict", "");
+# ECode
+	my $ecode = &GetParam("ecode","");
+	my ($code_today, $code_yesterday);
+	$code_today = &simple_crypt(length($id).substr(&CalcDay($Now),5));
+	$code_yesterday = &simple_crypt(length($id).substr(&CalcDay($Now - 86400),5));
+
+	if (($ecode ne $code_today) && ($ecode ne $code_yesterday)) { # spam
+		&ReportError("SPAM editing");
+		return;
+	}
+###
 	DoPostMain($string, $id, $summary, $oldtime, $oldconflict, 0);
 	return;
 }
