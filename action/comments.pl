@@ -24,6 +24,15 @@ sub action_comments {
 		return;
 	}
 
+# 금지단어 처리는 여기서 먼저
+	if (my $bannedText = &TextIsBanned($newcomments)) {
+		print &GetHeader("", T('Editing Denied'),"");
+		print Ts('Editing not allowed: text includes banned text');
+		print " [$bannedText]";
+		print &GetCommonFooter();
+		return;
+	}
+
 	# 블로그 지원을 위한 꽁수
 	my ($blogrcpage, $blogrccomment);
 	if ($id =~ m/(.+)(\/|%2f|%2F)(.+)/) {
