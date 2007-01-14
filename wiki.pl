@@ -1954,11 +1954,13 @@ sub GetHtmlHeader {
 ###############
 
 ### RobotsMetaTag
-### from http://www.usemod.com/cgi-bin/wiki.pl?WikiPatches/RobotsNoFollow
 	my $action = lc(&GetParam('action',''));
-	if ($action eq "" ||			# regular page browse
-			$action eq "rc" ||		# recent changes
-			$action eq "index"		# page list
+	my $search = &GetParam('search','').&GetParam('dosearch','').&GetParam('reverse','');
+	if (
+			($search eq "") &&			# not search result
+			($action eq "" ||			# regular page browse
+			 $action eq "rc" ||			# recent changes
+			 $action eq "index")		# page list
 	   ) {
 		$html .= "<META NAME='robots' CONTENT='index,follow'/>\n";
 	} else {
