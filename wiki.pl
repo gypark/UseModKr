@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.103a";
-$WikiRelease = "2007-01-11";
+$WikiVersion = "0.92K3-ext1.104";
+$WikiRelease = "2007-01-14";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -1952,6 +1952,18 @@ sub GetHtmlHeader {
 	$html .= "\n";
 ###
 ###############
+
+### RobotsMetaTag
+### from http://www.usemod.com/cgi-bin/wiki.pl?WikiPatches/RobotsNoFollow
+	my $action = lc(&GetParam('action',''));
+	if ($action eq "" ||			# regular page browse
+			$action eq "rc" ||		# recent changes
+			$action eq "index"		# page list
+	   ) {
+		$html .= "<META NAME='robots' CONTENT='index,follow'/>\n";
+	} else {
+		$html .= "<META NAME='robots' CONTENT='noindex,nofollow'/>\n";
+	}
 
 ### 사용자 정의 헤더
 	$html .= $UserHeader;
