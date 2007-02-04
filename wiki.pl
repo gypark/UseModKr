@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.105";
+$WikiVersion = "0.92K3-ext1.106";
 $WikiRelease = "2007-02-04";
 
 $HashKey = "salt"; # 2-character string
@@ -100,7 +100,8 @@ use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime $Sec_Revision $Sec_Ts
 	$pageid $IsPDA $MemoID
 	$QuotedFullUrl
 	%MacroFile
-	$UseShortcut $UseShortcutPage);
+	$UseShortcut $UseShortcutPage
+	$SectionNumber);
 ###
 ###############
 
@@ -3171,6 +3172,11 @@ sub MacroInclude {
 	$txt =~ s/(<(long)?comments\()([-+]?\d+)(\)>)/$1$name,$3$4/gi;
 	$txt =~ s/(<thread\()([-+]?\d+(,\d+)?)(\)>)/$1$name,$2$4/gi;
 
+# 섹션 단위 편집 - include 될 때는 하지 않음
+	if ($UseHeadings) {
+		$txt =~ s/((^|\n)\s*\=+\s+[^\n]+)(\s+\=+)/$1${FS}noedit$FS$3/go;
+	}
+
 	return $txt;
 }
 
@@ -4138,7 +4144,18 @@ sub WikiHeading {
 	$depth = length($depth);
 	$depth = 6  if ($depth > 6);
 	$text =~ s/^#\s+/&WikiHeadingNumber($depth,$')/e; # $' == $POSTMATCH
-	return $pre . "<H$depth>$text</H$depth>\n";
+### 섹션 단위 편집
+# 	return $pre . "<H$depth>$text</H$depth>\n";
+	my $edit_section;
+	if ($text =~ s/${FS}noedit$FS//) {	# include 된 내용의 경우는 스킵
+	} elsif (&GetParam('revision', '') eq '') {
+		$SectionNumber++;
+		$edit_section = '<SPAN class="editsection">['.
+			&ScriptLink("action=edit&id=$pageid&section=$SectionNumber",&T("edit")).
+			']</SPAN>';
+	}
+	return $pre . "<H$depth>$edit_section$text</H$depth>\n";
+######
 }
 
 sub RestoreSavedText
@@ -5533,6 +5550,49 @@ sub DoEdit {
 	if ($preview && !$isConflict) {
 		$oldText = $newText;
 	}
+### 섹션 단위 편집 - 편집할 때
+	my $section = &GetParam('section', '');
+	if ($section >= 1) {
+		my $temp_text;
+		my (@h_depth, @h_pos);
+		my $num = 0;
+
+		$temp_text = $oldText;												
+
+		# {{{ }}} 등 헤드라인이 올 수 없는 것들을 먼저 제외
+		%SaveUrl = ();
+		$SaveUrlIndex = 0;
+		$temp_text = &store_raw_codes($temp_text);
+
+		# 남은 텍스트에서 헤드라인들의 목록을 뽑는다
+		while ($temp_text =~ /(^[ \t]*(\=+)\s+[^\n]+\s+\=+\s*$)/gm) {
+			$num++;
+			$h_pos[$num] = pos($temp_text) - length($1);		# 각 섹션의 시작 포지션
+			$h_depth[$num] = length($2);
+		}
+		$num++;
+		$h_pos[$num] = length($temp_text);
+		$h_depth[$num] = 1;
+
+		# 같은 depth 의 다음 헤드라인을 찾음
+		my $next;
+		for ($next = $section+1; ($next <= $#h_depth) && ($h_depth[$section] < $h_depth[$next]); $next++) {}
+
+		# 수정할 섹션의 텍스트만 추출
+		my $offset = $h_pos[$section];
+		my $length = $h_pos[$next] - $offset;
+		$temp_text = substr($temp_text, $offset, $length);
+
+		# 제외했던 내용 복원
+		$temp_text = &RestoreSavedText($temp_text);
+		%SaveUrl = ();
+		$SaveUrlIndex = 0;
+
+		# $oldText 바꿔치기
+		$oldText = $temp_text;
+		$header .= " ". &T('(section)');
+	}
+#####
 	$editRows = &GetParam("editrows", 20);
 	$editCols = &GetParam("editcols", 65);
 	print &GetHeader('', &QuoteHtml($header), '');
@@ -5706,6 +5766,11 @@ function oekaki()
 		my $ecode = &simple_crypt(length($id).substr(&CalcDay($Now),5));
 		print &GetHiddenValue("ecode","$ecode")."\n";
 ###
+### 섹션 단위 편집
+		if ($section >= 1) {
+			print &GetHiddenValue("section", $section)."\n";
+		}
+#####
 		print &GetTextArea('text', $oldText, $editRows, $editCols);
 		$summary = &GetParam("summary", "*");
 		print "<p>", T('Summary:') . " ",
@@ -6991,6 +7056,48 @@ sub DoPostMain {
 	$oldrev = $Section{'revision'};
 	$pgtime = $Section{'ts'};
 
+### 섹션 단위 편집 - 저장할 때
+	my $section = &GetParam('section', '');
+	if ($section >= 1) {
+		my $temp_text;
+		my (@h_depth, @h_pos);
+		my $num = 0;
+
+		$temp_text = $old;												
+
+		# {{{ }}} 등 헤드라인이 올 수 없는 것들을 먼저 제외
+		%SaveUrl = ();
+		$SaveUrlIndex = 0;
+		$temp_text = &store_raw_codes($temp_text);
+
+		# 남은 텍스트에서 헤드라인들의 목록을 뽑는다
+		while ($temp_text =~ /(^[ \t]*(\=+)\s+[^\n]+\s+\=+\s*$)/gm) {
+			$num++;
+			$h_pos[$num] = pos($temp_text) - length($1);		# 각 섹션의 시작 포지션
+			$h_depth[$num] = length($2);
+		}
+		$num++;
+		$h_pos[$num] = length($temp_text);
+		$h_depth[$num] = 1;
+
+		# 같은 depth 의 다음 헤드라인을 찾음
+		my $next;
+		for ($next = $section+1; ($next <= $#h_depth) && ($h_depth[$section] < $h_depth[$next]); $next++) {}
+
+		# 입력폼에서 넘어온 텍스트를, 그 외 앞뒤 섹션과 결합
+		$temp_text = substr($temp_text, 0, $h_pos[$section]).
+			$string.
+			substr($temp_text, $h_pos[$next]);
+
+		# 제외했던 내용 복원
+		$temp_text = &RestoreSavedText($temp_text);
+		%SaveUrl = ();
+		$SaveUrlIndex = 0;
+
+		# $string 바꿔치기
+		$string = $temp_text;
+	}
+#####
 	$preview = 0;
 	$preview = 1  if (&GetParam("Preview", "") ne "");
 	if (!$preview && ($old eq $string)) {  # No changes (ok for preview)
@@ -7020,6 +7127,9 @@ sub DoPostMain {
 	# Detect editing conflicts and resubmit edit
 	if (($oldrev > 0) && ($newAuthor && ($oldtime != $pgtime))) {
 		&ReleaseLock();
+### 섹션 단위 편집 - 충돌이 발생하면 전체 페이지 편집으로
+		$q->param('section','');
+#####
 		if ($oldconflict>0) {  # Conflict again...
 			&DoEdit($id, 2, $pgtime, $string, $preview);
 		} else {
@@ -9092,6 +9202,21 @@ sub simple_crypt {
 	return substr($encrypt, 2);
 }
 
+# 섹션 단위 편집을 위한 내부 함수
+sub store_raw_codes {
+	my ($text) = @_;
+
+	# 코드는 GetPageLinks 에서 다시 가져옴
+	$text =~ s/(<html>((.|\n)*?)<\/html>)/&StoreRaw($1)/ige;
+	$text =~ s/(<nowiki>(.|\n)*?\<\/nowiki>)/&StoreRaw($1)/ige;
+	$text =~ s/(<pre>(.|\n)*?\<\/pre>)/&StoreRaw($1)/ige;
+	$text =~ s/(<code>(.|\n)*?\<\/code>)/&StoreRaw($1)/ige;
+	$text =~ s/((^|\n)\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n)/&StoreRaw($1)/igem;
+	$text =~ s/((^|\n)\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n)/&StoreRaw($1)/igem;
+	$text =~ s/((^|\n)\{\{\{#!((\w+)( .+)?)[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n)/&StoreRaw($1)/igem;
+
+	return $text;
+}
 
 ### 통채로 추가한 함수들의 끝
 ###############

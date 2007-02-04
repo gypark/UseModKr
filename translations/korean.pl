@@ -769,4 +769,6 @@ If you leave current page, the contents you are writing will not be stored.
 이 페이지를 벗어나면 작성중이던 글이 지워집니다.
 Replace strings in all pages
 모든 페이지의 문자열 일괄 치환
+(section)
+(부분)
 END_OF_TRANSLATION

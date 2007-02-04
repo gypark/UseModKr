@@ -164,6 +164,13 @@ h6 {
 	font-size: 111%;
 }
 
+/* 섹션 별 편집 */
+.editsection {
+	font-size: 90%;
+	float: right;
+    margin-right: 0.5em;
+}
+
 /* 일반적인 링크 */
 A:link, A:active, A:visited, A:hover {
 	background: transparent;
@@ -732,4 +739,5 @@ A.wordindex:hover
 {
 	text-decoration: underline;
 }
+
 
