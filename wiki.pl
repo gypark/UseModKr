@@ -5569,6 +5569,14 @@ sub DoEdit {
 			$num++;
 			$h_pos[$num] = pos($temp_text) - length($1);		# 각 섹션의 시작 포지션
 			$h_depth[$num] = length($2);
+
+			# summary 를 해당 섹션 제목으로
+			if ($num == $section) {
+				my $h_str = $1;
+				$h_str =~ /^[ \t]*\=+\s+(#\s+)?([^\n]+)\s+\=+\s*$/;
+				$h_str = $2;
+				$q->param("summary", "$h_str - ".&GetParam("summary", ""));
+			}
 		}
 		$num++;
 		$h_pos[$num] = length($temp_text);
