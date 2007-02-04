@@ -4153,6 +4153,7 @@ sub WikiHeading {
 		$edit_section = '<SPAN class="editsection">['.
 			&ScriptLink("action=edit&id=$pageid&section=$SectionNumber",&T("edit")).
 			']</SPAN>';
+		$edit_section = '' if ($depth == 1);
 	}
 	return $pre . "<H$depth>$edit_section$text</H$depth>\n";
 ######
