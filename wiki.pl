@@ -9211,9 +9211,9 @@ sub store_raw_codes {
 	$text =~ s/(<nowiki>(.|\n)*?\<\/nowiki>)/&StoreRaw($1)/ige;
 	$text =~ s/(<pre>(.|\n)*?\<\/pre>)/&StoreRaw($1)/ige;
 	$text =~ s/(<code>(.|\n)*?\<\/code>)/&StoreRaw($1)/ige;
-	$text =~ s/((^|\n)\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n)/&StoreRaw($1)/igem;
-	$text =~ s/((^|\n)\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n)/&StoreRaw($1)/igem;
-	$text =~ s/((^|\n)\{\{\{#!((\w+)( .+)?)[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n)/&StoreRaw($1)/igem;
+	$text =~ s/((^|\n)\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/&StoreRaw($1)."\n"/igem;
+	$text =~ s/((^|\n)\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/&StoreRaw($1)."\n"/igem;
+	$text =~ s/((^|\n)\{\{\{#!((\w+)( .+)?)[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/&StoreRaw($1)."\n"/igem;
 
 	return $text;
 }
