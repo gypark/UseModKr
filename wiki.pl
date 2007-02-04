@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.104";
-$WikiRelease = "2007-01-14";
+$WikiVersion = "0.92K3-ext1.105";
+$WikiRelease = "2007-02-04";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -578,6 +578,15 @@ sub DoBrowseRequest {
 		if ($FreeLinks && (!-f &GetPageFile($id))) {
 			$id = &FreeToNormal($id);
 		}
+### QUERY_STRING 이 utf-8로 들어온 경우
+		if (&ValidId($id) ne "") {
+			my $converted_id = encode_korean($id, 'utf-8', "$HttpCharset");
+			if (&ValidId($converted_id) eq "") {
+				$id = $converted_id;
+			}
+		}
+#####
+
 		if (($NotFoundPg ne '') && (!-f &GetPageFile($id))) {
 			$id = $NotFoundPg;
 		}
@@ -587,6 +596,16 @@ sub DoBrowseRequest {
 	}
 	$action = lc(&GetParam('action', ''));
 	$id = &GetParam('id', '');
+### QUERY_STRING 이 utf-8로 들어온 경우
+		if (&ValidId($id) ne "") {
+			my $converted_id = encode_korean($id, 'utf-8', "$HttpCharset");
+			if (&ValidId($converted_id) eq "") {
+				$id = $converted_id;
+				$q->param('id', $converted_id);
+			}
+		}
+#####
+
 	$DocID = $id;
 	if ($action eq 'browse') {
 		if ($FreeLinks && (!-f &GetPageFile($id))) {
