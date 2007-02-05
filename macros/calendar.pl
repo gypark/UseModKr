@@ -77,7 +77,7 @@ sub MacroCalendar {
 	# 달력 제목 출력
 	$result .= "<TABLE class='calendar'>";
 	$result .= "<CAPTION class='calendar'>" 
-		."<a href=\"$ScriptName?$cal_mainpage$cal_year-$cal_month\">"
+		."<a href=\"$ScriptName".&ScriptLinkChar()."$cal_mainpage$cal_year-$cal_month\">"
 		.(length($cal_mainpage)?"$cal_mainpage<br>":"")
 		."$cal_year-$cal_month"
 		."</a>"
@@ -132,7 +132,7 @@ sub MacroCalendar {
 			}
 
 			$result .= "<td class='$td_class'>"
-				."<a href=\"$ScriptName?$cal_mainpage$cal_page\">"
+				."<a href=\"$ScriptName".&ScriptLinkChar()."$cal_mainpage$cal_page\">"
 				."<span style='color:$cal_color[$wday]; $span_style'>"
 				.$cal_result
 				."</span></a></td>";

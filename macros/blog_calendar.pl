@@ -86,7 +86,7 @@ sub MacroBlogCalendar {
 	# 달력 제목 출력
 	$result .= "<TABLE class='calendar'>";
 	$result .= "<CAPTION class='calendar'>" 
-		."<a href=\"$ScriptName?$toc_mainpage/$cal_year-$cal_month\">"
+		."<a href=\"$ScriptName".&ScriptLinkChar()."$toc_mainpage/$cal_year-$cal_month\">"
 		.(length($toc_mainpage)?"$toc_mainpage<br>":"")
 		."$cal_year-$cal_month"
 		."</a>"
@@ -148,7 +148,7 @@ sub MacroBlogCalendar {
 			}
 
 			$result .= "<td class='$td_class'>"
-				.(($page)?"<a href=\"$ScriptName?$page\" title=\"$pagename\">":"")
+				.(($page)?"<a href=\"$ScriptName".&ScriptLinkChar()."$page\" title=\"$pagename\">":"")
 				."<span style='color:$cal_color[$wday]; $span_style'>"
 				.$cal_result
 				."</span>"
