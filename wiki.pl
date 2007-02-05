@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.106a";
+$WikiVersion = "0.92K3-ext1.106b";
 $WikiRelease = "2007-02-05";
 
 $HashKey = "salt"; # 2-character string
@@ -1560,7 +1560,6 @@ sub ScriptLinkChar {
 sub ScriptLink {
 	my ($action, $text) = @_;
 
-#	return "<A href=\"$ScriptName?$action\">$text</A>";
 	return "<a href=\"$ScriptName" . &ScriptLinkChar() . "$action\">$text</a>";
 }
 ###
@@ -1764,7 +1763,7 @@ sub ScriptLinkTitle {
 	if ($FreeLinks) {
 		$action =~ s/ /_/g;
 	}
-	return "<a href=\"$ScriptName?$action\" title=\"$title\">$text</a>";
+	return "<a href=\"$ScriptName" . &ScriptLinkChar() . "$action\" title=\"$title\">$text</a>";
 }
 
 sub GetAuthorLink {
