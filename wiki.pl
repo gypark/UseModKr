@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.106b";
+$WikiVersion = "0.92K3-ext1.107";
 $WikiRelease = "2007-02-05";
 
 $HashKey = "salt"; # 2-character string
@@ -495,14 +495,27 @@ sub InitRequest {
 	$CGI::DISABLE_UPLOADS = 0;  
 ###
 ###############
+### slashlinks 처리
+	if ($SlashLinks && (length($ENV{'PATH_INFO'}) > 1)) {
+		$ENV{'QUERY_STRING'} .= '&' if ($ENV{'QUERY_STRING'});
+		$ENV{'QUERY_STRING'} .= substr($ENV{'PATH_INFO'}, 1);
+	}
+# slahslink 관련 패치이나, POST 에서 에러가 난다 - 일단 보류
+#	if   ($ENV{'REQUEST_METHOD'} eq 'GET') {
+#		$q = new CGI($ENV{'QUERY_STRING'});
+#	} elsif($ENV{'REQUEST_METHOD'} eq 'POST') {
+#		read (STDIN, $q, $ENV{'CONTENT_LENGTH'});
+#		$q = new CGI($q);
+#	}
 	$q = new CGI;
+#####
 	$q->autoEscape(undef);
 
 ###############
 ### added by gypark
 ### file upload
 	if ($q->cgi_error() =~ m/^413/) {
-		print $q->redirect(-url=>"http:$ENV{SCRIPT_NAME}?action=upload&error=3");
+		print $q->redirect(-url=>"http:$ENV{SCRIPT_NAME}".&ScriptLinkChar()."action=upload&error=3");
 		exit 1;
 	}
 	$UploadUrl = "http:$UploadDir" if ($UploadUrl eq "");
@@ -510,6 +523,12 @@ sub InitRequest {
 ###############
 	$Now = time;                     # Reset in case script is persistent
 	$ScriptName = pop(@ScriptPath);  # Name used in links
+### slashlinks 처리
+	if ($SlashLinks) {
+		my $numberOfSlashes = ($ENV{'PATH_INFO'} =~ tr[/][/]);
+		$ScriptName = ('../' x $numberOfSlashes) . $ScriptName;
+	}
+#####
 	$IndexInit = 0;                  # Must be reset for each request
 	$InterSiteInit = 0;
 	%InterSite = ();
@@ -858,9 +877,9 @@ sub BrowseExternUrl {
 		print "<html>\n";
 		print "<title>$SiteName: $id</title>\n";
 		print "<frameset rows=\"$SizeTopFrame,*,$sizeBottomFrame\" cols=\"1\" frameborder=\"0\">\n";
-		print "  <frame src=\"$ScriptName?action=browse&InFrame=1&id=$id&oldid=$oldId\" noresize scrolling=\"no\">\n";
+		print "  <frame src=\"$ScriptName".&ScriptLinkChar()."action=browse&InFrame=1&id=$id&oldid=$oldId\" noresize scrolling=\"no\">\n";
 		print "  <frame src=\"$url\" noresize>\n";
-		print "  <frame src=\"$ScriptName?action=browse&InFrame=2&id=$id&oldid=$oldId\" noresize scrolling=\"no\">\n"
+		print "  <frame src=\"$ScriptName".&ScriptLinkChar()."action=browse&InFrame=2&id=$id&oldid=$oldId\" noresize scrolling=\"no\">\n"
 			if ($EditGuideInExtern);
 		print "  <noframes>\n";
 		print "  <body>\n";
@@ -1569,7 +1588,7 @@ sub ScriptLink {
 
 sub HelpLink {
 	my ($id, $text) = @_;
-	my $url = "$ScriptName?action=help&index=$id";
+	my $url = "$ScriptName".&ScriptLinkChar()."action=help&index=$id";
 
 ### 작성 취소 시 확인
 #	return "<a href=\"javascript:help('$url')\">$text</a>";
@@ -1966,7 +1985,7 @@ sub GetHtmlHeader {
 ### 헤더 출력 개선
 	$html .= qq(<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=$HttpCharset">\n);
 	$html .= qq(<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">\n);
-	$html .= qq(<link rel="alternate" type="application/rss+xml" title="$SiteName" href="http://$ENV{SERVER_NAME}$ENV{SCRIPT_NAME}?action=rss">\n);
+	$html .= qq|<link rel="alternate" type="application/rss+xml" title="$SiteName" href="http://$ENV{SERVER_NAME}$ENV{SCRIPT_NAME}${\(&ScriptLinkChar())}action=rss">\n|;
 	$html .= qq(<script src="$JavaScript" language="javascript" type="text/javascript"></script>);
 	$html .= "\n";
 ###
@@ -2013,7 +2032,7 @@ sub GetHtmlHeader {
 			if ($FreeLinks) {
 				$id = &FreeToNormal($id);
 			}
-			$bodyExtra .= qq( ondblclick="location.href='$ScriptName?action=edit&id=$id'" );
+			$bodyExtra .= qq| ondblclick="location.href='$ScriptName${\(&ScriptLinkChar())}action=edit&id=$id'" |;
 		}
 	}
 ###
@@ -2403,7 +2422,7 @@ sub GetRedirectPage {
 
 	# Normally get URL from script, but allow override.
 	$FullUrl = $q->url(-full=>1)  if ($FullUrl eq "");
-	$url = $FullUrl . "?" . $newid;
+	$url = $FullUrl . &ScriptLinkChar() . $newid;
 	$nameLink = "<a href=\"$url\">$name</a>";
 	if ($RedirType < 3) {
 		if ($RedirType == 1) {             # Use CGI.pm
@@ -5706,12 +5725,12 @@ function help(s)
 <!--
 function upload()
 {
-	var w = window.open("$ScriptName?action=upload", "upload", "width=640,height=250,resizable=1,statusbar=1,scrollbars=1");
+	var w = window.open("$ScriptName${\(&ScriptLinkChar())}action=upload", "upload", "width=640,height=250,resizable=1,statusbar=1,scrollbars=1");
 	w.focus();
 }
 function oekaki()
 {
-	var w = window.open("$ScriptName?action=oekaki&mode=paint", "oekaki", "width=900,height=750,resizable=1,statusbar=1,scrollbars=1");
+	var w = window.open("$ScriptName${\(&ScriptLinkChar())}action=oekaki&mode=paint", "oekaki", "width=900,height=750,resizable=1,statusbar=1,scrollbars=1");
 	w.focus();
 }
 //-->
@@ -8514,6 +8533,10 @@ sub OekakiPaint {
 		&GetParam('height','300')
 	);
 
+	my $archive_path = $q->url(-full=>1);
+	$archive_path =~ s/[^\/]+$//;
+	$archive_path .= "oekakibbs.jar";
+
 	$imageWidth = 40 if ($imageWidth < 40);
 	$imageWidth = 1000 if ($imageWidth > 1000);
 	$imageHeight = 40 if ($imageHeight < 40);
@@ -8544,9 +8567,9 @@ height [1000-40]<input type="text" name="height" size="4" maxlength="4" value="$
 
 <p align="center">
 
-<applet name="oekakibbs" codebase="./" code="a.p.class" archive="./oekakibbs.jar" width="$appletWidth" height="$appletHeight" mayscript>
-<param name="cgi" value="$ScriptName?action=oekaki&mode=save">
-<param name="url" value="$ScriptName?action=oekaki&mode=exit">
+<applet name="oekakibbs" codebase="./" code="a.p.class" archive="$archive_path" width="$appletWidth" height="$appletHeight" mayscript>
+<param name="cgi" value="$ScriptName${\(&ScriptLinkChar())}action=oekaki&mode=save">
+<param name="url" value="$ScriptName${\(&ScriptLinkChar())}action=oekaki&mode=exit">
 
 <param name="popup" value="0">
 <param name="tooltype" value="full">
@@ -8811,7 +8834,7 @@ sub GetRcRss {
 >
     <channel rdf:about="$ChannelAbout">
         <title>${\(&QuoteHtml($SiteName))}</title>
-        <link>${\($QuotedFullUrl . &QuoteHtml("?$RCName"))}</link>
+        <link>${\($QuotedFullUrl . &QuoteHtml(&ScriptLinkChar()."$RCName"))}</link>
         <description>${\(&QuoteHtml($SiteDescription))}</description>
         <wiki:interwiki>
             <rdf:Description link="$QuotedFullUrl">
@@ -8881,10 +8904,10 @@ sub GetRc {
 ### replaced by gypark
 ### 북마크
 #	$diffPrefix = $QuotedFullUrl . &QuoteHtml("?action=browse\&diff=4\&id=");
-	$diffPrefix = $QuotedFullUrl . &QuoteHtml("?action=browse\&diff=5\&id=");
+	$diffPrefix = $QuotedFullUrl . &QuoteHtml(&ScriptLinkChar()."action=browse\&diff=5\&id=");
 ###
 ###############
-	$historyPrefix = $QuotedFullUrl . &QuoteHtml("?action=history\&id=");
+	$historyPrefix = $QuotedFullUrl . &QuoteHtml(&ScriptLinkChar()."action=history\&id=");
 	foreach $rcline (@outrc) {
 		($ts, $pagename) = split(/$FS3/, $rcline);
 		$pagecount{$pagename}++;
@@ -8972,7 +8995,7 @@ sub GetRssRcLine {
 	$host =~ s/\d+$/xxx/;
 	if ($userName) {
 		$author = &QuoteHtml($userName);
-		$authorLink = "link=\"$QuotedFullUrl?$author\"";
+		$authorLink = "link=\"$QuotedFullUrl".&ScriptLinkChar()."$author\"";
 	} else {
 		$author = $host;
 	}
@@ -8988,7 +9011,7 @@ sub GetRssRcLine {
 	$item = <<RSS ;
     <item rdf:about="$itemID">
         <title>$pagename</title>
-        <link>$QuotedFullUrl?$encoded_pagename</link>
+        <link>$QuotedFullUrl${\(&ScriptLinkChar())}$encoded_pagename</link>
         <description>$description</description>
         <dc:date>$date</dc:date>
 		<dc:creator>$author</dc:creator>
