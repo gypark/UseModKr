@@ -528,6 +528,7 @@ sub InitRequest {
 		my $numberOfSlashes = ($ENV{'PATH_INFO'} =~ tr[/][/]);
 		$ScriptName = ('../' x $numberOfSlashes) . $ScriptName;
 	}
+	$ScriptName = $FullUrl if ($FullUrl ne '');
 #####
 	$IndexInit = 0;                  # Must be reset for each request
 	$InterSiteInit = 0;
