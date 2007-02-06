@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.107a";
-$WikiRelease = "2007-02-05";
+$WikiVersion = "0.92K3-ext1.107b";
+$WikiRelease = "2007-02-06";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -5709,8 +5709,8 @@ function preview()
 	var w = window.open("", "Preview", "width=640,height=480,resizable=1,statusbar=1,scrollbars=1");
 	w.focus();
 
-	var body = '<html><head><title>Wiki Preview</title><meta http-equiv="Content-Type" content="text/html; charset=euc-kr"></head>';
-	body += '<body><form method="post" action="$ScriptName">';
+	var body = '<html><head><title>Wiki Preview</title><meta http-equiv="Content-Type" content="text/html; charset=$HttpCharset"></head>';
+	body += '<body><form method="post" action="$ScriptName" accept-charset="$HttpCharset">';
 	body += '<input type="hidden" name="id" value="$id">';
 	body += '<input type="hidden" name="action" value="preview"><input type=hidden name="text"></form></body></html>';
 
