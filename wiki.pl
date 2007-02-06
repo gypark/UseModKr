@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.108";
+$WikiVersion = "0.92K3-ext1.109";
 $WikiRelease = "2007-02-06";
 
 $HashKey = "salt"; # 2-character string
@@ -74,8 +74,7 @@ use vars qw(
 	$HiddenPageFile $TemplatePage
 	$InterWikiMoniker $SiteDescription $RssLogoUrl $RssDays $RssTimeZone
 	$SlashLinks $InterIconDir $SendPingAllowed $JavaScript
-	$UseLatex
-	$UserHeader
+	$UseLatex $UserHeader $OekakiJar
 	);
 ###
 ###############
@@ -172,6 +171,7 @@ $SendPingAllowed = 0;   # 0 - anyone, 1 - who can edit, 2 - who is admin
 $JavaScript  = "wikiscript.js";   # URL for JavaScript code (like "/wikiscript.js")
 $UseLatex    = 0;		# 1 = Use LaTeX conversion   2 = Don't convert
 $UserHeader  = '';              # Optional HTML header additional content
+$OekakiJar   = "oekakibbs.jar";	# URL for oekaki *.jar file
 
 # Major options:
 $UseSubpage  = 1;       # 1 = use subpages,       0 = do not use subpages
@@ -8547,10 +8547,6 @@ sub OekakiPaint {
 		&GetParam('height','300')
 	);
 
-	my $archive_path = $q->url(-full=>1);
-	$archive_path =~ s/[^\/]+$//;
-	$archive_path .= "oekakibbs.jar";
-
 	$imageWidth = 40 if ($imageWidth < 40);
 	$imageWidth = 1000 if ($imageWidth > 1000);
 	$imageHeight = 40 if ($imageHeight < 40);
@@ -8581,7 +8577,7 @@ height [1000-40]<input type="text" name="height" size="4" maxlength="4" value="$
 
 <p align="center">
 
-<applet name="oekakibbs" codebase="./" code="a.p.class" archive="$archive_path" width="$appletWidth" height="$appletHeight" mayscript>
+<applet name="oekakibbs" codebase="./" code="a.p.class" archive="$OekakiJar" width="$appletWidth" height="$appletHeight" mayscript>
 <param name="cgi" value="$ScriptName${\(&ScriptLinkChar())}action=oekaki&mode=save">
 <param name="url" value="$ScriptName${\(&ScriptLinkChar())}action=oekaki&mode=exit">
 
