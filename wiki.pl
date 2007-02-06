@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.107b";
+$WikiVersion = "0.92K3-ext1.107c";
 $WikiRelease = "2007-02-06";
 
 $HashKey = "salt"; # 2-character string
@@ -9081,6 +9081,7 @@ sub DoSendTrackbackPing {
 		$ping->blog_name("$blog_name");
 
 		my $client = Net::Trackback::Client->new();
+		$client->charset("$HttpCharset");
 		my $msg = $client->send_ping($ping);
 		my $msg_str = $msg->to_xml;
 
