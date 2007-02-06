@@ -280,7 +280,6 @@ if ($CheckTime) {
 ###############
 ### added by gypark
 ### oekaki
-#	if ($ENV{'QUERY_STRING'} eq "action=oekaki&mode=save") {
 	if (($ENV{'QUERY_STRING'} eq "action=oekaki&mode=save") ||
 			($ENV{'PATH_INFO'} eq "/action=oekaki&mode=save")) {
 		&OekakiSave();
