@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.107";
+$WikiVersion = "0.92K3-ext1.107a";
 $WikiRelease = "2007-02-05";
 
 $HashKey = "salt"; # 2-character string
@@ -1938,6 +1938,19 @@ sub GetHttpHeader {
 			. "&id&"    . $SetCookie{'id'}
 			. "&randkey&" . $SetCookie{'randkey'}
 			. ";";
+### slashlinks 지원 - 로긴,로그아웃시에 쿠키의 path를 동일하게 해줌
+		my $cookie_path = $q->url(-absolute=>1);
+		if ($ENV{'SCRIPT_NAME'} eq $cookie_path) {		# mod_rewrite 가 사용되지 않은 경우
+			$cookie_path =~ s/[^\/]*$//;					# 스크립트 이름만 제거
+		} else {										# mod_rewrite
+			if ($ENV{'PATH_INFO'} ne '') {					# wiki.pl/ 로 rewrite 된 경우	
+				$cookie_path =~ s/$ENV{'PATH_INFO'}$//;
+			} else {										# wiki.pl? 로 rewrite 된 경우
+				$cookie_path =~ s/$ENV{'QUERY_STRING'}$//;
+			}
+		}
+		$cookie .= "path=$cookie_path;";
+#####
 		if ($SetCookie{'expire'} eq "1") {
 			$cookie .= "expires=Fri, 08-Sep-2010 19:47:23 GMT";
 		}
