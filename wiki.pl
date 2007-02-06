@@ -9140,7 +9140,7 @@ sub PageCanReceiveTrackbackPing {
 
 sub EncodeUrl {
 	my ($string) = @_;
-	$string =~ s!([^a-zA-Z0-9_.-])!uc sprintf "%%%02x", ord($1)!eg;
+	$string =~ s!([^/a-zA-Z0-9_.-])!uc sprintf "%%%02x", ord($1)!eg;
 	return $string;
 }
 
