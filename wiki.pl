@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.109";
+$WikiVersion = "0.92K3-ext1.109a";
 $WikiRelease = "2007-02-06";
 
 $HashKey = "salt"; # 2-character string
@@ -1749,7 +1749,7 @@ sub GetReverseLink {
 	if ($FreeLinks) {
 		$name =~ s/_/ /g;  # Display with spaces
 	}
-	return &ScriptLink("reverse=$id", $name);
+	return &ScriptLink("action=reverse&id=$id", $name);
 }
 ###
 ###############
@@ -5496,16 +5496,6 @@ sub DoOtherRequest {
 		&DoSearch($search);
 		return;
 	}
-###############
-### added by gypark
-### 역링크
-	$search = &GetParam("reverse", "");
-	if ($search ne "") {
-		&DoReverse($search);
-		return;
-	}
-###
-###############
 	# Handle posted pages
 	if (&GetParam("oldtime", "") ne "") {
 		$id = &GetParam("title", "");
@@ -6556,47 +6546,6 @@ sub DoSearch {
 
 	print &GetCommonFooter();
 }
-
-###############
-### added by gypark
-sub DoReverse {
-	my ($string) = @_;
-	my @x = ();
-	my $pagelines;
-
-	if ($string eq '') {
-		&DoIndex();
-		return;
-	}
-	print &GetHeader('', &QuoteHtml(Ts('Links to %s', $string)), '');
-### hide page by gypark
-	if (&PageIsHidden($string)) {
-		print Ts('%s is a hidden page', $string);
-		print &GetCommonFooter();
-		return;
-	}
-###
-	print '<br>';
-
-	foreach $pagelines (&GetFullLinkList("page=1&inter=1&unique=1&sort=1&exists=2&empty=0&reverse=$string")) {
-		my @pages = split(' ', $pagelines);
-		@x = (@x, shift(@pages));
-	}
-	
-	&PrintPageList(@x);
-
-	if ($#x eq -1) {
-		print T('No reverse link.') . "<br>";
-	}
-	if (&ValidId($string) eq "") {
-		print "<hr size=\"1\">";
-		print Ts('Return to %s' , &GetPageLink($string)) . "<br>";
-	}
-
-	print &GetCommonFooter();
-}
-###
-###############
 
 ###############
 ### replaced by gypark
