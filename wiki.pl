@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.109a";
-$WikiRelease = "2007-02-06";
+$WikiVersion = "0.92K3-ext1.109b";
+$WikiRelease = "2007-02-07";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -4033,18 +4033,18 @@ sub ISBNLink {
 	}
 
 ### 책표지가 없는 경우
-	my ($noCoverIcon, $iconNum) = ("icons/isbn-nocover.jpg", ($num % 5));
-	$noCoverIcon = "icons/isbn-nocover-$iconNum.jpg"
-		if (-f "icons/isbn-nocover-$iconNum.jpg");
+	my ($noCoverIcon, $iconNum) = ("$IconDir/isbn-nocover.jpg", ($num % 5));
+	$noCoverIcon = "$IconDir/isbn-nocover-$iconNum.jpg"
+		if (-f "$IconDir/isbn-nocover-$iconNum.jpg");
 
 ### 국내 서적
-	if ($num =~ /^89/) {
-		my $siteurl = "http://www.aladdin.co.kr/Cover";
+	if ($num =~ /^(89|60)/) {
+		my $siteurl = "http://image.aladdin.co.kr/cover/cover";
 		$first = "$siteurl/$num\_1.jpg";
 		$second = "$siteurl/$num\_1.gif";
 		$third = "$siteurl/$num\_1.JPG";
 		$fourth = "$siteurl/$num\_1.GIF";
-		return "<a href=\"http://www.aladdin.co.kr/catalog/book.asp?ISBN=$num\">".
+		return "<A href=\"http://www.aladdin.co.kr/shop/wproduct.aspx?ISBN=$num\">".
 			"<IMG class='isbn' ".
 			"$ImageTag ".
 			"src='$first' ".
