@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.109c";
+$WikiVersion = "0.92K3-ext1.109d";
 $WikiRelease = "2007-02-08";
 
 $HashKey = "salt"; # 2-character string
@@ -9110,7 +9110,10 @@ sub GetTrackbackGuide {
 	my $url = $FullUrl . &ScriptLinkChar() . "action=tb&tc=$tcode&id=$encoded";
 
 	if (&PageCanReceiveTrackbackPing($id)) {
-		$trackbackguide .= &T('Trackback address of this page:') . " " . "$url";
+		$trackbackguide .= &T('Trackback address of this page:') . " " .
+			"<SPAN onClick=\"copyUrl('".$url."');\">".
+			$url.
+			"</SPAN>";
 	} else {
 		$trackbackguide .= &T('This page can not receive Trackback');
 	}

@@ -24,3 +24,12 @@ function chk_close(e, str) {
 		}
 	}
 }
+
+// 트랙백 주소 복사
+function copyUrl(url) {
+	if (window.clipboardData) {
+		if (confirm("Copy the URL to the clipboard.")) {
+			window.clipboardData.setData("Text", url);
+		}
+	}
+}
