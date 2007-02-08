@@ -29,6 +29,11 @@ sub action_comments {
 		print &GetHeader("", T('Editing Denied'),"");
 		print Ts('Editing not allowed: text includes banned text');
 		print " [$bannedText]";
+		print "\n<br><hr noshade size=1><p><strong>". T('This is the text you submitted:').
+				"<br>". T('(Copy the text, go back with your browser, paste the text, and edit again please)').
+				"</strong><p>".
+				&GetTextArea('text', $newcomments, &GetParam("editrows", 20), &GetParam("editcols", 65)).
+				"<p>\n";
 		print &GetCommonFooter();
 		return;
 	}

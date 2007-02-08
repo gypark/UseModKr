@@ -771,4 +771,6 @@ Replace strings in all pages
 모든 페이지의 문자열 일괄 치환
 (section)
 (부분)
+(Copy the text, go back with your browser, paste the text, and edit again please)
+(아래 텍스트를 복사하고, 브라우저의 뒤로 가기를 사용하여, 이전 화면에 붙여놓고 다시 편집해 주시기 바랍니다)
 END_OF_TRANSLATION

@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.109b";
-$WikiRelease = "2007-02-07";
+$WikiVersion = "0.92K3-ext1.109c";
+$WikiRelease = "2007-02-08";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -7009,6 +7009,11 @@ sub DoPostMain {
 		print &GetHeader("", T('Editing Denied'),"");
 		print Ts('Editing not allowed: text includes banned text');
 		print " [$bannedText]";
+		print "\n<br><hr noshade size=1><p><strong>". T('This is the text you submitted:').
+				"<br>". T('(Copy the text, go back with your browser, paste the text, and edit again please)').
+				"</strong><p>".
+				&GetTextArea('text', $string, &GetParam("editrows", 20), &GetParam("editcols", 65)).
+				"<p>\n";
 		print &GetCommonFooter();
 		return;
 	}
