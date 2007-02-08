@@ -26,9 +26,9 @@ function chk_close(e, str) {
 }
 
 // 트랙백 주소 복사
-function copyUrl(url) {
+function copy_clip(msg, url) {
 	if (window.clipboardData) {
-		if (confirm("Copy the URL to the clipboard.")) {
+		if (confirm(msg)) {
 			window.clipboardData.setData("Text", url);
 		}
 	}

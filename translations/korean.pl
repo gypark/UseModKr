@@ -715,6 +715,8 @@ Ping successfully sent
 핑을 보내는 데 성공했습니다
 Trackback address of this page:
 이 페이지의 트랙백 주소:
+Copy the address to the clipboard.
+이 주소를 클립보드에 복사합니다.
 This page can not receive Trackback
 이 페이지로는 트랙백을 보낼 수 없습니다
 Trackback from %s
@@ -757,6 +759,8 @@ Unlock Site
 사이트 수정금지 해제
 Editing not allowed: text includes banned text
 수정할 수 없습니다: 금지된 단어가 포함되어 있습니다
+(Copy the text, go back with your browser, paste the text, and edit again please)
+(아래 텍스트를 복사하고, 브라우저의 뒤로 가기를 사용하여, 이전 화면에 붙여놓고 다시 편집해 주시기 바랍니다)
 Editing Banned text
 등록 금지 단어 목록 수정
 Updating Banned text
@@ -771,6 +775,4 @@ Replace strings in all pages
 모든 페이지의 문자열 일괄 치환
 (section)
 (부분)
-(Copy the text, go back with your browser, paste the text, and edit again please)
-(아래 텍스트를 복사하고, 브라우저의 뒤로 가기를 사용하여, 이전 화면에 붙여놓고 다시 편집해 주시기 바랍니다)
 END_OF_TRANSLATION

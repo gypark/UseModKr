@@ -9110,8 +9110,11 @@ sub GetTrackbackGuide {
 	my $url = $FullUrl . &ScriptLinkChar() . "action=tb&tc=$tcode&id=$encoded";
 
 	if (&PageCanReceiveTrackbackPing($id)) {
-		$trackbackguide .= &T('Trackback address of this page:') . " " .
-			"<SPAN onClick=\"copyUrl('".$url."');\">".
+		$trackbackguide .= &T('Trackback address of this page:')." ".
+			"<SPAN onClick=\"copy_clip('".
+			&T('Copy the address to the clipboard.').
+			"','"
+			.$url."');\">".
 			$url.
 			"</SPAN>";
 	} else {
