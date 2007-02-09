@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.109d";
-$WikiRelease = "2007-02-08";
+$WikiVersion = "0.92K3-ext1.109e";
+$WikiRelease = "2007-02-09";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -9111,12 +9111,12 @@ sub GetTrackbackGuide {
 
 	if (&PageCanReceiveTrackbackPing($id)) {
 		$trackbackguide .= &T('Trackback address of this page:')." ".
-			"<SPAN onClick=\"copy_clip('".
+			"<input type=\"button\" title=\"".
 			&T('Copy the address to the clipboard.').
-			"','"
-			.$url."');\">".
-			$url.
-			"</SPAN>";
+			"\" value=\"".
+			&T('Copy').
+			"\" onClick=\"copy_clip('','$url');\"> ".
+			$url;
 	} else {
 		$trackbackguide .= &T('This page can not receive Trackback');
 	}

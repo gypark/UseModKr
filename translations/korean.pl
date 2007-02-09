@@ -715,6 +715,8 @@ Ping successfully sent
 핑을 보내는 데 성공했습니다
 Trackback address of this page:
 이 페이지의 트랙백 주소:
+Copy
+복사
 Copy the address to the clipboard.
 이 주소를 클립보드에 복사합니다.
 This page can not receive Trackback

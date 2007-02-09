@@ -26,6 +26,7 @@ function chk_close(e, str) {
 }
 
 // msg - 사용자에게 확인창을 띄울때 출력되는 메시지
+//     - ""이면 확인창 띄우지 않음
 // text - 클립보드에 복사될 텍스트
 // 출처: http://www.krikkit.net/howto_javascript_copy_clipboard.html
 // modified by raymundo, gypark@gmail.com
@@ -37,7 +38,9 @@ function chk_close(e, str) {
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
 function copy_clip(msg, text) {
-	if (!confirm(msg)) return;
+	if (msg != "") {
+		if (!confirm(msg)) return;
+	}
 
 	// IE
 	if (window.clipboardData) { 
