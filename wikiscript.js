@@ -53,8 +53,10 @@ function copy_clip(msg, text) {
 		// 또는 "about:config" 페이지를 열어서 다음 항목의 값을 true로 설정해 준다
 		// signed.applets.codebase_principal_support
 
-		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
+		alert("If it fails to copy, check the option:\n\nsigned.applets.codebase_principal_support  =  true\n\nin \"about:config\" page.");
 
+		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
+		
 		var clip = Components.classes['@mozilla.org/widget/clipboard;1'].createInstance(Components.interfaces.nsIClipboard);
 		if (!clip) return;
 

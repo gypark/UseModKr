@@ -3534,8 +3534,8 @@ sub GetSiteUrl {
 sub StoreRaw {
 	my ($html) = @_;
 
-	$SaveUrl{$SaveUrlIndex} = $html;
-	return $FS . $SaveUrlIndex++ . $FS;
+	$SaveUrl{++$SaveUrlIndex} = $html;
+	return $FS . $SaveUrlIndex . $FS;
 }
 
 ###############
@@ -3559,8 +3559,7 @@ sub StoreCodeRaw {
 	$html =~ s/&__GT__;/&gt;/g;
 	$html =~ s/&__AMP__;/&amp;/g;
 
-	$SaveUrl{$SaveUrlIndex} = $html;
-	return $FS . $SaveUrlIndex++ . $FS;
+	return &StoreRaw($html);
 
 }
 
@@ -3607,8 +3606,7 @@ EnDoFwIkIcOdE`;
 		$line =~ s/(<font [^>]*>)?&amp;(<\/font>)?(<font [^>]*>)?__LT__(<\/font>)?(<font [^>]*>)?;(<\/font>)?/$1&lt;$6/g;
 		$line =~ s/(<font [^>]*>)?&amp;(<\/font>)?(<font [^>]*>)?__AMP__(<\/font>)?(<font [^>]*>)?;(<\/font>)?/$1&amp;$6/g;
 
-		$SaveUrl{$SaveUrlIndex} = $line;
-		$result .= $FS . $SaveUrlIndex++ . $FS;
+		$result .= &StoreRaw($line);
 
 	}
 	return $result;
@@ -5916,7 +5914,9 @@ sub GetTextArea {
 ### &lt; 와 &gt; 가 들어가 있는 페이지를 수정할 경우 자동으로 부등호로 바뀌어
 ### 버리는 문제를 해결
 ### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
+	$text =~ s/(<!--.*?-->)/&StoreRaw($1)/ges;
 	$text =~ s/(\&)/\&amp;/g;
+	$text = &RestoreSavedText($text);
 ###
 ###############
 
@@ -6895,9 +6895,9 @@ sub GetPageLinks {
 ###############
 ### added by gypark
 ### {{{ }}} 내의 내용은 태그로 간주하지 않음
-	$text =~ s/(^|\n)\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/ \n/igm;
-	$text =~ s/(^|\n)\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/ \n/igm;
-	$text =~ s/(^|\n)\{\{\{#!((\w+)( .+)?)[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/ \n/igm;
+	$text =~ s/(^|\n)(\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1 \n/igm;
+	$text =~ s/(^|\n)(\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1 \n/igm;
+	$text =~ s/(^|\n)(\{\{\{#!((\w+)( .+)?)[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1 \n/igm;
 ###
 ###############
 	if ($interlink) {
@@ -7801,8 +7801,9 @@ sub SubstituteTextLinks {
 ###############
 ### added by gypark
 ### {{{ }}} 내의 내용은 태그로 간주하지 않음
-	$text =~ s/((^|\n)\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n)/&StoreRaw($1)/igem;
-	$text =~ s/((^|\n)\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n)/&StoreRaw($1)/igem;
+	$text =~ s/(^|\n)(\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1.&StoreRaw($2)."\n"/igem;
+	$text =~ s/(^|\n)(\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1.&StoreRaw($2)."\n"/igem;
+	$text =~ s/(^|\n)(\{\{\{#!((\w+)( .+)?)[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1.&StoreRaw($2)."\n"/igem;
 ###
 ###############
 
