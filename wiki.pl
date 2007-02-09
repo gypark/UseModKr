@@ -2100,24 +2100,6 @@ EOH
 		}
 
 		$headExtra .= <<EOH;
-function GetKeyStroke(KeyStorke) {
-	var evt = KeyStorke || window.event;
-	var eventChooser = evt.keyCode || evt.which;
-	var target = evt.target || evt.srcElement;
-	if (evt.altKey || evt.ctrlKey) return;
-	while (target && target.tagName.toLowerCase() != 'input' && target.tagName.toLowerCase() != 'textarea') {
-		target = target.parentElement;
-	}
-	if (!target) {
-		var which = String.fromCharCode(eventChooser).toLowerCase();
-		for (var i in key) {
-			if (which == i) {
-				document.location.href = key[i];
-			}
-		}
-	}
-}
-
 document.onkeypress = GetKeyStroke;
 -->
 </script>
