@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.109e";
+$WikiVersion = "0.92K3-ext1.109f";
 $WikiRelease = "2007-02-09";
 
 $HashKey = "salt"; # 2-character string
@@ -2104,6 +2104,7 @@ function GetKeyStroke(KeyStorke) {
 	var evt = KeyStorke || window.event;
 	var eventChooser = evt.keyCode || evt.which;
 	var target = evt.target || evt.srcElement;
+	if (evt.altKey || evt.ctrlKey) return;
 	while (target && target.tagName.toLowerCase() != 'input' && target.tagName.toLowerCase() != 'textarea') {
 		target = target.parentElement;
 	}
