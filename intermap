@@ -100,8 +100,10 @@ UseModKr            http://cgi.chollian.net/~royalpink/wiki/wiki.pl?
 VisualWorks         http://wiki.cs.uiuc.edu/VisualWorks/
 Why                 http://clublet.com/c/c/why?
 Wiki                http://c2.com/cgi/wiki?|wiki-16.png
-WikiPedia           http://www.wikipedia.org/wiki/|wikipedia-16.png
-WikiPediaKo         http://ko.wikipedia.org/wiki/|wikipedia-16.png|utf-8
+WikiPedia           http://en.wikipedia.org/wiki/|wikipedia-16.png|utf-8
+Wikipedia           http://en.wikipedia.org/wiki/|wikipedia-16.png|utf-8
+KoWikiPedia         http://ko.wikipedia.org/wiki/|wikipedia-16.png|utf-8
+KoWikipedia         http://ko.wikipedia.org/wiki/|wikipedia-16.png|utf-8
 WikiX               http://wikix.ath.cx/index.php?display=|wikixnet-16.png
 WIM                 http://linux.mizi.com/wim/|wim-16.png
 Xper                http://xper.org/wiki/xp/|xper-16.png
