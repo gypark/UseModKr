@@ -1,5 +1,12 @@
 ### intermap
-# The format of each line is "WikiName URL [# comment]"
+# The format of each line is "WikiName URL[option] [# comment]"
+# option : |[icon][|encoding]
+# example:
+# example:
+#    WikiPediaKo         http://ko.wikipedia.org/wiki/                           # no option
+#    WikiPediaKo         http://ko.wikipedia.org/wiki/|wikipedia-16.png          # icon
+#    WikiPediaKo         http://ko.wikipedia.org/wiki/||utf-8                    # encoding
+#    WikiPediaKo         http://ko.wikipedia.org/wiki/|wikipedia-16.png|utf-8    # full option
 ###
 AcadWiki            http://xarch.tu-graz.ac.at/autocad/wiki/
 Acronym             http://www.acronymfinder.com/af-query.asp?String=exact&Acronym=|acronym-16.png
@@ -34,7 +41,7 @@ GentooKorea         http://gentoo.or.kr/wiki/moin.cgi/
 GnomeKorea          http://www.gnome.or.kr/moin.cgi/|gnomekorea-16.png
 GoogleGroups        http://groups.google.com/groups?q=
 Google              http://www.google.com/search?q=|google-16.png
-GyparkWiki          http://gypark.pe.kr/cgi-bin/wiki/wiki.pl?|GyparkWiki.png
+GyparkWiki          http://gypark.pe.kr/wiki/|GyparkWiki.png
 HammondWiki         http://www.dairiki.org/HammondWiki/index.php3?
 Hssg                http://cgi.chollian.net/~hspia/wiki/wiki.pl?
 Hwanseo             http://cgi.chollian.net/~hspia/wiki/wiki.pl?
@@ -94,6 +101,7 @@ VisualWorks         http://wiki.cs.uiuc.edu/VisualWorks/
 Why                 http://clublet.com/c/c/why?
 Wiki                http://c2.com/cgi/wiki?|wiki-16.png
 WikiPedia           http://www.wikipedia.org/wiki/|wikipedia-16.png
+WikiPediaKo         http://ko.wikipedia.org/wiki/|wikipedia-16.png|utf-8
 WikiX               http://wikix.ath.cx/index.php?display=|wikixnet-16.png
 WIM                 http://linux.mizi.com/wim/|wim-16.png
 Xper                http://xper.org/wiki/xp/|xper-16.png

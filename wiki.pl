@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.110";
-$WikiRelease = "2007-02-09";
+$WikiVersion = "0.92K3-ext1.111";
+$WikiRelease = "2007-02-11";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -3393,16 +3393,22 @@ sub InterPageLink {
 ###############
 ### added by gypark
 ### interwiki 아이콘
-	my ($image, $url_main);
-	if ($url =~ /\|/) {
-		($url, $image) = split(/\|/, $url, 2);		
-	}
+	my ($image, $url_main, $encoding);
+	($url, $image, $encoding) = split(/\|/, $url);
 	$url_main = $url;
 ###
 ###############
 	return ("", $id . $punct)  if ($url eq "");
 	$remotePage =~ s/&amp;/&/g;  # Unquote common URL HTML
-	$url .= $remotePage;
+#	$url .= $remotePage;
+### intermap 에 인코딩 지정
+	my $encoded_page = $remotePage;
+	if (($encoding ne "") && (lc($encoding) ne lc($HttpCharset))) {
+		$encoded_page = &encode_korean($encoded_page, $HttpCharset, $encoding);
+		$encoded_page = &EncodeUrl($encoded_page);
+	}
+	$url .= $encoded_page;
+
 ###############
 ### added by gypark
 ### InterWiki 로 적힌 이미지 처리
