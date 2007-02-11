@@ -13,7 +13,11 @@ sub MacroShowInterMap() {
 	my ($status, $data) = &ReadFile($InterFile);
 
 	if ($status) {
-		$data =~ s/\|(\S+)/ <IMG class='inter' src='$InterIconDir\/$1' alt='$1'>$2/gm;
+		$data =~ s/(#.*)/&StoreRaw("<SPAN style='color: blue;'>$1<\/SPAN>")/ge;
+		$data =~ s/\|([^\|\n]+\.$ImageExtensions)/ <IMG class='inter' src='$InterIconDir\/$1' alt='$1'>/g;
+		$data =~ s/\|([^\|\n]+)/ <SPAN style='color: green;'>$1<\/SPAN>/g;
+		$data =~ s/\|//g;
+		$data = &RestoreSavedText($data);
 	} else {
 		$data = "Can't read intermap file";
 	}
