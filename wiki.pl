@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.111";
+$WikiVersion = "0.92K3-ext1.111a";
 $WikiRelease = "2007-02-11";
 
 $HashKey = "salt"; # 2-character string
@@ -3405,8 +3405,8 @@ sub InterPageLink {
 	my $encoded_page = $remotePage;
 	if (($encoding ne "") && (lc($encoding) ne lc($HttpCharset))) {
 		$encoded_page = &encode_korean($encoded_page, $HttpCharset, $encoding);
-		$encoded_page = &EncodeUrl($encoded_page);
 	}
+	$encoded_page = &EncodeUrl($encoded_page);
 	$url .= $encoded_page;
 
 ###############
