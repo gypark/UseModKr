@@ -33,7 +33,7 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.111a";
+$WikiVersion = "0.92K3-ext1.111b";
 $WikiRelease = "2007-02-11";
 
 $HashKey = "salt"; # 2-character string
@@ -1904,7 +1904,7 @@ sub GetHeader {
 ### page 처음에 bottom 으로 가는 링크를 추가
 ### #EXTERN
 	if (&GetParam('InFrame','') eq '') {
-		$result .= "\n<div align=\"right\"><a accesskey=\"z\" name=\"PAGE_TOP\" href=\"#PAGE_BOTTOM\">". T('Bottom')." [b]" . "</a></div>\n";
+		$result .= "\n<div class=\"gobottom\" align=\"right\"><a accesskey=\"z\" name=\"PAGE_TOP\" href=\"#PAGE_BOTTOM\">". T('Bottom')." [b]" . "</a></div>\n";
 	}
 ###
 ###############
@@ -3436,7 +3436,7 @@ sub InterPageLink {
 				"</A>";
 	$link_html .= "<A class='inter' href='$url' title='$id'>$remotePage</A>";
 ### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
-	$link_html .= "<a href=\"$url\" target=\"_blank\"><img src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>";
+	$link_html .= "<a href=\"$url\" target=\"_blank\"><img class=\"newwindow\" src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>";
 	return ($link_html, $punct);
 ###
 ###############
@@ -3475,7 +3475,7 @@ sub StoreBracketInterPage {
 	$link_html = "<A class='inter' href='$url' title='$id'>[$text]</A>" .
 ### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
 				"<a href=\"$url\" target=\"_blank\">" .
-				"<img src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\">" .
+				"<img class=\"newwindow\" src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\">" .
 				"</a>";
 	return &StoreRaw($link_html);
 ###
@@ -3919,7 +3919,7 @@ sub UrlLink {
 ### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
 ### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
 #	return ("<a href=\"$name\">$name</a>", $punct);
-	return ("<A class='outer' href=\"$name\">$protocol$name</A><a href=\"$name\" target=\"_blank\"><img src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>", $punct);
+	return ("<A class='outer' href=\"$name\">$protocol$name</A><a href=\"$name\" target=\"_blank\"><img class=\"newwindow\" src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>", $punct);
 ###
 ###############
 }
@@ -3936,7 +3936,7 @@ sub StoreBracketUrl {
 ### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
 ### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
 #	return &StoreRaw("<a href=\"$url\">[$text]</a>");
-	return &StoreRaw("<A class='outer' href=\"$url\">[$text]</A><a href=\"$url\" target=\"_blank\"><img src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>");
+	return &StoreRaw("<A class='outer' href=\"$url\">[$text]</A><a href=\"$url\" target=\"_blank\"><img class=\"newwindow\" src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>");
 ###
 ###############
 }

@@ -72,7 +72,8 @@ MuWeb               http://www.dunstable.com/scripts/MuWebWeb?
 NoSmoke             http://no-smok.net/nsmk/|nosmoke-16.png
 NoSmok              http://no-smok.net/nsmk/|nosmoke-16.png
 NovaKim             http://goodstyle.org/wikix/index.php?display=
-Oddmuse             http://www.oddmuse.org/cgi-bin/wiki?
+OddMuse             http://www.oddmuse.org/cgi-bin/wiki/|http://www.oddmuse.org/favicon.ico
+Oddmuse             http://www.oddmuse.org/cgi-bin/wiki/|http://www.oddmuse.org/favicon.ico
 OrgPatterns         http://www.bell-labs.com/cgi-user/OrgPatterns/OrgPatterns?
 PalmWiki            http://wiki.jmjeong.com/wiki.pl?|PalmWiki.gif
 PhpWiki             http://phpwiki.sourceforge.net/phpwiki/index.php3?
