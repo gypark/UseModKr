@@ -79,9 +79,6 @@ $JavaScript  = "wikiscript.js";   # URL for JavaScript code (like "/wikiscript.j
 $UseLatex    = 0;		# 1 = Use LaTeX conversion   2 = Don't convert
 ### 사용자 정의 헤더
 $UserHeader  = '';              # Optional HTML header additional content
-$UserHeader  = <<EOF;
-<link rel="stylesheet" media="print" href="wiki_print.css">
-EOF
 ### Oekaki .jar 파일
 $OekakiJar   = "oekakibbs.jar";	# URL for oekaki *.jar file
 ##
