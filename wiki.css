@@ -740,4 +740,9 @@ A.wordindex:hover
 	text-decoration: underline;
 }
 
+SPAN.wordindex {
+	font-size: 80%;
+	vertical-align: sub;
+	display: none;
+}
 

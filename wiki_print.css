@@ -23,6 +23,7 @@ body {
 
 PRE {
 	background: white;
+	color: black;
 }
 
 PRE font {
@@ -73,4 +74,13 @@ DIV.threadreply {
 
 DIV.threadmemo {
 	display: none;
+}
+
+/* index */
+A.wordindex:link, A.wordindex:active, A.wordindex:visited, A.wordindex:hover {
+	color: black;
+}
+
+SPAN.wordindex {
+	display: inline;
 }

@@ -91,7 +91,8 @@ sub MacroIndex {
 
 	$txt = "<A class='wordindex' name='INDEXR_$MyIndexCounter' href='#INDEX_$MyIndexCounter'>".
 		$pword.
-		"</A>";
+		"</A>".
+		"<SPAN class='wordindex'>($MyIndexCounter)</SPAN>";
 
 	return $txt;
 }
