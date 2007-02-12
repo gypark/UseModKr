@@ -1,0 +1,76 @@
+/*******************************
+	wiki.css
+	CSS for UseModWiki 0.92K3-ext1.30 or later version.
+	gypark@gmail.com
+	from 2002. 03. 01.
+*******************************/
+
+/********************
+ * 사이트 전체
+ ********************/
+body {
+	margin-left: 1%;
+	margin-right: 1%;
+	font: normal normal normal 75%/160% gulim, "Times New Roman", serif;
+	text-align:justify;
+	background: #fefefe;
+	color: black;
+}
+
+.editsection {
+	display: none;
+}
+
+PRE {
+	background: white;
+}
+
+PRE font {
+	color: black;
+}
+
+IMG.newwindow {
+	display: none;
+}
+
+/* 상단 메뉴 바 */
+DIV.gobottom {
+	display: none;
+}
+
+TABLE.gotobar {
+	display: none;
+}
+
+/* 편집 가이드 */
+DIV.editguide {
+	display: none;
+}
+
+/* footer */
+DIV.footer,HR.footer {
+	display: none;
+}
+
+/* memo */
+DIV.memo {
+	display: block;
+}
+
+/* 트랙백 주고받기 안내영역 */
+DIV.trackbackguide {
+	display: none;
+}
+
+/* thread */
+DIV.threadnew {
+	display: none;
+}
+
+DIV.threadreply {
+	display: none;
+}
+
+DIV.threadmemo {
+	display: none;
+}
