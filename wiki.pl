@@ -33,8 +33,8 @@ use strict;
 ### added by gypark
 ### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext1.111c";
-$WikiRelease = "2007-02-11";
+$WikiVersion = "0.92K3-ext2rc1";
+$WikiRelease = "2007-02-13";
 
 $HashKey = "salt"; # 2-character string
 ###
@@ -50,7 +50,7 @@ use vars qw(@RcDays @HtmlPairs @HtmlSingle
 	$TempDir $LockDir $DataDir $HtmlDir $UserDir $KeepDir $PageDir
 	$InterFile $RcFile $RcOldFile $IndexFile $FullUrl $SiteName $HomePage
 	$LogoUrl $RcDefault $IndentLimit $RecentTop $EditAllowed $UseDiff
-	$UseSubpage $UseCache $RawHtml $SimpleLinks $NonEnglish $LogoLeft
+	$UseSubpage $UseCache $RawHtml $LogoLeft
 	$KeepDays $HtmlTags $HtmlLinks $UseDiffLog $KeepMajor $KeepAuthor
 	$FreeUpper $EmailNotify $SendMail $EmailFrom $FastGlob $EmbedWiki
 	$ScriptTZ $BracketText $UseAmPm $UseIndex $UseLookup
@@ -68,7 +68,7 @@ use vars qw(@RcDays @HtmlPairs @HtmlSingle
 ### 패치를 위해 추가된 환경설정 변수
 use vars qw(
 	$UserGotoBar $UserGotoBar2 $UserGotoBar3 $UserGotoBar4 
-	$ConfigFile $SOURCEHIGHLIGHT @SRCHIGHLANG $LinkFirstChar
+	$ConfigFile $SOURCEHIGHLIGHT @SRCHIGHLANG $EditNameLink
 	$EditGuideInExtern $SizeTopFrame $SizeBottomFrame
 	$LogoPage $CheckTime $LinkDir $IconDir $CountDir $UploadDir $UploadUrl
 	$HiddenPageFile $TemplatePage
@@ -96,11 +96,8 @@ use vars qw(%Page %Section %Text %InterSite %SaveUrl %SaveNumUrl
 ### 패치를 위해 추가된 내부 전역 변수
 use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime $Sec_Revision $Sec_Ts
 	$ViewCount $AnchoredFreeLinkPattern %UserInterest %HiddenPage
-	$pageid $IsPDA $MemoID
-	$QuotedFullUrl
-	%MacroFile
-	$UseShortcut $UseShortcutPage
-	$SectionNumber);
+	$pageid $IsPDA $MemoID $QuotedFullUrl %MacroFile $UseShortcut
+	$UseShortcutPage $SectionNumber $AnchorPattern);
 ###
 ###############
 
@@ -148,7 +145,6 @@ $UserGotoBar4 = "";
 # do "./translations/korean.pl";    # Path of translation file
 $SOURCEHIGHLIGHT    = "/usr/local/bin/source-highlight";    # path of source-highlight
 @SRCHIGHLANG = qw(cpp java javascript prolog perl php3 python flex changeelog);
-$LinkFirstChar = 1;    # 1 = link on first character,  0 = followed by "?" mark (classical)
 $EditGuideInExtern = 0; # 1 = show edit guide in bottom frame, 0 = don't show
 $SizeTopFrame = 160;
 $SizeBottomFrame = 110;
@@ -172,6 +168,7 @@ $JavaScript  = "wikiscript.js";   # URL for JavaScript code (like "/wikiscript.j
 $UseLatex    = 0;		# 1 = Use LaTeX conversion   2 = Don't convert
 $UserHeader  = '';              # Optional HTML header additional content
 $OekakiJar   = "oekakibbs.jar";	# URL for oekaki *.jar file
+$EditNameLink = 0;      # 1 = edit links use name (CSS), 0 = '?' links
 
 # Major options:
 $UseSubpage  = 1;       # 1 = use subpages,       0 = do not use subpages
@@ -195,8 +192,6 @@ $KeepMajor   = 1;       # 1 = keep major rev,     0 = expire all revisions
 $KeepAuthor  = 1;       # 1 = keep author rev,    0 = expire all revisions
 $ShowEdits   = 0;       # 1 = show minor edits,   0 = hide edits by default
 $HtmlLinks   = 1;       # 1 = allow A HREF links, 0 = no raw HTML links
-$SimpleLinks = 0;       # 1 = only letters,       0 = allow _ and numbers
-$NonEnglish  = 0;       # 1 = extra link chars,   0 = only A-Za-z chars
 $ThinLine    = 1;       # 1 = fancy <hr> tags,    0 = classic wiki <hr>
 $BracketText = 1;       # 1 = allow [URL text],   0 = no link descriptions
 $UseAmPm     = 1;       # 1 = use am/pm in times, 0 = use 24-hour times
@@ -305,7 +300,7 @@ sub InitLinkPatterns {
 
 	# Field separators are used in the URL-style patterns below.
 #  $FS  = "\xb3";      # The FS character is a superscript "3"
-	$FS  = "\x7f";
+	$FS  = "\x1e";		# by gypark. from oddmuse
 	$FS1 = $FS . "1";   # The FS values are used to separate fields
 	$FS2 = $FS . "2";   # in stored hashtables and other data structures.
 	$FS3 = $FS . "3";   # The FS character is not allowed in user data.
@@ -315,19 +310,9 @@ sub InitLinkPatterns {
 	$FS_gt = $FS . "gt";
 ###
 ###############
-
-	$UpperLetter = "[A-Z";
-	$LowerLetter = "[a-z";
-	$AnyLetter   = "[A-Za-z";
-	if ($NonEnglish) {
-		$UpperLetter .= "\xc0-\xde";
-		$LowerLetter .= "\xdf-\xff";
-		$AnyLetter   .= "\xc0-\xff";
-	}
-	if (!$SimpleLinks) {
-		$AnyLetter .= "_0-9";
-	}
-	$UpperLetter .= "]"; $LowerLetter .= "]"; $AnyLetter .= "]";
+	$UpperLetter = "[A-Z\xc0-\xde]";
+	$LowerLetter = "[a-z\xdf-\xff]";
+	$AnyLetter   = "[A-Za-z\x80-\xff_0-9]";
 
 	# Main link pattern: lowercase between uppercase, then anything
 	$LpA = $UpperLetter . "+" . $LowerLetter . "+" . $UpperLetter
@@ -344,13 +329,6 @@ sub InitLinkPatterns {
 		$LinkPattern = "($LpA)";
 	}
 	$QDelim = '(?:"")?';     # Optional quote delimiter (not in output)
-###############
-### replaced by gypark
-### anchor 에 한글 사용
-#	$AnchoredLinkPattern = $LinkPattern . '#(\\w+)' . $QDelim if $NamedAnchors;
-	$AnchoredLinkPattern = $LinkPattern . '#([0-9A-Za-z\xa0-\xff]+)' . $QDelim if $NamedAnchors;
-###
-###############
 	$LinkPattern .= $QDelim;
 
 	# Inter-site convention: sites must start with uppercase letter
@@ -358,27 +336,22 @@ sub InitLinkPatterns {
 	$InterSitePattern = $UpperLetter . $AnyLetter . "+";
 	$InterLinkPattern = "((?:$InterSitePattern:[^\\]\\s\"<>$FS]+)$QDelim)";
 
+	# free link [[pagename]]
 	if ($FreeLinks) {
 		# Note: the - character must be first in $AnyLetter definition
-		#if ($NonEnglish) {
-			$AnyLetter = "[-,.()' _0-9A-Za-z\xa0-\xff]";
-		#} else {
-		#  $AnyLetter = "[-,.()' _0-9A-Za-z]";
-		#}
+		$AnyLetter = "[-,.()' _0-9A-Za-z\x80-\xff]";
 	}
-	$FreeLinkPattern = "($AnyLetter+)";
 	if ($UseSubpage) {
 		$FreeLinkPattern = "((?:(?:$AnyLetter+)?\\/)?$AnyLetter+)";
+	} else {
+		$FreeLinkPattern = "($AnyLetter+)";
 	}
 	$FreeLinkPattern .= $QDelim;
 
-###############
-### added by gypark
-### 한글패이지에 anchor 사용
-### from Bab2's patch
-	$AnchoredFreeLinkPattern = $FreeLinkPattern . '#([0-9A-Za-z\xa0-\xff]+)' . $QDelim if $NamedAnchors;
-###
-###############
+	# anchored link
+	$AnchorPattern = '#([0-9A-Za-z\x80-\xff]+)';
+	$AnchoredLinkPattern = $LinkPattern . $AnchorPattern . $QDelim if $NamedAnchors;
+	$AnchoredFreeLinkPattern = $FreeLinkPattern . $AnchorPattern . $QDelim if $NamedAnchors;
 
 	# Url-style links are delimited by one of:
 	#   1.  Whitespace                           (kept in output)
@@ -387,20 +360,12 @@ sub InitLinkPatterns {
 	#   4.  A single double-quote (")            (kept in output)
 	#   5.  A $FS (field separator) character    (kept in output)
 	#   6.  A double double-quote ("")           (removed from output)
-
-	$UrlProtocols = "http|https|ftp|afs|news|nntp|mid|cid|mailto|wais|mms|mmst|"
-					. "prospero|telnet|gopher";
-	$UrlProtocols .= '|file'  if $NetworkFile;
+	$UrlProtocols = 'http|https|ftp|afs|news|nntp|mid|cid|mailto|wais|mms|mmst|prospero|telnet|gopher|irc';
+	$UrlProtocols .= '|file' if $NetworkFile;
 	$UrlPattern = "((?:(?:$UrlProtocols):[^\\]\\s\"<>$FS]+)$QDelim)";
 	$ImageExtensions = "(gif|jpg|png|bmp|jpeg|GIF|JPG|PNG|BMP|JPEG)";
 	$RFCPattern = "RFC\\s?(\\d+)";
-###############
-### replaced by gypark
-### ISBN 패턴 수정
-#	$ISBNPattern = "ISBN:?([0-9- xX]{10,})";
 	$ISBNPattern = "ISBN:?([0-9-xX]{10,})";
-###
-###############
 }
 
 # Simple HTML cache
@@ -846,6 +811,9 @@ sub BrowsePage {
 
 sub ReBrowsePage {
 	my ($id, $oldId, $isEdit) = @_;
+	$id = &EncodeUrl($id);
+	$oldId = &EncodeUrl($oldId);
+
 
 	if ($oldId ne "") {   # Target of #REDIRECT (loop breaking)
 		print &GetRedirectPage("action=browse&id=$id&oldid=$oldId",
@@ -1583,6 +1551,12 @@ sub ScriptLink {
 
 	return "<a href=\"$ScriptName" . &ScriptLinkChar() . "$action\">$text</a>";
 }
+
+sub ScriptLinkClass {
+	my ($action, $text, $class) = @_;
+
+	return "<a href=\"$ScriptName" . &ScriptLinkChar() . "$action\" class=\"$class\">$text</a>";
+}
 ###
 ###############
 
@@ -1601,21 +1575,8 @@ sub HelpLink {
 
 sub GetPageLink {
 	my ($id) = @_;
-	my $name = $id;
 
-	$id =~ s|^/|$MainPage/|;
-	if ($FreeLinks) {
-		$id = &FreeToNormal($id);
-		$name =~ s/_/ /g;
-	}
-###############
-### pda clip by gypark
-	if ($IsPDA) {
-		return 	&ScriptLink("action=browse&pda=1&id=$id", $name);
-	}
-###
-###############
-	return &ScriptLink($id, $name);
+	return &GetPageLinkText($id, $id);
 }
 
 sub GetPageLinkText {
@@ -1633,7 +1594,7 @@ sub GetPageLinkText {
 	}
 ###
 ###############
-	return &ScriptLink($id, $name);
+	return &ScriptLinkClass($id, $name, 'wikipagelink');
 }
 
 sub GetEditLink {
@@ -1643,7 +1604,7 @@ sub GetEditLink {
 		$id = &FreeToNormal($id);
 		$name =~ s/_/ /g;
 	}
-	return &ScriptLink("action=edit&id=$id", $name);
+	return &ScriptLinkClass("action=edit&id=$id", $name, 'wikipageedit');
 }
 
 ###############
@@ -1702,23 +1663,16 @@ sub GetPageOrEditAnchoredLink {
 		$name = "$name#$anchor" if $anchor && $NamedAnchors != 2;
 		return &GetPageLinkText($id, $name);
 	}
-	if ($FreeLinks) {
+	if ($FreeLinks && !$EditNameLink) {
 		if ($name =~ m| |) {  # Not a single word
 			$name = "[$name]";  # Add brackets so boundaries are obvious
 		}
 	}
-###############
-### replaced by gypark
-### 존재하지 않는 페이지에 대한 링크 출력 형식 변경
-#	return $name . &GetEditLink($id,"?");
-	if ((&GetParam('linkstyle', $LinkFirstChar)) 
-			&& ($name =~ /(\[)?([^\/]*\/)?([a-zA-Z0-9\/]|[\x80-\xff][\x80-\xff])([^\]]*)(\])?/)) {
-		return $2 . &GetEditLink($id,"<b>$3</b>") . $4;
+	if ($EditNameLink) {
+		return &GetEditLink($id, $name);
 	} else {
 		return $name . &GetEditLink($id,"?");
 	}
-###
-###############
 }
 
 
@@ -2583,7 +2537,7 @@ sub CommonMarkup {
 ### replaced by gypark
 ### anchor 에 한글 사용
 #		s/\[\#(\w+)\]/&StoreHref(" name=\"$1\"")/ge if $NamedAnchors;
-		s/\[\#([0-9A-Za-z\xa0-\xff]+)\]/&StoreHref(" name=\"$1\"")/ge if $NamedAnchors;
+		s/\[$AnchorPattern\]/&StoreHref(" name=\"$1\"")/ge if $NamedAnchors;
 ###
 ###############
 		if ($HtmlTags) {
@@ -6027,14 +5981,6 @@ sub DoEditPrefs {
 
 	print '<br>', &GetFormCheck('toplinkbar', 1,
 							T('Show link bar on top'));
-###############
-### added by gypark
-### 빈 페이지 링크 스타일을 환경 설정에서 결정
-### from Bab2's patch
-	print '<br>', &GetFormCheck('linkstyle', $LinkFirstChar,
-			T('Make link at the first character of an empty page'));
-###
-###############
 	print '<br>', &GetFormCheck('linkrandom', 0,
 												T('Add "Random Page" link to link bar'));
 	print '<br>', $q->submit(-name=>'Save', -value=>T('Save')), "\n";

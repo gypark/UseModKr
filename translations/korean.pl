@@ -539,8 +539,6 @@ No reverse link.
 %s 페이지는 외부의 페이지를 표시합니다.
 You need the web browser which supports frame tag.
 이 페이지를 보려면, 프레임을 볼 수 있는 브라우저가 필요합니다.
-Make link at the first character of an empty page
-내용이 없는 페이지의 이름 첫 글자에 링크를 만듦
 Keep login information
 자동 로그인 사용
 Update my bookmark timestamp

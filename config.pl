@@ -40,8 +40,6 @@ do "./translations/korean.pl";    # Path of translation file
 ### path of source-highlight
 $SOURCEHIGHLIGHT    = "/usr/local/bin/source-highlight";    # path of source-highlight
 @SRCHIGHLANG = qw(cpp java javascript prolog perl php3 python flex changeelog);
-### 존재하지 않는 페이지 표시 방식
-$LinkFirstChar = 1;    # 1 = link on first character,  0 = followed by "?" mark (classical)
 ### EXTERN 페이지 하단에 편집 가이드 표시
 $EditGuideInExtern = 0; # 1 = show edit guide in bottom frame, 0 = don't show
 $SizeTopFrame = 160;
@@ -81,6 +79,8 @@ $UseLatex    = 0;		# 1 = Use LaTeX conversion   2 = Don't convert
 $UserHeader  = '';              # Optional HTML header additional content
 ### Oekaki .jar 파일
 $OekakiJar   = "oekakibbs.jar";	# URL for oekaki *.jar file
+### 존재하지 않는 페이지 표시 방식
+$EditNameLink = 1;      # 1 = edit links use name (CSS), 0 = '?' links
 ##
 ##########################################################
 
@@ -106,15 +106,13 @@ $KeepMajor   = 1;       # 1 = keep major rev,     0 = expire all revisions
 $KeepAuthor  = 1;       # 1 = keep author rev,    0 = expire all revisions
 $ShowEdits   = 0;       # 1 = show minor edits,   0 = hide edits by default
 $HtmlLinks   = 1;       # 1 = allow A HREF links, 0 = no raw HTML links
-$SimpleLinks = 0;       # 1 = only letters,       0 = allow _ and numbers
-$NonEnglish  = 0;       # 1 = extra link chars,   0 = only A-Za-z chars
 $ThinLine    = 1;       # 1 = fancy <hr> tags,    0 = classic wiki <hr>
 $BracketText = 1;       # 1 = allow [URL text],   0 = no link descriptions
 $UseAmPm     = 1;       # 1 = use am/pm in times, 0 = use 24-hour times
 $UseIndex    = 0;       # 1 = use index file,     0 = slow/reliable method
 $UseHeadings = 1;       # 1 = allow = h1 text =,  0 = no header formatting
 $NetworkFile = 1;       # 1 = allow remote file:, 0 = no file:// links
-$BracketWiki = 0;       # 1 = [WikiLnk txt] link, 0 = no local descriptions
+$BracketWiki = 1;       # 1 = [WikiLnk txt] link, 0 = no local descriptions
 $UseLookup   = 0;       # 1 = lookup host names,  0 = skip lookup (IP only)
 $FreeUpper   = 0;       # 1 = force upper case,   0 = do not force case
 $FastGlob    = 1;       # 1 = new faster code,    0 = old compatible code

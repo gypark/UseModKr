@@ -182,6 +182,28 @@ A:hover {
 	text-decoration: underline;
 }
 
+/* 위키 페이지 링크 */
+A.wikipagelink:link, A.wikipagelink:active, A.wikipagelink:visited, A.wikipagelink:hover {
+	background: transparent;
+	color: green;
+	text-decoration: none;
+}
+A.wikipagelink:hover
+{
+	text-decoration: underline;
+}
+
+/* 위키 페이지 편집 링크 */
+A.wikipageedit:link, A.wikipageedit:active, A.wikipageedit:visited, A.wikipageedit:hover {
+	background: transparent;
+	color: red;
+	text-decoration: none;
+}
+A.wikipageedit:hover
+{
+	text-decoration: underline;
+}
+
 /* 외부 URL */
 A.outer:link, A.outer:active, A.outer:visited, A.outer:hover {
 	background: transparent;
