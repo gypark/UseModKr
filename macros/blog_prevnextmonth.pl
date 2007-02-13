@@ -1,5 +1,5 @@
 # <blog_prevnextmonth>
-# ÀÌÀü ´Þ°ú ´ÙÀ½ ´Þ·Î °¡´Â ¸µÅ©¸¦ ¸¸µê
+# ì´ì „ ë‹¬ê³¼ ë‹¤ìŒ ë‹¬ë¡œ ê°€ëŠ” ë§í¬ë¥¼ ë§Œë“¦
 
 sub blog_prevnextmonth {
 	my ($txt) = @_;

@@ -1,4 +1,4 @@
-# <blog_calendar(¸ñÂ÷ÆäÀÌÁö,³â,¿ù)>
+# <blog_calendar(ëª©ì°¨í˜ì´ì§€,ë…„,ì›”)>
 
 sub blog_calendar {
 	my ($txt) = @_;
@@ -24,12 +24,12 @@ sub MacroBlogCalendar {
 	my ($td_class, $span_style);
 	my $temp;
 
-	# ´ŞÀÇ °ªÀÌ 13 ÀÌ»óÀÌ¸é ¹«È¿
+	# ë‹¬ì˜ ê°’ì´ 13 ì´ìƒì´ë©´ ë¬´íš¨
 	if (!($cal_month =~ /[-+]/) && ($cal_month > 12)) {
 		return "&lt;calendar($tocpage,$cal_year,$cal_month)&gt;";
 	}
 
-	# ¶óÀÌºê·¯¸® ÀĞÀ½
+	# ë¼ì´ë¸ŒëŸ¬ë¦¬ ì½ìŒ
 	my ($MacrosDir, $MyMacrosDir) = ("./macros/", "./mymacros/");
 	if (-f "$MyMacrosDir/blog_library.pl") {
 		require "./$MyMacrosDir/blog_library.pl";
@@ -39,27 +39,27 @@ sub MacroBlogCalendar {
 		return "<font color='red'>blog_library.pl not found</font>";
 	}
 
-	# ¸ñÂ÷ÆäÀÌÁö·ÎºÎÅÍ ¸ñÂ÷¸®½ºÆ®¸¦ ¾ò¾î³¿
+	# ëª©ì°¨í˜ì´ì§€ë¡œë¶€í„° ëª©ì°¨ë¦¬ìŠ¤íŠ¸ë¥¼ ì–»ì–´ëƒ„
 	my ($status, $toc_mainpage, @tocitem_List) = &BlogReadToc($tocpage);
 	if (!$status) {
 		return "$toc_mainpage";
 	}
 
-	# ¸®½ºÆ®¸¦ ÇÏ³ª·Î ¿¬°á
+	# ë¦¬ìŠ¤íŠ¸ë¥¼ í•˜ë‚˜ë¡œ ì—°ê²°
 	my $tocitems = join("\n", @tocitem_List);
 
-	# ³âµµ³ª ´Ş¿¡ 0 À» ÀÎÀÚ·Î ¹ŞÀ¸¸é ¿ÃÇØ ¶Ç´Â ÀÌ¹ø ´Ş
+	# ë…„ë„ë‚˜ ë‹¬ì— 0 ì„ ì¸ìë¡œ ë°›ìœ¼ë©´ ì˜¬í•´ ë˜ëŠ” ì´ë²ˆ ë‹¬
 	$cal_year = $this_year+1900 if ($cal_year == 0); 
 	$cal_month = $this_month+1 if ($cal_month == 0);
 
-	# ³âµµ¿¡ + ¶Ç´Â - °¡ ÀÖÀ¸¸é ¿ÃÇØ·ÎºÎÅÍ º¯À§ °è»ê
+	# ë…„ë„ì— + ë˜ëŠ” - ê°€ ìˆìœ¼ë©´ ì˜¬í•´ë¡œë¶€í„° ë³€ìœ„ ê³„ì‚°
 	if ($cal_year =~ /\+(\d+)/ ) {
 		$cal_year = $this_year+1900 + $1;
 	} elsif ($cal_year =~ /-(\d+)/ ) {
 		$cal_year = $this_year+1900 - $1;
 	}
 
-	# ´Ş¿¡ + ¶Ç´Â - °¡ ÀÖÀ¸¸é ÀÌ¹ø ´Ş·ÎºÎÅÍ º¯À§ °è»ê
+	# ë‹¬ì— + ë˜ëŠ” - ê°€ ìˆìœ¼ë©´ ì´ë²ˆ ë‹¬ë¡œë¶€í„° ë³€ìœ„ ê³„ì‚°
 	if ($cal_month =~ /\+(\d+)/ ) {
 		$cal_month = $this_month+1 + $1;
 		while ($cal_month > 12)  {
@@ -74,16 +74,16 @@ sub MacroBlogCalendar {
 		}
 	}
 	
-	# 1902³âºÎÅÍ 2037³â »çÀÌ¸¸ Áö¿øÇÔ. ±× ¹üÀ§¸¦ ¹ş¾î³ª¸é 1902³â°ú 2037³âÀ¸·Î °è»ê
+	# 1902ë…„ë¶€í„° 2037ë…„ ì‚¬ì´ë§Œ ì§€ì›í•¨. ê·¸ ë²”ìœ„ë¥¼ ë²—ì–´ë‚˜ë©´ 1902ë…„ê³¼ 2037ë…„ìœ¼ë¡œ ê³„ì‚°
 	$cal_year = 2037 if ($cal_year > 2037);
 	$cal_year = 1902 if ($cal_year < 1902);
 
-	# 1¿ù~9¿ùÀº 01~09·Î ¸¸µê
+	# 1ì›”~9ì›”ì€ 01~09ë¡œ ë§Œë“¦
 	if ($cal_month < 10) {
 		$cal_month = "0" . $cal_month;
 	}
 
-	# ´Ş·Â Á¦¸ñ Ãâ·Â
+	# ë‹¬ë ¥ ì œëª© ì¶œë ¥
 	$result .= "<TABLE class='calendar'>";
 	$result .= "<CAPTION class='calendar'>" 
 		."<a href=\"$ScriptName".&ScriptLinkChar()."$toc_mainpage/$cal_year-$cal_month\">"
@@ -92,7 +92,7 @@ sub MacroBlogCalendar {
 		."</a>"
 		."</CAPTION>";
 
-	# »ó´ÜÀÇ ¿äÀÏ Ãâ·Â 
+	# ìƒë‹¨ì˜ ìš”ì¼ ì¶œë ¥ 
 	$result .= "<TR class='calendar'>";
 	for (0..6) {
 		$result .= "<TH class='calendar'>"
@@ -100,21 +100,21 @@ sub MacroBlogCalendar {
 	}
 	$result .= "</TR>";
 
-	# ÀÎÀÚ·Î ÁÖ¾îÁø ´ŞÀÇ 1ÀÏ³¯À» Ã£À½
+	# ì¸ìë¡œ ì£¼ì–´ì§„ ë‹¬ì˜ 1ì¼ë‚ ì„ ì°¾ìŒ
 	$cal_time = timelocal(0,0,0,1,$cal_month-1,$cal_year);
 	($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($cal_time);
-	# ´Ş·ÂÀÇ Ã¹¹øÂ° ³¯ Ã£À½
+	# ë‹¬ë ¥ì˜ ì²«ë²ˆì§¸ ë‚  ì°¾ìŒ
 	$cal_time -= $wday * (60 * 60 * 24);
 	($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($cal_time);
 
-	# ´Ş·Â ±×¸²
+	# ë‹¬ë ¥ ê·¸ë¦¼
 	my ($temp_month, $temp_day);
 		
 	for (1..6) {
 		$result .= "<TR class='calendar'>";
 		for (0..6) {
 
-			# 1~9´Â 01~09·Î ¸¸µê
+			# 1~9ëŠ” 01~09ë¡œ ë§Œë“¦
 			($temp_month, $temp_day) = ($mon + 1, $mday);
 			$temp_month = "0".$temp_month if ($temp_month < 10);
 			$temp_day = "0".$temp_day if ($temp_day < 10);
@@ -129,7 +129,7 @@ sub MacroBlogCalendar {
 				$td_class = "calendar";
 			}
 
-# ÇØ´ç ³¯Â¥¿¡ Æ÷½ºÆ®°¡ ÀÖ´Â °æ¿ì
+# í•´ë‹¹ ë‚ ì§œì— í¬ìŠ¤íŠ¸ê°€ ìˆëŠ” ê²½ìš°
 			my ($page, $pagename) = ("", "");
 			if ($tocitems =~ /^\[\[(.+?)(\|.*)?\]\] $cal_page$/m) {
 				($page, $pagename) = ($1, $1);
@@ -137,7 +137,7 @@ sub MacroBlogCalendar {
 				$page = &FreeToNormal($page);
 				$span_style .= "font-weight: bold; text-decoration: underline; ";
 				$wday = 7;
-# ÇöÀç º¸´Â ÆäÀÌÁö¿¡ ÇØ´çÇÏ´Â ³¯Â¥ÀÎ °æ¿ì
+# í˜„ì¬ ë³´ëŠ” í˜ì´ì§€ì— í•´ë‹¹í•˜ëŠ” ë‚ ì§œì¸ ê²½ìš°
 				if ($page eq $OpenPageName) {
 					$td_class .= "thispage";
 				}
@@ -158,7 +158,7 @@ sub MacroBlogCalendar {
 			($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($cal_time);
 		}
 		$result .= "</TR>";
-		# 4 ¶Ç´Â 5 ÁÙ·Î ³¡³¾ ¼ö ÀÖÀ¸¸é ³¡³¿
+		# 4 ë˜ëŠ” 5 ì¤„ë¡œ ëë‚¼ ìˆ˜ ìˆìœ¼ë©´ ëëƒ„
 		last if (($mon+1 > $cal_month) || ($year+1900 > $cal_year));
 	}
 

@@ -1,4 +1,4 @@
-# <prevupnext(ÆäÀÌÁö)> ¸ÅÅ©·Î
+# <prevupnext(í˜ì´ì§€)> ë§¤í¬ë¡œ
 sub prevupnext {
 	my ($txt) = @_;
 
@@ -29,7 +29,7 @@ sub MacroPrevUpNext() {
 		$toc_mainpage = $tocpage;
 	}
 
-	# ¸ñÂ÷ ÆäÀÌÁö¸¦ ÀĞÀ½
+	# ëª©ì°¨ í˜ì´ì§€ë¥¼ ì½ìŒ
 	my ($fname, $status, $data);
 	$fname = &GetPageFile($tocpage);
 	if (!(-f $fname)) {
@@ -46,11 +46,11 @@ sub MacroPrevUpNext() {
 	my %temp_Text = split(/$FS3/, $temp_Section{'data'}, -1);
 	my $tocpage_Text = $temp_Text{'text'};
 
-	# ¶óÀÎ º°·Î ºĞ¸®
+	# ë¼ì¸ ë³„ë¡œ ë¶„ë¦¬
 	my @tocpage_Lines = split('\n',$tocpage_Text);
 	my @tocitem_List;
 
-	# À¯È¿ÇÑ ¶óÀÎ¸¸ ÃßÃâ
+	# ìœ íš¨í•œ ë¼ì¸ë§Œ ì¶”ì¶œ
 	foreach my $line (@tocpage_Lines) {
 		if ($line =~ m/^(\*|#)+\s*(.*)\s*$/) {
 			my $item = $2;
@@ -66,7 +66,7 @@ sub MacroPrevUpNext() {
 		$mainpage = $OpenPageName;
 	}
 
-	# ¸ñÂ÷¿¡¼­ ÇöÀç ÆäÀÌÁöÀÇ À§Ä¡¸¦ Ã£À½
+	# ëª©ì°¨ì—ì„œ í˜„ì¬ í˜ì´ì§€ì˜ ìœ„ì¹˜ë¥¼ ì°¾ìŒ
 	my $idx = 0;
 	for ($idx = 0; $idx <= $#tocitem_List; $idx++) {
 		my $line = $tocitem_List[$idx];
@@ -85,14 +85,14 @@ sub MacroPrevUpNext() {
 		}
 	}
 
-	# ÀÌÀü,´ÙÀ½,À§,¸ñÂ÷ ¸µÅ© »ı¼º
+	# ì´ì „,ë‹¤ìŒ,ìœ„,ëª©ì°¨ ë§í¬ ìƒì„±
 	my ($prev, $toc, $next);
 	if ($idx > $#tocitem_List) {
 		return "[Not found this page:$OpenPageName in TOC]";
 	}
 
-# "/¼­ºêÆäÀÌÁö" ÇüÅÂÀÇ °æ¿ì ¸µÅ©°¡ Àß¸ø °É¸®´Â °ÍÀ» ¸·±â À§ÇØ MainPage
-# º¯¼ö¸¦ ¹Ù²ãÄ¡±âÇØ¾ß ÇÔ
+# "/ì„œë¸Œí˜ì´ì§€" í˜•íƒœì˜ ê²½ìš° ë§í¬ê°€ ì˜ëª» ê±¸ë¦¬ëŠ” ê²ƒì„ ë§‰ê¸° ìœ„í•´ MainPage
+# ë³€ìˆ˜ë¥¼ ë°”ê¿”ì¹˜ê¸°í•´ì•¼ í•¨
 	my $mainPage_backup = $MainPage;
 	$MainPage = $toc_mainpage;
 	$prev = &CommonMarkup($tocitem_List[$idx-1],0,1) if ($idx > 0);
@@ -101,7 +101,7 @@ sub MacroPrevUpNext() {
 	$toc = &GetPageLink($tocpage);
 	$MainPage = $mainPage_backup;
 
-	# Ãâ·Â
+	# ì¶œë ¥
 	$txt = "<B>";
 	$txt .= &T('Prev')." : $prev<BR>";
 	$txt .= &T('Next')." : $next<BR>";

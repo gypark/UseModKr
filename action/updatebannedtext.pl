@@ -1,5 +1,5 @@
 # updatebannedtext action
-# ±ÝÁö´Ü¾î
+# ê¸ˆì§€ë‹¨ì–´
 sub action_updatebannedtext {
 	my ($newList, $fname);
 

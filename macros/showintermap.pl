@@ -1,5 +1,5 @@
 # <showintermap>
-# intermap ÆÄÀÏÀÇ ³»¿ëÀ» Ãâ·ÂÇÔ
+# intermap íŒŒì¼ì˜ ë‚´ìš©ì„ ì¶œë ¥í•¨
 
 sub showintermap {
 	my ($txt) = @_;

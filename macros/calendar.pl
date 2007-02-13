@@ -21,12 +21,12 @@ sub MacroCalendar {
 	my ($td_class, $span_style);
 	my $temp;
 
-	# ´ŞÀÇ °ªÀÌ 13 ÀÌ»óÀÌ¸é ¹«È¿
+	# ë‹¬ì˜ ê°’ì´ 13 ì´ìƒì´ë©´ ë¬´íš¨
 	if (!($cal_month =~ /[-+]/) && ($cal_month > 12)) {
 		return "&lt;calendar($cal_mainpage$cal_year,$cal_month)&gt;";
 	}
 
-	# prefix Ã³¸®
+	# prefix ì²˜ë¦¬
 	if (length($cal_mainpage) != 0) {
 		$temp = $cal_mainpage;
 		$temp =~ s/,$//;
@@ -39,18 +39,18 @@ sub MacroCalendar {
 		$cal_mainpage = "$temp/";
 	}
 
-	# ³âµµ³ª ´Ş¿¡ 0 À» ÀÎÀÚ·Î ¹ŞÀ¸¸é ¿ÃÇØ ¶Ç´Â ÀÌ¹ø ´Ş
+	# ë…„ë„ë‚˜ ë‹¬ì— 0 ì„ ì¸ìë¡œ ë°›ìœ¼ë©´ ì˜¬í•´ ë˜ëŠ” ì´ë²ˆ ë‹¬
 	$cal_year = $this_year+1900 if ($cal_year == 0); 
 	$cal_month = $this_month+1 if ($cal_month == 0);
 
-	# ³âµµ¿¡ + ¶Ç´Â - °¡ ÀÖÀ¸¸é ¿ÃÇØ·ÎºÎÅÍ º¯À§ °è»ê
+	# ë…„ë„ì— + ë˜ëŠ” - ê°€ ìˆìœ¼ë©´ ì˜¬í•´ë¡œë¶€í„° ë³€ìœ„ ê³„ì‚°
 	if ($cal_year =~ /\+(\d+)/ ) {
 		$cal_year = $this_year+1900 + $1;
 	} elsif ($cal_year =~ /-(\d+)/ ) {
 		$cal_year = $this_year+1900 - $1;
 	}
 
-	# ´Ş¿¡ + ¶Ç´Â - °¡ ÀÖÀ¸¸é ÀÌ¹ø ´Ş·ÎºÎÅÍ º¯À§ °è»ê
+	# ë‹¬ì— + ë˜ëŠ” - ê°€ ìˆìœ¼ë©´ ì´ë²ˆ ë‹¬ë¡œë¶€í„° ë³€ìœ„ ê³„ì‚°
 	if ($cal_month =~ /\+(\d+)/ ) {
 		$cal_month = $this_month+1 + $1;
 		while ($cal_month > 12)  {
@@ -65,16 +65,16 @@ sub MacroCalendar {
 		}
 	}
 	
-	# 1902³âºÎÅÍ 2037³â »çÀÌ¸¸ Áö¿øÇÔ. ±× ¹üÀ§¸¦ ¹ş¾î³ª¸é 1902³â°ú 2037³âÀ¸·Î °è»ê
+	# 1902ë…„ë¶€í„° 2037ë…„ ì‚¬ì´ë§Œ ì§€ì›í•¨. ê·¸ ë²”ìœ„ë¥¼ ë²—ì–´ë‚˜ë©´ 1902ë…„ê³¼ 2037ë…„ìœ¼ë¡œ ê³„ì‚°
 	$cal_year = 2037 if ($cal_year > 2037);
 	$cal_year = 1902 if ($cal_year < 1902);
 
-	# 1¿ù~9¿ùÀº 01~09·Î ¸¸µê
+	# 1ì›”~9ì›”ì€ 01~09ë¡œ ë§Œë“¦
 	if ($cal_month < 10) {
 		$cal_month = "0" . $cal_month;
 	}
 
-	# ´Ş·Â Á¦¸ñ Ãâ·Â
+	# ë‹¬ë ¥ ì œëª© ì¶œë ¥
 	$result .= "<TABLE class='calendar'>";
 	$result .= "<CAPTION class='calendar'>" 
 		."<a href=\"$ScriptName".&ScriptLinkChar()."$cal_mainpage$cal_year-$cal_month\">"
@@ -83,7 +83,7 @@ sub MacroCalendar {
 		."</a>"
 		."</CAPTION>";
 
-	# »ó´ÜÀÇ ¿äÀÏ Ãâ·Â 
+	# ìƒë‹¨ì˜ ìš”ì¼ ì¶œë ¥ 
 	$result .= "<TR class='calendar'>";
 	for (0..6) {
 		$result .= "<TH class='calendar'>"
@@ -91,21 +91,21 @@ sub MacroCalendar {
 	}
 	$result .= "</TR>";
 
-	# ÀÎÀÚ·Î ÁÖ¾îÁø ´ŞÀÇ 1ÀÏ³¯À» Ã£À½
+	# ì¸ìë¡œ ì£¼ì–´ì§„ ë‹¬ì˜ 1ì¼ë‚ ì„ ì°¾ìŒ
 	$cal_time = timelocal(0,0,0,1,$cal_month-1,$cal_year);
 	($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($cal_time);
-	# ´Ş·ÂÀÇ Ã¹¹øÂ° ³¯ Ã£À½
+	# ë‹¬ë ¥ì˜ ì²«ë²ˆì§¸ ë‚  ì°¾ìŒ
 	$cal_time -= $wday * (60 * 60 * 24);
 	($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($cal_time);
 
-	# ´Ş·Â ±×¸²
+	# ë‹¬ë ¥ ê·¸ë¦¼
 	my ($temp_month, $temp_day);
 		
 	for (1..6) {
 		$result .= "<TR class='calendar'>";
 		for (0..6) {
 
-			# 1~9´Â 01~09·Î ¸¸µê
+			# 1~9ëŠ” 01~09ë¡œ ë§Œë“¦
 			($temp_month, $temp_day) = ($mon + 1, $mday);
 			$temp_month = "0".$temp_month if ($temp_month < 10);
 			$temp_day = "0".$temp_day if ($temp_day < 10);
@@ -140,7 +140,7 @@ sub MacroCalendar {
 			($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($cal_time);
 		}
 		$result .= "</TR>";
-		# 4 ¶Ç´Â 5 ÁÙ·Î ³¡³¾ ¼ö ÀÖÀ¸¸é ³¡³¿
+		# 4 ë˜ëŠ” 5 ì¤„ë¡œ ëë‚¼ ìˆ˜ ìˆìœ¼ë©´ ëëƒ„
 		last if (($mon+1 > $cal_month) || ($year+1900 > $cal_year));
 	}
 

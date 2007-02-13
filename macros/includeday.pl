@@ -1,9 +1,9 @@
 sub includeday {
 	my ($txt) = @_;
 
-### includeday ∏≈≈©∑Œ
+### includeday Îß§ÌÅ¨Î°ú
  	$txt =~ s/(^|\n)(<includeday\(([^,\n]+,)?([-+]?\d+)\)>)([\r\f]*\n)/$1 . &MacroIncludeDay($2, $3, $4) . $5/geim;
-### includedays ∏≈≈©∑Œ
+### includedays Îß§ÌÅ¨Î°ú
  	$txt =~ s/(^|\n)(<includedays\(([^,\n]+,)?([-+]?\d+),([-+]?\d+)\)>)([\r\f]*\n)/$1 . &MacroIncludeDay($2, $3, $4, $5) . $6/geim;
 
 	return $txt;
@@ -23,13 +23,13 @@ sub MacroIncludeDay {
 		$num = -1;
 	}
 
-	# main page √≥∏Æ
+	# main page Ï≤òÎ¶¨
 	if ($mainpage ne "") {
 		$temp = $mainpage;
 		$temp =~ s/,$//;
 		$temp =~ s/^\[\[(.*)\]\]$/$1/;
 
-# include ¥¬ ¥Ÿ∏• ∏∂≈©æ˜∫∏¥Ÿ ∏’¿˙ √≥∏Æµ«±‚ ∂ßπÆø° æ∆∑° ¥‹∂Ù¿∫ « ø‰ æ¯¥Ÿ
+# include Îäî Îã§Î•∏ ÎßàÌÅ¨ÏóÖÎ≥¥Îã§ Î®ºÏ†Ä Ï≤òÎ¶¨ÎêòÍ∏∞ ÎïåÎ¨∏Ïóê ÏïÑÎûò Îã®ÎùΩÏùÄ ÌïÑÏöî ÏóÜÎã§
 #		$temp = &RemoveLink($temp);
 #		$temp = &FreeToNormal($temp);
 #		if (&ValidId($temp) ne "") {
@@ -40,7 +40,7 @@ sub MacroIncludeDay {
 		$mainpage = $temp . "/";
 	}
 
-	# ≥Ø¬•¿« ∫Ø¿ß ∞ËªÍ 
+	# ÎÇ†ÏßúÏùò Î≥ÄÏúÑ Í≥ÑÏÇ∞ 
 	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst);
 	my $maximum_count = 100;
 	while (($num != 0) && ($maximum_count > 0)) {

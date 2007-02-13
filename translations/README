@@ -12,16 +12,16 @@ they are not defined in translation files.
 Use $HomePage and $RCName, respectively, for them.
 
 
-ÀÌ µğ·ºÅä¸®¿¡´Â "UseModWiki translation file" µéÀ» º¸°üÇÕ´Ï´Ù.
+ì´ ë””ë ‰í† ë¦¬ì—ëŠ” "UseModWiki translation file" ë“¤ì„ ë³´ê´€í•©ë‹ˆë‹¤.
 
-¹ø¿ª È­ÀÏÀ» »ç¿ëÇÏ±â À§ÇØ¼­´Â, config.pl È­ÀÏ ¸¶Áö¸·¿¡
+ë²ˆì—­ í™”ì¼ì„ ì‚¬ìš©í•˜ê¸° ìœ„í•´ì„œëŠ”, config.pl í™”ì¼ ë§ˆì§€ë§‰ì—
 
-    do "./translations/korean.pl";          (»ó´ë °æ·Î)
-¶Ç´Â
-	do "/home/me/wiki/translations/korean.pl";       (Àı´ë °æ·Î)
+    do "./translations/korean.pl";          (ìƒëŒ€ ê²½ë¡œ)
+ë˜ëŠ”
+	do "/home/me/wiki/translations/korean.pl";       (ì ˆëŒ€ ê²½ë¡œ)
 
-µî°ú °°ÀÌ »ç¿ëÇÏ·Á´Â È­ÀÏÀÇ °æ·Î¸¦ ¸í½ÃÇØ ÁÖ¸é µË´Ï´Ù.
+ë“±ê³¼ ê°™ì´ ì‚¬ìš©í•˜ë ¤ëŠ” í™”ì¼ì˜ ê²½ë¡œë¥¼ ëª…ì‹œí•´ ì£¼ë©´ ë©ë‹ˆë‹¤.
 
-"Home" °ú "RecentChange" ´Â ±× ÀÚÃ¼°¡ ÆäÀÌÁö ÀÌ¸§ÀÌ±â ¶§¹®¿¡
-¾ğ¾îÆÑ¿¡¼­ ÁöÁ¤ÇÏÁö ¾Ê½À´Ï´Ù. wiki.pl ¶Ç´Â config.pl ¿¡ ÀÖ´Â
-$HomePage ¿Í $RCName À» º¯°æÇÏ¼¼¿ä.
+"Home" ê³¼ "RecentChange" ëŠ” ê·¸ ìì²´ê°€ í˜ì´ì§€ ì´ë¦„ì´ê¸° ë•Œë¬¸ì—
+ì–¸ì–´íŒ©ì—ì„œ ì§€ì •í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤. wiki.pl ë˜ëŠ” config.pl ì— ìˆëŠ”
+$HomePage ì™€ $RCName ì„ ë³€ê²½í•˜ì„¸ìš”.

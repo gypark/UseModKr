@@ -31,7 +31,7 @@ use strict;
 
 ###############
 ### added by gypark
-### wiki.pl ¹öÀü Á¤º¸
+### wiki.pl ë²„ì „ ì •ë³´
 use vars qw($WikiVersion $WikiRelease $HashKey);
 $WikiVersion = "0.92K3-ext1.111c";
 $WikiRelease = "2007-02-11";
@@ -45,7 +45,7 @@ local $| = 1;  # Do not buffer output (localized for mod_perl)
 # Configuration/constant variables:
 ###############
 ### modified by gypark
-### Á¦ÀÏ ³¡¿¡ ConfigFile µîµî Ãß°¡
+### ì œì¼ ëì— ConfigFile ë“±ë“± ì¶”ê°€
 use vars qw(@RcDays @HtmlPairs @HtmlSingle
 	$TempDir $LockDir $DataDir $HtmlDir $UserDir $KeepDir $PageDir
 	$InterFile $RcFile $RcOldFile $IndexFile $FullUrl $SiteName $HomePage
@@ -65,7 +65,7 @@ use vars qw(@RcDays @HtmlPairs @HtmlSingle
 
 ###############
 ### added by gypark
-### ÆĞÄ¡¸¦ À§ÇØ Ãß°¡µÈ È¯°æ¼³Á¤ º¯¼ö
+### íŒ¨ì¹˜ë¥¼ ìœ„í•´ ì¶”ê°€ëœ í™˜ê²½ì„¤ì • ë³€ìˆ˜
 use vars qw(
 	$UserGotoBar $UserGotoBar2 $UserGotoBar3 $UserGotoBar4 
 	$ConfigFile $SOURCEHIGHLIGHT @SRCHIGHLANG $LinkFirstChar
@@ -93,7 +93,7 @@ use vars qw(%Page %Section %Text %InterSite %SaveUrl %SaveNumUrl
 
 ###############
 ### added by gypark
-### ÆĞÄ¡¸¦ À§ÇØ Ãß°¡µÈ ³»ºÎ Àü¿ª º¯¼ö
+### íŒ¨ì¹˜ë¥¼ ìœ„í•´ ì¶”ê°€ëœ ë‚´ë¶€ ì „ì—­ ë³€ìˆ˜
 use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime $Sec_Revision $Sec_Ts
 	$ViewCount $AnchoredFreeLinkPattern %UserInterest %HiddenPage
 	$pageid $IsPDA $MemoID
@@ -107,8 +107,8 @@ use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime $Sec_Revision $Sec_Ts
 # == Configuration =====================================================
 ###############
 ### replaced by gypark
-### º¸¾ÈÀ» À§ÇØ¼­ µ¥ÀÌÅ¸ ÀúÀå °ø°£À» ´Ù¸¥ °÷À¸·Î ÁöÁ¤
-### ÀûÀıÈ÷ ¹Ù²Ù¾î¼­ »ç¿ëÇÒ °Í
+### ë³´ì•ˆì„ ìœ„í•´ì„œ ë°ì´íƒ€ ì €ì¥ ê³µê°„ì„ ë‹¤ë¥¸ ê³³ìœ¼ë¡œ ì§€ì •
+### ì ì ˆíˆ ë°”ê¾¸ì–´ì„œ ì‚¬ìš©í•  ê²ƒ
 # $DataDir     = "data"; # Main wiki directory
 $DataDir     = "data";    # Main wiki directory
 $ConfigFile  = "config.pl"; # path of config file
@@ -246,7 +246,7 @@ $NamedAnchors   = 1;        # 0 = no anchors, 1 = enable anchors, 2 = enable but
 umask 0;
 
 $TableOfContents = "";
-# ´ÜÃàÅ°
+# ë‹¨ì¶•í‚¤
 $UseShortcut = 1;
 $UseShortcutPage = 1;
 
@@ -254,7 +254,7 @@ $UseShortcutPage = 1;
 sub DoWikiRequest {
 ###############
 ### replaced by gypark
-### È¯°æ º¯¼öµéÀ» ÁöÁ¤ÇÏ´Â ·çÆ¾À» Á¦°Å. ¹«Á¶°Ç config file ¸¦ ÀĞÀ½.
+### í™˜ê²½ ë³€ìˆ˜ë“¤ì„ ì§€ì •í•˜ëŠ” ë£¨í‹´ì„ ì œê±°. ë¬´ì¡°ê±´ config file ë¥¼ ì½ìŒ.
 	if (-f $ConfigFile) {
 		do "$ConfigFile";
 	} else {
@@ -265,7 +265,7 @@ sub DoWikiRequest {
 
 ###############
 ### added by gypark
-### Ã³¸® ½Ã°£ ÃøÁ¤
+### ì²˜ë¦¬ ì‹œê°„ ì¸¡ì •
 if ($CheckTime) {
 	eval "use Time::HiRes qw( usleep ualarm gettimeofday tv_interval )";
 	if ($@) { 
@@ -346,7 +346,7 @@ sub InitLinkPatterns {
 	$QDelim = '(?:"")?';     # Optional quote delimiter (not in output)
 ###############
 ### replaced by gypark
-### anchor ¿¡ ÇÑ±Û »ç¿ë
+### anchor ì— í•œê¸€ ì‚¬ìš©
 #	$AnchoredLinkPattern = $LinkPattern . '#(\\w+)' . $QDelim if $NamedAnchors;
 	$AnchoredLinkPattern = $LinkPattern . '#([0-9A-Za-z\xa0-\xff]+)' . $QDelim if $NamedAnchors;
 ###
@@ -374,7 +374,7 @@ sub InitLinkPatterns {
 
 ###############
 ### added by gypark
-### ÇÑ±ÛÆĞÀÌÁö¿¡ anchor »ç¿ë
+### í•œê¸€íŒ¨ì´ì§€ì— anchor ì‚¬ìš©
 ### from Bab2's patch
 	$AnchoredFreeLinkPattern = $FreeLinkPattern . '#([0-9A-Za-z\xa0-\xff]+)' . $QDelim if $NamedAnchors;
 ###
@@ -396,7 +396,7 @@ sub InitLinkPatterns {
 	$RFCPattern = "RFC\\s?(\\d+)";
 ###############
 ### replaced by gypark
-### ISBN ÆĞÅÏ ¼öÁ¤
+### ISBN íŒ¨í„´ ìˆ˜ì •
 #	$ISBNPattern = "ISBN:?([0-9- xX]{10,})";
 	$ISBNPattern = "ISBN:?([0-9-xX]{10,})";
 ###
@@ -412,7 +412,7 @@ sub DoCacheBrowse {
 	if (($query eq "") && ($ENV{'REQUEST_METHOD'} eq "GET")) {
 ###############
 ### replaced by gypark
-### LogoPage °¡ ÀÖÀ¸¸é ÀÌ°ÍÀ» embed Çü½ÄÀ¸·Î Ãâ·Â
+### LogoPage ê°€ ìˆìœ¼ë©´ ì´ê²ƒì„ embed í˜•ì‹ìœ¼ë¡œ ì¶œë ¥
 #		$query = $HomePage;  # Allow caching of home page.
 		if ($LogoPage eq "") {
 			$query = $HomePage;  # Allow caching of home page.
@@ -424,7 +424,7 @@ sub DoCacheBrowse {
 	}
 ###############
 ### added by gypark
-### LogoPage °¡ ÀÖÀ¸¸é ÀÌ°ÍÀ» embed Çü½ÄÀ¸·Î Ãâ·Â
+### LogoPage ê°€ ìˆìœ¼ë©´ ì´ê²ƒì„ embed í˜•ì‹ìœ¼ë¡œ ì¶œë ¥
 	return 0 if ($query eq $LogoPage);
 ###
 ###############
@@ -496,12 +496,12 @@ sub InitRequest {
 	$CGI::DISABLE_UPLOADS = 0;  
 ###
 ###############
-### slashlinks Ã³¸®
+### slashlinks ì²˜ë¦¬
 	if ($SlashLinks && (length($ENV{'PATH_INFO'}) > 1)) {
 		$ENV{'QUERY_STRING'} .= '&' if ($ENV{'QUERY_STRING'});
 		$ENV{'QUERY_STRING'} .= substr($ENV{'PATH_INFO'}, 1);
 	}
-# slahslink °ü·Ã ÆĞÄ¡ÀÌ³ª, POST ¿¡¼­ ¿¡·¯°¡ ³­´Ù - ÀÏ´Ü º¸·ù
+# slahslink ê´€ë ¨ íŒ¨ì¹˜ì´ë‚˜, POST ì—ì„œ ì—ëŸ¬ê°€ ë‚œë‹¤ - ì¼ë‹¨ ë³´ë¥˜
 #	if   ($ENV{'REQUEST_METHOD'} eq 'GET') {
 #		$q = new CGI($ENV{'QUERY_STRING'});
 #	} elsif($ENV{'REQUEST_METHOD'} eq 'POST') {
@@ -524,7 +524,7 @@ sub InitRequest {
 ###############
 	$Now = time;                     # Reset in case script is persistent
 	$ScriptName = pop(@ScriptPath);  # Name used in links
-### slashlinks Ã³¸®
+### slashlinks ì²˜ë¦¬
 	if ($SlashLinks) {
 		my $numberOfSlashes = ($ENV{'PATH_INFO'} =~ tr[/][/]);
 		$ScriptName = ('../' x $numberOfSlashes) . $ScriptName;
@@ -577,7 +577,7 @@ sub DoBrowseRequest {
 	if (!$q->param) {             # No parameter
 ###############
 ### replaced by gypark
-### LogoPage °¡ ÀÖÀ¸¸é ÀÌ°ÍÀ» embed Çü½ÄÀ¸·Î Ãâ·Â
+### LogoPage ê°€ ìˆìœ¼ë©´ ì´ê²ƒì„ embed í˜•ì‹ìœ¼ë¡œ ì¶œë ¥
 #		&BrowsePage($HomePage);
 		if ($LogoPage eq "") {
 			&BrowsePage($HomePage);
@@ -600,7 +600,7 @@ sub DoBrowseRequest {
 		if ($FreeLinks && (!-f &GetPageFile($id))) {
 			$id = &FreeToNormal($id);
 		}
-### QUERY_STRING ÀÌ utf-8·Î µé¾î¿Â °æ¿ì
+### QUERY_STRING ì´ utf-8ë¡œ ë“¤ì–´ì˜¨ ê²½ìš°
 		if (&ValidId($id) ne "") {
 			my $converted_id = encode_korean($id, 'utf-8', "$HttpCharset");
 			if (&ValidId($converted_id) eq "") {
@@ -618,7 +618,7 @@ sub DoBrowseRequest {
 	}
 	$action = lc(&GetParam('action', ''));
 	$id = &GetParam('id', '');
-### QUERY_STRING ÀÌ utf-8·Î µé¾î¿Â °æ¿ì
+### QUERY_STRING ì´ utf-8ë¡œ ë“¤ì–´ì˜¨ ê²½ìš°
 		if (&ValidId($id) ne "") {
 			my $converted_id = encode_korean($id, 'utf-8', "$HttpCharset");
 			if (&ValidId($converted_id) eq "") {
@@ -638,7 +638,7 @@ sub DoBrowseRequest {
 		}
 ###############
 ### added by gypark
-### id °¡ NULL ÀÏ °æ¿ì È¨À¸·Î ÀÌµ¿
+### id ê°€ NULL ì¼ ê²½ìš° í™ˆìœ¼ë¡œ ì´ë™
 ### from Bab2's patch
 		if ($id eq '') {
 			$id = $HomePage;
@@ -721,7 +721,7 @@ sub BrowsePage {
 	}
 ###############
 ### added by gypark
-### ¸ÅÅ©·Î°¡ µé¾î°£ ÆäÀÌÁöÀÇ ÆíÁı°¡ÀÌµå ¹®Á¦ ÇØ°á
+### ë§¤í¬ë¡œê°€ ë“¤ì–´ê°„ í˜ì´ì§€ì˜ í¸ì§‘ê°€ì´ë“œ ë¬¸ì œ í•´ê²°
 	$Sec_Revision = $Section{'revision'};
 	$Sec_Ts = $Section{'ts'};
 ###
@@ -789,7 +789,7 @@ sub BrowsePage {
 		&OpenKeptRevisions('text_default')  if (!$openKept);
 ###############
 ### added by gypark
-### ÃÖ±Ùº¯°æ³»¿ª¿¡ ºÏ¸¶Å© ±â´É µµÀÔ
+### ìµœê·¼ë³€ê²½ë‚´ì—­ì— ë¶ë§ˆí¬ ê¸°ëŠ¥ ë„ì…
 		if ($showDiff == 5) { 
 #			if (&GetParam('username',"") ne "") {
 			if (&LoginUser()) {
@@ -837,7 +837,7 @@ sub BrowsePage {
 	return  if ($showDiff || ($revision ne ''));  # Don't cache special version
 ###############
 ### replaced by gypark
-### redirect ·Î ¿Å°Ü°¡´Â °æ¿ì¿¡´Â cache »ı¼ºÀ» ÇÏÁö ¾Ê°Ô ÇÔ
+### redirect ë¡œ ì˜®ê²¨ê°€ëŠ” ê²½ìš°ì—ëŠ” cache ìƒì„±ì„ í•˜ì§€ ì•Šê²Œ í•¨
 #	&UpdateHtmlCache($id, $fullHtml)  if $UseCache;
 	&UpdateHtmlCache($id, $fullHtml)  if ($UseCache && ($oldId eq ''));
 ###
@@ -1063,7 +1063,7 @@ sub DoRc {
 
 ###############
 ### replaced by gypark
-### ÃÖ±Ùº¯°æ³»¿ª¿¡ ºÏ¸¶Å© ±â´É µµÀÔ
+### ìµœê·¼ë³€ê²½ë‚´ì—­ì— ë¶ë§ˆí¬ ê¸°ëŠ¥ ë„ì…
 #	print "<br>" . &ScriptLink("action=rc&from=$lastTs",
 #		T('List new changes starting from'));
 #	print " " . &TimeToText($lastTs) . "<br>\n";
@@ -1147,7 +1147,7 @@ sub GetRcHtml {
 	my ($showedit, $inlist, $link, $all, $idOnly);
 ###############
 ### replaced by gypark
-### RcOldFile ¹ö±× ¼öÁ¤
+### RcOldFile ë²„ê·¸ ìˆ˜ì •
 #	my ($ts, $oldts, $pagename, $summary, $isEdit, $host, $kind, $extraTemp);
 	my ($ts, $pagename, $summary, $isEdit, $host, $kind, $extraTemp);
 ###
@@ -1165,14 +1165,14 @@ sub GetRcHtml {
 
 ###############
 ### added by gypark
-### ÃÖ±Ù º¯°æ ³»¿ª°ú rss ¿¡ ¾ÆÀÌÅÛ °¹¼ö ÁöÁ¤ ¿É¼Ç
+### ìµœê·¼ ë³€ê²½ ë‚´ì—­ê³¼ rss ì— ì•„ì´í…œ ê°¯ìˆ˜ ì§€ì • ì˜µì…˜
 	my $num_items = &GetParam("items", 0);
 	my $num_printed = 0;
 ###
 ###############
 ###############
 ### added by gypark
-### ÃÖ±Ùº¯°æ³»¿ª¿¡ ºÏ¸¶Å© ±â´É µµÀÔ
+### ìµœê·¼ë³€ê²½ë‚´ì—­ì— ë¶ë§ˆí¬ ê¸°ëŠ¥ ë„ì…
 	my $bookmark;
 	my $bookmarkuser = &GetParam('username', "");
 	my ($rcnew, $rcupdated, $rcdiff, $rcdeleted, $rcinterest) = (
@@ -1180,7 +1180,7 @@ sub GetRcHtml {
 			"<img style='border:0' src='$IconDir/rc-updated.gif'>",
 			"<img style='border:0' src='$IconDir/rc-diff.gif'>",
 			"<img style='border:0' src='$IconDir/rc-deleted.gif'>",
-### °ü½É ÆäÀÌÁö
+### ê´€ì‹¬ í˜ì´ì§€
 			"<img style='border:0' src='$IconDir/rc-interest.gif' alt='".T('Interesting Page')."'>",
 	);
 	$bookmark = &GetParam('bookmark',-1);
@@ -1200,7 +1200,7 @@ sub GetRcHtml {
 		@outrc = @temprc;
 	}
 
-### summary °³¼± by gypark
+### summary ê°œì„  by gypark
 	my %all_summary;
 
 	$all = &GetParam("rcall", 0);
@@ -1213,16 +1213,16 @@ sub GetRcHtml {
 	# Later consider folding into loop above?
 	# Later add lines to assoc. pagename array (for new RC display)
 	foreach $rcline (@outrc) {
-### summary °³¼± by gypark
+### summary ê°œì„  by gypark
 # 		($ts, $pagename) = split(/$FS3/, $rcline);
 		($ts, $pagename, $summary) = split(/$FS3/, $rcline);
 ####
 
 ###############
 ### replaced by gypark
-### ÃÖ±Ùº¯°æ³»¿ª¿¡ ºÏ¸¶Å© ±â´É µµÀÔ
+### ìµœê·¼ë³€ê²½ë‚´ì—­ì— ë¶ë§ˆí¬ ê¸°ëŠ¥ ë„ì…
 #		$pagecount{$pagename}++;
-### summary °³¼± by gypark
+### summary ê°œì„  by gypark
 #		$pagecount{$pagename}++ if ($ts > $bookmark);
 		if ($ts > $bookmark) {
 			$pagecount{$pagename}++;
@@ -1242,9 +1242,9 @@ sub GetRcHtml {
 	$inlist = 0;
 ###############
 ### replaced by gypark
-### ÃÖ±Ù º¯°æ ³»¿ªÀ» Å×ÀÌºí·Î Ãâ·Â
+### ìµœê·¼ ë³€ê²½ ë‚´ì—­ì„ í…Œì´ë¸”ë¡œ ì¶œë ¥
 ### from Jof4002's patch
-### pda clip ±â´É Ãß°¡
+### pda clip ê¸°ëŠ¥ ì¶”ê°€
 #	$html = "";
 	if ($IsPDA) {
 		$html = "";
@@ -1253,7 +1253,7 @@ sub GetRcHtml {
 	}
 ###
 ###############
-### summary °³¼± by gypark
+### summary ê°œì„  by gypark
 #	$all = &GetParam("rcall", 0);
 #	$all = &GetParam("all", $all);
 #	$newtop = &GetParam("rcnewtop", $RecentTop);
@@ -1264,7 +1264,7 @@ sub GetRcHtml {
 	@outrc = reverse @outrc if ($newtop);
 ###############
 ### commented by gypark
-### RcOldFile ¹ö±× ¼öÁ¤
+### RcOldFile ë²„ê·¸ ìˆ˜ì •
 #	($oldts, $pagename, $summary, $isEdit, $host, $kind, $extraTemp)
 #		= split(/$FS3/, $outrc[0]);
 #	$oldts += 1;
@@ -1284,14 +1284,14 @@ sub GetRcHtml {
 ###############
 ###############
 ### added by gypark
-### ÃÖ±Ù º¯°æ ³»¿ª°ú rss ¿¡ ¾ÆÀÌÅÛ °¹¼ö ÁöÁ¤ ¿É¼Ç
+### ìµœê·¼ ë³€ê²½ ë‚´ì—­ê³¼ rss ì— ì•„ì´í…œ ê°¯ìˆ˜ ì§€ì • ì˜µì…˜
 		$num_printed++;
 		last if (($num_items > 0) && ($num_printed > $num_items));
 ###
 ###############
 ###############
 ### commented by gypark
-### RcOldFile ¹ö±× ¼öÁ¤
+### RcOldFile ë²„ê·¸ ìˆ˜ì •
 #		next  if ($ts >= $oldts);
 #		$oldts = $ts;
 ###
@@ -1303,9 +1303,9 @@ sub GetRcHtml {
 			if ($inlist) {
 ###############
 ### commented by gypark
-### ÃÖ±Ù º¯°æ ³»¿ªÀ» Å×ÀÌºí·Î Ãâ·Â
+### ìµœê·¼ ë³€ê²½ ë‚´ì—­ì„ í…Œì´ë¸”ë¡œ ì¶œë ¥
 ### from Jof4002's patch
-### pda clip ±â´É Ãß°¡
+### pda clip ê¸°ëŠ¥ ì¶”ê°€
 #				$html .= "</UL>\n";
 				$html .= "</UL>\n" if ($IsPDA);
 ###
@@ -1314,9 +1314,9 @@ sub GetRcHtml {
 			}
 ###############
 ### replaced by gypark
-### ÃÖ±Ùº¯°æ³»¿ª¿¡ ºÏ¸¶Å© ±â´É µµÀÔ
-### ÃÖ±Ù º¯°æ ³»¿ªÀ» Å×ÀÌºí·Î Ãâ·Â ÆĞÄ¡µµ °°ÀÌ Àû¿ë
-### pda clip ±â´É Ãß°¡
+### ìµœê·¼ë³€ê²½ë‚´ì—­ì— ë¶ë§ˆí¬ ê¸°ëŠ¥ ë„ì…
+### ìµœê·¼ ë³€ê²½ ë‚´ì—­ì„ í…Œì´ë¸”ë¡œ ì¶œë ¥ íŒ¨ì¹˜ë„ ê°™ì´ ì ìš©
+### pda clip ê¸°ëŠ¥ ì¶”ê°€
 #			$html .= "<p><strong>" . $date . "</strong><p>\n";
 			if ($IsPDA) {
 				$html .= "<p><strong>" . $date . "</strong><p>\n";
@@ -1337,9 +1337,9 @@ sub GetRcHtml {
 		if (!$inlist) {
 ###############
 ### commented by gypark
-### ÃÖ±Ù º¯°æ ³»¿ªÀ» Å×ÀÌºí·Î Ãâ·Â
+### ìµœê·¼ ë³€ê²½ ë‚´ì—­ì„ í…Œì´ë¸”ë¡œ ì¶œë ¥
 ### from Jof4002's patch
-### pda clip ±â´É Ãß°¡
+### pda clip ê¸°ëŠ¥ ì¶”ê°€
 #			$html .= "<UL>\n";
 			$html .= "<UL>\n" if ($IsPDA);
 ###
@@ -1366,7 +1366,7 @@ sub GetRcHtml {
 			$summary = &QuoteHtml($summary);
 ###############
 ### replaced by gypark
-### ÃÖ±Ù º¯°æ ³»¿ªÀ» Å×ÀÌºí·Î Ãâ·Â
+### ìµœê·¼ ë³€ê²½ ë‚´ì—­ì„ í…Œì´ë¸”ë¡œ ì¶œë ¥
 #			$sum = "<strong>[$summary]</strong> ";
 			$sum = "[$summary]";
 ###
@@ -1388,7 +1388,7 @@ sub GetRcHtml {
 		if ($UseDiff && &GetParam("diffrclink", 1)) {
 ###############
 ### replaced by gypark
-### ÃÖ±Ùº¯°æ³»¿ª¿¡ ºÏ¸¶Å© ±â´É µµÀÔ
+### ìµœê·¼ë³€ê²½ë‚´ì—­ì— ë¶ë§ˆí¬ ê¸°ëŠ¥ ë„ì…
 #			$link .= &ScriptLinkDiff(4, $pagename, $tDiff, "") . "  ";
 			if (!(-f &GetPageFile($pagename))) {
 				$link .= &GetHistoryLink($pagename, $rcdeleted);
@@ -1404,9 +1404,9 @@ sub GetRcHtml {
 		}
 ###############
 ### replaced by gypark
-### ÃÖ±Ù º¯°æ ³»¿ªÀ» Å×ÀÌºí·Î Ãâ·Â
+### ìµœê·¼ ë³€ê²½ ë‚´ì—­ì„ í…Œì´ë¸”ë¡œ ì¶œë ¥
 ### from Jof4002's patch
-### pda clip ±â´É Ãß°¡
+### pda clip ê¸°ëŠ¥ ì¶”ê°€
 #		$link .= &GetPageLink($pagename);
 #		$html .= "<li>$link ";
 #		# Later do new-RC looping here.
@@ -1417,7 +1417,7 @@ sub GetRcHtml {
 		if (!($IsPDA)) {
 			$html .= "<TR class='rc'>"
 				. "<TD class='rc'>"
-### °ü½É ÆäÀÌÁö
+### ê´€ì‹¬ í˜ì´ì§€
 				. ((defined ($UserInterest{$pagename}))?"$rcinterest":"&nbsp;&nbsp;")
 				. "</TD>"
 				. "<TD class='rc'>$link </TD>"
@@ -1425,7 +1425,7 @@ sub GetRcHtml {
 				. "<TD class='rctime'>" . &CalcTime($ts) . "</TD>"
 				. "<TD class='rccount'>$count$edit</TD>"
 				. "<TD class='rcauthor'>$author</TD></TR>\n";
-### summary °³¼± by gypark
+### summary ê°œì„  by gypark
 # 			if ($sum ne "") {
 # 					. "<TD colspan=4 class='rcsummary'>&nbsp;&nbsp;$sum</TD></TR>\n";
 #			}
@@ -1542,8 +1542,8 @@ sub GetHistoryLine {
 	if (0 == $row) { # current revision
 ###############
 ### replaced by gypark
-### History È­¸é¿¡¼­, Á¦ÀÏ ¸¶Áö¸· revision Àº revision ¹øÈ£ ´ë½Å
-### "ÇöÀç ¹öÀü" ÀÌ¶ó°í ³ª¿À°Ô ÇÔ
+### History í™”ë©´ì—ì„œ, ì œì¼ ë§ˆì§€ë§‰ revision ì€ revision ë²ˆí˜¸ ëŒ€ì‹ 
+### "í˜„ì¬ ë²„ì „" ì´ë¼ê³  ë‚˜ì˜¤ê²Œ í•¨
 #		$html .= &GetPageLinkText($id, Ts('Revision %s', $rev)) . ' ';
 		$html .= &GetPageLinkText($id, Ts('Current Revision', $rev)) . ' ';
 ###
@@ -1570,7 +1570,7 @@ sub GetHistoryLine {
 # ==== HTML and page-oriented functions ====
 ###############
 ### added by gypark
-### ½ºÅ©¸³Æ® µÚ¿¡ / or ? ¼±ÅÃ from usemod1.0
+### ìŠ¤í¬ë¦½íŠ¸ ë’¤ì— / or ? ì„ íƒ from usemod1.0
 sub ScriptLinkChar {
 	if ($SlashLinks) {
 		return '/';
@@ -1592,7 +1592,7 @@ sub HelpLink {
 	my ($id, $text) = @_;
 	my $url = "$ScriptName".&ScriptLinkChar()."action=help&index=$id";
 
-### ÀÛ¼º Ãë¼Ò ½Ã È®ÀÎ
+### ì‘ì„± ì·¨ì†Œ ì‹œ í™•ì¸
 #	return "<a href=\"javascript:help('$url')\">$text</a>";
 	return "<a onclick=\"closeok=true;\" href=\"javascript:help('$url')\">$text</a>";
 }
@@ -1709,7 +1709,7 @@ sub GetPageOrEditAnchoredLink {
 	}
 ###############
 ### replaced by gypark
-### Á¸ÀçÇÏÁö ¾Ê´Â ÆäÀÌÁö¿¡ ´ëÇÑ ¸µÅ© Ãâ·Â Çü½Ä º¯°æ
+### ì¡´ì¬í•˜ì§€ ì•ŠëŠ” í˜ì´ì§€ì— ëŒ€í•œ ë§í¬ ì¶œë ¥ í˜•ì‹ ë³€ê²½
 #	return $name . &GetEditLink($id,"?");
 	if ((&GetParam('linkstyle', $LinkFirstChar)) 
 			&& ($name =~ /(\[)?([^\/]*\/)?([a-zA-Z0-9\/]|[\x80-\xff][\x80-\xff])([^\]]*)(\])?/)) {
@@ -1741,7 +1741,7 @@ sub GetSearchLink {
 
 ###############
 ### added by gypark
-### ¿ª¸µÅ© Ãß°¡
+### ì—­ë§í¬ ì¶”ê°€
 sub GetReverseLink {
 	my ($id) = @_;
 	my $name = $id;
@@ -1878,7 +1878,7 @@ sub GetHeader {
 		}
 ###############
 ### replaced by gypark
-### ·Î°í ÀÌ¹ÌÁö¿¡ ´ÜÃàÅ° alt+w ÁöÁ¤
+### ë¡œê³  ì´ë¯¸ì§€ì— ë‹¨ì¶•í‚¤ alt+w ì§€ì •
 #		$header = &ScriptLink($HomePage, "<$logoImage>");
 		$header = "<a accesskey=\"w\" href=\"$ScriptName\"><$logoImage></a>";
 ###
@@ -1887,10 +1887,10 @@ sub GetHeader {
 	if ($id ne '') {
 ###############
 ### replaced by gypark
-### »çÀÌÆ® ·Î°í°¡, action ÀÌ µé¾î°¡´Â ÆäÀÌÁö¿¡¼­¸¸ Ç¥½ÃµÇ´Â ¹®Á¦¸¦ ÇØ°á
+### ì‚¬ì´íŠ¸ ë¡œê³ ê°€, action ì´ ë“¤ì–´ê°€ëŠ” í˜ì´ì§€ì—ì„œë§Œ í‘œì‹œë˜ëŠ” ë¬¸ì œë¥¼ í•´ê²°
 ### from http://host9.swidc.com/~ncc1701/wiki/wiki.cgi?FAQ
 #		$result .= $q->h1(&GetSearchLink($id));
-### ¿ª¸µÅ© °³¼±
+### ì—­ë§í¬ ê°œì„ 
 #		$result .= $q->h1($header . &GetSearchLink($id));
 		$result .= $q->h1({-class=>"pagename"}, $header . &GetReverseLink($id));
 ###
@@ -1901,7 +1901,7 @@ sub GetHeader {
 
 ###############
 ### added by gypark
-### page Ã³À½¿¡ bottom À¸·Î °¡´Â ¸µÅ©¸¦ Ãß°¡
+### page ì²˜ìŒì— bottom ìœ¼ë¡œ ê°€ëŠ” ë§í¬ë¥¼ ì¶”ê°€
 ### #EXTERN
 	if (&GetParam('InFrame','') eq '') {
 		$result .= "\n<div class=\"gobottom\" align=\"right\"><a accesskey=\"z\" name=\"PAGE_TOP\" href=\"#PAGE_BOTTOM\">". T('Bottom')." [b]" . "</a></div>\n";
@@ -1925,7 +1925,7 @@ sub GetHttpHeader {
 	if (defined($SetCookie{'id'})) {
 ###############
 ### replaced by gypark
-### ·Î±äÇÒ ¶§ ÀÚµ¿ ·Î±×ÀÎ ¿©ºÎ ¼±ÅÃ
+### ë¡œê¸´í•  ë•Œ ìë™ ë¡œê·¸ì¸ ì—¬ë¶€ ì„ íƒ
 ### from Bab2's patch
 #		$cookie = "$CookieName="
 #						. "rev&" . $SetCookie{'rev'}
@@ -1939,14 +1939,14 @@ sub GetHttpHeader {
 			. "&id&"    . $SetCookie{'id'}
 			. "&randkey&" . $SetCookie{'randkey'}
 			. ";";
-### slashlinks Áö¿ø - ·Î±ä,·Î±×¾Æ¿ô½Ã¿¡ ÄíÅ°ÀÇ path¸¦ µ¿ÀÏÇÏ°Ô ÇØÁÜ
+### slashlinks ì§€ì› - ë¡œê¸´,ë¡œê·¸ì•„ì›ƒì‹œì— ì¿ í‚¤ì˜ pathë¥¼ ë™ì¼í•˜ê²Œ í•´ì¤Œ
 		my $cookie_path = $q->url(-absolute=>1);
-		if ($ENV{'SCRIPT_NAME'} eq $cookie_path) {		# mod_rewrite °¡ »ç¿ëµÇÁö ¾ÊÀº °æ¿ì
-			$cookie_path =~ s/[^\/]*$//;					# ½ºÅ©¸³Æ® ÀÌ¸§¸¸ Á¦°Å
+		if ($ENV{'SCRIPT_NAME'} eq $cookie_path) {		# mod_rewrite ê°€ ì‚¬ìš©ë˜ì§€ ì•Šì€ ê²½ìš°
+			$cookie_path =~ s/[^\/]*$//;					# ìŠ¤í¬ë¦½íŠ¸ ì´ë¦„ë§Œ ì œê±°
 		} else {										# mod_rewrite
-			if ($ENV{'PATH_INFO'} ne '') {					# wiki.pl/ ·Î rewrite µÈ °æ¿ì	
+			if ($ENV{'PATH_INFO'} ne '') {					# wiki.pl/ ë¡œ rewrite ëœ ê²½ìš°	
 				$cookie_path =~ s/$ENV{'PATH_INFO'}$//;
-			} else {										# wiki.pl? ·Î rewrite µÈ °æ¿ì
+			} else {										# wiki.pl? ë¡œ rewrite ëœ ê²½ìš°
 				$cookie_path =~ s/$ENV{'QUERY_STRING'}$//;
 			}
 		}
@@ -1997,7 +1997,7 @@ sub GetHtmlHeader {
 	# Insert other header stuff here (like inline style sheets?)
 ###############
 ### added by gypark
-### Çì´õ Ãâ·Â °³¼±
+### í—¤ë” ì¶œë ¥ ê°œì„ 
 	$html .= qq(<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=$HttpCharset">\n);
 	$html .= qq(<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">\n);
 	$html .= qq|<link rel="alternate" type="application/rss+xml" title="$SiteName" href="http://$ENV{SERVER_NAME}$ENV{SCRIPT_NAME}${\(&ScriptLinkChar())}action=rss">\n|;
@@ -2020,7 +2020,7 @@ sub GetHtmlHeader {
 		$html .= "<META NAME='robots' CONTENT='noindex,nofollow'/>\n";
 	}
 
-### »ç¿ëÀÚ Á¤ÀÇ Çì´õ
+### ì‚¬ìš©ì ì •ì˜ í—¤ë”
 	$html .= $UserHeader;
 	$html .= "\n";
 
@@ -2053,7 +2053,7 @@ sub GetHtmlHeader {
 ###
 ###############
 
-### ÀÛ¼º Ãë¼Ò½Ã È®ÀÎ
+### ì‘ì„± ì·¨ì†Œì‹œ í™•ì¸
 	if (
 			(&GetParam("oldtime", "") ne "") || 
 			((lc(&GetParam("action","")) eq "edit") && (&UserCanEdit($id,1)))
@@ -2062,7 +2062,7 @@ sub GetHtmlHeader {
 		$bodyExtra .= qq( onbeforeunload="chk_close(event, '$close_string')" );
 	}
 
-### ´ÜÃàÅ°
+### ë‹¨ì¶•í‚¤
 	my $headExtra;
 	if ($UseShortcut) {
 		my $shortCutUrl = "$ScriptName".&ScriptLinkChar();
@@ -2120,7 +2120,7 @@ sub GetEditGuide {
 
 ###############
 ### added by gypark
-### °ü¸®ÀÚ°¡ ÆäÀÌÁö¸¦ º¼ ¶§´Â ÇÏ´Ü¿¡ ¼öÁ¤ ±İÁö ¿©ºÎ¸¦ ¾Ë·ÁÁÖ°í ±İÁö ¼³Á¤/ÇØÁ¦¸¦ ÇÒ ¼ö ÀÖ°Ô ÇÔ
+### ê´€ë¦¬ìê°€ í˜ì´ì§€ë¥¼ ë³¼ ë•ŒëŠ” í•˜ë‹¨ì— ìˆ˜ì • ê¸ˆì§€ ì—¬ë¶€ë¥¼ ì•Œë ¤ì£¼ê³  ê¸ˆì§€ ì„¤ì •/í•´ì œë¥¼ í•  ìˆ˜ ìˆê²Œ í•¨
 	if (&UserIsAdmin()) {
 		if (-f &GetLockedPageFile($id)) {
 			$result .= T('(locked)') . " | ";
@@ -2140,7 +2140,7 @@ sub GetEditGuide {
 
 ###############
 ### replaced by gypark
-### ÆäÀÌÁö ÇÏ´Ü¿¡ Ãâ·ÂµÇ´Â ¼ø¼­¸¦ ¹Ù²Ş
+### í˜ì´ì§€ í•˜ë‹¨ì— ì¶œë ¥ë˜ëŠ” ìˆœì„œë¥¼ ë°”ê¿ˆ
 # 	if (&UserCanEdit($id, 0)) {
 # 		if ($rev ne '') {
 # 			$result .= &GetOldPageLink('edit',   $id, $rev,
@@ -2174,7 +2174,7 @@ sub GetEditGuide {
 
 ###############
 ### replaced by gypark
-### ¸ÅÅ©·Î°¡ µé¾î°£ ÆäÀÌÁöÀÇ ÆíÁı°¡ÀÌµå ¹®Á¦ ÇØ°á
+### ë§¤í¬ë¡œê°€ ë“¤ì–´ê°„ í˜ì´ì§€ì˜ í¸ì§‘ê°€ì´ë“œ ë¬¸ì œ í•´ê²°
 #	if ($Section{'revision'} > 0) {
 	if ($Sec_Revision > 0) {
 ###
@@ -2187,7 +2187,7 @@ sub GetEditGuide {
 		}
 ###############
 ### replaced by gypark
-### ¸ÅÅ©·Î°¡ µé¾î°£ ÆäÀÌÁöÀÇ ÆíÁı°¡ÀÌµå ¹®Á¦ ÇØ°á
+### ë§¤í¬ë¡œê°€ ë“¤ì–´ê°„ í˜ì´ì§€ì˜ í¸ì§‘ê°€ì´ë“œ ë¬¸ì œ í•´ê²°
 #		$result .= ' ' . &TimeToText($Section{ts});
 		$result .= ' ' . &TimeToText($Sec_Ts);
 ###
@@ -2206,7 +2206,7 @@ sub GetEditGuide {
 ###############
 ###############
 ### added by gypark
-### °ü½É ÆäÀÌÁö
+### ê´€ì‹¬ í˜ì´ì§€
 #	if (&GetParam('username') ne "") {
 	if (&LoginUser()) {
 		if (defined($UserInterest{$id})) {
@@ -2236,7 +2236,7 @@ sub GetEditGuide {
 	} else {
 ###############
 ### replaced by gypark
-### view action Ãß°¡
+### view action ì¶”ê°€
 #		$result .= T('This page is read-only');
 		if ($rev ne '') {
 			$result .= &GetOldPageLink('edit',   $id, $rev,
@@ -2283,7 +2283,7 @@ sub GetCommonFooter {
 sub GetMinimumFooter {
 ###############
 ### replaced by gypark
-### page ¸¶Áö¸·¿¡ top À¸·Î °¡´Â ¸µÅ©¸¦ Ãß°¡
+### page ë§ˆì§€ë§‰ì— top ìœ¼ë¡œ ê°€ëŠ” ë§í¬ë¥¼ ì¶”ê°€
 #	if ($FooterNote ne '') {
 #		return T($FooterNote) . $q->end_html;  # Allow local translations
 #	}
@@ -2299,7 +2299,7 @@ sub GetMinimumFooter {
 		$result .= T($FooterNote);  # Allow local translations
 	}
 
-### Ã³¸® ½Ã°£ ÃøÁ¤
+### ì²˜ë¦¬ ì‹œê°„ ì¸¡ì •
 	$result .= "\n<DIV class='footer'>";
 	if ($CheckTime) {
 		$result .= "<i>" . sprintf("%8.3f",&tv_interval($StartTime)) . " sec </i>";
@@ -2317,7 +2317,7 @@ sub GetFormStart {
 
 ###############
 ### replaced by gypark
-### form ¿¡ ÀÌ¸§À» ³ÖÀ» ¼ö ÀÖµµ·Ï ÇÔ
+### form ì— ì´ë¦„ì„ ë„£ì„ ìˆ˜ ìˆë„ë¡ í•¨
 #	return $q->startform("POST", "$ScriptName", "application/x-www-form-urlencoded");
 
 	my ($name) = @_;
@@ -2346,7 +2346,7 @@ sub GetGotoBar {
 		$main =~ s|/.*||;  # Only the main page name (remove subpage)
 ###############
 ### replaceed by gypark
-### subpage ÀÇ °æ¿ì, »óÀ§ÆäÀÌÁö ÀÌ¸§ ¾Õ¿¡ ¾ÆÀÌÄÜ Ç¥½Ã
+### subpage ì˜ ê²½ìš°, ìƒìœ„í˜ì´ì§€ ì´ë¦„ ì•ì— ì•„ì´ì½˜ í‘œì‹œ
 #		$bartext .= " </td><td> " . &GetPageLink($main);
 		$bartext .= "</TD>\n<TD class='gotoparentpage'><img src=\"$IconDir/parentpage.gif\" border=\"0\" alt=\""
 					. T('Main Page:') . " $main\" align=\"absmiddle\">" . &GetPageLink($main);
@@ -2355,8 +2355,8 @@ sub GetGotoBar {
 	}
 ###############
 ### added by gypark
-### »ó´Ü ¸Ş´º ¹Ù¿¡ »ç¿ëÀÚ Á¤ÀÇ Ç×¸ñÀ» Ãß°¡
-### UserGotoBar2~4 ¶ó´Â ÀÌ¸§À¸·Î ÁöÁ¤ÇØÁÖ¸é µÈ´Ù
+### ìƒë‹¨ ë©”ë‰´ ë°”ì— ì‚¬ìš©ì ì •ì˜ í•­ëª©ì„ ì¶”ê°€
+### UserGotoBar2~4 ë¼ëŠ” ì´ë¦„ìœ¼ë¡œ ì§€ì •í•´ì£¼ë©´ ëœë‹¤
 	if ($UserGotoBar2 ne '') {
 		$bartext .= "</TD>\n<TD class='gotouser'>" . $UserGotoBar2;
 	}
@@ -2400,8 +2400,8 @@ sub GetSearchForm {
 
 ###############
 ### repalced by gypark
-### »ó´Ü¸Ş´º¿¡ "Search:" µµ ¹ø¿ªÀ» ½ÃÅ´
-### ´ÜÃàÅ° alt-s ÁöÁ¤
+### ìƒë‹¨ë©”ë‰´ì— "Search:" ë„ ë²ˆì—­ì„ ì‹œí‚´
+### ë‹¨ì¶•í‚¤ alt-s ì§€ì •
 #	$result = "Search: <input class=text type=text name='search' size=10>" 
 # . $q->textfield(-name=>'search', -size=>12)
 #						. &GetHiddenValue("dosearch", 1);
@@ -2461,8 +2461,8 @@ sub WikiToHTML {
 	$pageText =~ s/$FS//g;              # Remove separators (paranoia)
 ###############
 ### added by gypark
-### include ¸ÅÅ©·Î ¾È¿¡¼­ À§Å°ÅÂ±×¸¦ ÀÛµ¿ÇÏ°Ô ÇÔ
-### http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?ÇÁ·Î±×·¡¹ÖÆÁ/Wiki
+### include ë§¤í¬ë¡œ ì•ˆì—ì„œ ìœ„í‚¤íƒœê·¸ë¥¼ ì‘ë™í•˜ê²Œ í•¨
+### http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?í”„ë¡œê·¸ë˜ë°íŒ/Wiki
 	$pageText = &MacroIncludeSubst($pageText);
 ###
 ###############
@@ -2472,7 +2472,7 @@ sub WikiToHTML {
 	}
 ###############
 ### replaced by gypar
-### {{{ }}} Ã³¸®¸¦ À§ÇØ, º»¹® ¼Ò½º´Â Æ¯º°ÇÏ°Ô Quote ÇÑ´Ù
+### {{{ }}} ì²˜ë¦¬ë¥¼ ìœ„í•´, ë³¸ë¬¸ ì†ŒìŠ¤ëŠ” íŠ¹ë³„í•˜ê²Œ Quote í•œë‹¤
 #	$pageText = &QuoteHtml($pageText);
 	$pageText = &QuoteHtmlForPageContent($pageText);
 ###
@@ -2480,7 +2480,7 @@ sub WikiToHTML {
 
 ###############
 ### replaced by gypark
-### {{{ }}} Ã³¸®¸¦ À§ÇØ¼­, ÁÙ ³¡¿¡ ¿À´Â ¹é½½·¡½¬ µÎ°³¿Í ÇÏ³ªµµ ÀÓ½ÃÅÂ±×¸¦ °ÅÃÄ º¯È¯½ÃÅ²´Ù
+### {{{ }}} ì²˜ë¦¬ë¥¼ ìœ„í•´ì„œ, ì¤„ ëì— ì˜¤ëŠ” ë°±ìŠ¬ë˜ì‰¬ ë‘ê°œì™€ í•˜ë‚˜ë„ ì„ì‹œíƒœê·¸ë¥¼ ê±°ì³ ë³€í™˜ì‹œí‚¨ë‹¤
 #	$pageText =~ s/\\\\ *\r?\n/<BR>/g;		# double backslash for forced <BR> - comes in handy for <LI>
 #	$pageText =~ s/\\ *\r?\n/ /g;			# Join lines with backslash at end
 
@@ -2492,7 +2492,7 @@ sub WikiToHTML {
 
 ###############
 ### replaced by gypark
-### {{{ }}} Ã³¸®¸¦ À§ÇØ ¾Æ·¡ µÎ ¶óÀÎÀÇ ¼ø¼­¸¦ ¹Ù²Ş
+### {{{ }}} ì²˜ë¦¬ë¥¼ ìœ„í•´ ì•„ë˜ ë‘ ë¼ì¸ì˜ ìˆœì„œë¥¼ ë°”ê¿ˆ
 ### from danny's patch.
 
 #	$pageText = &WikiLinesToHtml($pageText);      # Line-oriented markup
@@ -2512,7 +2512,7 @@ sub WikiToHTML {
 	}
 ###############
 ### added by gypark
-### WikiHeading °³¼± from Jof
+### WikiHeading ê°œì„  from Jof
 	$pageText =~ s/&__LT__;toc&__GT__;/<a name="toc"><\/a>$TableOfContents/i;
 	$pageText =~ s/&__LT__;toc&__GT__;/$TableOfContents/gi;
 ###
@@ -2520,7 +2520,7 @@ sub WikiToHTML {
 
 ###############
 ### added by gypark
-### {{{ }}} Ã³¸®¸¦ À§ÇØ Ãß°¡. ÀÓ½Ã ÅÂ±×¸¦ ¿ø·¡´ë·Î º¹¿ø
+### {{{ }}} ì²˜ë¦¬ë¥¼ ìœ„í•´ ì¶”ê°€. ì„ì‹œ íƒœê·¸ë¥¼ ì›ë˜ëŒ€ë¡œ ë³µì›
 	$pageText =~ s/&__DOUBLEBACKSLASH__;/<BR>\n/g;
 	$pageText =~ s/&__SINGLEBACKSLASH__;/ /g;
 	$pageText =~ s/&__LT__;/&lt;/g;
@@ -2543,20 +2543,20 @@ sub CommonMarkup {
 	if ($doLines < 2) { # 2 = do line-oriented only
 ###############
 ### added by gypark
-### {{{ }}} Ã³¸® 
+### {{{ }}} ì²˜ë¦¬ 
 		s/(^|\n)\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/&StoreRaw("\n<PRE class=\"code\">") . &StoreCodeRaw($2) . &StoreRaw("\n<\/PRE>") . "\n"/igem;
 
 ### plugin
 		s/(^|\n)\{\{\{#!((\w+)( .+)?)[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/$1.&StorePlugin($2,$5)."\n"/igem;
 
-### {{{lang|n|t }}} Ã³¸®
+### {{{lang|n|t }}} ì²˜ë¦¬
 		s/(^|\n)\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/&StoreRaw("<PRE class=\"syntax\">") . &StoreSyntaxHighlight($2, $4, $5) . &StoreRaw("<\/PRE>") . "\n"/igem;
 ###
 ###############
 
 ###############
 ### added by gypark
-### <raw> ÅÂ±× - quoting µµ ÇÏÁö ¾Ê´Â´Ù
+### <raw> íƒœê·¸ - quoting ë„ í•˜ì§€ ì•ŠëŠ”ë‹¤
 		s/\&__LT__;raw\&__GT__;(([^\n])*?)\&__LT__;\/raw\&__GT__;/&StoreCodeRaw($1)/ige;
 ###
 ###############
@@ -2569,7 +2569,7 @@ sub CommonMarkup {
 
 ###############
 ### added by gypark
-### LaTeX Áö¿ø
+### LaTeX ì§€ì›
 		if ($UseLatex) {
 #			s/\$\$((.|\n)*?)\$\$/&StoreRaw(&MakeLaTeX("\$"."$1"."\$", "display"))/ige;
 #			s/\$((.|\n)*?)\$/&StoreRaw(&MakeLaTeX("\$"."$1"."\$", "inline"))/ige;
@@ -2581,7 +2581,7 @@ sub CommonMarkup {
 
 ###############
 ### replaced by gypark
-### anchor ¿¡ ÇÑ±Û »ç¿ë
+### anchor ì— í•œê¸€ ì‚¬ìš©
 #		s/\[\#(\w+)\]/&StoreHref(" name=\"$1\"")/ge if $NamedAnchors;
 		s/\[\#([0-9A-Za-z\xa0-\xff]+)\]/&StoreHref(" name=\"$1\"")/ge if $NamedAnchors;
 ###
@@ -2612,7 +2612,7 @@ sub CommonMarkup {
 			s/\[\[$FreeLinkPattern\]\]/&StorePageOrEditLink($1, "")/geo;
 ###############
 ### added by gypark
-### ÇÑ±ÛÆĞÀÌÁö¿¡ anchor »ç¿ë
+### í•œê¸€íŒ¨ì´ì§€ì— anchor ì‚¬ìš©
 ### from Bab2's patch
 			s/\[\[$AnchoredFreeLinkPattern\|([^\]]+)\]\]/&StoreBracketAnchoredLink($1, $2, $3)/geos if $NamedAnchors;
 			s/\[\[$AnchoredFreeLinkPattern\]\]/&StoreRaw(&GetPageOrEditAnchoredLink($1, $2, ""))/geos if $NamedAnchors;
@@ -2643,14 +2643,14 @@ sub CommonMarkup {
 		s/\[$InterLinkPattern\]/&StoreBracketInterPage($1, "")/geo;
 ###############
 ### added by gypark
-### °³º°ÀûÀÎ IMG: ÅÂ±×
+### ê°œë³„ì ì¸ IMG: íƒœê·¸
 		s/IMG:([^<>\n]*)\n?$UrlPattern/&StoreImgUrl($1, $2, $useImage)/geo;
 ###
 ###############
 		s/$UrlPattern/&StoreUrl($1, $useImage)/geo;
 ###############
 ### replaced by gypark
-### InterWiki ·Î ÀûÈù ÀÌ¹ÌÁö Ã³¸®
+### InterWiki ë¡œ ì íŒ ì´ë¯¸ì§€ ì²˜ë¦¬
 #		s/$InterLinkPattern/&StoreInterPage($1)/geo;
 		s/$InterLinkPattern/&StoreInterPage($1, $useImage)/geo;
 ###
@@ -2669,7 +2669,7 @@ sub CommonMarkup {
 
 ###############
 ### replaced by gypark
-### ==== °¡ hr °ú Çìµå¶óÀÎ ¾çÂÊ¿¡¼­ Ã³¸®µÇ¾î Ãæµ¹ÀÌ »ı±ä´Ù. hr ÆĞÅÏÀ» ¼öÁ¤
+### ==== ê°€ hr ê³¼ í—¤ë“œë¼ì¸ ì–‘ìª½ì—ì„œ ì²˜ë¦¬ë˜ì–´ ì¶©ëŒì´ ìƒê¸´ë‹¤. hr íŒ¨í„´ì„ ìˆ˜ì •
 ### http://www.usemod.com/cgi-bin/wiki.pl?ThinLine
 # 		if ($ThinLine) {
 # 			s/----+/<hr noshade size=1>/g;
@@ -2701,14 +2701,14 @@ sub CommonMarkup {
 			s/(^|\n)\s*(\=+)\s+([^\n]+)\s+\=+/&WikiHeading($1, $2, $3)/geo;
 ###############
 ### replaced by gypark
-### table ³» ¼¿ º°·Î Á¤·Ä
+### table ë‚´ ì…€ ë³„ë¡œ ì •ë ¬
 #			s/((\|\|)+)/"<\/TD><TD COLSPAN=\"" . (length($1)\/2) . "\">"/ge if $TableMode;
 
-# rowspan À» vvv.. ·Î Ç¥ÇöÇÏ´Â °æ¿ì (Â÷ÈÄ¿¡ ´Ù½Ã °í·ÁÇÒ ¿¹Á¤)
+# rowspan ì„ vvv.. ë¡œ í‘œí˜„í•˜ëŠ” ê²½ìš° (ì°¨í›„ì— ë‹¤ì‹œ ê³ ë ¤í•  ì˜ˆì •)
 #			my %td_align = ("&__LT__;", "left", "&__GT__;", "right", "|", "center");
 #			s/((\|\|)*)(\|(&__LT__;|&__GT__;|\|)(v*))/"<\/TD><TD align=\"$td_align{$4}\" COLSPAN=\""
 #				. ((length($1)\/2)+1) . ((length($5))?"\" ROWSPAN=\"".(length($5)+1):"") . "\">"/ge if $TableMode;
-# rowspan À» v3 À¸·Î Ç¥ÇöÇÏ´Â °æ¿ì
+# rowspan ì„ v3 ìœ¼ë¡œ í‘œí˜„í•˜ëŠ” ê²½ìš°
 			my %td_align = ("&__LT__;", "left", "&__GT__;", "right", "|", "center");
 			s/((\|\|)*)(\|(&__LT__;|&__GT__;|\|)((v(\d*))?))/"<\/TD><TD align=\"$td_align{$4}\" COLSPAN=\""
 				. ((length($1)\/2)+1) . ((length($5))?"\" ROWSPAN=\"" . ((length($7))?"$7":"2"):"") . "\">"/ge if $TableMode;
@@ -2719,8 +2719,8 @@ sub CommonMarkup {
 
 ###############
 ### commented by gypark
-### {{{ }}} Ã³¸® ¶§¹®¿¡ ÇÔ¼ö È£Ãâ ¼ø¼­¸¦ ¹Ù²Ù¸é Ç¥ÀÛ¼ºÀÌ ¾ÈµÈ´Ù
-### ´ÙÀ½ µÎ ÁÙÀ» ÁÖ¼®Ã³¸®ÇØÁÖ¾î ÇØ°á
+### {{{ }}} ì²˜ë¦¬ ë•Œë¬¸ì— í•¨ìˆ˜ í˜¸ì¶œ ìˆœì„œë¥¼ ë°”ê¾¸ë©´ í‘œì‘ì„±ì´ ì•ˆëœë‹¤
+### ë‹¤ìŒ ë‘ ì¤„ì„ ì£¼ì„ì²˜ë¦¬í•´ì£¼ì–´ í•´ê²°
 
 #	s/^\|([^|]+)[^|]/<TR><TD>$1<\/TD>\n/g;      # start of line: new table-row -- luke
 #	s/\|([^|]+)[^|]/<td>$1<\/td>\n/g;           # new field -- luke
@@ -2772,23 +2772,23 @@ sub MacroSubst {
 
 ### <UploadedFiles>
 	$txt =~ s/(\&__LT__;uploadedfiles\&__GT__;)/&MacroUploadedFiles($1)/gei;
-### <comments(¼ıÀÚ)>
-    # ÆäÀÌÁö ÀÌ¸§À» ¾²Áö ¾ÊÀ½
+### <comments(ìˆ«ì)>
+    # í˜ì´ì§€ ì´ë¦„ì„ ì“°ì§€ ì•ŠìŒ
 	$txt =~ s/(&__LT__;(long)?comments\()([-+]?\d+)(\)&__GT__;)/$1$pageid,$3$4/gi;
 
 	$txt =~ s/(\&__LT__;comments\(([^,]+),([-+]?\d+)\)&__GT__;)/&MacroComments($1,$2,$3)/gei;
 ### <noinclude> </noinclude> from Jof
 	$txt =~ s/\&__LT__;(\/)?noinclude\&__GT__;//gei;
-### <longcomments(¼ıÀÚ)>
+### <longcomments(ìˆ«ì)>
 	$txt =~ s/(\&__LT__;longcomments\(([^,]+),([-+]?\d+)\)&__GT__;)/&MacroComments($1,$2,$3,1)/gei;
-### <memo(Á¦¸ñ)></memo> from Jof
+### <memo(ì œëª©)></memo> from Jof
 	$txt =~ s/(&__LT__;memo\(([^\n]+?)\)&__GT__;((.)*?)&__LT__;\/memo&__GT__;)/&MacroMemo($1, $2, $3)/geis;
 ### <trackbacksent> <trackbackreceived>
 	$txt =~ s/(((^|\n)\* .*)*\n?)(&__LT__;trackbacksent&__GT__;)/&MacroTrackbackSent($4,$1)/gei;
 	$txt =~ s/(((^|\n)\* .*\n\*\* .*\n\*\* .*)*\n?)(&__LT__;trackbackreceived&__GT__;)/&MacroTrackbackReceived($4,$1)/gei;
 ###
 
-### ¸ÅÅ©·Î ¸ğµâÈ­
+### ë§¤í¬ë¡œ ëª¨ë“ˆí™”
 	my $macroname;
 	my ($MacrosDir, $MyMacrosDir) = ("./macros/", "./mymacros/");
 	foreach my $dir ($MacrosDir, $MyMacrosDir) {
@@ -2828,16 +2828,16 @@ sub RemoveLink {
 
 ###############
 ### added by gypark
-### include ¸ÅÅ©·Î ¾È¿¡¼­ À§Å°ÅÂ±×¸¦ ÀÛµ¿ÇÏ°Ô ÇÔ
-### http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?ÇÁ·Î±×·¡¹ÖÆÁ/Wiki
+### include ë§¤í¬ë¡œ ì•ˆì—ì„œ ìœ„í‚¤íƒœê·¸ë¥¼ ì‘ë™í•˜ê²Œ í•¨
+### http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?í”„ë¡œê·¸ë˜ë°íŒ/Wiki
 sub MacroIncludeSubst {
 	my ($txt) = @_;
 
 	$txt =~ s/(^|\n)<include\((.*)\)>([\r\f]*\n)/$1 . &MacroInclude($2) . $3/geim;
-### toc ¸¦ Æ÷ÇÔÇÏÁö ¾Ê´Â includenotoc ¸ÅÅ©·Î Ãß°¡
+### toc ë¥¼ í¬í•¨í•˜ì§€ ì•ŠëŠ” includenotoc ë§¤í¬ë¡œ ì¶”ê°€
 	$txt =~ s/(^|\n)<includenotoc\((.*)\)>([\r\f]*\n)/$1 . &MacroInclude($2, "notoc") . $3/geim;
 
-### include ¸ÅÅ©·Î ½Ã¸®Áî ¸ğµâÈ­
+### include ë§¤í¬ë¡œ ì‹œë¦¬ì¦ˆ ëª¨ë“ˆí™”
 	my $macroname;
 	my ($MacrosDir, $MyMacrosDir) = ("./macros/", "./mymacros/");
 	foreach my $dir ($MacrosDir, $MyMacrosDir) {
@@ -2863,7 +2863,7 @@ sub MacroIncludeSubst {
 
 ###############
 ### added by gypark
-### Ãß°¡ÇÑ ¸ÅÅ©·ÎÀÇ µ¿ÀÛºÎ
+### ì¶”ê°€í•œ ë§¤í¬ë¡œì˜ ë™ì‘ë¶€
 ### trackback
 sub MacroTrackbackSent {
 	my ($itself, $trackbacks) = @_;
@@ -2983,7 +2983,7 @@ sub MacroComments {
 		$hidden_long = &GetHiddenValue("long","1") . "<br>";
 	}
 
-	if (((!&UserCanEdit($id,1)) && (($abs_up < 100) || ($abs_up > $threshold2))) || (&UserIsBanned())) {		# ¿¡µğÆ® ºÒ°¡
+	if (((!&UserCanEdit($id,1)) && (($abs_up < 100) || ($abs_up > $threshold2))) || (&UserIsBanned())) {		# ì—ë””íŠ¸ ë¶ˆê°€
 		$readonly_true = "true";
 		$readonly_style = "background-color: #f0f0f0;";
 		$readonly_msg = T('Comment is not allowed');
@@ -3011,7 +3011,7 @@ sub MacroComments {
 											-default=>"$readonly_msg");
 		}
 		$submit_button = "";
-	} else {											# ¿¡µğÆ® °¡´É
+	} else {											# ì—ë””íŠ¸ ê°€ëŠ¥
 		$name_field = $q->textfield(-name=>"name",
 									-class=>"comments",
 									-size=>"15",
@@ -3049,7 +3049,7 @@ sub MacroComments {
 		$q->endform;
 
 	if ($threadindent ne '') {
-		if ($threadindent >= 1) {	# "»õ±Û¾²±â"µµ °¨Ãß°í ½Í´Ù¸é 1 ´ë½Å 0À¸·Î ÇÒ °Í
+		if ($threadindent >= 1) {	# "ìƒˆê¸€ì“°ê¸°"ë„ ê°ì¶”ê³  ì‹¶ë‹¤ë©´ 1 ëŒ€ì‹  0ìœ¼ë¡œ í•  ê²ƒ
 			my $memotitle = ($threadindent == 0)?T('Write New Thread'):T('Write Comment');
 			$txt = &MacroMemo("", $memotitle, $txt, "threadmemo");
 		} else {
@@ -3147,7 +3147,7 @@ sub MacroUploadedFiles {
 sub MacroInclude {
 	my ($name, $opt) = @_;
 
-	if ($OpenPageName eq $name) { # Recursive Include ¹æÁö
+	if ($OpenPageName eq $name) { # Recursive Include ë°©ì§€
 		return "";
 	}
 	
@@ -3155,7 +3155,7 @@ sub MacroInclude {
 	$name =~ s|^/|$MainPage/|;
 	$name = &FreeToNormal($name);
 
-	my $fname = &GetPageFile($name);	# Á¸ÀçÇÏÁö ¾Ê´Â ÆÄÀÏÀÌ¸é ±×³É ¸®ÅÏ
+	my $fname = &GetPageFile($name);	# ì¡´ì¬í•˜ì§€ ì•ŠëŠ” íŒŒì¼ì´ë©´ ê·¸ëƒ¥ ë¦¬í„´
 	if (!(-f $fname)) {
 		return "";
 	}
@@ -3179,16 +3179,16 @@ sub MacroInclude {
 	my %TextInclude = split(/$FS3/, $SubSection{'data'}, -1);
 	my $txt = $TextInclude{'text'};
 
-	# includenotoc ÀÇ °æ¿ì
+	# includenotoc ì˜ ê²½ìš°
 	$txt =~ s/<toc>/$FS_lt."toc".$FS_gt/gei if ($opt eq "notoc");
-	# noinclude Ã³¸® from Jof
+	# noinclude ì²˜ë¦¬ from Jof
 	$txt =~ s/<noinclude>(.)*?<\/noinclude>//igs;
 
-	# comments ½Ã¸®ÁîÀÇ °æ¿ì ÆäÀÌÁö ¾ÆÀÌµğ¸¦ Ãß°¡ÇØÁÜ
+	# comments ì‹œë¦¬ì¦ˆì˜ ê²½ìš° í˜ì´ì§€ ì•„ì´ë””ë¥¼ ì¶”ê°€í•´ì¤Œ
 	$txt =~ s/(<(long)?comments\()([-+]?\d+)(\)>)/$1$name,$3$4/gi;
 	$txt =~ s/(<thread\()([-+]?\d+(,\d+)?)(\)>)/$1$name,$2$4/gi;
 
-# ¼½¼Ç ´ÜÀ§ ÆíÁı - include µÉ ¶§´Â ÇÏÁö ¾ÊÀ½
+# ì„¹ì…˜ ë‹¨ìœ„ í¸ì§‘ - include ë  ë•ŒëŠ” í•˜ì§€ ì•ŠìŒ
 	if ($UseHeadings) {
 		$txt =~ s/((^|\n)\s*\=+\s+[^\n]+)(\s+\=+)/$1${FS}noedit$FS$3/go;
 	}
@@ -3230,13 +3230,13 @@ sub WikiLinesToHtml {
 			$depth = 1;
 ###############
 ### replaced by gypark
-### table ³» ¼¿ º°·Î Á¤·Ä
+### table ë‚´ ì…€ ë³„ë¡œ ì •ë ¬
 # 		} elsif (s/^((\|\|)+)(.*)\|\|\s*$/"<TR VALIGN='CENTER' ALIGN='CENTER'><TD colspan='" . (length($1)\/2) . "'>$3<\/TD><\/TR>\n"/e) {
 # 			$code = 'TABLE';
 # 			$TableMode = 1;
 # 			$depth = 1;
 
-# rowspan À» vvv.. ·Î Ç¥ÇöÇÏ´Â °æ¿ì (Â÷ÈÄ¿¡ ´Ù½Ã °í·ÁÇÒ ¿¹Á¤)
+# rowspan ì„ vvv.. ë¡œ í‘œí˜„í•˜ëŠ” ê²½ìš° (ì°¨í›„ì— ë‹¤ì‹œ ê³ ë ¤í•  ì˜ˆì •)
 # 		} elsif (s/^((\|\|)*)(\|(&__LT__;|&__GT__;|\|)(v*))(.*)\|\|\s*$/"<TR VALIGN='CENTER' ALIGN='CENTER'>"
 # 				. "<TD align=\"$td_align{$4}\" colspan=\""
 # 				. ((length($1)\/2)+1) . ((length($5))?"\" ROWSPAN=\"".(length($5)+1):"") . "\">"
@@ -3271,7 +3271,7 @@ sub WikiLinesToHtml {
 			if ($tag eq "TABLE") {
 ###############
 ### replaced by gypark
-### ÁÙ Áß°£ || ¹®Á¦ ÇØ°á
+### ì¤„ ì¤‘ê°„ || ë¬¸ì œ í•´ê²°
 ### from Jof4002's patch
 #				$pageHtml .=  "</TR>\n";
 #				$tag = "table"
@@ -3289,7 +3289,7 @@ sub WikiLinesToHtml {
 				if ($oldCode ne $code) {
 ###############
 ### added by gypark
-### ÁÙ Áß°£ || ¹®Á¦ ÇØ°á
+### ì¤„ ì¤‘ê°„ || ë¬¸ì œ í•´ê²°
 ### from Jof4002's patch
 					if ($oldCode eq "TABLE") {
 						$TableMode = 0;
@@ -3336,7 +3336,7 @@ sub QuoteHtml {
 
 ###############
 ### added by gypark
-### {{{ }}} Ã³¸®¸¦ À§ÇØ º»¹® Ã³¸®½Ã¿¡´Â Quote ¸¦ ´Ù¸£°Ô ÇÔ
+### {{{ }}} ì²˜ë¦¬ë¥¼ ìœ„í•´ ë³¸ë¬¸ ì²˜ë¦¬ì‹œì—ëŠ” Quote ë¥¼ ë‹¤ë¥´ê²Œ í•¨
 sub QuoteHtmlForPageContent {
 	my ($html) = @_;
 
@@ -3356,7 +3356,7 @@ sub QuoteHtmlForPageContent {
 sub StoreInterPage {
 ###############
 ### replaced by gypark
-### InterWiki ·Î ÀûÈù ÀÌ¹ÌÁö Ã³¸®
+### InterWiki ë¡œ ì íŒ ì´ë¯¸ì§€ ì²˜ë¦¬
 #	my ($id) = @_;
 	my ($id, $useImage) = @_;
 ###
@@ -3365,7 +3365,7 @@ sub StoreInterPage {
 
 ###############
 ### replaced by gypark
-### InterWiki ·Î ÀûÈù ÀÌ¹ÌÁö Ã³¸®
+### InterWiki ë¡œ ì íŒ ì´ë¯¸ì§€ ì²˜ë¦¬
 #	($link, $extra) = &InterPageLink($id);
 	($link, $extra) = &InterPageLink($id, $useImage);
 ###
@@ -3378,7 +3378,7 @@ sub StoreInterPage {
 sub InterPageLink {
 ###############
 ### replaced by gypark
-### InterWiki ·Î ÀûÈù ÀÌ¹ÌÁö Ã³¸®
+### InterWiki ë¡œ ì íŒ ì´ë¯¸ì§€ ì²˜ë¦¬
 #	my ($id) = @_;
 	my ($id, $useImage) = @_;
 ###
@@ -3392,7 +3392,7 @@ sub InterPageLink {
 	$url = &GetSiteUrl($site);
 ###############
 ### added by gypark
-### interwiki ¾ÆÀÌÄÜ
+### interwiki ì•„ì´ì½˜
 	my ($image, $url_main, $encoding);
 	($url, $image, $encoding) = split(/\|/, $url);
 	$url_main = $url;
@@ -3401,7 +3401,7 @@ sub InterPageLink {
 	return ("", $id . $punct)  if ($url eq "");
 	$remotePage =~ s/&amp;/&/g;  # Unquote common URL HTML
 #	$url .= $remotePage;
-### intermap ¿¡ ÀÎÄÚµù ÁöÁ¤
+### intermap ì— ì¸ì½”ë”© ì§€ì •
 	my $encoded_page = $remotePage;
 	if (($encoding ne "") && (lc($encoding) ne lc($HttpCharset))) {
 		$encoded_page = &encode_korean($encoded_page, $HttpCharset, $encoding);
@@ -3411,7 +3411,7 @@ sub InterPageLink {
 
 ###############
 ### added by gypark
-### InterWiki ·Î ÀûÈù ÀÌ¹ÌÁö Ã³¸®
+### InterWiki ë¡œ ì íŒ ì´ë¯¸ì§€ ì²˜ë¦¬
 ### from Jof's patch
 	if ($useImage && ($url =~ /^(http:|https:|ftp:).+\.$ImageExtensions$/)) {
 		$url = $1 if ($url =~ /^https?:(.*)/ && $1 !~ /^\/\//);
@@ -3422,7 +3422,7 @@ sub InterPageLink {
 
 ###############
 ### replaced by gypark
-### interwiki ¾ÆÀÌÄÜ
+### interwiki ì•„ì´ì½˜
 #	return ("<a href=\"$url\">$name</a>", $punct);
 	my $link_html = '';
 	if (!($image)) {
@@ -3435,7 +3435,7 @@ sub InterPageLink {
 				"<IMG class='inter' src='$image' alt='$site:' title='$site:'>" .
 				"</A>";
 	$link_html .= "<A class='inter' href='$url' title='$id'>$remotePage</A>";
-### ¿ÜºÎ URL À» »õÃ¢À¸·Î ¶ç¿ï ¼ö ÀÖ´Â ¸µÅ©¸¦ ºÙÀÓ
+### ì™¸ë¶€ URL ì„ ìƒˆì°½ìœ¼ë¡œ ë„ìš¸ ìˆ˜ ìˆëŠ” ë§í¬ë¥¼ ë¶™ì„
 	$link_html .= "<a href=\"$url\" target=\"_blank\"><img class=\"newwindow\" src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>";
 	return ($link_html, $punct);
 ###
@@ -3452,7 +3452,7 @@ sub StoreBracketInterPage {
 	$url = &GetSiteUrl($site);
 ###############
 ### added by gypark
-### interwiki ¾ÆÀÌÄÜ
+### interwiki ì•„ì´ì½˜
 	my ($image, $url_main);
 	if ($url =~ /\|/) {
 		($url, $image) = split(/\|/, $url, 2);		
@@ -3469,11 +3469,11 @@ sub StoreBracketInterPage {
 	$url .= $remotePage;
 ###############
 ### replaced by gypark
-### interwiki ¾ÆÀÌÄÜ
+### interwiki ì•„ì´ì½˜
 #	return &StoreRaw("<a href=\"$url\">[$text]</a>");
 	my $link_html = '';
 	$link_html = "<A class='inter' href='$url' title='$id'>[$text]</A>" .
-### ¿ÜºÎ URL À» »õÃ¢À¸·Î ¶ç¿ï ¼ö ÀÖ´Â ¸µÅ©¸¦ ºÙÀÓ
+### ì™¸ë¶€ URL ì„ ìƒˆì°½ìœ¼ë¡œ ë„ìš¸ ìˆ˜ ìˆëŠ” ë§í¬ë¥¼ ë¶™ì„
 				"<a href=\"$url\" target=\"_blank\">" .
 				"<img class=\"newwindow\" src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\">" .
 				"</a>";
@@ -3509,20 +3509,20 @@ sub GetSiteUrl {
 #		%InterSite = split(/\s+/, $data);  # Later consider defensive code
 		($status, $data) = &ReadFile($InterFile);
 		if ($status) {
-### intermap¿¡ #À» »ç¿ëÇÑ ÁÖ¼® Ãß°¡ Áö¿ø
+### intermapì— #ì„ ì‚¬ìš©í•œ ì£¼ì„ ì¶”ê°€ ì§€ì›
 #			%InterSite = split(/\s+/, $data);
 			%InterSite = map { s/\s*#.*//; split /\s+/; } grep { s/^\s*//; /^[^#]/ } split /\n/, $data;
 		}
 		if (!defined($InterSite{'Upload'})) {
-### interwiki ¾ÆÀÌÄÜ
+### interwiki ì•„ì´ì½˜
 			$InterSite{'Upload'} = "$UploadUrl\/|default-upload.gif";
 		}
 ###
 ###############
 ###############
 ### added by gypark
-### Local, LocalWiki ÀÎÅÍÀ§Å° from usemod 1.0
-### interwiki ¾ÆÀÌÄÜ °°ÀÌ Àû¿ë
+### Local, LocalWiki ì¸í„°ìœ„í‚¤ from usemod 1.0
+### interwiki ì•„ì´ì½˜ ê°™ì´ ì ìš©
 		if (!defined($InterSite{'LocalWiki'})) {
 			$InterSite{'LocalWiki'} = $ScriptName . &ScriptLinkChar() . "|default-local.gif";
 		}
@@ -3546,9 +3546,9 @@ sub StoreRaw {
 
 ###############
 ### added by gypark
-### ¸î °¡Áö ÇÔ¼öµé Ãß°¡
+### ëª‡ ê°€ì§€ í•¨ìˆ˜ë“¤ ì¶”ê°€
 
-### {{{ }}} Ã³¸®¸¦ À§ÇØ
+### {{{ }}} ì²˜ë¦¬ë¥¼ ìœ„í•´
 sub StoreCodeRaw {
 	my ($html) = @_;
 
@@ -3569,7 +3569,7 @@ sub StoreCodeRaw {
 
 }
 
-### {{{lang }}} Ã³¸®¸¦ À§ÇØ
+### {{{lang }}} ì²˜ë¦¬ë¥¼ ìœ„í•´
 sub StoreSyntaxHighlight {
 	my ($lang, $opt , @code) = @_;
 
@@ -3594,7 +3594,7 @@ sub StoreSyntaxHighlight {
 @code
 EnDoFwIkIcOdE`;
 
-# source-highlight Ãâ·Â¹° ¾ÕµÚÀÇ ¹öÀüÁ¤º¸, pre ÅÂ±×, tt ÅÂ±×¸¦ »«´Ù
+# source-highlight ì¶œë ¥ë¬¼ ì•ë’¤ì˜ ë²„ì „ì •ë³´, pre íƒœê·¸, tt íƒœê·¸ë¥¼ ëº€ë‹¤
 	my $html = join($FS1, @html);
 	$html =~ s/^<!-- Generator: GNU source-highlight.*?-->//s;
 	$html =~ s/^.*?<pre>.*?<tt>//s;
@@ -3620,7 +3620,7 @@ EnDoFwIkIcOdE`;
 
 ###############
 ### added by gypark
-### ¿ÜºÎ plugin Áö¿ø
+### ì™¸ë¶€ plugin ì§€ì›
 sub StorePlugin {
 	my ($command, $content) = @_;
 	my $name;
@@ -3639,7 +3639,7 @@ sub StorePlugin {
 		$plugin_file = "$PluginDir/$name.pl";
 	}
 
-	if ($plugin_file eq "") {	# ÇÃ·¯±×ÀÎÀÌ ¾øÀ½
+	if ($plugin_file eq "") {	# í”ŒëŸ¬ê·¸ì¸ì´ ì—†ìŒ
 		return &StoreRaw("\n<PRE class='code'>").
 			&StoreRaw("\n<font color='red'>No such plugin found: $name</font>\n").
 			&StoreCodeRaw($content).
@@ -3648,7 +3648,7 @@ sub StorePlugin {
 
 	my $loadplugin = eval "require '$plugin_file'";
 
-	if (not $loadplugin) {		# ÇÃ·¯±×ÀÎ ·Îµå¿¡ ½ÇÆĞ
+	if (not $loadplugin) {		# í”ŒëŸ¬ê·¸ì¸ ë¡œë“œì— ì‹¤íŒ¨
 		return &StoreRaw("\n<PRE class='code'>").
 			&StoreRaw("\n<font color='red'>Failed to load plugin: $name</font>\n").
 			&StoreCodeRaw($content).
@@ -3658,7 +3658,7 @@ sub StorePlugin {
 	my $func = "plugin_$name";
 	my $content_unquoted = &UnquoteHtmlForPageContent($content);
 	my $txt = &{\&$func}($content_unquoted, @opt);
-	if (not defined $txt) {		# ÇÃ·¯±×ÀÎÀÌ undef ¹İÈ¯
+	if (not defined $txt) {		# í”ŒëŸ¬ê·¸ì¸ì´ undef ë°˜í™˜
 		return &StoreRaw("\n<PRE class='code'>").
 			&StoreRaw("\n<font color='red'>Error occurred while processing: $name</font>\n").
 			&StoreCodeRaw($content).
@@ -3670,29 +3670,29 @@ sub StorePlugin {
 ###
 ###############
 
-### ±ÛÀ» ÀÛ¼ºÇÑ Á÷ÈÄ¿¡ ¼öÇàµÇ´Â ¸ÅÅ©·Îµé
+### ê¸€ì„ ì‘ì„±í•œ ì§í›„ì— ìˆ˜í–‰ë˜ëŠ” ë§¤í¬ë¡œë“¤
 sub ProcessPostMacro {
 	my ($string, $id) = @_;
 
-	### ¿©±â¿¡ »ç¿ëÇÒ ¸ÅÅ©·ÎµéÀ» ³ª¿­ÇÑ´Ù
+	### ì—¬ê¸°ì— ì‚¬ìš©í•  ë§¤í¬ë¡œë“¤ì„ ë‚˜ì—´í•œë‹¤
 	$string = &PostMacroMySign($string);
 
 	return $string;
 }
 
-### <mysign> ¸ÅÅ©·Î Ã³¸®
+### <mysign> ë§¤í¬ë¡œ ì²˜ë¦¬
 sub PostMacroMySign {
 	my ($string) = @_;
 	my ($timestamp) = &TimeToText($Now);
 	my ($author) = &GetParam('username');
 
 	if ($author ne "") {
-	# ÀÌ ½ÃÁ¡¿¡¼­ [[ ]] ¸¦ ºÙÀÌ´Â °ÍÀÌ ¿ÇÀº°¡ È®ÀÎÇÒ °Í
+	# ì´ ì‹œì ì—ì„œ [[ ]] ë¥¼ ë¶™ì´ëŠ” ê²ƒì´ ì˜³ì€ê°€ í™•ì¸í•  ê²ƒ
 		$author = "[[$author]]";
 	} else {
 		$author = &GetRemoteHost(0);
 	}
-	# ¿©±â¼­´Â ±×³É mysign(ÀÌ¸§,½Ã°£)À¸·Î¸¸ º¯°æ
+	# ì—¬ê¸°ì„œëŠ” ê·¸ëƒ¥ mysign(ì´ë¦„,ì‹œê°„)ìœ¼ë¡œë§Œ ë³€ê²½
 	$string =~ s/<mysign>([\r\f]*\n)/<mysign($author,$timestamp)>$1/gim; 
 
 	return $string;
@@ -3724,13 +3724,13 @@ sub UnquoteHtmlForPageContent {
 
 ###############
 ### added by gypark
-### LaTeX Áö¿ø
+### LaTeX ì§€ì›
 sub MakeLaTeX {
 	my ($latex,  $type) = @_;
 
 	$latex = &UnquoteHtmlForPageContent($latex);
 
-	# ±×¸²ÆÄÀÏÀÇ ÀÌ¸§Àº ÅØ½ºÆ®¸¦ ÇØ½³ÇÏ¿© °áÁ¤
+	# ê·¸ë¦¼íŒŒì¼ì˜ ì´ë¦„ì€ í…ìŠ¤íŠ¸ë¥¼ í•´ìŠí•˜ì—¬ ê²°ì •
 	my $hash;
 	my $hasMD5 = eval "require Digest::MD5;";
 	if ($hasMD5) {
@@ -3740,21 +3740,21 @@ sub MakeLaTeX {
 	}
 	$hash =~ s/(\W)/uc sprintf "_%02x", ord($1)/eg;
 
-	# ±âº»°ª ¼³Á¤
+	# ê¸°ë³¸ê°’ ì„¤ì •
 	my $hashimage = "$hash.png";
 	my $imgpath = "";
 	my $LatexDir = "$UploadDir/latex";
 	my $LatexUrl = "$UploadUrl/latex";
 	my $TemplateFile = "$DataDir/latex.template";
 		
-	# µğ·ºÅä¸® »ı¼º
+	# ë””ë ‰í† ë¦¬ ìƒì„±
 	&CreateDir($UploadDir);
 	&CreateDir($LatexDir);
 
 	if (-f "$LatexDir/$hashimage" && not -z "$LatexDir/$hashimage") {
-		# ÀÌ¹Ì »ı¼ºµÇ¾î Ä³½¬¿¡ ÀÖÀ½
+		# ì´ë¯¸ ìƒì„±ë˜ì–´ ìºì‰¬ì— ìˆìŒ
 	} else {
-		# »õ·Î »ı¼ºÇØ¾ß µÊ
+		# ìƒˆë¡œ ìƒì„±í•´ì•¼ ë¨
 		my $hashdir = "$TempDir/$hash";
 		my $DefaultTemplate = << 'EOT';
 \documentclass[12pt]{amsart}
@@ -3801,7 +3801,7 @@ EOT
 
 		chdir ($hashdir);
 
-		# ¿øº» tex »ı¼º
+		# ì›ë³¸ tex ìƒì„±
 		open (OUTFILE, ">srender.tex");
 		print OUTFILE $template;
 		close OUTFILE;
@@ -3811,7 +3811,7 @@ EOT
 		open STDOUT, ">hash.log";
 		open STDERR, ">&STDOUT";
 
-		# ±×¸² »ı¼º
+		# ê·¸ë¦¼ ìƒì„±
 		qx(latex -interaction=nonstopmode srender.tex);
 		qx(dvips srender.dvi);
 		qx(convert -transparent "white" -density 100x100 -trim -shave 0x2 srender.ps $hashimage);
@@ -3821,7 +3821,7 @@ EOT
 		open STDOUT, ">&SAVEOUT";
 		open STDERR, ">&SAVEERR";
 
-		# upload °æ·Î ±×¸² ¿Å±è
+		# upload ê²½ë¡œ ê·¸ë¦¼ ì˜®ê¹€
 		chdir($pwd);
 		if (-f "$hashdir/$hashimage" && not -z "$hashdir/$hashimage") {
 			my $png = &ReadFile("$hashdir/$hashimage");
@@ -3833,7 +3833,7 @@ EOT
 		rmdir ($hashdir) or return "[[rmdir fail]]";
 	}
 
-	# IMG ÅÂ±× Ãâ·Â
+	# IMG íƒœê·¸ ì¶œë ¥
 	if ($type eq "inline") {
 		$imgpath = "<IMG border=0 vspace=0 hspace=0 align='middle' ".
 			"src='$LatexUrl/$hashimage' ".
@@ -3868,7 +3868,7 @@ sub StoreUrl {
 
 ###############
 ### added by gypark
-### °³º°ÀûÀÎ IMG: ÅÂ±×
+### ê°œë³„ì ì¸ IMG: íƒœê·¸
 sub StoreImgUrl {
 	my ($imgTag, $name, $useImage) = @_;
 	my ($link, $extra);
@@ -3900,7 +3900,7 @@ sub UrlLink {
 		$name = $1 if ($name =~ /^https?:(.*)/ && $1 !~ /^\/\//);
 ###############
 ### replaced by gypark
-### ÀÌ¹ÌÁö¿¡ alt ÅÂ±×¸¦ ³Ö¾î ¿ø·¡ ÁÖ¼Ò¸¦ º¸ÀÓ
+### ì´ë¯¸ì§€ì— alt íƒœê·¸ë¥¼ ë„£ì–´ ì›ë˜ ì£¼ì†Œë¥¼ ë³´ì„
 #		return ("<img $ImageTag src=\"$name\">", $punct);
 		return ("<img $ImageTag src=\"$name\" alt=\"$name\">", $punct);
 ###
@@ -3908,7 +3908,7 @@ sub UrlLink {
 	}
 ###############
 ### added by gypark
-### »ó´ë °æ·Î·Î ÀûÈù URL À» Á¦´ë·Î Ã³¸®
+### ìƒëŒ€ ê²½ë¡œë¡œ ì íŒ URL ì„ ì œëŒ€ë¡œ ì²˜ë¦¬
 	my $protocol;
 	($protocol, $name) = ($1, $2) if ($name =~ /^(https?:)(.*)/ && $2 !~ /^\/\//);
 ###
@@ -3916,8 +3916,8 @@ sub UrlLink {
 
 ###############
 ### replaced by gypark
-### ¿ÜºÎ URL À» »õÃ¢À¸·Î ¶ç¿ï ¼ö ÀÖ´Â ¸µÅ©¸¦ ºÙÀÓ
-### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?ÇÁ·Î±×·¡¹ÖÆÁ/Wiki
+### ì™¸ë¶€ URL ì„ ìƒˆì°½ìœ¼ë¡œ ë„ìš¸ ìˆ˜ ìˆëŠ” ë§í¬ë¥¼ ë¶™ì„
+### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?í”„ë¡œê·¸ë˜ë°íŒ/Wiki
 #	return ("<a href=\"$name\">$name</a>", $punct);
 	return ("<A class='outer' href=\"$name\">$protocol$name</A><a href=\"$name\" target=\"_blank\"><img class=\"newwindow\" src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>", $punct);
 ###
@@ -3933,8 +3933,8 @@ sub StoreBracketUrl {
 	}
 ###############
 ### replaced by gypark
-### ¿ÜºÎ URL À» »õÃ¢À¸·Î ¶ç¿ï ¼ö ÀÖ´Â ¸µÅ©¸¦ ºÙÀÓ
-### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?ÇÁ·Î±×·¡¹ÖÆÁ/Wiki
+### ì™¸ë¶€ URL ì„ ìƒˆì°½ìœ¼ë¡œ ë„ìš¸ ìˆ˜ ìˆëŠ” ë§í¬ë¥¼ ë¶™ì„
+### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?í”„ë¡œê·¸ë˜ë°íŒ/Wiki
 #	return &StoreRaw("<a href=\"$url\">[$text]</a>");
 	return &StoreRaw("<A class='outer' href=\"$url\">[$text]</A><a href=\"$url\" target=\"_blank\"><img class=\"newwindow\" src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>");
 ###
@@ -4019,12 +4019,12 @@ sub ISBNLink {
 		return "ISBN $rawnum";
 	}
 
-### Ã¥Ç¥Áö°¡ ¾ø´Â °æ¿ì
+### ì±…í‘œì§€ê°€ ì—†ëŠ” ê²½ìš°
 	my ($noCoverIcon, $iconNum) = ("$IconDir/isbn-nocover.jpg", ($num % 5));
 	$noCoverIcon = "$IconDir/isbn-nocover-$iconNum.jpg"
 		if (-f "$IconDir/isbn-nocover-$iconNum.jpg");
 
-### ±¹³» ¼­Àû
+### êµ­ë‚´ ì„œì 
 	if ($num =~ /^(89|60)/) {
 		my $siteurl = "http://image.aladdin.co.kr/cover/cover";
 		$first = "$siteurl/$num\_1.jpg";
@@ -4042,7 +4042,7 @@ sub ISBNLink {
 			"alt='".T('Go to the on-line bookstore')." ISBN:$rawprint'>".
 			"</a>";
 	}
-### ÀÏº» ¼­Àû
+### ì¼ë³¸ ì„œì 
 	if ($num =~ /^4/) {
 		return "<a href='http://bookweb.kinokuniya.co.jp/guest/cgi-bin/wshosea.cgi?W-ISBN=$num'>" .
 			"<IMG class='isbn' ".
@@ -4051,7 +4051,7 @@ sub ISBNLink {
 			"alt='".T('Go to the on-line bookstore')." ISBN:$rawprint'>".
 			"</a>";
 	}
-### ±× ¿Ü ¼­Àû
+### ê·¸ ì™¸ ì„œì 
 	return "<a href='http://www.amazon.com/exec/obidos/ISBN=$num'>" .
 		"<IMG class='isbn' ".
 		"$ImageTag src='http://images.amazon.com/images/P/$num.01.MZZZZZZZ.gif' ".
@@ -4073,8 +4073,8 @@ sub SplitUrlPunct {
 	$punct = "";
 ###############
 ### replaced by gypark
-### ÇÑ±ÛÀÌ Æ÷ÇÔµÈ ÀÎÅÍÀ§Å°¿¡¼­ ÀÏºÎ ÇÑ±ÛÀ» ÀÎ½ÄÇÏÁö ¸øÇÏ´Â ¹®Á¦ ÇØ°á
-### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?ÇÁ·Î±×·¡¹ÖÆÁ/Wiki
+### í•œê¸€ì´ í¬í•¨ëœ ì¸í„°ìœ„í‚¤ì—ì„œ ì¼ë¶€ í•œê¸€ì„ ì¸ì‹í•˜ì§€ ëª»í•˜ëŠ” ë¬¸ì œ í•´ê²°
+### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?í”„ë¡œê·¸ë˜ë°íŒ/Wiki
 
 #	($punct) = ($url =~ /([^a-zA-Z0-9\/\xc0-\xff]+)$/);
 #	$url =~ s/([^a-zA-Z0-9\/\xc0-\xff]+)$//;
@@ -4122,8 +4122,8 @@ sub WikiHeadingNumber {
 	# Cook anchor by canonicalizing $text.
 ###############
 ### replaced by gypark
-### <toc> »ç¿ë¿¡ ÀÖ¾î¼­ Çìµå¶óÀÎ ¹®ÀÚ¿­ÀÇ ³¡´Ü¾î°¡ °°À¸¸é Á¦´ë·Î toc ¸µÅ©°¡
-### µÇÁö ¾Ê´Â ¹ö±× ÇØ°á
+### <toc> ì‚¬ìš©ì— ìˆì–´ì„œ í—¤ë“œë¼ì¸ ë¬¸ìì—´ì˜ ëë‹¨ì–´ê°€ ê°™ìœ¼ë©´ ì œëŒ€ë¡œ toc ë§í¬ê°€
+### ë˜ì§€ ì•ŠëŠ” ë²„ê·¸ í•´ê²°
 ### from http://host9.swidc.com/~ncc1701/wiki/wiki.cgi?FAQ
 
 #	$anchor = $text;
@@ -4142,8 +4142,8 @@ sub WikiHeadingNumber {
 
 ###############
 ### replaced by gypark
-### <toc> °³¼±
-### http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?ÇÁ·Î±×·¡¹ÖÆÁ
+### <toc> ê°œì„ 
+### http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?í”„ë¡œê·¸ë˜ë°íŒ
 #	$TableOfContents .= $number . &ScriptLink("$OpenPageName#$anchor",$text) . "</dd>\n<dt> </dt><dd>";
 	$TableOfContents .= $number . "<a href=\"#$anchor\">" . $text . "</a></dd>\n<dt> </dt><dd>";
 ###
@@ -4151,7 +4151,7 @@ sub WikiHeadingNumber {
 
 ###############
 ### replaced by gypark
-### WikiHeading °³¼± from Jof
+### WikiHeading ê°œì„  from Jof
 #	return &StoreHref(" name=\"$anchor\"") . $number;
 	return &StoreHref(" name='$anchor' href='#toc'",$number);
 ###
@@ -4164,10 +4164,10 @@ sub WikiHeading {
 	$depth = length($depth);
 	$depth = 6  if ($depth > 6);
 	$text =~ s/^#\s+/&WikiHeadingNumber($depth,$')/e; # $' == $POSTMATCH
-### ¼½¼Ç ´ÜÀ§ ÆíÁı
+### ì„¹ì…˜ ë‹¨ìœ„ í¸ì§‘
 # 	return $pre . "<H$depth>$text</H$depth>\n";
 	my $edit_section;
-	if ($text =~ s/${FS}noedit$FS//) {	# include µÈ ³»¿ëÀÇ °æ¿ì´Â ½ºÅµ
+	if ($text =~ s/${FS}noedit$FS//) {	# include ëœ ë‚´ìš©ì˜ ê²½ìš°ëŠ” ìŠ¤í‚µ
 	} elsif (&GetParam('revision', '') eq '') {
 		$SectionNumber++;
 		$edit_section = '<SPAN class="editsection">['.
@@ -4257,7 +4257,7 @@ sub GetDiffHTML {
 		$currentRevision = Ts('Revision %s', $revNew) if $revNew;
 ###############
 ### added by gypark
-### ¹ø¿ªÀÇ ÆíÀÇ¸¦ À§ÇÏ¿©
+### ë²ˆì—­ì˜ í¸ì˜ë¥¼ ìœ„í•˜ì—¬
 		my $fromRevision = Ts('Revision %s', $revOld);
 ###
 ###############
@@ -4280,8 +4280,8 @@ sub GetDiffHTML {
 	
 ###############
 ### added by gypark
-### {{{ }}} Ã³¸®¸¦ À§ÇØ Ãß°¡. ÀÓ½Ã ÅÂ±×¸¦ ¿ø·¡´ë·Î º¹¿ø
-### diff È­¸é¿¡¼­µµ \\ ¿Í \ Ã³¸®¸¦ ÇØ ÁÖ´Â °Ô ³ªÀ»·Á³ª?
+### {{{ }}} ì²˜ë¦¬ë¥¼ ìœ„í•´ ì¶”ê°€. ì„ì‹œ íƒœê·¸ë¥¼ ì›ë˜ëŒ€ë¡œ ë³µì›
+### diff í™”ë©´ì—ì„œë„ \\ ì™€ \ ì²˜ë¦¬ë¥¼ í•´ ì£¼ëŠ” ê²Œ ë‚˜ì„ë ¤ë‚˜?
 	$html =~ s/&__LT__;/&lt;/g;
 	$html =~ s/&__GT__;/&gt;/g;
 	$html =~ s/&__AMP__;/&amp;/g;
@@ -4332,7 +4332,7 @@ sub GetDiff {
 	&WriteStringToFile($newName, $new);
 ###############
 ### replaced by gypark
-### diff Ãâ·Â °³¼±
+### diff ì¶œë ¥ ê°œì„ 
 #	$diff_out = `diff $oldName $newName`;
 	$diff_out = `diff -u $oldName $newName`;
 	if ($diff_out eq "") {
@@ -4348,7 +4348,7 @@ sub GetDiff {
 
 ###############
 ### added by gypark
-### diff Ãâ·Â °³¼±
+### diff ì¶œë ¥ ê°œì„ 
 sub DiffToHTML {
 	my ($html) = @_;
 	if ($html =~ /^---/) {
@@ -4362,7 +4362,7 @@ sub DiffToHTML {
 
 ###############
 ### replaced by gypark
-### diff Ãâ·Â °³¼±
+### diff ì¶œë ¥ ê°œì„ 
 # sub DiffToHTML {
 sub DiffToHTMLplain {
 ###
@@ -4385,7 +4385,7 @@ sub DiffToHTMLplain {
 
 ###############
 ### added by gypark
-### diff Ãâ·Â °³¼±
+### diff ì¶œë ¥ ê°œì„ 
 sub DiffToHTMLunified {
 	my ($html) = @_;
 	my (@lines, $line, $result, $row, $td_class, $in_table, $output_exist);
@@ -4631,7 +4631,7 @@ sub SaveKeepSection {
 
 ###############
 ### replaced by gypark
-### ÆäÀÌÁö »èÁ¦ ½Ã¿¡ keep È­ÀÏÀº º¸Á¸ÇØ µÒ
+### í˜ì´ì§€ ì‚­ì œ ì‹œì— keep í™”ì¼ì€ ë³´ì¡´í•´ ë‘ 
 #	return  if ($Section{'revision'} < 1);  # Don't keep "empty" revision
 	if ($Section{'revision'} < 1) {
 		if (-f $file) {
@@ -4733,7 +4733,7 @@ sub OpenKeptRevisions {
 	&OpenKeptList();
 ###############
 ### added by gypark
-### ÃÖ±Ùº¯°æ³»¿ª¿¡ ºÏ¸¶Å© ±â´É µµÀÔ
+### ìµœê·¼ë³€ê²½ë‚´ì—­ì— ë¶ë§ˆí¬ ê¸°ëŠ¥ ë„ì…
 	%RevisionTs = ();
 ###
 ###############
@@ -4743,7 +4743,7 @@ sub OpenKeptRevisions {
 		$KeptRevisions{$tempSection{'revision'}} = $_;
 ###############
 ### added by gypark
-### ÃÖ±Ùº¯°æ³»¿ª¿¡ ºÏ¸¶Å© ±â´É µµÀÔ
+### ìµœê·¼ë³€ê²½ë‚´ì—­ì— ë¶ë§ˆí¬ ê¸°ëŠ¥ ë„ì…
 		$RevisionTs{$tempSection{'revision'}} = $tempSection{'ts'};
 ###
 ###############
@@ -4762,7 +4762,7 @@ sub LoadUserData {
 	%UserData = split(/$FS1/, $data, -1);  # -1 keeps trailing null fields
 ###############
 ### added by gypark
-### °ü½É ÆäÀÌÁö
+### ê´€ì‹¬ í˜ì´ì§€
 	%UserInterest = split(/$FS2/, $UserData{'interest'}, -1);
 ###
 ###############
@@ -4898,7 +4898,7 @@ sub UserIsAdmin {
 		next  if ($_ eq "");
 ###############
 ### replaced by gypark
-### ¾ÏÈ£¸¦ ¾ÏÈ£È­ÇØ¼­ ÀúÀå
+### ì•”í˜¸ë¥¼ ì•”í˜¸í™”í•´ì„œ ì €ì¥
 ### from Bab2's patch
 #		return 1  if ($userPassword eq $_);
 		return 1  if (crypt($_, $userPassword) eq $userPassword);
@@ -4920,7 +4920,7 @@ sub UserIsEditor {
 		next  if ($_ eq "");
 ###############
 ### replaced by gypark
-### ¾ÏÈ£¸¦ ¾ÏÈ£È­ÇØ¼­ ÀúÀå
+### ì•”í˜¸ë¥¼ ì•”í˜¸í™”í•´ì„œ ì €ì¥
 ### from Bab2's patch
 #		return 1  if ($userPassword eq $_);
 		return 1  if (crypt($_, $userPassword) eq $userPassword);
@@ -5052,7 +5052,7 @@ sub CreateDir {
 
 ###############
 ### replaced by gypark
-### µğ·ºÅä¸® »ı¼º¿¡ ½ÇÆĞÇÒ °æ¿ì ¿¡·¯ Ãâ·Â
+### ë””ë ‰í† ë¦¬ ìƒì„±ì— ì‹¤íŒ¨í•  ê²½ìš° ì—ëŸ¬ ì¶œë ¥
 #	mkdir($newdir, 0775)  if (!(-d $newdir));
 	if (!(-d $newdir)) {
 		mkdir($newdir, 0775) or die(Ts('cant create directory %s', $newdir) . ": $!");
@@ -5236,7 +5236,7 @@ sub GetParam {
 	my $result;
 
 	$result = $q->param($name);
-### POST ·Î ³Ñ¾î¿Ã °æ¿ìÀÇ µ¥ÀÌÅ¸ Ã³¸®
+### POST ë¡œ ë„˜ì–´ì˜¬ ê²½ìš°ì˜ ë°ì´íƒ€ ì²˜ë¦¬
 	if (!defined($result)) {
 		$result = $q->url_param($name);
 	}
@@ -5310,7 +5310,7 @@ sub DoPreview {
 	print &GetHtmlHeader(T('Preview') . " : $SiteName", "Preview");
 ###############
 ### replaced by gypark
-### ¹Ì¸®º¸±â¿¡¼­ <mysign> µîÀÇ preprocessor »ç¿ë
+### ë¯¸ë¦¬ë³´ê¸°ì—ì„œ <mysign> ë“±ì˜ preprocessor ì‚¬ìš©
 #	print &WikiToHTML(&GetParam("text", undef));
 
 	my ($textPreview) = &GetParam("text", undef);
@@ -5323,7 +5323,7 @@ sub DoPreview {
 
 ###############
 ### replaceed by gypark
-### µµ¿ò¸» º°µµÀÇ È­ÀÏ·Î ºĞ¸®
+### ë„ì›€ë§ ë³„ë„ì˜ í™”ì¼ë¡œ ë¶„ë¦¬
 sub DoHelp {
 	my $idx = &GetParam("index", "");
 
@@ -5348,14 +5348,14 @@ sub DoOtherRequest {
 	my ($id, $action, $text, $search);
 
 	$ClickEdit = 0;									# luke added
-	$UseShortcutPage = 0;		# ´ÜÃàÅ°
+	$UseShortcutPage = 0;		# ë‹¨ì¶•í‚¤
 	$action = &GetParam("action", "");
 	$id = &GetParam("id", "");
 	if ($action ne "") {
 		$action = lc($action);
 ###############
 ### replaced by gypark
-### action ¸ğµâÈ­
+### action ëª¨ë“ˆí™”
 		my $action_file = "";
 		my ($MyActionDir, $ActionDir) = ("./myaction/", "./action/");
 		if (-f "$MyActionDir/$action.pl") {
@@ -5367,7 +5367,7 @@ sub DoOtherRequest {
 		if ($action_file ne "") {
 			my $loadaction = eval "require '$action_file'";
 
-			if (not $loadaction) {		# action ·Îµå ½ÇÆĞ
+			if (not $loadaction) {		# action ë¡œë“œ ì‹¤íŒ¨
 				$UseShortcut = 0;
 				&ReportError(Ts('Fail to load action: %s', $action));
 				return;
@@ -5380,7 +5380,7 @@ sub DoOtherRequest {
 ###
 ###############
 		if ($action eq "edit") {
-			$UseShortcut = 0;	# ´ÜÃàÅ°
+			$UseShortcut = 0;	# ë‹¨ì¶•í‚¤
 			&DoEdit($id, 0, 0, "", 0)  if &ValidIdOrDie($id);
 		} elsif ($action eq "unlock") {
 			&DoUnlock();
@@ -5388,7 +5388,7 @@ sub DoOtherRequest {
 			&DoIndex();
 ###############
 ### added by gypark
-### titleindex action Ãß°¡
+### titleindex action ì¶”ê°€
 ### from Bab2's patch
 		} elsif ($action eq "titleindex") {
 			$UseShortcut = 0;
@@ -5426,7 +5426,7 @@ sub DoOtherRequest {
 			&DoShowVersion();
 ###############
 ### added by gypark
-### ÃÖ±Ùº¯°æ³»¿ª¿¡ ºÏ¸¶Å© ±â´É µµÀÔ
+### ìµœê·¼ë³€ê²½ë‚´ì—­ì— ë¶ë§ˆí¬ ê¸°ëŠ¥ ë„ì…
 		} elsif ($action eq "bookmark") {
 			&DoBookmark();
 ### file upload
@@ -5437,10 +5437,10 @@ sub DoOtherRequest {
 		} elsif ($action eq "oekaki") {
 			$UseShortcut = 0;
 			&DoOekaki();
-### °ü½É ÆäÀÌÁö
+### ê´€ì‹¬ í˜ì´ì§€
 		} elsif ($action eq "interest") {
 			&DoInterest();
-### UploadedFiles ¸ÅÅ©·Î
+### UploadedFiles ë§¤í¬ë¡œ
 		} elsif ($action eq "deleteuploadedfiles") {
 			&DoDeleteUploadedFiles();
 ### hide page by gypark
@@ -5501,14 +5501,14 @@ sub DoEdit {
 
 ###############
 ### added by gypark
-### view action Ãß°¡
+### view action ì¶”ê°€
 	my $canEdit = &UserCanEdit($id,1);
 ###
 ###############
 
 ###############
 ### commented by gypark
-### view action Ãß°¡
+### view action ì¶”ê°€
 #	if (!&UserCanEdit($id, 1)) {
 #		print &GetHeader("", T('Editing Denied'), "");
 #		if (&UserIsBanned()) {
@@ -5516,8 +5516,8 @@ sub DoEdit {
 #			print "<p>";
 #			print T('Contact the wiki administrator for more information.');
 #		} else {
-### ¼öÁ¤ ºÒ°¡¸¦ ¾Ë¸®´Â ¸Ş¼¼Áö¿¡, »çÀÌÆ® Á¦¸ñÀÌ ¾Æ´Ï¶ó 
-### ÇØ´ç ÆäÀÌÁö¸íÀÌ ³ª¿Àµµ·Ï ¼öÁ¤
+### ìˆ˜ì • ë¶ˆê°€ë¥¼ ì•Œë¦¬ëŠ” ë©”ì„¸ì§€ì—, ì‚¬ì´íŠ¸ ì œëª©ì´ ì•„ë‹ˆë¼ 
+### í•´ë‹¹ í˜ì´ì§€ëª…ì´ ë‚˜ì˜¤ë„ë¡ ìˆ˜ì •
 #			print Ts('Editing not allowed: %s is read-only.', $SiteName);
 #			print Ts('Editing not allowed: %s is read-only.', $id);
 #		}
@@ -5534,7 +5534,7 @@ sub DoEdit {
 	$header = Ts('Editing %s', $id);
 ###############
 ### added by gypark
-### view action Ãß°¡
+### view action ì¶”ê°€
 	$header = Ts('Viewing %s', $id) if (!$canEdit);
 ###
 ###############
@@ -5551,7 +5551,7 @@ sub DoEdit {
 			$header = Ts('Editing revision %s of', $revision) . " $id";
 ###############
 ### added by gypark
-### view action Ãß°¡
+### view action ì¶”ê°€
 			$header = Ts('Viewing revision %s of', $revision) . " $id" if (!$canEdit);
 ###
 ###############
@@ -5561,7 +5561,7 @@ sub DoEdit {
 	if ($preview && !$isConflict) {
 		$oldText = $newText;
 	}
-### ¼½¼Ç ´ÜÀ§ ÆíÁı - ÆíÁıÇÒ ¶§
+### ì„¹ì…˜ ë‹¨ìœ„ í¸ì§‘ - í¸ì§‘í•  ë•Œ
 	my $section = &GetParam('section', '');
 	if ($section >= 1) {
 		my $temp_text;
@@ -5570,18 +5570,18 @@ sub DoEdit {
 
 		$temp_text = $oldText;												
 
-		# {{{ }}} µî Çìµå¶óÀÎÀÌ ¿Ã ¼ö ¾ø´Â °ÍµéÀ» ¸ÕÀú Á¦¿Ü
+		# {{{ }}} ë“± í—¤ë“œë¼ì¸ì´ ì˜¬ ìˆ˜ ì—†ëŠ” ê²ƒë“¤ì„ ë¨¼ì € ì œì™¸
 		%SaveUrl = ();
 		$SaveUrlIndex = 0;
 		$temp_text = &store_raw_codes($temp_text);
 
-		# ³²Àº ÅØ½ºÆ®¿¡¼­ Çìµå¶óÀÎµéÀÇ ¸ñ·ÏÀ» »Ì´Â´Ù
+		# ë‚¨ì€ í…ìŠ¤íŠ¸ì—ì„œ í—¤ë“œë¼ì¸ë“¤ì˜ ëª©ë¡ì„ ë½‘ëŠ”ë‹¤
 		while ($temp_text =~ /(^[ \t]*(\=+)\s+[^\n]+\s+\=+\s*$)/gm) {
 			$num++;
-			$h_pos[$num] = pos($temp_text) - length($1);		# °¢ ¼½¼ÇÀÇ ½ÃÀÛ Æ÷Áö¼Ç
+			$h_pos[$num] = pos($temp_text) - length($1);		# ê° ì„¹ì…˜ì˜ ì‹œì‘ í¬ì§€ì…˜
 			$h_depth[$num] = length($2);
 
-			# summary ¸¦ ÇØ´ç ¼½¼Ç Á¦¸ñÀ¸·Î
+			# summary ë¥¼ í•´ë‹¹ ì„¹ì…˜ ì œëª©ìœ¼ë¡œ
 			if ($num == $section) {
 				my $h_str = $1;
 				$h_str =~ /^[ \t]*\=+\s+(#\s+)?([^\n]+)\s+\=+\s*$/;
@@ -5594,21 +5594,21 @@ sub DoEdit {
 		$h_pos[$num] = length($temp_text);
 		$h_depth[$num] = 1;
 
-		# °°Àº depth ÀÇ ´ÙÀ½ Çìµå¶óÀÎÀ» Ã£À½
+		# ê°™ì€ depth ì˜ ë‹¤ìŒ í—¤ë“œë¼ì¸ì„ ì°¾ìŒ
 		my $next;
 		for ($next = $section+1; ($next <= $#h_depth) && ($h_depth[$section] < $h_depth[$next]); $next++) {}
 
-		# ¼öÁ¤ÇÒ ¼½¼ÇÀÇ ÅØ½ºÆ®¸¸ ÃßÃâ
+		# ìˆ˜ì •í•  ì„¹ì…˜ì˜ í…ìŠ¤íŠ¸ë§Œ ì¶”ì¶œ
 		my $offset = $h_pos[$section];
 		my $length = $h_pos[$next] - $offset;
 		$temp_text = substr($temp_text, $offset, $length);
 
-		# Á¦¿ÜÇß´ø ³»¿ë º¹¿ø
+		# ì œì™¸í–ˆë˜ ë‚´ìš© ë³µì›
 		$temp_text = &RestoreSavedText($temp_text);
 		%SaveUrl = ();
 		$SaveUrlIndex = 0;
 
-		# $oldText ¹Ù²ãÄ¡±â
+		# $oldText ë°”ê¿”ì¹˜ê¸°
 		$oldText = $temp_text;
 		$header .= " ". &T('(section)');
 	}
@@ -5628,7 +5628,7 @@ sub DoEdit {
 ###############
 ###############
 ### added by gypark
-### view action Ãß°¡
+### view action ì¶”ê°€
 	if (!$canEdit) {
 		if (&UserIsBanned()) {
 			print T('Editing not allowed: user, ip, or network is blocked.');
@@ -5643,7 +5643,7 @@ sub DoEdit {
 ###############
 ###############
 ### replaced by gypark
-### view action Ãß°¡
+### view action ì¶”ê°€
 # 	if ($revision ne '') {
 	if ($canEdit && ($revision ne '')) {
 ###
@@ -5655,7 +5655,7 @@ sub DoEdit {
 	}
 ###############
 ### replaced by gypark
-### view action Ãß°¡
+### view action ì¶”ê°€
 # 	if ($isConflict) {
 	if ($canEdit && $isConflict) {
 ###
@@ -5733,14 +5733,14 @@ function oekaki()
 
 ###############
 ### added by gypark
-### view action Ãß°¡
+### view action ì¶”ê°€
 	if ($canEdit) {
 ###
 ###############
 		print T('Editing Help :') . "&nbsp;";
 ###############
 ### replaced by gypark
-### µµ¿ò¸» º°µµÀÇ È­ÀÏ·Î ºĞ¸®
+### ë„ì›€ë§ ë³„ë„ì˜ í™”ì¼ë¡œ ë¶„ë¦¬
 
 # 	print &HelpLink(1, T('Make Page')) . " | ";
 #   ...
@@ -5757,14 +5757,14 @@ function oekaki()
 ###############
 ###############
 ### added by gypark
-### view action Ãß°¡
+### view action ì¶”ê°€
 	}
 ###
 ###############
 
 ###############
 ### replaced by gypark
-### ÆíÁı¸ğµå¿¡ µé¾î°¬À»¶§ Æ÷Ä¿½º°¡ ÆíÁıÃ¢¿¡ ÀÖµµ·Ï ÇÑ´Ù
+### í¸ì§‘ëª¨ë“œì— ë“¤ì–´ê°”ì„ë•Œ í¬ì»¤ìŠ¤ê°€ í¸ì§‘ì°½ì— ìˆë„ë¡ í•œë‹¤
 #	print &GetFormStart();
 	print $q->startform(-method=>"POST", -action=>"$ScriptName", -enctype=>"application/x-www-form-urlencoded",
 			-name=>"form_edit", -onSubmit=>"closeok=true; return true;");
@@ -5772,7 +5772,7 @@ function oekaki()
 ###############
 ###############
 ### added by gypark
-### view action Ãß°¡
+### view action ì¶”ê°€
 	if ($canEdit) {
 ###
 ###############
@@ -5786,7 +5786,7 @@ function oekaki()
 		my $ecode = &simple_crypt(length($id).substr(&CalcDay($Now),5));
 		print &GetHiddenValue("ecode","$ecode")."\n";
 ###
-### ¼½¼Ç ´ÜÀ§ ÆíÁı
+### ì„¹ì…˜ ë‹¨ìœ„ í¸ì§‘
 		if ($section >= 1) {
 			print &GetHiddenValue("section", $section)."\n";
 		}
@@ -5815,7 +5815,7 @@ function oekaki()
 		if ($EditNote ne '') {
 			print T($EditNote) . '<br>';  # Allow translation
 		}
-### ´ÜÃàÅ°
+### ë‹¨ì¶•í‚¤
 #		print $q->submit(-name=>'Save', -value=>T('Save')), "\n";
 		print $q->submit(-accesskey=>'r', -name=>'Save', -value=>T('Save')." [alt+r]"), "\n";
 		$userName = &GetParam("username", "");
@@ -5827,7 +5827,7 @@ function oekaki()
 		}
 ###############
 ### replaced by gypark 
-### ¹Ì¸®º¸±â ¹öÆ°¿¡ ¹ø¿ªÇÔ¼ö Àû¿ë
+### ë¯¸ë¦¬ë³´ê¸° ë²„íŠ¼ì— ë²ˆì—­í•¨ìˆ˜ ì ìš©
 		print q(<input accesskey="p" type="button" name="prev1" value="). 
 			T('Popup Preview')." [alt+p]" . 
 			q(" onclick="javascript:preview();">); # luke added
@@ -5853,7 +5853,7 @@ function oekaki()
 					"<p>\n";
 ###############
 ### added by gypark
-### conflict ¹ß»ı½Ã ¾çÂÊÀÇ ÀÔ·ÂÀ» ºñ±³
+### conflict ë°œìƒì‹œ ì–‘ìª½ì˜ ì…ë ¥ì„ ë¹„êµ
 			my $conflictdiff = &GetDiff($oldText, $newText, 1);
 			$conflictdiff = T('No diff available.') if ($conflictdiff eq "");
 			print "\n<br><hr noshade size=1><p><strong>",
@@ -5866,7 +5866,7 @@ function oekaki()
 		}
 ###############
 ### added by gypark
-### view action Ãß°¡
+### view action ì¶”ê°€
 	} else {
 		print $q->textarea(-class=>'view', -accesskey=>'i', -name=>'text', 
 				-default=>$oldText, -rows=>$editRows, -columns=>$editCols, 
@@ -5890,8 +5890,8 @@ function oekaki()
 	}
 ###############
 ### added by gypark
-### ÆíÁı È­¸é ¾Æ·¡¿¡ ÆíÁıÀ» Ãë¼ÒÇÏ°í ¿ø·¡ ÆäÀÌÁö·Î µ¹¾Æ°¡´Â ¸µÅ© Ãß°¡
-### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?ÇÁ·Î±×·¡¹ÖÆÁ/Wiki
+### í¸ì§‘ í™”ë©´ ì•„ë˜ì— í¸ì§‘ì„ ì·¨ì†Œí•˜ê³  ì›ë˜ í˜ì´ì§€ë¡œ ëŒì•„ê°€ëŠ” ë§í¬ ì¶”ê°€
+### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?í”„ë¡œê·¸ë˜ë°íŒ/Wiki
 	print Ts('Return to %s' , &GetPageLink($id)) . " | ";
 ###
 ###############
@@ -5900,7 +5900,7 @@ function oekaki()
 	print $q->endform;
 ###############
 ### added by gypark
-### ÆíÁı¸ğµå¿¡ µé¾î°¬À»¶§ Æ÷Ä¿½º°¡ ÆíÁıÃ¢¿¡ ÀÖµµ·Ï ÇÑ´Ù
+### í¸ì§‘ëª¨ë“œì— ë“¤ì–´ê°”ì„ë•Œ í¬ì»¤ìŠ¤ê°€ í¸ì§‘ì°½ì— ìˆë„ë¡ í•œë‹¤
 	print "\n<script language=\"JavaScript\" type=\"text/javascript\">\n"
 		. "<!--\n"
 		. "previous_text = document.form_edit.text.value;\n"
@@ -5917,9 +5917,9 @@ sub GetTextArea {
 	my ($name, $text, $rows, $cols) = @_;
 ###############
 ### added by gypark
-### &lt; ¿Í &gt; °¡ µé¾î°¡ ÀÖ´Â ÆäÀÌÁö¸¦ ¼öÁ¤ÇÒ °æ¿ì ÀÚµ¿À¸·Î ºÎµîÈ£·Î ¹Ù²î¾î
-### ¹ö¸®´Â ¹®Á¦¸¦ ÇØ°á
-### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?ÇÁ·Î±×·¡¹ÖÆÁ/Wiki
+### &lt; ì™€ &gt; ê°€ ë“¤ì–´ê°€ ìˆëŠ” í˜ì´ì§€ë¥¼ ìˆ˜ì •í•  ê²½ìš° ìë™ìœ¼ë¡œ ë¶€ë“±í˜¸ë¡œ ë°”ë€Œì–´
+### ë²„ë¦¬ëŠ” ë¬¸ì œë¥¼ í•´ê²°
+### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?í”„ë¡œê·¸ë˜ë°íŒ/Wiki
 	$text =~ s/(<!--.*?-->)/&StoreRaw($1)/ges;
 	$text =~ s/(\&)/\&amp;/g;
 	$text = &RestoreSavedText($text);
@@ -5928,7 +5928,7 @@ sub GetTextArea {
 
 ###############
 ### replaced by gypark
-### ÆíÁıÃ¢¿¡ alt+i ´ÜÃàÅ° Ãß°¡
+### í¸ì§‘ì°½ì— alt+i ë‹¨ì¶•í‚¤ ì¶”ê°€
 # 	if (&GetParam("editwide", 1)) {
 # 		return $q->textarea(-name=>$name, -default=>$text,
 # 												-rows=>$rows, -columns=>$cols, -override=>1,
@@ -6029,7 +6029,7 @@ sub DoEditPrefs {
 							T('Show link bar on top'));
 ###############
 ### added by gypark
-### ºó ÆäÀÌÁö ¸µÅ© ½ºÅ¸ÀÏÀ» È¯°æ ¼³Á¤¿¡¼­ °áÁ¤
+### ë¹ˆ í˜ì´ì§€ ë§í¬ ìŠ¤íƒ€ì¼ì„ í™˜ê²½ ì„¤ì •ì—ì„œ ê²°ì •
 ### from Bab2's patch
 	print '<br>', &GetFormCheck('linkstyle', $LinkFirstChar,
 			T('Make link at the first character of an empty page'));
@@ -6063,7 +6063,7 @@ sub DoUpdatePrefs {
 	my ($username, $password);
 ###############
 ### added by gypark
-### ¾ÏÈ£¸¦ ¾ÏÈ£È­ÇØ¼­ ÀúÀå
+### ì•”í˜¸ë¥¼ ì•”í˜¸í™”í•´ì„œ ì €ì¥
 ### from Bab2's patch
 	my $hashpass = "";
 ###
@@ -6073,7 +6073,7 @@ sub DoUpdatePrefs {
 	&UpdatePrefCheckbox("toplinkbar");
 ###############
 ### added by gypark
-### ºó ÆäÀÌÁö ¸µÅ© ½ºÅ¸ÀÏÀ» È¯°æ ¼³Á¤¿¡¼­ °áÁ¤
+### ë¹ˆ í˜ì´ì§€ ë§í¬ ìŠ¤íƒ€ì¼ì„ í™˜ê²½ ì„¤ì •ì—ì„œ ê²°ì •
 ### from Bab2's patch
 	&UpdatePrefCheckbox("linkstyle");
 ###
@@ -6084,7 +6084,7 @@ sub DoUpdatePrefs {
 
 ###############
 ### replaced by gypark
-### ¾ÆÀÌµğ Ã¹±ÛÀÚ¸¦ ´ë¹®ÀÚ·Î º¯È¯
+### ì•„ì´ë”” ì²«ê¸€ìë¥¼ ëŒ€ë¬¸ìë¡œ ë³€í™˜
 
 #	$UserID = &GetParam("p_username",  "");
 #	$username = &GetParam("p_username",  "");
@@ -6094,7 +6094,7 @@ sub DoUpdatePrefs {
 ###############
 ###############
 ### added by gypark
-### ´Ù¸¥ »ç¿ëÀÚÀÇ È¯°æ¼³Á¤ º¯°æÀ» ±İÁö
+### ë‹¤ë¥¸ ì‚¬ìš©ìì˜ í™˜ê²½ì„¤ì • ë³€ê²½ì„ ê¸ˆì§€
 	my ($status, $data) = &ReadFile(&UserDataFilename($UserID));
 	if ($status) {
 		if ((!(&UserIsAdmin)) && ($UserData{'id'} ne $UserID)) {
@@ -6112,7 +6112,7 @@ sub DoUpdatePrefs {
 	}
 ###############
 ### replaced by gypark
-### ¾ÆÀÌµğ Ç×¸ñÀ» °ø¶õÀ¸·Î ³õÁö ¸øÇÏ°Ô ÇÏ°í, ÃÖ¼Ò 4ÀÚ ÀÌ»óÀÌ¾î¾ß ÇÏµµ·Ï Á¦ÇÑ
+### ì•„ì´ë”” í•­ëª©ì„ ê³µë€ìœ¼ë¡œ ë†“ì§€ ëª»í•˜ê²Œ í•˜ê³ , ìµœì†Œ 4ì ì´ìƒì´ì–´ì•¼ í•˜ë„ë¡ ì œí•œ
 ### based on Bab2's patch
 #	if ($username eq "") {
 #		print T('UserName removed.'), '<br>';
@@ -6156,7 +6156,7 @@ sub DoUpdatePrefs {
 	$password = &GetParam("p_password",  "");
 ###############
 ### added by gypark
-### ¾ÏÈ£¸¦ ¾ÏÈ£È­ÇØ¼­ ÀúÀå
+### ì•”í˜¸ë¥¼ ì•”í˜¸í™”í•´ì„œ ì €ì¥
 ### from Bab2's patch
 	$hashpass = crypt($password, $HashKey);
 ###
@@ -6168,7 +6168,7 @@ sub DoUpdatePrefs {
 		print T('Password changed.'), '<br>';
 ###############
 ### replaced by gypark
-### ¾ÏÈ£¸¦ ¾ÏÈ£È­ÇØ¼­ ÀúÀå
+### ì•”í˜¸ë¥¼ ì•”í˜¸í™”í•´ì„œ ì €ì¥
 ### from Bab2's patch
 #		$UserData{'password'} = $password;
 		$UserData{'password'} = $hashpass;
@@ -6179,7 +6179,7 @@ sub DoUpdatePrefs {
 		$password = &GetParam("p_adminpw",  "");
 ###############
 ### added by gypark
-### ¾ÏÈ£¸¦ ¾ÏÈ£È­ÇØ¼­ ÀúÀå
+### ì•”í˜¸ë¥¼ ì•”í˜¸í™”í•´ì„œ ì €ì¥
 ### from Bab2's patch
 		$hashpass = crypt($password, $HashKey);
 ###
@@ -6191,7 +6191,7 @@ sub DoUpdatePrefs {
 			print T('Administrator password changed.'), '<br>';
 ###############
 ### replaced by gypark
-### ¾ÏÈ£¸¦ ¾ÏÈ£È­ÇØ¼­ ÀúÀå
+### ì•”í˜¸ë¥¼ ì•”í˜¸í™”í•´ì„œ ì €ì¥
 ### from Bab2's patch
 #			$UserData{'adminpw'} = $password;
 			$UserData{'adminpw'} = $hashpass;
@@ -6298,7 +6298,7 @@ sub UpdatePrefNumber {
 
 ###############
 ### added by gypark
-### titleindex action Ãß°¡
+### titleindex action ì¶”ê°€
 ### from Bab2's patch
 sub DoTitleIndex {
 	my (@list);
@@ -6338,7 +6338,7 @@ sub DoEnterLogin {
 	print &GetHeader('', T('Login'), "");
 ###############
 ### replaced by gypark
-### »ç¿ëÀÚ ¾ÆÀÌµğ¸¦ ÀÔ·ÂÇÏ´Â ¶õ¿¡ Æ÷Ä¿½º¸¦ ÁØ´Ù
+### ì‚¬ìš©ì ì•„ì´ë””ë¥¼ ì…ë ¥í•˜ëŠ” ë€ì— í¬ì»¤ìŠ¤ë¥¼ ì¤€ë‹¤
 #	print &GetFormStart();
 	print &GetFormStart("form_login");
 ###
@@ -6353,7 +6353,7 @@ sub DoEnterLogin {
 													 -size=>15, -maxlength=>50);
 ###############
 ### added by gypark
-### ·Î±äÇÒ ¶§ ÀÚµ¿ ·Î±×ÀÎ ¿©ºÎ ¼±ÅÃ
+### ë¡œê¸´í•  ë•Œ ìë™ ë¡œê·¸ì¸ ì—¬ë¶€ ì„ íƒ
 ### from Bab2's patch
 	print '<br>', &GetFormCheck('expire', 0, T('Keep login information'));
 ###
@@ -6363,7 +6363,7 @@ sub DoEnterLogin {
 	print $q->endform;
 ###############
 ### added by gypark
-### »ç¿ëÀÚ ¾ÆÀÌµğ¸¦ ÀÔ·ÂÇÏ´Â ¶õ¿¡ Æ÷Ä¿½º¸¦ ÁØ´Ù
+### ì‚¬ìš©ì ì•„ì´ë””ë¥¼ ì…ë ¥í•˜ëŠ” ë€ì— í¬ì»¤ìŠ¤ë¥¼ ì¤€ë‹¤
 	print "\n<script language=\"JavaScript\" type=\"text/javascript\">\n"
 		. "<!--\n"
 		. "document.form_login.p_userid.focus();\n"
@@ -6380,7 +6380,7 @@ sub DoLogin {
 	$success = 0;
 ###############
 ### replaced by gypark
-### ¾ÆÀÌµğ Ã¹±ÛÀÚ¸¦ ¹«Á¶°Ç ´ë¹®ÀÚ·Î º¯È¯
+### ì•„ì´ë”” ì²«ê¸€ìë¥¼ ë¬´ì¡°ê±´ ëŒ€ë¬¸ìë¡œ ë³€í™˜
 #	$uid = &GetParam("p_userid", "");
 	$uid = &FreeToNormal(&GetParam("p_userid", ""));
 ###
@@ -6392,7 +6392,7 @@ sub DoLogin {
 		&LoadUserData();
 ###############
 ### replaced by gypark
-### ¾ÏÈ£¸¦ ¾ÏÈ£È­ÇØ¼­ ÀúÀå
+### ì•”í˜¸ë¥¼ ì•”í˜¸í™”í•´ì„œ ì €ì¥
 ### from Bab2's patch
 #		if (defined($UserData{'password'}) &&
 #				($UserData{'password'} eq $password)) {
@@ -6402,7 +6402,7 @@ sub DoLogin {
 ###############
 ###############
 ### added by gypark
-### ·Î±äÇÒ ¶§ ÀÚµ¿ ·Î±×ÀÎ ¿©ºÎ ¼±ÅÃ
+### ë¡œê¸´í•  ë•Œ ìë™ ë¡œê·¸ì¸ ì—¬ë¶€ ì„ íƒ
 ### from Bab2's patch
 			my $expire_mode = &UpdatePrefCheckbox("expire");
 			if ($expire_mode eq "") {
@@ -6421,7 +6421,7 @@ sub DoLogin {
 			$SetCookie{'id'} = "";
 ###############
 ### added by gypark
-### Àß¸øµÈ ¾ÆÀÌµğ¸¦ ³Ö¾úÀ» ¶§ÀÇ Ã³¸® Ãß°¡
+### ì˜ëª»ëœ ì•„ì´ë””ë¥¼ ë„£ì—ˆì„ ë•Œì˜ ì²˜ë¦¬ ì¶”ê°€
 ### from Bab2's patch
 			$UserID = "";
 			&LoadUserData();
@@ -6432,7 +6432,7 @@ sub DoLogin {
 
 ###############
 ### replaced by gypark
-### ·Î±ä ¼º°ø ¶Ç´Â ½ÇÆĞ½ÃÀÇ ¸Ş½ÃÁö ¼öÁ¤
+### ë¡œê¸´ ì„±ê³µ ë˜ëŠ” ì‹¤íŒ¨ì‹œì˜ ë©”ì‹œì§€ ìˆ˜ì •
 
 #	print &GetHeader('', T('Login Results'), '');
 #
@@ -6473,8 +6473,8 @@ sub DoLogout {
 
 ###############
 ### replaced by gypark
-### logout Á÷ÈÄ¿¡µµ »ó´Ü¸Ş´º¿¡ logout ¸µÅ©°¡ ³²¾Æ ÀÖ´Â ¹®Á¦ ÇØ°á
-### ±Ùº»ÀûÀÎ Á¶Ä¡°¡ µÇÁö ¸øÇÑ´Ù. ÁÖÀÇ
+### logout ì§í›„ì—ë„ ìƒë‹¨ë©”ë‰´ì— logout ë§í¬ê°€ ë‚¨ì•„ ìˆëŠ” ë¬¸ì œ í•´ê²°
+### ê·¼ë³¸ì ì¸ ì¡°ì¹˜ê°€ ë˜ì§€ ëª»í•œë‹¤. ì£¼ì˜
 #	print &GetHeader('', T('Logout Results'), '');
 
 	my $tempUserID = $UserID;
@@ -6502,7 +6502,7 @@ sub SaveUserData {
 	my ($userFile, $data);
 ###############
 ### added by gypark
-### ¼³Ä¡ ÈÄ Ã³À½À¸·Î »ç¿ëÀÚ ¾ÆÀÌµğ¸¦ ¸¸µé ¶§ ¿¡·¯°¡ ³ª´Â °ÍÀ» ÇØ°á
+### ì„¤ì¹˜ í›„ ì²˜ìŒìœ¼ë¡œ ì‚¬ìš©ì ì•„ì´ë””ë¥¼ ë§Œë“¤ ë•Œ ì—ëŸ¬ê°€ ë‚˜ëŠ” ê²ƒì„ í•´ê²°
 	&CreateDir($UserDir);
 ###
 ###############
@@ -6524,7 +6524,7 @@ sub DoSearch {
 	@x = &SearchTitleAndBody($string);
 	&PrintPageList(@x);
 
-### °Ë»ö °á°ú ÇÏ´Ü¿¡ »õ ÆäÀÌÁö ¸¸µé±â Ç×»ó Ãâ·Â
+### ê²€ìƒ‰ ê²°ê³¼ í•˜ë‹¨ì— ìƒˆ í˜ì´ì§€ ë§Œë“¤ê¸° í•­ìƒ ì¶œë ¥
 #	if ($#x eq -1) {
 	$string = &FreeToNormal($string) if ($FreeLinks);
 	if ((&ValidId($string) eq "") && (not -f &GetPageFile($string))) {
@@ -6538,13 +6538,13 @@ sub DoSearch {
 
 ###############
 ### replaced by gypark
-### ¸ñÂ÷¸¦ A,B,..,°¡,³ª,... µîÀ¸·Î ±¸ºĞÇØ¼­ Ãâ·ÂÇÏµµ·Ï ÇÔ
-### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?ÇÁ·Î±×·¡¹ÖÆÁ/Wiki
+### ëª©ì°¨ë¥¼ A,B,..,ê°€,ë‚˜,... ë“±ìœ¼ë¡œ êµ¬ë¶„í•´ì„œ ì¶œë ¥í•˜ë„ë¡ í•¨
+### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?í”„ë¡œê·¸ë˜ë°íŒ/Wiki
 
 # sub PrintPageList {
 # 	my $pagename;
 # 
-# 	print "<h2>", Ts('ÆäÀÌÁö ¼ö: %s', ($#_ + 1)), "</h2>\n";
+# 	print "<h2>", Ts('í˜ì´ì§€ ìˆ˜: %s', ($#_ + 1)), "</h2>\n";
 # 	foreach $pagename (@_) {
 # 		print ".... "  if ($pagename =~ m|/|);
 # 		print &GetPageLink($pagename);
@@ -6561,17 +6561,17 @@ sub PrintPageList {
 	my ($pagename);
 	my $count = 0;
 	my $titleIsPrinted = 0;
-	my @han = qw(°¡ ³ª ´Ù ¶ó ¸¶ ¹Ù »ç ¾Æ ÀÚ Â÷ Ä« Å¸ ÆÄ ÇÏ);
+	my @han = qw(ê°€ ë‚˜ ë‹¤ ë¼ ë§ˆ ë°” ì‚¬ ì•„ ì ì°¨ ì¹´ íƒ€ íŒŒ í•˜);
 	my @indexTitle = (0, "A".."Z");
-	push (@indexTitle, @han, "±âÅ¸");
+	push (@indexTitle, @han, "ê¸°íƒ€");
 	my @indexSearch=("A".."Z");
-	push (@indexSearch, @han, "ËĞ");
+	push (@indexSearch, @han, "ï¤€");
 
 	print "<a name='TOC'></a><h2>", Ts('%s pages found:', ($#_ + 1)), "</h2>\n";
 
 ###############
 ### replaced by gypark
-### index ¶Ç´Â °Ë»ö°á°ú Ã¢ÀÇ Á¦ÀÏ »ó´Ü¿¡ ±¸ºĞÅÇ ¸µÅ©¸¦ ³ÖÀ½
+### index ë˜ëŠ” ê²€ìƒ‰ê²°ê³¼ ì°½ì˜ ì œì¼ ìƒë‹¨ì— êµ¬ë¶„íƒ­ ë§í¬ë¥¼ ë„£ìŒ
 
 # 	foreach $pagename(@_) {
 # 		until (
@@ -6585,7 +6585,7 @@ sub PrintPageList {
 # 		if (!$titleIsPrinted) {
 #			print $q->h3($indexTitle[$count]);
 
-	# »ó´Ü¿¡ ¾ŞÄ¿¸¦ °¡¸®Å°´Â ÀÎµ¦½º ³ª¿­
+	# ìƒë‹¨ì— ì•µì»¤ë¥¼ ê°€ë¦¬í‚¤ëŠ” ì¸ë±ìŠ¤ ë‚˜ì—´
 	my $count2 = 0;
 	print("\n|");
 	while ( $count2 <= $#indexTitle ) {
@@ -6617,19 +6617,19 @@ sub PrintPageList {
 			last if $count > 40;
 		}
 		if (!$titleIsPrinted) {
-			# ÆäÀÌÁö°¡ ¾ø´Â »öÀÎÀÇ ¾ŞÄ¿ Ã³¸®
+			# í˜ì´ì§€ê°€ ì—†ëŠ” ìƒ‰ì¸ì˜ ì•µì»¤ ì²˜ë¦¬
 			while ( $count2 <= ($count - 1) ) {
 				print "\n<a name=\"H_$indexTitle[$count2]\">";
-# ¾Æ·¡ ÁÖ¼®À» ÇØÁ¦ÇÏ¸é ÆäÀÌÁö°¡ ¾ø´Â »öÀÎµµ Çìµå¶óÀÎÀÌ ³ª¿À³ª,
-# »ç¿ëÇÏÁö ¾Ê´Â °ÍÀÌ ÁÁ´Ù. ¿ª¸µÅ©¸¦ »ç¿ëÇØº¸¸é ÀÌÇØ°¡ µÉ µí
+# ì•„ë˜ ì£¼ì„ì„ í•´ì œí•˜ë©´ í˜ì´ì§€ê°€ ì—†ëŠ” ìƒ‰ì¸ë„ í—¤ë“œë¼ì¸ì´ ë‚˜ì˜¤ë‚˜,
+# ì‚¬ìš©í•˜ì§€ ì•ŠëŠ” ê²ƒì´ ì¢‹ë‹¤. ì—­ë§í¬ë¥¼ ì‚¬ìš©í•´ë³´ë©´ ì´í•´ê°€ ë  ë“¯
 #				print $q->h3($indexTitle[$count2]);
 				print "</a>";
 				$count2++;
 			}
-# ¾ŞÄ¿¸¦ »ğÀÔ
+# ì•µì»¤ë¥¼ ì‚½ì…
 			print $q->h3("<a name=\"H_$indexTitle[$count]\" title=\"". T('Top') ."\" href=\"#TOC\">$indexTitle[$count]</A>"); 
 			$count2 = $count + 1;
-### gypark ÀÇ »öÀÎ ÆĞÄ¡
+### gypark ì˜ ìƒ‰ì¸ íŒ¨ì¹˜
 ###############
 			$titleIsPrinted=1;
 		}
@@ -6640,7 +6640,7 @@ sub PrintPageList {
 		if (&UserIsAdmin()) {
 ###############
 ### added by gypark
-### °ü¸®ÀÚÀÇ ÀÎµ¦½º È­¸é¿¡¼­´Â Àá±ä ÆäÀÌÁö¸¦ º°µµ·Î Ç¥½Ã
+### ê´€ë¦¬ìì˜ ì¸ë±ìŠ¤ í™”ë©´ì—ì„œëŠ” ì ê¸´ í˜ì´ì§€ë¥¼ ë³„ë„ë¡œ í‘œì‹œ
 			if (-f &GetLockedPageFile($pagename)) {
 				print " " . T('(locked)');
 			}
@@ -6664,7 +6664,7 @@ sub PrintPageList {
 	}
 }
 
-### jof4002 ÀÇ index È­¸é ÆĞÄ¡
+### jof4002 ì˜ index í™”ë©´ íŒ¨ì¹˜
 ###############
 
 sub DoLinks {
@@ -6677,7 +6677,7 @@ sub DoLinks {
 
 ###############
 ### added by gypark
-### ¿ª¸µÅ©¸¦ Ã£´Â ÇÔ¼ö Ãß°¡
+### ì—­ë§í¬ë¥¼ ì°¾ëŠ” í•¨ìˆ˜ ì¶”ê°€
 # sub MacroReverse {
 # 	my $pagelines;
 # 	my @result = ();
@@ -6705,7 +6705,7 @@ sub PrintLinkList {
 		@links = ();
 ###############
 ### replaced by gypark
-### full link list °³¼±
+### full link list ê°œì„ 
 #		foreach $page (split(' ', $pagelines)) {
 		my @pages = split(' ', $pagelines);
 		foreach $page (@pages) {
@@ -6722,7 +6722,7 @@ sub PrintLinkList {
 					$link = &GetPageLink($page);
 ###############
 ### added by gypark
-### full link list °³¼±
+### full link list ê°œì„ 
 				} elsif ($page =~ /^\// && $pgExists{(split ('/',$pages[0]))[0].$page}) {
 					($link, $extra) = &GetPageLinkText((split ('/',$pages[0]))[0].$page, $page);
 ###
@@ -6746,10 +6746,10 @@ sub PrintLinkList {
 sub GetFullLinkList {
 ###############
 ### added by gypark
-### GetFullLinkList ¿¡ ÀÎÀÚÃ³¸® ±â´É Ãß°¡
+### GetFullLinkList ì— ì¸ìì²˜ë¦¬ ê¸°ëŠ¥ ì¶”ê°€
 	my ($opt) = @_;
 	my $opt_item;
-	my %args = (            # default °ª
+	my %args = (            # default ê°’
 			"unique" , 1,
 			"sort", 1,
 			"page", 1,
@@ -6770,7 +6770,7 @@ sub GetFullLinkList {
 
 ###############
 ### replaceed by gypark
-### ¿ª¸µÅ© °Ë»ö ¿É¼Ç Ãß°¡
+### ì—­ë§í¬ ê²€ìƒ‰ ì˜µì…˜ ì¶”ê°€
 #	my ($name, $unique, $sort, $exists, $empty, $link, $search);
 	my ($name, $unique, $sort, $exists, $empty, $link, $search, $reverse);
 ###
@@ -6780,7 +6780,7 @@ sub GetFullLinkList {
 
 ###############
 ### replaced by gypark
-### GetFullLinkList ¿¡ ÀÎÀÚÃ³¸® ±â´É Ãß°¡
+### GetFullLinkList ì— ì¸ìì²˜ë¦¬ ê¸°ëŠ¥ ì¶”ê°€
 # 	$unique = &GetParam("unique", 1);
 # 	$sort = &GetParam("sort", 1);
 # 	$pagelink = &GetParam("page", 1);
@@ -6802,7 +6802,7 @@ sub GetFullLinkList {
 
 ###############
 ### added by gypark
-### ¿ª¸µÅ© ±â´É Ãß°¡
+### ì—­ë§í¬ ê¸°ëŠ¥ ì¶”ê°€
 	$reverse = &GetParam("reverse", $args{"reverse"});
 ###
 ###############
@@ -6823,7 +6823,7 @@ sub GetFullLinkList {
 		}
 ###############
 ### replaced by gypark
-### ¸µÅ© ¸ñ·ÏÀ» º°µµ·Î °ü¸®
+### ë§í¬ ëª©ë¡ì„ ë³„ë„ë¡œ ê´€ë¦¬
 #		@links = &GetPageLinks($name, $pagelink, $interlink, $urllink);
 		@links = &GetPageLinksFromFile($name, $pagelink, $interlink, $urllink);
 ###
@@ -6836,7 +6836,7 @@ sub GetFullLinkList {
 			}
 ###############
 ### replaced by gypark
-### /ÆäÀÌÁö Çü½ÄÀÇ ÇÏÀ§ÆäÀÌÁöÀÇ Á¸Àç¿¡ ´ëÇÑ ¹ö±×¼öÁ¤
+### /í˜ì´ì§€ í˜•ì‹ì˜ í•˜ìœ„í˜ì´ì§€ì˜ ì¡´ì¬ì— ëŒ€í•œ ë²„ê·¸ìˆ˜ì •
 #			if (($exists == 0) && ($pgExists{$link} == 1)) {
 # 				next;
 # 			}
@@ -6859,7 +6859,7 @@ sub GetFullLinkList {
 			}
 ###############
 ### added by gypark
-### ¿ª¸µÅ© ±â´É Ãß°¡
+### ì—­ë§í¬ ê¸°ëŠ¥ ì¶”ê°€
 			if ($reverse ne "") {
 				my ($mainpage, $subpage) = ("", "");
 				if ($reverse =~ /(.+)\/(.+)/) {
@@ -6900,7 +6900,7 @@ sub GetPageLinks {
 	$text =~ s/<code>(.|\n)*?\<\/code>/ /ig;
 ###############
 ### added by gypark
-### {{{ }}} ³»ÀÇ ³»¿ëÀº ÅÂ±×·Î °£ÁÖÇÏÁö ¾ÊÀ½
+### {{{ }}} ë‚´ì˜ ë‚´ìš©ì€ íƒœê·¸ë¡œ ê°„ì£¼í•˜ì§€ ì•ŠìŒ
 	$text =~ s/(^|\n)(\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1 \n/igm;
 	$text =~ s/(^|\n)(\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1 \n/igm;
 	$text =~ s/(^|\n)(\{\{\{#!((\w+)( .+)?)[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1 \n/igm;
@@ -6983,7 +6983,7 @@ sub DoPostMain {
 
 ###############
 ### replaced by gypark
-### comments ±â´É
+### comments ê¸°ëŠ¥
 #	if (!&UserCanEdit($id, 1)) {
 	if (($rebrowseid eq "") && (!&UserCanEdit($id, 1))) {
 ###
@@ -6993,7 +6993,7 @@ sub DoPostMain {
 		return;
 	}
 
-# ±İÁö´Ü¾î
+# ê¸ˆì§€ë‹¨ì–´
 	if (my $bannedText = &TextIsBanned($string)) {
 		print &GetHeader("", T('Editing Denied'),"");
 		print Ts('Editing not allowed: text includes banned text');
@@ -7027,8 +7027,8 @@ sub DoPostMain {
 	
 ###############
 ### added by gypark
-### <mysign> µî ±ÛÀÛ¼º Á÷ÈÄ ¼öÇàÇÒ ¸ÅÅ©·Î
-### comments ±¸ÇöÀ» À§ÇØ $id Ãß°¡, from Jof
+### <mysign> ë“± ê¸€ì‘ì„± ì§í›„ ìˆ˜í–‰í•  ë§¤í¬ë¡œ
+### comments êµ¬í˜„ì„ ìœ„í•´ $id ì¶”ê°€, from Jof
 	$string = &ProcessPostMacro($string, $id);
 ###
 ###############
@@ -7042,7 +7042,7 @@ sub DoPostMain {
 	$oldrev = $Section{'revision'};
 	$pgtime = $Section{'ts'};
 
-### ¼½¼Ç ´ÜÀ§ ÆíÁı - ÀúÀåÇÒ ¶§
+### ì„¹ì…˜ ë‹¨ìœ„ í¸ì§‘ - ì €ì¥í•  ë•Œ
 	my $section = &GetParam('section', '');
 	if ($section >= 1) {
 		my $temp_text;
@@ -7051,36 +7051,36 @@ sub DoPostMain {
 
 		$temp_text = $old;												
 
-		# {{{ }}} µî Çìµå¶óÀÎÀÌ ¿Ã ¼ö ¾ø´Â °ÍµéÀ» ¸ÕÀú Á¦¿Ü
+		# {{{ }}} ë“± í—¤ë“œë¼ì¸ì´ ì˜¬ ìˆ˜ ì—†ëŠ” ê²ƒë“¤ì„ ë¨¼ì € ì œì™¸
 		%SaveUrl = ();
 		$SaveUrlIndex = 0;
 		$temp_text = &store_raw_codes($temp_text);
 
-		# ³²Àº ÅØ½ºÆ®¿¡¼­ Çìµå¶óÀÎµéÀÇ ¸ñ·ÏÀ» »Ì´Â´Ù
+		# ë‚¨ì€ í…ìŠ¤íŠ¸ì—ì„œ í—¤ë“œë¼ì¸ë“¤ì˜ ëª©ë¡ì„ ë½‘ëŠ”ë‹¤
 		while ($temp_text =~ /(^[ \t]*(\=+)\s+[^\n]+\s+\=+\s*$)/gm) {
 			$num++;
-			$h_pos[$num] = pos($temp_text) - length($1);		# °¢ ¼½¼ÇÀÇ ½ÃÀÛ Æ÷Áö¼Ç
+			$h_pos[$num] = pos($temp_text) - length($1);		# ê° ì„¹ì…˜ì˜ ì‹œì‘ í¬ì§€ì…˜
 			$h_depth[$num] = length($2);
 		}
 		$num++;
 		$h_pos[$num] = length($temp_text);
 		$h_depth[$num] = 1;
 
-		# °°Àº depth ÀÇ ´ÙÀ½ Çìµå¶óÀÎÀ» Ã£À½
+		# ê°™ì€ depth ì˜ ë‹¤ìŒ í—¤ë“œë¼ì¸ì„ ì°¾ìŒ
 		my $next;
 		for ($next = $section+1; ($next <= $#h_depth) && ($h_depth[$section] < $h_depth[$next]); $next++) {}
 
-		# ÀÔ·ÂÆû¿¡¼­ ³Ñ¾î¿Â ÅØ½ºÆ®¸¦, ±× ¿Ü ¾ÕµÚ ¼½¼Ç°ú °áÇÕ
+		# ì…ë ¥í¼ì—ì„œ ë„˜ì–´ì˜¨ í…ìŠ¤íŠ¸ë¥¼, ê·¸ ì™¸ ì•ë’¤ ì„¹ì…˜ê³¼ ê²°í•©
 		$temp_text = substr($temp_text, 0, $h_pos[$section]).
 			$string.
 			substr($temp_text, $h_pos[$next]);
 
-		# Á¦¿ÜÇß´ø ³»¿ë º¹¿ø
+		# ì œì™¸í–ˆë˜ ë‚´ìš© ë³µì›
 		$temp_text = &RestoreSavedText($temp_text);
 		%SaveUrl = ();
 		$SaveUrlIndex = 0;
 
-		# $string ¹Ù²ãÄ¡±â
+		# $string ë°”ê¿”ì¹˜ê¸°
 		$string = $temp_text;
 	}
 #####
@@ -7095,7 +7095,7 @@ sub DoPostMain {
 #	if (($UserID > 399) || ($Section{'id'} > 399))  {
 ###############
 ### replaced by gypark
-### ·Î±×ÀÎ ÇÏÁö ¾ÊÀº °æ¿ìÀÇ conflict
+### ë¡œê·¸ì¸ í•˜ì§€ ì•Šì€ ê²½ìš°ì˜ conflict
 #	if (($UserID ne "") || ($Section{'id'} ne ""))  {
 	if (
 #		(($UserID ne "") && ($UserID ne "112") && ($UserID ne "113")) ||
@@ -7113,7 +7113,7 @@ sub DoPostMain {
 	# Detect editing conflicts and resubmit edit
 	if (($oldrev > 0) && ($newAuthor && ($oldtime != $pgtime))) {
 		&ReleaseLock();
-### ¼½¼Ç ´ÜÀ§ ÆíÁı - Ãæµ¹ÀÌ ¹ß»ıÇÏ¸é ÀüÃ¼ ÆäÀÌÁö ÆíÁıÀ¸·Î
+### ì„¹ì…˜ ë‹¨ìœ„ í¸ì§‘ - ì¶©ëŒì´ ë°œìƒí•˜ë©´ ì „ì²´ í˜ì´ì§€ í¸ì§‘ìœ¼ë¡œ
 		$q->param('section','');
 #####
 		if ($oldconflict>0) {  # Conflict again...
@@ -7157,7 +7157,7 @@ sub DoPostMain {
 	&SavePage();
 ###############
 ### added by gypark
-### ¸µÅ© ¸ñ·ÏÀ» º°µµ·Î °ü¸®
+### ë§í¬ ëª©ë¡ì„ ë³„ë„ë¡œ ê´€ë¦¬
 	&SaveLinkFile($id);
 ###
 ###############
@@ -7373,7 +7373,7 @@ sub WriteRcLog {
 	$extra{'name'} = $name  if ($name ne "");
 ###############
 ### added by gypark
-### ÃÖ±Ùº¯°æ³»¿ª¿¡ ºÏ¸¶Å© ±â´É µµÀÔ
+### ìµœê·¼ë³€ê²½ë‚´ì—­ì— ë¶ë§ˆí¬ ê¸°ëŠ¥ ë„ì…
 	$extra{'tscreate'} = $Page{'tscreate'};
 ### rss from usemod 1.0
 	$extra{'revision'} = $revision if ($revision ne "");
@@ -7420,7 +7420,7 @@ sub DoMaintain {
 		&ExpireKeepFile();
 ###############
 ### added by gypark
-### ¸µÅ© ¸ñ·ÏÀ» º°µµ·Î °ü¸®
+### ë§í¬ ëª©ë¡ì„ ë³„ë„ë¡œ ê´€ë¦¬
 		&SaveLinkFile($name);
 ### page count
 		if (!(-f &GetCountFile($name))) {
@@ -7631,7 +7631,7 @@ sub BuildLinkIndexPage {
 
 ###############
 ### replaced by gypark
-### ¸µÅ© ¸ñ·ÏÀ» º°µµ·Î °ü¸®
+### ë§í¬ ëª©ë¡ì„ ë³„ë„ë¡œ ê´€ë¦¬
 #	@links = &GetPageLinks($page, 1, 0, 0);
 	@links = &GetPageLinksFromFile($page, 1, 0, 0);
 ###
@@ -7678,7 +7678,7 @@ sub EditRecentChanges {
 	&EditRecentChangesFile($RcFile,    $action, $old, $new);
 ###############
 ### replaced by gypark
-### RcOldFile ¹ö±× ¼öÁ¤
+### RcOldFile ë²„ê·¸ ìˆ˜ì •
 #	&EditRecentChangesFile($RcOldFile, $action, $old, $new);
 	&EditRecentChangesFile($RcOldFile, $action, $old, $new) if (-f $RcOldFile);
 ###
@@ -7735,7 +7735,7 @@ sub DeletePage {
 
 ###############
 ### added by gypark
-### ÆäÀÌÁö »èÁ¦ ½Ã¿¡ keep È­ÀÏÀº º¸Á¸ÇØ µÒ
+### í˜ì´ì§€ ì‚­ì œ ì‹œì— keep í™”ì¼ì€ ë³´ì¡´í•´ ë‘ 
 	&OpenPage($page);
 	&OpenDefaultText();
 	&SaveKeepSection();
@@ -7747,7 +7747,7 @@ sub DeletePage {
 	unlink($fname)  if (-f $fname);
 ###############
 ### commented by gypark
-### ÆäÀÌÁö »èÁ¦ ½Ã¿¡ keep È­ÀÏÀº º¸Á¸ÇØ µÒ
+### í˜ì´ì§€ ì‚­ì œ ì‹œì— keep í™”ì¼ì€ ë³´ì¡´í•´ ë‘ 
 #	$fname = $KeepDir . "/" . &GetPageDirectory($page) .  "/$page.kp";
 #	unlink($fname)  if (-f $fname);
 ###
@@ -7755,17 +7755,17 @@ sub DeletePage {
 
 #########################################################3
 ### added by gypark
-### lck È­ÀÏµµ °°ÀÌ »èÁ¦
+### lck í™”ì¼ë„ ê°™ì´ ì‚­ì œ
 	$fname = &GetLockedPageFile($page);
 	unlink($fname) if (-f $fname);
-### cache È­ÀÏµµ °°ÀÌ »èÁ¦
+### cache í™”ì¼ë„ ê°™ì´ ì‚­ì œ
 	&UnlinkHtmlCache($page);
-### page count È­ÀÏµµ °°ÀÌ »èÁ¦
+### page count í™”ì¼ë„ ê°™ì´ ì‚­ì œ
 	$fname = &GetCountFile($page);
 	unlink ($fname) if (-f $fname);
 ### hide page by gypark
 	if (defined($HiddenPage{$page})) {
-		# ¼û±ä È­ÀÏÀÇ °æ¿ì´Â keep È­ÀÏ°ú rclog ¸¦ ´Ù Á¦°ÅÇÑ´Ù.
+		# ìˆ¨ê¸´ í™”ì¼ì˜ ê²½ìš°ëŠ” keep í™”ì¼ê³¼ rclog ë¥¼ ë‹¤ ì œê±°í•œë‹¤.
 		&EditRecentChanges(1, $page, "");
 		$fname = $KeepDir . "/" . &GetPageDirectory($page) .  "/$page.kp";
 		unlink($fname)  if (-f $fname);
@@ -7775,7 +7775,7 @@ sub DeletePage {
 #########################################################3
 ###############
 ### added by gypark
-### ¸µÅ© ¸ñ·ÏÀ» º°µµ·Î °ü¸®
+### ë§í¬ ëª©ë¡ì„ ë³„ë„ë¡œ ê´€ë¦¬
 	$fname = &GetLinkFile($page);
 	unlink($fname) if (-f $fname);
 ###
@@ -7783,7 +7783,7 @@ sub DeletePage {
 	unlink($IndexFile)  if ($UseIndex);
 ###############
 ### commented by gypark
-### ÆäÀÌÁö »èÁ¦ ½Ã¿¡ keep È­ÀÏÀº º¸Á¸ÇØ µÒ
+### í˜ì´ì§€ ì‚­ì œ ì‹œì— keep í™”ì¼ì€ ë³´ì¡´í•´ ë‘ 
 #	&EditRecentChanges(1, $page, "")  if ($doRC);  # Delete page
 ###
 ###############
@@ -7806,7 +7806,7 @@ sub SubstituteTextLinks {
 	$text =~ s/(<nowiki>((.|\n)*?)<\/nowiki>)/&StoreRaw($1)/ige;
 ###############
 ### added by gypark
-### {{{ }}} ³»ÀÇ ³»¿ëÀº ÅÂ±×·Î °£ÁÖÇÏÁö ¾ÊÀ½
+### {{{ }}} ë‚´ì˜ ë‚´ìš©ì€ íƒœê·¸ë¡œ ê°„ì£¼í•˜ì§€ ì•ŠìŒ
 	$text =~ s/(^|\n)(\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1.&StoreRaw($2)."\n"/igem;
 	$text =~ s/(^|\n)(\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1.&StoreRaw($2)."\n"/igem;
 	$text =~ s/(^|\n)(\{\{\{#!((\w+)( .+)?)[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1.&StoreRaw($2)."\n"/igem;
@@ -7971,7 +7971,7 @@ sub RenameTextLinks {
 			&WriteStringToFile($file, join($FS1, %Page));
 ###############
 ### added by gypark
-### ¸µÅ© ¸ñ·ÏÀ» º°µµ·Î °ü¸®
+### ë§í¬ ëª©ë¡ì„ ë³„ë„ë¡œ ê´€ë¦¬
 			&SaveLinkFile($page);
 ###
 ###############
@@ -8017,16 +8017,16 @@ sub RenamePage {
 	unlink($IndexFile)  if ($UseIndex);
 ###############
 ### added by gypark
-### ÆäÀÌÁö ÀÌ¸§ º¯°æ½Ã, lock È­ÀÏµµ °°ÀÌ º¯°æ
+### í˜ì´ì§€ ì´ë¦„ ë³€ê²½ì‹œ, lock í™”ì¼ë„ ê°™ì´ ë³€ê²½
 	my ($oldlock, $newlock);
 	$oldlock = &GetLockedPageFile($old);
 	if (-f $oldlock) {
 		$newlock = &GetLockedPageFile($new);
 		rename($oldlock, $newlock) || die "error while renaming lock";
 	}
-### cache È­ÀÏÀº »èÁ¦
+### cache í™”ì¼ì€ ì‚­ì œ
 	&UnlinkHtmlCache($old);
-### page count È­ÀÏµµ º¯°æ
+### page count í™”ì¼ë„ ë³€ê²½
 	my ($oldcnt, $newcnt);
 	$oldcnt = &GetCountFile($old);
 	if (-f $oldcnt) {
@@ -8045,7 +8045,7 @@ sub RenamePage {
 
 ###############
 ### added by gypark
-### ¸µÅ© ¸ñ·ÏÀ» º°µµ·Î °ü¸®
+### ë§í¬ ëª©ë¡ì„ ë³„ë„ë¡œ ê´€ë¦¬
 	my ($oldlink, $newlink);
 	$oldlink = &GetLinkFile($old);
 	if (-f $oldlink) {
@@ -8066,7 +8066,7 @@ sub DoShowVersion {
 	print &GetHeader("", T('Displaying Wiki Version'), "");
 ###############
 ### replaced by gypark
-### ¹öÀü Á¤º¸¸¦ º°µµÀÇ º¯¼ö¿¡ º¸°ü
+### ë²„ì „ ì •ë³´ë¥¼ ë³„ë„ì˜ ë³€ìˆ˜ì— ë³´ê´€
 # 	print "<p>UseModWiki version 0.92K2<p>\n";
 	print "<p>UseModWiki version $WikiVersion ($WikiRelease)<p>\n";
 ###
@@ -8079,9 +8079,9 @@ sub DoShowVersion {
 
 ###############
 ### added by gypark
-### ÅëÃ¤·Î Ãß°¡ÇÑ ÇÔ¼öµéÀº ¿©±â¿¡ µÒ
+### í†µì±„ë¡œ ì¶”ê°€í•œ í•¨ìˆ˜ë“¤ì€ ì—¬ê¸°ì— ë‘ 
 
-### ·Î±×ÀÎÇÑ »ç¿ëÀÚÀÎÁö °Ë»ç
+### ë¡œê·¸ì¸í•œ ì‚¬ìš©ìì¸ì§€ ê²€ì‚¬
 sub LoginUser {
 	if (($UserID eq "113") || ($UserID eq "112")) {
 		return 0;
@@ -8092,10 +8092,10 @@ sub LoginUser {
 
 ###############
 ### added by gypark
-### ÃÖ±Ùº¯°æ³»¿ª¿¡ ºÏ¸¶Å© ±â´É µµÀÔ
+### ìµœê·¼ë³€ê²½ë‚´ì—­ì— ë¶ë§ˆí¬ ê¸°ëŠ¥ ë„ì…
 sub DoBookmark {
-	if (&GetParam('username') eq "") {		# ·Î±×ÀÎÇÏÁö ¾ÊÀº °æ¿ì
-		&BrowsePage(T($RCName));				# ±×³É ÃÖ±Ù º¯°æ ³»¿ªÀ¸·Î ÀÌµ¿
+	if (&GetParam('username') eq "") {		# ë¡œê·¸ì¸í•˜ì§€ ì•Šì€ ê²½ìš°
+		&BrowsePage(T($RCName));				# ê·¸ëƒ¥ ìµœê·¼ ë³€ê²½ ë‚´ì—­ìœ¼ë¡œ ì´ë™
 		return 1;
 	}
 	if (&GetParam('time') ne "") {
@@ -8112,7 +8112,7 @@ sub DoBookmark {
 
 ###############
 ### added by gypark
-### ¸µÅ© ¸ñ·ÏÀ» º°µµ·Î °ü¸®
+### ë§í¬ ëª©ë¡ì„ ë³„ë„ë¡œ ê´€ë¦¬
 sub GetLinkFile {
 	my ($id) = @_;
 
@@ -8193,13 +8193,13 @@ sub GetPageCount {
 		= ($Section{'username'}, $Section{'ip'},
 			&GetParam('username', ""), $ENV{REMOTE_ADDR}, 0);
 
-	# Ä«¿îÆ® ÀĞ¾î¿È
+	# ì¹´ìš´íŠ¸ ì½ì–´ì˜´
 	&CreatePageDir($CountDir, $id);
 	$countfile = &GetCountFile($id);
 	($status, $pagecount) = &ReadFile($countfile);
 	$pagecount = 0 if ($status == 0);
 
-	# Ä«¿îÆ® °»½Å ¿©ºÎ °áÁ¤
+	# ì¹´ìš´íŠ¸ ê°±ì‹  ì—¬ë¶€ ê²°ì •
 	if ($view_user eq "") {
 		if ($edit_ip ne $view_ip) {
 			$add = 1;
@@ -8212,7 +8212,7 @@ sub GetPageCount {
 	}
 	$pagecount += $add;
 
-	# Ä«¿îÆ® ±â·Ï
+	# ì¹´ìš´íŠ¸ ê¸°ë¡
 	if ($add == 1) {
 		&RequestLockDir('count', 1, 1, 0) || return $pagecount;
 		&WriteStringToFile($countfile, $pagecount);
@@ -8332,7 +8332,7 @@ sub UploadFile {
 	return 0;
 }
 
-### DeleteUploadedFiles ¸ÅÅ©·Î
+### DeleteUploadedFiles ë§¤í¬ë¡œ
 sub DoDeleteUploadedFiles {
 	my (%vars, @files);
 
@@ -8442,16 +8442,16 @@ height [1000-40]<input type="text" name="height" size="4" maxlength="4" value="3
 sub OekakiSave {
 	my ($buffer, $filename, $prefix, $target_full);
 
-# POST µ¥ÀÌÅ¸ ÀĞÀ½
+# POST ë°ì´íƒ€ ì½ìŒ
 	read (STDIN, $buffer, $ENV{'CONTENT_LENGTH'});
 
-# µ¥ÀÌÅÍ °Ë»ç
+# ë°ì´í„° ê²€ì‚¬
 	my $mark = "Content-type:image/0";
 	if (!($buffer =~ m|$mark|)) {
 		die ("Invalid POST data");
 	}
 
-# png µ¥ÀÌÅÍÀÇ Ã³À½ ºÎºĞÀÇ index °áÁ¤
+# png ë°ì´í„°ì˜ ì²˜ìŒ ë¶€ë¶„ì˜ index ê²°ì •
 	my $start = index($buffer, $mark);
 	$start = index($buffer, "\r\n", $start+1);
 	$start = index($buffer, "\r\n", $start+1);
@@ -8460,28 +8460,28 @@ sub OekakiSave {
 	}
 	$start += 2;
 
-# png µ¥ÀÌÅÍ °áÁ¤
+# png ë°ì´í„° ê²°ì •
 	my $png_data = substr($buffer, $start);
 
-# ¶ôÀ» È¹µæ
+# ë½ì„ íšë“
 	if (!(&RequestLockDir('oekaki', 4, 3, 0))) {
 		die("can not get lock");
 	}
 
-# ÀúÀåÇÒ È­ÀÏ¸í °áÁ¤
+# ì €ì¥í•  í™”ì¼ëª… ê²°ì •
 	$filename = "oekaki.png";
 	$prefix = &GetLastPrefix($UploadDir, $filename);
 	$target_full = $UploadDir."/".$prefix.$filename;
 
-# ÀúÀå
+# ì €ì¥
 	&CreateDir($UploadDir);
 	&WriteBinaryToFile($target_full, $png_data);
 
-# ¶ôÀ» ÇØÁ¦
+# ë½ì„ í•´ì œ
 	&ReleaseLockDir('oekaki');
 	chmod(0644, "$target_full");
 
-# Á¾·á
+# ì¢…ë£Œ
 	print "Content-type: text/plain\n\n";
 	print "success\n";
 }
@@ -8554,7 +8554,7 @@ height [1000-40]<input type="text" name="height" size="4" maxlength="4" value="$
 |;
 }
 
-### È­ÀÏ¸íÀÌ °ãÄ¥ °æ¿ì ¾Õ¿¡ ºÙÀÏ prefix ¸¦ ¾ò´Â ÇÔ¼ö
+### í™”ì¼ëª…ì´ ê²¹ì¹  ê²½ìš° ì•ì— ë¶™ì¼ prefix ë¥¼ ì–»ëŠ” í•¨ìˆ˜
 sub GetLastPrefix {
 	my ($dir, $file) = @_;
 
@@ -8578,7 +8578,7 @@ sub GetLastPrefix {
 	return $prefix ."_";
 }
 
-### °ü½É ÆäÀÌÁö
+### ê´€ì‹¬ í˜ì´ì§€
 sub DoInterest {
 	my ($title, $temp);
 	my $mode = &GetParam('mode');
@@ -8832,7 +8832,7 @@ sub GetRc {
 	$showedit = &GetParam("showedit", $showedit);
 ###############
 ### added by gypark
-### ÃÖ±Ù º¯°æ ³»¿ª°ú rss ¿¡ ¾ÆÀÌÅÛ °¹¼ö ÁöÁ¤ ¿É¼Ç
+### ìµœê·¼ ë³€ê²½ ë‚´ì—­ê³¼ rss ì— ì•„ì´í…œ ê°¯ìˆ˜ ì§€ì • ì˜µì…˜
 	my $num_items = &GetParam("items", 0);
 	my $num_printed = 0;
 ###
@@ -8857,7 +8857,7 @@ sub GetRc {
 	$tChanges = T('changes');
 ###############
 ### replaced by gypark
-### ºÏ¸¶Å©
+### ë¶ë§ˆí¬
 #	$diffPrefix = $QuotedFullUrl . &QuoteHtml("?action=browse\&diff=4\&id=");
 	$diffPrefix = $QuotedFullUrl . &QuoteHtml(&ScriptLinkChar()."action=browse\&diff=5\&id=");
 ###
@@ -8887,7 +8887,7 @@ sub GetRc {
 		next if (&PageIsHidden($pagename));
 ###############
 ### added by gypark
-### ÃÖ±Ù º¯°æ ³»¿ª°ú rss ¿¡ ¾ÆÀÌÅÛ °¹¼ö ÁöÁ¤ ¿É¼Ç
+### ìµœê·¼ ë³€ê²½ ë‚´ì—­ê³¼ rss ì— ì•„ì´í…œ ê°¯ìˆ˜ ì§€ì • ì˜µì…˜
 		$num_printed++;
 		last if (($num_items > 0) && ($num_printed > $num_items));
 ###
@@ -8986,7 +8986,7 @@ RSS
 }
 
 sub GetHtmlRcLine {
-### ÇöÀç´Â »ç¿ëµÇÁö ¾ÊÀ½
+### í˜„ì¬ëŠ” ì‚¬ìš©ë˜ì§€ ì•ŠìŒ
 	die "GetHtmlRcLine -- must not be executed!!!";
 }
 
@@ -9154,7 +9154,7 @@ sub GetTrackbackGuide {
 	$result .= "</DIV>";
 }
 
-# ±İÁö´Ü¾î
+# ê¸ˆì§€ë‹¨ì–´
 sub TextIsBanned {
 	my ($text) = @_;
 	my ($data, $status);
@@ -9187,7 +9187,7 @@ sub encode_korean {
 	return $str;
 }
 
-# ÀÎÀÚ¸¦ $HashKey¸¦ salt·Î ÇÏ¿© cryptÇÏ°í, ¾ÕÀÇ µÎ ¹ÙÀÌÆ® Á¦¿ÜÇÏ¿© ¹İÈ¯
+# ì¸ìë¥¼ $HashKeyë¥¼ saltë¡œ í•˜ì—¬ cryptí•˜ê³ , ì•ì˜ ë‘ ë°”ì´íŠ¸ ì œì™¸í•˜ì—¬ ë°˜í™˜
 sub simple_crypt {
 	my ($orig) = @_;
 
@@ -9196,11 +9196,11 @@ sub simple_crypt {
 	return substr($encrypt, 2);
 }
 
-# ¼½¼Ç ´ÜÀ§ ÆíÁıÀ» À§ÇÑ ³»ºÎ ÇÔ¼ö
+# ì„¹ì…˜ ë‹¨ìœ„ í¸ì§‘ì„ ìœ„í•œ ë‚´ë¶€ í•¨ìˆ˜
 sub store_raw_codes {
 	my ($text) = @_;
 
-	# ÄÚµå´Â GetPageLinks ¿¡¼­ ´Ù½Ã °¡Á®¿È
+	# ì½”ë“œëŠ” GetPageLinks ì—ì„œ ë‹¤ì‹œ ê°€ì ¸ì˜´
 	$text =~ s/(<html>((.|\n)*?)<\/html>)/&StoreRaw($1)/ige;
 	$text =~ s/(<nowiki>(.|\n)*?\<\/nowiki>)/&StoreRaw($1)/ige;
 	$text =~ s/(<pre>(.|\n)*?\<\/pre>)/&StoreRaw($1)/ige;
@@ -9212,7 +9212,7 @@ sub store_raw_codes {
 	return $text;
 }
 
-### ÅëÃ¤·Î Ãß°¡ÇÑ ÇÔ¼öµéÀÇ ³¡
+### í†µì±„ë¡œ ì¶”ê°€í•œ í•¨ìˆ˜ë“¤ì˜ ë
 ###############
 
 &DoWikiRequest()  if ($RunCGI && ($_ ne 'nocgi'));   # Do everything.

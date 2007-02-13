@@ -4,12 +4,12 @@
 # by gypark (raymundo@kebi.com)
 # 2003-03-10
 
-# ´Ù¸¥ °÷¿¡ ¹é¾÷ÇØµĞ À§Å° µ¥ÀÌÅ¸¸¦ nobody ÀÇ ±ÇÇÑÀ¸·Î º¹»çÇÏ¿© º¹¿øÇÏ´Â ½ºÅ©¸³Æ®ÀÔ´Ï´Ù.
-# ½ºÅ©¸³Æ®ÀÇ ÆÛ¹Ì¼ÇÀ» 755 ·Î º¯°æÇÑ ÈÄ À¥ºê¶ó¿ìÀú¸¦ ÅëÇØ ½ÇÇàÇÏ¼¼¿ä.
+# ë‹¤ë¥¸ ê³³ì— ë°±ì—…í•´ë‘” ìœ„í‚¤ ë°ì´íƒ€ë¥¼ nobody ì˜ ê¶Œí•œìœ¼ë¡œ ë³µì‚¬í•˜ì—¬ ë³µì›í•˜ëŠ” ìŠ¤í¬ë¦½íŠ¸ì…ë‹ˆë‹¤.
+# ìŠ¤í¬ë¦½íŠ¸ì˜ í¼ë¯¸ì…˜ì„ 755 ë¡œ ë³€ê²½í•œ í›„ ì›¹ë¸Œë¼ìš°ì €ë¥¼ í†µí•´ ì‹¤í–‰í•˜ì„¸ìš”.
 
 umask 0;
 
-# ÆÄ¶ó¸ŞÅÍ ÀúÀå
+# íŒŒë¼ë©”í„° ì €ì¥
 if ($ENV{'QUERY_STRING'} ne "") {
 	@pairs = split(/&/, $ENV{'QUERY_STRING'});
 } else {
@@ -26,13 +26,13 @@ foreach (@pairs) {
 	$param{$name} = $value;
 }
 
-# ±¸µ¿
+# êµ¬ë™
 if (defined($param{'source'}) && defined($param{'dest'})) {
 	print_header();
 	if (copy_dir($param{'source'}, $param{'dest'})) {
-		print "<p><b>¼º°øÀûÀ¸·Î µ¥ÀÌÅ¸¸¦ º¹»çÇß½À´Ï´Ù.</b>";
+		print "<p><b>ì„±ê³µì ìœ¼ë¡œ ë°ì´íƒ€ë¥¼ ë³µì‚¬í–ˆìŠµë‹ˆë‹¤.</b>";
 	} else {
-		print "<p><b>µ¥ÀÌÅ¸ º¹»ç¿¡ ½ÇÆĞÇß½À´Ï´Ù.</b>";
+		print "<p><b>ë°ì´íƒ€ ë³µì‚¬ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.</b>";
 		print_form();
 		print_footer();
 	}
@@ -54,10 +54,10 @@ sub print_header {
 <title>restore the files to nobody's permission</title>
 </head>
 <body>
-µğ·ºÅä¸®¸¦ º¹»çÇØ ÁÖ´Â ½ºÅ©¸³Æ® ÀÔ´Ï´Ù.<br>
-À¥ºê¶ó¿ìÀú¸¦ ÅëÇØ¼­ CGI ·Î ½ÇÇàÀ» ÇÏ¸é,<br>
-ÀÚ½ÅÀÌ ¹é¾÷ÇØ µĞ À§Å°µ¥ÀÌÅ¸ µğ·ºÅä¸®¸¦ º¹»çÇÏ¿©<br>
-nobody ¼ÒÀ¯ÀÇ µğ·ºÅä¸®¿Í È­ÀÏ·Î ¸¸µé¾î Áİ´Ï´Ù.<br>
+ë””ë ‰í† ë¦¬ë¥¼ ë³µì‚¬í•´ ì£¼ëŠ” ìŠ¤í¬ë¦½íŠ¸ ì…ë‹ˆë‹¤.<br>
+ì›¹ë¸Œë¼ìš°ì €ë¥¼ í†µí•´ì„œ CGI ë¡œ ì‹¤í–‰ì„ í•˜ë©´,<br>
+ìì‹ ì´ ë°±ì—…í•´ ë‘” ìœ„í‚¤ë°ì´íƒ€ ë””ë ‰í† ë¦¬ë¥¼ ë³µì‚¬í•˜ì—¬<br>
+nobody ì†Œìœ ì˜ ë””ë ‰í† ë¦¬ì™€ í™”ì¼ë¡œ ë§Œë“¤ì–´ ì¤ë‹ˆë‹¤.<br>
 <p>
 <hr>
 END_OF_FILE
@@ -67,18 +67,18 @@ sub print_form {
 	print <<END_OF_FILE;
 <form method="post" action="restore.pl" name="form_input">
 <p>
-½ºÅ©¸³Æ®ÀÇ °æ·Î: $0<br>\n
+ìŠ¤í¬ë¦½íŠ¸ì˜ ê²½ë¡œ: $0<br>\n
 <p>
-º¸°üµÈ µ¥ÀÌÅ¸ µğ·ºÅä¸®ÀÇ °æ·Î : <input type="text" name="source" size="60" value="$param{'source'}" /><br>\n
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (¿¹: /home/foo/backup/data)<br>\n
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (ÀÌ µğ·ºÅä¸®°¡ ½Ã½ºÅÛ¿¡ Á¸ÀçÇØ¾ß ÇÕ´Ï´Ù)<br>\n
+ë³´ê´€ëœ ë°ì´íƒ€ ë””ë ‰í† ë¦¬ì˜ ê²½ë¡œ : <input type="text" name="source" size="60" value="$param{'source'}" /><br>\n
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (ì˜ˆ: /home/foo/backup/data)<br>\n
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (ì´ ë””ë ‰í† ë¦¬ê°€ ì‹œìŠ¤í…œì— ì¡´ì¬í•´ì•¼ í•©ë‹ˆë‹¤)<br>\n
 <p>
-º¹¿øÇÒ µ¥ÀÌÅ¸ µğ·ºÅä¸®ÀÇ °æ·Î : <input type="text" name="dest" size="60" value="$param{'dest'}" /><br>\n
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (¿¹: /home/foo/public_html/cgi-bin/wiki/data)<br>\n
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (ÀÌ µğ·ºÅä¸®°¡ ½Ã½ºÅÛ¿¡ Á¸ÀçÇÏ°í, ÆÛ¹Ì¼ÇÀÌ 777·Î µÇ¾î ÀÖÀ¸¸ç,<br>\n
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  µğ·ºÅä¸® ¾È¿¡ ´Ù¸¥ È­ÀÏÀÌ³ª µğ·ºÅä¸®°¡ ¾ø¾î¾ß ÇÕ´Ï´Ù)<br>\n
+ë³µì›í•  ë°ì´íƒ€ ë””ë ‰í† ë¦¬ì˜ ê²½ë¡œ : <input type="text" name="dest" size="60" value="$param{'dest'}" /><br>\n
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (ì˜ˆ: /home/foo/public_html/cgi-bin/wiki/data)<br>\n
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (ì´ ë””ë ‰í† ë¦¬ê°€ ì‹œìŠ¤í…œì— ì¡´ì¬í•˜ê³ , í¼ë¯¸ì…˜ì´ 777ë¡œ ë˜ì–´ ìˆìœ¼ë©°,<br>\n
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ë””ë ‰í† ë¦¬ ì•ˆì— ë‹¤ë¥¸ í™”ì¼ì´ë‚˜ ë””ë ‰í† ë¦¬ê°€ ì—†ì–´ì•¼ í•©ë‹ˆë‹¤)<br>\n
 <p>
-<input type="submit" name="copy" value="º¹»ç" />
+<input type="submit" name="copy" value="ë³µì‚¬" />
 </form>
 END_OF_FILE
 }
@@ -94,32 +94,32 @@ sub copy_dir {
 	my ($source, $dest) = @_;
 
 	if ($source eq "") {
-		print "<p><b>¿øº» µğ·ºÅä¸®ÀÇ °æ·Î¸¦ ÀÔ·ÂÇÏ¼¼¿ä</b>";
+		print "<p><b>ì›ë³¸ ë””ë ‰í† ë¦¬ì˜ ê²½ë¡œë¥¼ ì…ë ¥í•˜ì„¸ìš”</b>";
 		return 0;
 	}
 	if ($dest eq "") {
-		print "<p><b>º¹»çÇÒ ´ë»ó µğ·ºÅä¸®ÀÇ °æ·Î¸¦ ÀÔ·ÂÇÏ¼¼¿ä</b>";
+		print "<p><b>ë³µì‚¬í•  ëŒ€ìƒ ë””ë ‰í† ë¦¬ì˜ ê²½ë¡œë¥¼ ì…ë ¥í•˜ì„¸ìš”</b>";
 		return 0;
 	}
 	if (!(-d $source)) {
-		print "<p><b>¿øº» °æ·Î°¡ Á¸ÀçÇÏÁö ¾Ê°Å³ª, µğ·ºÅä¸®°¡ ¾Æ´Õ´Ï´Ù</b>";
+		print "<p><b>ì›ë³¸ ê²½ë¡œê°€ ì¡´ì¬í•˜ì§€ ì•Šê±°ë‚˜, ë””ë ‰í† ë¦¬ê°€ ì•„ë‹™ë‹ˆë‹¤</b>";
 		return 0;
 	}
 	if (!(-d $dest)) {
-		print "<p><b>´ë»ó °æ·Î°¡ Á¸ÀçÇÏÁö ¾Ê°Å³ª, µğ·ºÅä¸®°¡ ¾Æ´Õ´Ï´Ù</b>";
+		print "<p><b>ëŒ€ìƒ ê²½ë¡œê°€ ì¡´ì¬í•˜ì§€ ì•Šê±°ë‚˜, ë””ë ‰í† ë¦¬ê°€ ì•„ë‹™ë‹ˆë‹¤</b>";
 		return 0;
 	}
 	if (!(-w $dest)) {
-		print "<p><b>´ë»ó °æ·ÎÀÇ ÆÛ¹Ì¼ÇÀÌ ¿Ã¹Ù¸£Áö ¾Ê½À´Ï´Ù</b>";
+		print "<p><b>ëŒ€ìƒ ê²½ë¡œì˜ í¼ë¯¸ì…˜ì´ ì˜¬ë°”ë¥´ì§€ ì•ŠìŠµë‹ˆë‹¤</b>";
 		return 0;
 	}
 	opendir(DIR, $dest);
 	my @files = readdir(DIR);
 	if ($#files != 1) {
-		print "<p><b>´ë»ó µğ·ºÅä¸®°¡ ºñ¾î ÀÖÁö ¾Ê½À´Ï´Ù</b>";
+		print "<p><b>ëŒ€ìƒ ë””ë ‰í† ë¦¬ê°€ ë¹„ì–´ ìˆì§€ ì•ŠìŠµë‹ˆë‹¤</b>";
 		return 0;
 	}
-	print "<p><b>µ¥ÀÌÅ¸ º¹»ç¸¦ ½ÃÀÛÇÕ´Ï´Ù.</b>";
+	print "<p><b>ë°ì´íƒ€ ë³µì‚¬ë¥¼ ì‹œì‘í•©ë‹ˆë‹¤.</b>";
 	if (copy_dir_recursive($source, $dest)) {
 		return 1;
 	} else {
@@ -131,7 +131,7 @@ sub copy_dir {
 sub copy_dir_recursive {
 	my ($source, $dest) = @_;
 	if (!opendir (SOURCEDIR, "$source")) {
-		print "<p><b>$source µğ·ºÅä¸®¸¦ ¿©´Â µ¥ ½ÇÆĞÇß½À´Ï´Ù: $!</b>" ; 
+		print "<p><b>$source ë””ë ‰í† ë¦¬ë¥¼ ì—¬ëŠ” ë° ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤: $!</b>" ; 
 		return 0; 
 	}
 	my @sourcefiles = readdir(SOURCEDIR);
@@ -141,7 +141,7 @@ sub copy_dir_recursive {
 	foreach my $file (@sourcefiles) {
 		next if (($file eq ".") || ($file eq ".."));
 		if (-d "$source/$file") {
-			mkdir ("$dest/$file", 0775) or die "$dest/$file µğ·ºÅä¸® »ı¼º ½ÇÆĞ : $!";
+			mkdir ("$dest/$file", 0775) or die "$dest/$file ë””ë ‰í† ë¦¬ ìƒì„± ì‹¤íŒ¨ : $!";
 			copy_dir_recursive("$source/$file", "$dest/$file");
 		} else {
 			my $content;

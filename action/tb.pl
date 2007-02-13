@@ -19,14 +19,14 @@ sub action_tb {
 		return;
 	}
 
-# UTF-8 -> EUC-KR ÀüÈ¯
+# UTF-8 -> EUC-KR ì „í™˜
 	if ($ENV{'CONTENT_TYPE'} and ($ENV{'CONTENT_TYPE'} =~ m/utf-8/i)) {
 		$title = encode_korean($title, 'utf-8', 'euc-kr');
 		$blog_name = encode_korean($blog_name, 'utf-8', 'euc-kr');
 		$excerpt = encode_korean($excerpt, 'utf-8', 'euc-kr');
 	}
 
-# ºí·Î±× Áö¿øÀ» À§ÇÑ ²Ç¼ö
+# ë¸”ë¡œê·¸ ì§€ì›ì„ ìœ„í•œ ê½ìˆ˜
 	my ($blogrcpage, $blogrccomment);
 	if ($id =~ m/(.+)(\/|%2f|%2F)(.+)/) {
 		$blogrcpage = "$1/BlogRc";
@@ -76,7 +76,7 @@ sub action_tb {
 			"** " . &T('Content:') . " $excerpt";
 		$string =~ s/($macro)/$newtrackbackreceived\n$1/;
 
-# ºí·Î±× Áö¿øÀ» À§ÇÑ ²Ç¼ö
+# ë¸”ë¡œê·¸ ì§€ì›ì„ ìœ„í•œ ê½ìˆ˜
 		if ($blogrcpage) {
 			$blogrccomment =~ s/(\r?\n)/ /g;
 			$blogrccomment =~ s/\[/{/g;

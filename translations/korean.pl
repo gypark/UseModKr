@@ -2,375 +2,375 @@
 # UseModWiki language pack for Korean language
 # by gypark < raymundo AT kebi.com >
 
-# ÇÑ±¹¾î ¾ð¾îÆÑÀÔ´Ï´Ù.
-# ¾Æ·¡¿¡ ³ª¿­µÈ ¹ø¿ª¹® Áß ÀÏºÎ´Â  Luke ´ÔÀÇ ÇÑ±Û ÆÐÄ¡·ÎºÎÅÍ,
-# ÀÏºÎ´Â danny ´ÔÀÇ ÆÐÄ¡·ÎºÎÅÍ °¡Á®¿À°í ³ª¸ÓÁö´Â Á÷Á¢ ¼öÁ¤Çß½À´Ï´Ù.
+# í•œêµ­ì–´ ì–¸ì–´íŒ©ìž…ë‹ˆë‹¤.
+# ì•„ëž˜ì— ë‚˜ì—´ëœ ë²ˆì—­ë¬¸ ì¤‘ ì¼ë¶€ëŠ”  Luke ë‹˜ì˜ í•œê¸€ íŒ¨ì¹˜ë¡œë¶€í„°,
+# ì¼ë¶€ëŠ” danny ë‹˜ì˜ íŒ¨ì¹˜ë¡œë¶€í„° ê°€ì ¸ì˜¤ê³  ë‚˜ë¨¸ì§€ëŠ” ì§ì ‘ ìˆ˜ì •í–ˆìŠµë‹ˆë‹¤.
 
-# ÀÌ È­ÀÏÀ» À§Å°À§Å°°¡ ¼³Ä¡µÈ µð·ºÅä¸®¿¡ µÎ°í, config.pl È­ÀÏ ¸¶Áö¸·¿¡
+# ì´ í™”ì¼ì„ ìœ„í‚¤ìœ„í‚¤ê°€ ì„¤ì¹˜ëœ ë””ë ‰í† ë¦¬ì— ë‘ê³ , config.pl í™”ì¼ ë§ˆì§€ë§‰ì—
 #
 #             do "./korean.pl";
 #
-# °ú °°ÀÌ Àû¾îÁÖ½Ã¸é µË´Ï´Ù. (¿ÞÂÊÀÇ #Àº Á¦°ÅÇÏ¼¼¿ä)
+# ê³¼ ê°™ì´ ì ì–´ì£¼ì‹œë©´ ë©ë‹ˆë‹¤. (ì™¼ìª½ì˜ #ì€ ì œê±°í•˜ì„¸ìš”)
 
 %Translate = split('\n',<<END_OF_TRANSLATION);
 Could not create %s
-%s ¸¦ »ý¼ºÇÒ ¼ö ¾ø½À´Ï´Ù
+%s ë¥¼ ìƒì„±í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤
 Showing revision %s
-%s ¹øÂ° ¼öÁ¤º»
+%s ë²ˆì§¸ ìˆ˜ì •ë³¸
 Revision %s not available
-%s ¹øÂ° ¼öÁ¤º»À» Ã£À» ¼ö ¾ø½À´Ï´Ù.
+%s ë²ˆì§¸ ìˆ˜ì •ë³¸ì„ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.
 showing current revision instead
-ÃÖÁ¾º»À» ´ë½Å º¸¿©µå¸³´Ï´Ù
+ìµœì¢…ë³¸ì„ ëŒ€ì‹  ë³´ì—¬ë“œë¦½ë‹ˆë‹¤
 Updates since %s
-%s ÀÌÈÄºÎÅÍÀÇ º¯°æ
+%s ì´í›„ë¶€í„°ì˜ ë³€ê²½
 Updates in the last %s day
-Áö³­ %s ÀÏ Àü ÀÌÈÄºÎÅÍÀÇ º¯°æ
+ì§€ë‚œ %s ì¼ ì „ ì´í›„ë¶€í„°ì˜ ë³€ê²½
 Updates in the last %s days
-Áö³­ %s ÀÏ Àü ÀÌÈÄºÎÅÍÀÇ º¯°æ
+ì§€ë‚œ %s ì¼ ì „ ì´í›„ë¶€í„°ì˜ ë³€ê²½
 Could not open %s log file
-%s ÀÇ ·Î±× È­ÀÏÀ» ¿­ ¼ö ¾ø½À´Ï´Ù
+%s ì˜ ë¡œê·¸ í™”ì¼ì„ ì—´ ìˆ˜ ì—†ìŠµë‹ˆë‹¤
 Error was
-´ÙÀ½ ¿¡·¯°¡ ¹ß»ýÇß½À´Ï´Ù
+ë‹¤ìŒ ì—ëŸ¬ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤
 Note: This error is normal if no changes have been made.
-À¯ÀÇ: ÆäÀÌÁö »ý¼ºÀÌ³ª ¼öÁ¤ÀÌ ÀüÇô ÀÌ·ïÁöÁö ¾ÊÀº »óÅÂ¶ó¸é ÀÌ ¿¡·¯°¡ ¹ß»ýÇÏ´Â °ÍÀº Á¤»óÀÔ´Ï´Ù.
+ìœ ì˜: íŽ˜ì´ì§€ ìƒì„±ì´ë‚˜ ìˆ˜ì •ì´ ì „í˜€ ì´ë¤„ì§€ì§€ ì•Šì€ ìƒíƒœë¼ë©´ ì´ ì—ëŸ¬ê°€ ë°œìƒí•˜ëŠ” ê²ƒì€ ì •ìƒìž…ë‹ˆë‹¤.
 Could not open old %s log file
-%s ÀÇ ÀÌÀü ·Î±× È­ÀÏÀ» ¿­ ¼ö ¾ø½À´Ï´Ù.
+%s ì˜ ì´ì „ ë¡œê·¸ í™”ì¼ì„ ì—´ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.
 for %s only
 
 %s day
-%s ÀÏÀü
+%s ì¼ì „
 %s days
-%s ÀÏÀü
+%s ì¼ì „
 List new changes starting from
-ÀÌ ³¯ ÀÌÈÄÀÇ º¯°æ ¸®½ºÆ® º¸±â:
+ì´ ë‚  ì´í›„ì˜ ë³€ê²½ ë¦¬ìŠ¤íŠ¸ ë³´ê¸°:
 No updates since %s
-%s ÀÌÈÄºÎÅÍ º¯°æ ³»¿ëÀÌ ¾ø½À´Ï´Ù.
+%s ì´í›„ë¶€í„° ë³€ê²½ ë‚´ìš©ì´ ì—†ìŠµë‹ˆë‹¤.
 Page generated %s
-ÆäÀÌÁö »ý¼ºÀÏÀÚ: %s
+íŽ˜ì´ì§€ ìƒì„±ì¼ìž: %s
 (edit)
-(¼öÁ¤)
+(ìˆ˜ì •)
 (diff)
-(º¯°æ»çÇ×)
+(ë³€ê²½ì‚¬í•­)
 (diff [d])
-(º¯°æ»çÇ× [d])
+(ë³€ê²½ì‚¬í•­ [d])
 changes
-¹ø º¯°æµÊ
+ë²ˆ ë³€ê²½ë¨
 History of %s
-"%s" ÆäÀÌÁöÀÇ º¯°æ ³»¿ª
+"%s" íŽ˜ì´ì§€ì˜ ë³€ê²½ ë‚´ì—­
 Revision %s
-%s ¹øÂ° ¼öÁ¤º»
+%s ë²ˆì§¸ ìˆ˜ì •ë³¸
 View
-º¸±â
+ë³´ê¸°
 Edit
-¼öÁ¤
+ìˆ˜ì •
 Diff
-º¯°æ»çÇ×
+ë³€ê²½ì‚¬í•­
 by
-¼öÁ¤ÇÑ »ç¶÷:
+ìˆ˜ì •í•œ ì‚¬ëžŒ:
 Preferences
-È¯°æ¼³Á¤
+í™˜ê²½ì„¤ì •
 Random Page
-¿À´ÃÀÇ ÆäÀÌÁö
+ì˜¤ëŠ˜ì˜ íŽ˜ì´ì§€
 ID %s
 
 from %s
 
 [Home]
-[Ã¹È­¸éÀ¸·Î]
+[ì²«í™”ë©´ìœ¼ë¡œ]
 redirected from %s
-%s ÆäÀÌÁö·ÎºÎÅÍ ÀÚµ¿À¸·Î ÀÌµ¿
+%s íŽ˜ì´ì§€ë¡œë¶€í„° ìžë™ìœ¼ë¡œ ì´ë™
 Edit revision %s of this page
-%s ¹øÂ° ¼öÁ¤º» ÆíÁý
+%s ë²ˆì§¸ ìˆ˜ì •ë³¸ íŽ¸ì§‘
 Edit text of this page
-ÀÌ ÆäÀÌÁö¸¦ ¼öÁ¤
+ì´ íŽ˜ì´ì§€ë¥¼ ìˆ˜ì •
 This page is read-only
-ÀÌ ÆäÀÌÁö´Â ¼öÁ¤ÀÌ ºÒ°¡´ÉÇÕ´Ï´Ù
+ì´ íŽ˜ì´ì§€ëŠ” ìˆ˜ì •ì´ ë¶ˆê°€ëŠ¥í•©ë‹ˆë‹¤
 View other revisions
-´Ù¸¥ ¼öÁ¤º» º¸±â
+ë‹¤ë¥¸ ìˆ˜ì •ë³¸ ë³´ê¸°
 View current revision
-ÇöÀç ¼öÁ¤º» º¸±â
+í˜„ìž¬ ìˆ˜ì •ë³¸ ë³´ê¸°
 Last edited
-¸¶Áö¸· ÆíÁýÀÏ:
+ë§ˆì§€ë§‰ íŽ¸ì§‘ì¼:
 Edited
-ÀÌ ¼öÁ¤º» ÆíÁýÀÏ:
+ì´ ìˆ˜ì •ë³¸ íŽ¸ì§‘ì¼:
 Warning
-°æ°í
+ê²½ê³ 
 Database is stored in temporary directory %s
-µ¥ÀÌÅ¸º£ÀÌ½º°¡ ÀÓ½Ã µð·ºÅä¸® %s ¿¡ ÀúÀåµË´Ï´Ù.
+ë°ì´íƒ€ë² ì´ìŠ¤ê°€ ìž„ì‹œ ë””ë ‰í† ë¦¬ %s ì— ì €ìž¥ë©ë‹ˆë‹¤.
 Search:
-°Ë»ö:
+ê²€ìƒ‰:
 Your browser should go to the %s page.
-%s ÆäÀÌÁö·Î ÀÌµ¿ÇØ¾ß ÇÕ´Ï´Ù.
+%s íŽ˜ì´ì§€ë¡œ ì´ë™í•´ì•¼ í•©ë‹ˆë‹¤.
 If it does not, click %s to continue.
-Á¦´ë·Î ÀÌµ¿ÇÏÁö ¾Ê´Â´Ù¸é, %s ¸¦ Å¬¸¯ÇÏ¼¼¿ä.
+ì œëŒ€ë¡œ ì´ë™í•˜ì§€ ì•ŠëŠ”ë‹¤ë©´, %s ë¥¼ í´ë¦­í•˜ì„¸ìš”.
 Thanks for editing...
 
 Thank you for editing %s.
 
 Link to another page...
-´Ù¸¥ ÆäÀÌÁö·Î ¸µÅ©µÇ¾î ÀÖ½À´Ï´Ù...
+ë‹¤ë¥¸ íŽ˜ì´ì§€ë¡œ ë§í¬ë˜ì–´ ìžˆìŠµë‹ˆë‹¤...
 Follow the %s link to continue.
-°è¼ÓÇÏ½Ã·Á¸é ´ÙÀ½ ¸µÅ©¸¦ Å¬¸¯ÇÏ¼¼¿ä: %s
+ê³„ì†í•˜ì‹œë ¤ë©´ ë‹¤ìŒ ë§í¬ë¥¼ í´ë¦­í•˜ì„¸ìš”: %s
 alternate
 
 search
 
 major diff
-ÀÏ¹ÝÀûÀÎ ¼öÁ¤
+ì¼ë°˜ì ì¸ ìˆ˜ì •
 minor diff
-¼Ò¼ÒÇÑ ¼öÁ¤
+ì†Œì†Œí•œ ìˆ˜ì •
 author diff
-´Ù¸¥ »ç¿ëÀÚ¿¡ ÀÇÇÑ ¼öÁ¤
+ë‹¤ë¥¸ ì‚¬ìš©ìžì— ì˜í•œ ìˆ˜ì •
 major
-ÀÏ¹ÝÀûÀÎ
+ì¼ë°˜ì ì¸
 minor
-¼Ò¼ÒÇÑ
+ì†Œì†Œí•œ
 author
-´Ù¸¥ »ç¿ëÀÚ¿¡ ÀÇÇÑ
+ë‹¤ë¥¸ ì‚¬ìš©ìžì— ì˜í•œ
 (The revisions are identical or unavailable.)
-(µÎ ¼öÁ¤º»ÀÇ ³»¿ëÀÌ µ¿ÀÏÇÏ°Å³ª, ¼öÁ¤º»À» ºñ±³ÇÒ ¼ö ¾øÀ½.)
+(ë‘ ìˆ˜ì •ë³¸ì˜ ë‚´ìš©ì´ ë™ì¼í•˜ê±°ë‚˜, ìˆ˜ì •ë³¸ì„ ë¹„êµí•  ìˆ˜ ì—†ìŒ.)
 no other diffs
-´Ù¸¥ º¯°æ»çÇ× ¾øÀ½
+ë‹¤ë¥¸ ë³€ê²½ì‚¬í•­ ì—†ìŒ
 No diff available.
-º¯°æ»çÇ× ¾øÀ½.
+ë³€ê²½ì‚¬í•­ ì—†ìŒ.
 Difference (from revision %s to current revision)
-º¯°æ»çÇ× (%s ¹øÂ° ¹öÀüºÎÅÍ ÇöÀç ¹öÀü±îÁö)
+ë³€ê²½ì‚¬í•­ (%s ë²ˆì§¸ ë²„ì „ë¶€í„° í˜„ìž¬ ë²„ì „ê¹Œì§€)
 No diff available--this is the first %s revision.
-º¯°æ»çÇ× ¾øÀ½--ÀÌ°ÍÀÌ Ã¹¹øÂ° %s ¹öÀüÀÓ.
+ë³€ê²½ì‚¬í•­ ì—†ìŒ--ì´ê²ƒì´ ì²«ë²ˆì§¸ %s ë²„ì „ìž„.
 Difference (from prior %s revision)
-º¯°æ»çÇ× (°¡Àå ÃÖ±ÙÀÇ "%s ¼öÁ¤"ºÎÅÍ)
+ë³€ê²½ì‚¬í•­ (ê°€ìž¥ ìµœê·¼ì˜ "%s ìˆ˜ì •"ë¶€í„°)
 Changed:
-º¯°æ:
+ë³€ê²½:
 Removed:
-»èÁ¦:
+ì‚­ì œ:
 Added:
-Ãß°¡:
+ì¶”ê°€:
 Describe the new page here.
-ÆäÀÌÁöÀÇ ³»¿ëÀ» ÀÛ¼ºÇÏ¼¼¿ä.
+íŽ˜ì´ì§€ì˜ ë‚´ìš©ì„ ìž‘ì„±í•˜ì„¸ìš”.
 Bad page version (or corrupt page).
-ÆäÀÌÁö ¹öÀüÀÌ Àß¸øµÇ¾ú°Å³ª, ÆäÀÌÁö°¡ ¼Õ»óµÇ¾úÀ½.
+íŽ˜ì´ì§€ ë²„ì „ì´ ìž˜ëª»ë˜ì—ˆê±°ë‚˜, íŽ˜ì´ì§€ê°€ ì†ìƒë˜ì—ˆìŒ.
 cant write %s
-%s ¸¦ ±â·ÏÇÒ ¼ö ¾ø½À´Ï´Ù.
+%s ë¥¼ ê¸°ë¡í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.
 Page name is too long: %s
-ÆäÀÌÁö ÀÌ¸§ÀÌ ³Ê¹« ±é´Ï´Ù: %s
+íŽ˜ì´ì§€ ì´ë¦„ì´ ë„ˆë¬´ ê¹ë‹ˆë‹¤: %s
 Page name may not contain space characters: %s
-ÆäÀÌÁö ÀÌ¸§¿¡ °ø¹éÀÌ µé¾î°¡ ÀÖ½À´Ï´Ù: %s
+íŽ˜ì´ì§€ ì´ë¦„ì— ê³µë°±ì´ ë“¤ì–´ê°€ ìžˆìŠµë‹ˆë‹¤: %s
 Too many / characters in page %s
-ÆäÀÌÁö ÀÌ¸§¿¡ ½½·¡½¬°¡ ³Ê¹« ¸¹½À´Ï´Ù: %s
+íŽ˜ì´ì§€ ì´ë¦„ì— ìŠ¬ëž˜ì‰¬ê°€ ë„ˆë¬´ ë§ŽìŠµë‹ˆë‹¤: %s
 Invalid Page %s (subpage without main page)
-Àß¸øµÈ ÆäÀÌÁö: %s (¸ÞÀÎ ÆäÀÌÁö ÀÌ¸§ÀÌ ¾øÀ½)
+ìž˜ëª»ëœ íŽ˜ì´ì§€: %s (ë©”ì¸ íŽ˜ì´ì§€ ì´ë¦„ì´ ì—†ìŒ)
 Invalid Page %s (missing subpage name)
-Àß¸øµÈ ÆäÀÌÁö: %s (ÇÏÀ§ ÆäÀÌÁö ÀÌ¸§ÀÌ ¾øÀ½)
+ìž˜ëª»ëœ íŽ˜ì´ì§€: %s (í•˜ìœ„ íŽ˜ì´ì§€ ì´ë¦„ì´ ì—†ìŒ)
 Invalid Page %s (/ not allowed)
-Àß¸øµÈ ÆäÀÌÁö: %s (½½·¡½¬(/)´Â Çã¿ëµÇÁö ¾ÊÀ½)
+ìž˜ëª»ëœ íŽ˜ì´ì§€: %s (ìŠ¬ëž˜ì‰¬(/)ëŠ” í—ˆìš©ë˜ì§€ ì•ŠìŒ)
 Invalid Page %s
-Àß¸øµÈ ÆäÀÌÁö: %s
+ìž˜ëª»ëœ íŽ˜ì´ì§€: %s
 Invalid Page %s (must not end with .db)
-Àß¸øµÈ ÆäÀÌÁö: %s (.db ·Î ³¡³ª¸é ¾È µÊ)
+ìž˜ëª»ëœ íŽ˜ì´ì§€: %s (.db ë¡œ ëë‚˜ë©´ ì•ˆ ë¨)
 Invalid Page %s (must not end with .lck)
-Àß¸øµÈ ÆäÀÌÁö: %s (.lck ·Î ³¡³ª¸é ¾È µÊ)
+ìž˜ëª»ëœ íŽ˜ì´ì§€: %s (.lck ë¡œ ëë‚˜ë©´ ì•ˆ ë¨)
 can not make %s
-%s ¸¦ ¸¸µé ¼ö ¾ø½À´Ï´Ù.
+%s ë¥¼ ë§Œë“¤ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.
 Can not open %s
-%s ¸¦ ¿­ ¼ö ¾ø½À´Ï´Ù.
+%s ë¥¼ ì—´ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.
 Invalid action parameter %s
-Àß¸øµÈ action ÆÄ¶ó¸ÞÅÍ: %s
+ìž˜ëª»ëœ action íŒŒë¼ë©”í„°: %s
 Invalid URL.
-Àß¸øµÈ URLÀÔ´Ï´Ù.
+ìž˜ëª»ëœ URLìž…ë‹ˆë‹¤.
 Editing Denied
-¼öÁ¤ ºÒ°¡
+ìˆ˜ì • ë¶ˆê°€
 Editing not allowed: user, ip, or network is blocked.
-¼öÁ¤ÇÒ ¼ö ¾ø½À´Ï´Ù: »ç¿ëÀÚ, IPÁÖ¼Ò, ¶Ç´Â ³×Æ®¿÷ÀÌ Â÷´ÜµÇ¾ú½À´Ï´Ù.
+ìˆ˜ì •í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤: ì‚¬ìš©ìž, IPì£¼ì†Œ, ë˜ëŠ” ë„¤íŠ¸ì›ì´ ì°¨ë‹¨ë˜ì—ˆìŠµë‹ˆë‹¤.
 Contact the wiki administrator for more information.
-ÀÚ¼¼ÇÑ »çÇ×Àº À§Å° °ü¸®ÀÚ¿¡°Ô ¹®ÀÇÇÏ¼¼¿ä.
+ìžì„¸í•œ ì‚¬í•­ì€ ìœ„í‚¤ ê´€ë¦¬ìžì—ê²Œ ë¬¸ì˜í•˜ì„¸ìš”.
 Editing not allowed: %s is read-only.
-¼öÁ¤ÇÒ ¼ö ¾ø½À´Ï´Ù: %s ´Â ÀÐ±â Àü¿ë ÆäÀÌÁöÀÔ´Ï´Ù.
+ìˆ˜ì •í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤: %s ëŠ” ì½ê¸° ì „ìš© íŽ˜ì´ì§€ìž…ë‹ˆë‹¤.
 Editing %s
-%s ÆäÀÌÁö¸¦ ÆíÁý Áß
+%s íŽ˜ì´ì§€ë¥¼ íŽ¸ì§‘ ì¤‘
 Editing revision %s of
-%s ¹øÂ° ¼öÁ¤º»À» ÆíÁý Áß : 
+%s ë²ˆì§¸ ìˆ˜ì •ë³¸ì„ íŽ¸ì§‘ ì¤‘ : 
 Editing old revision %s.
-%s ¹øÂ° ¼öÁ¤º»À» ÆíÁýÁßÀÔ´Ï´Ù.
+%s ë²ˆì§¸ ìˆ˜ì •ë³¸ì„ íŽ¸ì§‘ì¤‘ìž…ë‹ˆë‹¤.
 Saving this page will replace the latest revision with this text.
-ÀÌ ÆäÀÌÁö¸¦ ÀúÀåÇÏ¸é ÆäÀÌÁö ÃÖÁ¾º»À» µ¤¾î¾²°Ô µË´Ï´Ù.
+ì´ íŽ˜ì´ì§€ë¥¼ ì €ìž¥í•˜ë©´ íŽ˜ì´ì§€ ìµœì¢…ë³¸ì„ ë®ì–´ì“°ê²Œ ë©ë‹ˆë‹¤.
 Edit Conflict!
-´Ù¸¥ »ç¿ëÀÚ°¡ ÀÌ¹Ì ÆäÀÌÁö¸¦ ¼öÁ¤ÇØ¹ö·È½À´Ï´Ù!
+ë‹¤ë¥¸ ì‚¬ìš©ìžê°€ ì´ë¯¸ íŽ˜ì´ì§€ë¥¼ ìˆ˜ì •í•´ë²„ë ¸ìŠµë‹ˆë‹¤!
 (This is a new conflict)
-(¶Ç´Ù½Ã Ãæµ¹ÀÌ ¹ß»ýÇß½À´Ï´Ù)
+(ë˜ë‹¤ì‹œ ì¶©ëŒì´ ë°œìƒí–ˆìŠµë‹ˆë‹¤)
 Someone saved this page after you started editing.
-±ÍÇÏ°¡ ÆäÀÌÁö ÆíÁýÀ» ½ÃÀÛÇÑ ÀÌÈÄ¿¡ ´Ù¸¥ »ç¿ëÀÚ°¡ ÀÌ ÆäÀÌÁöÀÇ ³»¿ëÀ» ¼öÁ¤ÇÏ¿© ÀúÀåÇß½À´Ï´Ù.
+ê·€í•˜ê°€ íŽ˜ì´ì§€ íŽ¸ì§‘ì„ ì‹œìž‘í•œ ì´í›„ì— ë‹¤ë¥¸ ì‚¬ìš©ìžê°€ ì´ íŽ˜ì´ì§€ì˜ ë‚´ìš©ì„ ìˆ˜ì •í•˜ì—¬ ì €ìž¥í–ˆìŠµë‹ˆë‹¤.
 The top textbox contains the saved text.
-¾Æ·¡ º¸ÀÌ´Â Ã¹¹øÂ° ÆíÁýÃ¢¿¡ »õ·Î ÀúÀåµÈ ³»¿ëÀÌ ÀÖ½À´Ï´Ù.
+ì•„ëž˜ ë³´ì´ëŠ” ì²«ë²ˆì§¸ íŽ¸ì§‘ì°½ì— ìƒˆë¡œ ì €ìž¥ëœ ë‚´ìš©ì´ ìžˆìŠµë‹ˆë‹¤.
 Only the text in the top textbox will be saved.
-ÀúÀå ¹öÆ°À» ´©¸£¸é Ã¹¹øÂ° ÆíÁýÃ¢¿¡ ÀÖ´Â ³»¿ëÀÌ ÀúÀåµË´Ï´Ù.
+ì €ìž¥ ë²„íŠ¼ì„ ëˆ„ë¥´ë©´ ì²«ë²ˆì§¸ íŽ¸ì§‘ì°½ì— ìžˆëŠ” ë‚´ìš©ì´ ì €ìž¥ë©ë‹ˆë‹¤.
 Scroll down to see your edited text.
-Ã¢À» ¾Æ·¡·Î ½ºÅ©·ÑÇÏ¸é ±ÍÇÏ°¡ ÀÛ¼ºÇÑ ³»¿ëÀ» º¼ ¼ö ÀÖ½À´Ï´Ù.
+ì°½ì„ ì•„ëž˜ë¡œ ìŠ¤í¬ë¡¤í•˜ë©´ ê·€í•˜ê°€ ìž‘ì„±í•œ ë‚´ìš©ì„ ë³¼ ìˆ˜ ìžˆìŠµë‹ˆë‹¤.
 Last save time:
-¸¶Áö¸· ÀúÀå ½Ã°¢:
+ë§ˆì§€ë§‰ ì €ìž¥ ì‹œê°:
 Current time is:
-ÇöÀç ½Ã°¢:
+í˜„ìž¬ ì‹œê°:
 Summary:
-º¯°æ»çÇ×¿ä¾à:
+ë³€ê²½ì‚¬í•­ìš”ì•½:
 This change is a minor edit.
-¼Ò¼ÒÇÑ ¼öÁ¤(minor edit)ÀÎ °æ¿ì Ã¼Å©.
+ì†Œì†Œí•œ ìˆ˜ì •(minor edit)ì¸ ê²½ìš° ì²´í¬.
 Send email notification that %s has been changed.
-%s ÆäÀÌÁö°¡ º¯°æµÇ¸é ¸ÞÀÏ·Î ¾Ë¸².
+%s íŽ˜ì´ì§€ê°€ ë³€ê²½ë˜ë©´ ë©”ì¼ë¡œ ì•Œë¦¼.
 Save
-ÀúÀå
+ì €ìž¥
 Your user name is
-ÇöÀç »ç¿ëÀÚ ÀÌ¸§ : 
+í˜„ìž¬ ì‚¬ìš©ìž ì´ë¦„ : 
 Visit %s to set your user name.
-»ç¿ëÀÚ ÀÌ¸§À» µî·ÏÇÏ·Á¸é %s À» Å¬¸¯ÇÏ¼¼¿ä.
+ì‚¬ìš©ìž ì´ë¦„ì„ ë“±ë¡í•˜ë ¤ë©´ %s ì„ í´ë¦­í•˜ì„¸ìš”.
 Preview
-¹Ì¸® º¸±â
+ë¯¸ë¦¬ ë³´ê¸°
 This is the text you submitted:
-´ÙÀ½Àº ±ÍÇÏ°¡ ÀÛ¼ºÇÑ ³»¿ëÀÔ´Ï´Ù:
+ë‹¤ìŒì€ ê·€í•˜ê°€ ìž‘ì„±í•œ ë‚´ìš©ìž…ë‹ˆë‹¤:
 Preview:
-¹Ì¸® º¸±â:
+ë¯¸ë¦¬ ë³´ê¸°:
 NOTE: This preview shows the revision of the other author.
-ÁÖÀÇ: ÀÌ ¹Ì¸®º¸±â¿¡¼­ º¸ÀÌ´Â °ÍÀº ´Ù¸¥ »ç¿ëÀÚ°¡ ¼öÁ¤ÇÑ ³»¿ëÀÔ´Ï´Ù.
+ì£¼ì˜: ì´ ë¯¸ë¦¬ë³´ê¸°ì—ì„œ ë³´ì´ëŠ” ê²ƒì€ ë‹¤ë¥¸ ì‚¬ìš©ìžê°€ ìˆ˜ì •í•œ ë‚´ìš©ìž…ë‹ˆë‹¤.
 Preview only, not yet saved
-À§¿¡ º¸ÀÌ´Â °ÍÀº ¹Ì¸®º¸±âÀÔ´Ï´Ù. ¾ÆÁ÷ ÀúÀåµÇÁö ¾Ê¾Ò½À´Ï´Ù.
+ìœ„ì— ë³´ì´ëŠ” ê²ƒì€ ë¯¸ë¦¬ë³´ê¸°ìž…ë‹ˆë‹¤. ì•„ì§ ì €ìž¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.
 Editing Preferences
-È¯°æ¼³Á¤
+í™˜ê²½ì„¤ì •
 User Information:
-»ç¿ëÀÚ Á¤º¸:
+ì‚¬ìš©ìž ì •ë³´:
 Your User ID number: %s
-»ç¿ëÀÚ ID ¹øÈ£: %s
+ì‚¬ìš©ìž ID ë²ˆí˜¸: %s
 UserName:
-»ç¿ëÀÚ ÀÌ¸§:
+ì‚¬ìš©ìž ì´ë¦„:
 (blank to remove, or valid page name)
-(»èÁ¦ÇÏ·Á¸é °ø¶õÀ¸·Î ³²°ÜµÎ¼¼¿ä)
+(ì‚­ì œí•˜ë ¤ë©´ ê³µëž€ìœ¼ë¡œ ë‚¨ê²¨ë‘ì„¸ìš”)
 Set Password:
-¾ÏÈ£ ¼³Á¤:
+ì•”í˜¸ ì„¤ì •:
 (blank to remove password)
-(¾ÏÈ£¸¦ Á¦°ÅÇÏ·Á¸é °ø¶õÀ¸·Î ³²°ÜµÎ¼¼¿ä)
+(ì•”í˜¸ë¥¼ ì œê±°í•˜ë ¤ë©´ ê³µëž€ìœ¼ë¡œ ë‚¨ê²¨ë‘ì„¸ìš”)
 Passwords allow sharing preferences between multiple systems.
-¾ÏÈ£¸¦ »ç¿ëÇÏ¸é ½Ã½ºÅÛÀ» ¿Å°Ü ´Ù´Ï¸é¼­ µ¿ÀÏÇÑ È¯°æÀ» »ç¿ëÇÒ ¼ö ÀÖ½À´Ï´Ù.
+ì•”í˜¸ë¥¼ ì‚¬ìš©í•˜ë©´ ì‹œìŠ¤í…œì„ ì˜®ê²¨ ë‹¤ë‹ˆë©´ì„œ ë™ì¼í•œ í™˜ê²½ì„ ì‚¬ìš©í•  ìˆ˜ ìžˆìŠµë‹ˆë‹¤.
 Passwords are completely optional.
-¾ÏÈ£´Â ¼±ÅÃ»çÇ×ÀÔ´Ï´Ù.
+ì•”í˜¸ëŠ” ì„ íƒì‚¬í•­ìž…ë‹ˆë‹¤.
 Administrator Password:
-°ü¸®ÀÚ ¾ÏÈ£:
+ê´€ë¦¬ìž ì•”í˜¸:
 (Administrator passwords are used for special maintenance.)
-(°ü¸®ÀÚ ¾ÏÈ£´Â Æ¯º°ÇÑ °ü¸®¸¦ À§ÇØ »ç¿ëµË´Ï´Ù.)
+(ê´€ë¦¬ìž ì•”í˜¸ëŠ” íŠ¹ë³„í•œ ê´€ë¦¬ë¥¼ ìœ„í•´ ì‚¬ìš©ë©ë‹ˆë‹¤.)
 Include this address in the site email list.
-¾Æ·¡ÀÇ ÁÖ¼Ò¸¦ »çÀÌÆ® ÀÌ¸ÞÀÏ ¸®½ºÆ®¿¡ Æ÷ÇÔÇÕ´Ï´Ù.
+ì•„ëž˜ì˜ ì£¼ì†Œë¥¼ ì‚¬ì´íŠ¸ ì´ë©”ì¼ ë¦¬ìŠ¤íŠ¸ì— í¬í•¨í•©ë‹ˆë‹¤.
 (Uncheck the box to remove the address.)
-(ÁÖ¼Ò¸¦ Á¦°ÅÇÏ·Á¸é ¿ÞÂÊÀÇ Ã¼Å©¸¦ ¾ø¾Ö¼¼¿ä.)
+(ì£¼ì†Œë¥¼ ì œê±°í•˜ë ¤ë©´ ì™¼ìª½ì˜ ì²´í¬ë¥¼ ì—†ì• ì„¸ìš”.)
 Email Address:
-ÀÌ¸ÞÀÏ ÁÖ¼Ò:
+ì´ë©”ì¼ ì£¼ì†Œ:
 Default days to display:
-ÃÖ±Ù ¸î ÀÏ µ¿¾ÈÀÇ º¯°æ³»¿ªÀ» Ãâ·ÂÇÒ±î¿ä:
+ìµœê·¼ ëª‡ ì¼ ë™ì•ˆì˜ ë³€ê²½ë‚´ì—­ì„ ì¶œë ¥í• ê¹Œìš”:
 Most recent changes on top
-°¡Àå ÃÖ±Ù º¯°æÀ» Á¦ÀÏ À§¿¡ Ãâ·Â
+ê°€ìž¥ ìµœê·¼ ë³€ê²½ì„ ì œì¼ ìœ„ì— ì¶œë ¥
 Show all changes (not just most recent)
-°¢ ÆäÀÌÁöÀÇ ¸ðµç º¯°æ ³»¿ªÀ» Ãâ·Â (Ã¼Å©ÇÏÁö ¾ÊÀ» °æ¿ì, °¡Àå ÃÖ±Ù º¯°æ¸¸ Ãâ·Â)
+ê° íŽ˜ì´ì§€ì˜ ëª¨ë“  ë³€ê²½ ë‚´ì—­ì„ ì¶œë ¥ (ì²´í¬í•˜ì§€ ì•Šì„ ê²½ìš°, ê°€ìž¥ ìµœê·¼ ë³€ê²½ë§Œ ì¶œë ¥)
 Hide minor edits
-°¨Ãã
+ê°ì¶¤
 Show minor edits
-º¸¿©ÁÜ
+ë³´ì—¬ì¤Œ
 Show only minor edits
-¼Ò¼ÒÇÑ ¼öÁ¤¸¸ º¸¿©ÁÜ
+ì†Œì†Œí•œ ìˆ˜ì •ë§Œ ë³´ì—¬ì¤Œ
 Minor edit display:
-¼Ò¼ÒÇÑ ¼öÁ¤(minor edit) Ãâ·Â:
+ì†Œì†Œí•œ ìˆ˜ì •(minor edit) ì¶œë ¥:
 Use "changes" as link to history
-"~¹ø º¯°æµÊ"À» Å¬¸¯ÇÏ¸é º¯°æ³»¿ª º¸±â·Î ÀÌµ¿
+"~ë²ˆ ë³€ê²½ë¨"ì„ í´ë¦­í•˜ë©´ ë³€ê²½ë‚´ì—­ ë³´ê¸°ë¡œ ì´ë™
 Differences:
-º¯°æµÈ ³»¿ë º¸±â:
+ë³€ê²½ëœ ë‚´ìš© ë³´ê¸°:
 Show (diff) links on %s
-%s ¿¡ (º¯°æ»çÇ×) ¸µÅ© Ç¥½Ã
+%s ì— (ë³€ê²½ì‚¬í•­) ë§í¬ í‘œì‹œ
 Show differences on all pages
-ÆäÀÌÁö¸¦ º¼ ¶§ ÆäÀÌÁöÀÇ ÃÖ±Ùº¯°æ »çÇ×À» Ç×»ó Ç¥½Ã
+íŽ˜ì´ì§€ë¥¼ ë³¼ ë•Œ íŽ˜ì´ì§€ì˜ ìµœê·¼ë³€ê²½ ì‚¬í•­ì„ í•­ìƒ í‘œì‹œ
 No differences on %s
-%s ÆäÀÌÁö´Â ¿¹¿Ü
+%s íŽ˜ì´ì§€ëŠ” ì˜ˆì™¸
 Major
-ÀÏ¹ÝÀûÀÎ ¼öÁ¤ (Major Edit)
+ì¼ë°˜ì ì¸ ìˆ˜ì • (Major Edit)
 Minor
-¼Ò¼ÒÇÑ ¼öÁ¤ (Minor Edit)
+ì†Œì†Œí•œ ìˆ˜ì • (Minor Edit)
 Author
-´Ù¸¥ »ç¿ëÀÚ¿¡ ÀÇÇÑ ¼öÁ¤ (Author)
+ë‹¤ë¥¸ ì‚¬ìš©ìžì— ì˜í•œ ìˆ˜ì • (Author)
 Default difference type:
-±âº»ÀûÀ¸·Î ´ÙÀ½ º¯°æ»çÇ×À» ±âÁØÀ¸·Î º¸¿©ÁÜ:
+ê¸°ë³¸ì ìœ¼ë¡œ ë‹¤ìŒ ë³€ê²½ì‚¬í•­ì„ ê¸°ì¤€ìœ¼ë¡œ ë³´ì—¬ì¤Œ:
 Misc:
-±âÅ¸ ¼³Á¤:
+ê¸°íƒ€ ì„¤ì •:
 Server time:
-ÇöÀç ¼­¹ö ½Ã°¢:
+í˜„ìž¬ ì„œë²„ ì‹œê°:
 Time Zone offset (hours):
-»ç¿ëÀÚÀÇ Ç¥ÁØ ½Ã°£´ë (¼­¹ö ½Ã°¢°ú Â÷ÀÌ. ½Ã°£ ´ÜÀ§):
+ì‚¬ìš©ìžì˜ í‘œì¤€ ì‹œê°„ëŒ€ (ì„œë²„ ì‹œê°ê³¼ ì°¨ì´. ì‹œê°„ ë‹¨ìœ„):
 Use 100% wide edit area (if supported)
-ÆíÁýÃ¢À» ºê¶ó¿ìÀú Ã¢ Æø¿¡ ¸ÂÃç ÃÖ´ëÇÑ ³Ð°Ô »ç¿ë
+íŽ¸ì§‘ì°½ì„ ë¸Œë¼ìš°ì € ì°½ í­ì— ë§žì¶° ìµœëŒ€í•œ ë„“ê²Œ ì‚¬ìš©
 Edit area rows:
-ÆíÁýÃ¢ÀÇ Çà ¼ö:
+íŽ¸ì§‘ì°½ì˜ í–‰ ìˆ˜:
 columns:
-¿­ ¼ö:
+ì—´ ìˆ˜:
 Show link bar on top
-È­¸é »ó´Ü¿¡ ¸Þ´º¸¦ º¸ÀÓ (ÁÖÀÇ: ÀÌ ¿É¼ÇÀ» ÇØÁ¦ÇÏ¸é »ó´ÜÀÇ ¸Þ´º¹Ù°¡ »ç¶óÁ® ¹ö¸³´Ï´Ù. À¢¸¸ÇÏ¸é °Çµå¸®Áö ¸¶¼¼¿ä!)
+í™”ë©´ ìƒë‹¨ì— ë©”ë‰´ë¥¼ ë³´ìž„ (ì£¼ì˜: ì´ ì˜µì…˜ì„ í•´ì œí•˜ë©´ ìƒë‹¨ì˜ ë©”ë‰´ë°”ê°€ ì‚¬ë¼ì ¸ ë²„ë¦½ë‹ˆë‹¤. ì›¬ë§Œí•˜ë©´ ê±´ë“œë¦¬ì§€ ë§ˆì„¸ìš”!)
 Add "Random Page" link to link bar
-"¿À´ÃÀÇ ÆäÀÌÁö" ¸µÅ©¸¦ ¸Þ´º¿¡ Æ÷ÇÔ
+"ì˜¤ëŠ˜ì˜ íŽ˜ì´ì§€" ë§í¬ë¥¼ ë©”ë‰´ì— í¬í•¨
 Saving Preferences
-È¯°æ¼³Á¤ ÀúÀå
+í™˜ê²½ì„¤ì • ì €ìž¥
 Invalid UserID %s, preferences not saved.
-%s ´Â Àß¸øµÈ »ç¿ëÀÚIDÀÔ´Ï´Ù. È¯°æ¼³Á¤ÀÌ ÀúÀåµÇÁö ¾Ê¾Ò½À´Ï´Ù.
+%s ëŠ” ìž˜ëª»ëœ ì‚¬ìš©ìžIDìž…ë‹ˆë‹¤. í™˜ê²½ì„¤ì •ì´ ì €ìž¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.
 (Preferences require cookies, but no cookie was sent.)
-È¯°æ¼³Á¤À» º¸°üÇÏ±â À§ÇØ¼­´Â ÄíÅ°°¡ ÇÊ¿äÇÕ´Ï´Ù. ÄíÅ°°¡ Àü¼ÛµÇÁö ¾Ê¾Ò½À´Ï´Ù.
+í™˜ê²½ì„¤ì •ì„ ë³´ê´€í•˜ê¸° ìœ„í•´ì„œëŠ” ì¿ í‚¤ê°€ í•„ìš”í•©ë‹ˆë‹¤. ì¿ í‚¤ê°€ ì „ì†¡ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.
 UserName removed.
-»ç¿ëÀÚ ÀÌ¸§ÀÌ »èÁ¦µÇ¾ú½À´Ï´Ù.
+ì‚¬ìš©ìž ì´ë¦„ì´ ì‚­ì œë˜ì—ˆìŠµë‹ˆë‹¤.
 Invalid UserName %s: not saved.
-%s ´Â Àß¸øµÈ »ç¿ëÀÚIDÀÔ´Ï´Ù: ÀúÀåÇÏÁö ¾ÊÀ½.
+%s ëŠ” ìž˜ëª»ëœ ì‚¬ìš©ìžIDìž…ë‹ˆë‹¤: ì €ìž¥í•˜ì§€ ì•ŠìŒ.
 UserName must be 50 characters or less. (not saved)
-»ç¿ëÀÚ¸íÀº 50±ÛÀÚ¸¦ ³ÑÀ» ¼ö ¾ø½À´Ï´Ù: ÀúÀåÇÏÁö ¾ÊÀ½.
+ì‚¬ìš©ìžëª…ì€ 50ê¸€ìžë¥¼ ë„˜ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤: ì €ìž¥í•˜ì§€ ì•ŠìŒ.
 UserName %s saved.
-»ç¿ëÀÚ¸í %s À» ÀúÀåÇßÀ½.
+ì‚¬ìš©ìžëª… %s ì„ ì €ìž¥í–ˆìŒ.
 Password removed.
-»ç¿ëÀÚ ¾ÏÈ£ Áö¿ò.
+ì‚¬ìš©ìž ì•”í˜¸ ì§€ì›€.
 Password changed.
-»ç¿ëÀÚ ¾ÏÈ£ º¯°æ.
+ì‚¬ìš©ìž ì•”í˜¸ ë³€ê²½.
 Administrator password removed.
-°ü¸®ÀÚ ¾ÏÈ£ Áö¿ò.
+ê´€ë¦¬ìž ì•”í˜¸ ì§€ì›€.
 Administrator password changed.
-°ü¸®ÀÚ ¾ÏÈ£ º¯°æ.
+ê´€ë¦¬ìž ì•”í˜¸ ë³€ê²½.
 User has administrative abilities.
-»ç¿ëÀÚ¿¡°Ô °ü¸®ÀÚ ±ÇÇÑÀÌ ºÎ¿©µÇ¾ú½À´Ï´Ù.
+ì‚¬ìš©ìžì—ê²Œ ê´€ë¦¬ìž ê¶Œí•œì´ ë¶€ì—¬ë˜ì—ˆìŠµë‹ˆë‹¤.
 User has editor abilities.
-»ç¿ëÀÚ¿¡°Ô ÆíÁýÀÚ ±ÇÇÑÀÌ ºÎ¿©µÇ¾ú½À´Ï´Ù.
+ì‚¬ìš©ìžì—ê²Œ íŽ¸ì§‘ìž ê¶Œí•œì´ ë¶€ì—¬ë˜ì—ˆìŠµë‹ˆë‹¤.
 User does not have administrative abilities.
-»ç¿ëÀÚ¿¡°Ô´Â °ü¸®ÀÚ ±ÇÇÑÀÌ ¾øÀ½.
+ì‚¬ìš©ìžì—ê²ŒëŠ” ê´€ë¦¬ìž ê¶Œí•œì´ ì—†ìŒ.
 (Password does not match administrative password(s).)
-(°ü¸®ÀÚ ¾ÏÈ£°¡ ÀÏÄ¡ÇÏÁö ¾ÊÀ½.)
+(ê´€ë¦¬ìž ì•”í˜¸ê°€ ì¼ì¹˜í•˜ì§€ ì•ŠìŒ.)
 Local time:
-ÇöÀç Áö¿ª ½Ã°¢:
+í˜„ìž¬ ì§€ì—­ ì‹œê°:
 Preferences saved.
-»ç¿ëÀÚ ¼³Á¤ÀÌ ÀúÀåµÇ¾ú½À´Ï´Ù.
+ì‚¬ìš©ìž ì„¤ì •ì´ ì €ìž¥ë˜ì—ˆìŠµë‹ˆë‹¤.
 Could not read from %s:
-%s ¸¦ ÀÐÀ» ¼ö ¾ø½À´Ï´Ù:
+%s ë¥¼ ì½ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤:
 Could not get mail lock
-¸ÞÀÏ¿¡ ´ëÇÑ ¶ôÀ» È¹µæÇÒ ¼ö ¾ø½À´Ï´Ù:
+ë©”ì¼ì— ëŒ€í•œ ë½ì„ íšë“í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤:
 Could not append to %s:
-%s ¿¡ µ¡ºÙ¿© ¾µ ¼ö ¾ø½À´Ï´Ù:
+%s ì— ë§ë¶™ì—¬ ì“¸ ìˆ˜ ì—†ìŠµë‹ˆë‹¤:
 Could not overwrite %s:
-%s ¸¦ µ¤¾î¾µ ¼ö ¾ø½À´Ï´Ù:
+%s ë¥¼ ë®ì–´ì“¸ ìˆ˜ ì—†ìŠµë‹ˆë‹¤:
 Index of all pages
-¸ðµç ÆäÀÌÁö ¸ñ·Ï
+ëª¨ë“  íŽ˜ì´ì§€ ëª©ë¡
 Login
-·Î±×ÀÎ
+ë¡œê·¸ì¸
 User ID number:
-»ç¿ëÀÚ ID ¹øÈ£:
+ì‚¬ìš©ìž ID ë²ˆí˜¸:
 Password:
-»ç¿ëÀÚ ¾ÏÈ£:
+ì‚¬ìš©ìž ì•”í˜¸:
 Login Results
-·Î±×ÀÎ °á°ú
+ë¡œê·¸ì¸ ê²°ê³¼
 Login for user ID %s complete.
-»ç¿ëÀÚ %s ÀÇ ·Î±×ÀÎ¿¡ ¼º°øÇÏ¿´½À´Ï´Ù.
+ì‚¬ìš©ìž %s ì˜ ë¡œê·¸ì¸ì— ì„±ê³µí•˜ì˜€ìŠµë‹ˆë‹¤.
 Login for user ID %s failed.
-»ç¿ëÀÚ %s ÀÇ ·Î±×ÀÎ¿¡ ½ÇÆÐÇÏ¿´½À´Ï´Ù.
+ì‚¬ìš©ìž %s ì˜ ë¡œê·¸ì¸ì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.
 Could not get user-ID lock
-»ç¿ëÀÚID ¿¡ ´ëÇÑ ¶ôÀ» È¹µæÇÒ ¼ö ¾ø½À´Ï´Ù.
+ì‚¬ìš©ìžID ì— ëŒ€í•œ ë½ì„ íšë“í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.
 Search for: %s
-°Ë»ö°á°ú : %s
+ê²€ìƒ‰ê²°ê³¼ : %s
 %s pages found:
-ÆäÀÌÁö ¼ö : %s
+íŽ˜ì´ì§€ ìˆ˜ : %s
 Full Link List
-ÀüÃ¼ ¸µÅ© ¸ñ·Ï
+ì „ì²´ ë§í¬ ëª©ë¡
 Editing not allowed for %s.
 
 SampleUndefinedPage
@@ -386,7 +386,7 @@ Could not get editing lock
 Normal Unlock.
 
 Removing edit lock
-ÆäÀÌÁö ¼öÁ¤½Ã »ý¼ºµÈ ¶ô Á¦°Å
+íŽ˜ì´ì§€ ìˆ˜ì •ì‹œ ìƒì„±ëœ ë½ ì œê±°
 This operation may take several seconds...
 
 Forced Unlock.
@@ -394,9 +394,9 @@ Forced Unlock.
 %s log error:
 
 can not write diff_log
-diff_log ¸¦ ±â·ÏÇÒ ¼ö ¾ø½À´Ï´Ù.
+diff_log ë¥¼ ê¸°ë¡í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.
 Maintenance on all pages
-ÀüÃ¼ ÆäÀÌÁö º¸¼ö
+ì „ì²´ íŽ˜ì´ì§€ ë³´ìˆ˜
 Maintenance not done.
 
 (Maintenance can only be done once every 12 hours.)
@@ -406,375 +406,375 @@ Remove the "maintain" file or wait.
 Could not get maintain-lock
 
 Processing rename/delete commands:
-ÆäÀÌÁö ÀÌ¸§º¯°æ/»èÁ¦ ¸í·É Ã³¸®Áß:
+íŽ˜ì´ì§€ ì´ë¦„ë³€ê²½/ì‚­ì œ ëª…ë ¹ ì²˜ë¦¬ì¤‘:
 This operation is restricted to site editors only...
-ÆíÁýÀÚ ±ÇÇÑÀÌ ÀÖ¾î¾ß ¼öÇàÇÒ ¼ö ÀÖ´Â ¸í·ÉÀÔ´Ï´Ù...
+íŽ¸ì§‘ìž ê¶Œí•œì´ ìžˆì–´ì•¼ ìˆ˜í–‰í•  ìˆ˜ ìžˆëŠ” ëª…ë ¹ìž…ë‹ˆë‹¤...
 This operation is restricted to administrators only...
-°ü¸®ÀÚ ±ÇÇÑÀÌ ÀÖ¾î¾ß ¼öÇàÇÒ ¼ö ÀÖ´Â ¸í·ÉÀÔ´Ï´Ù...
+ê´€ë¦¬ìž ê¶Œí•œì´ ìžˆì–´ì•¼ ìˆ˜í–‰í•  ìˆ˜ ìžˆëŠ” ëª…ë ¹ìž…ë‹ˆë‹¤...
 Set or Remove global edit lock
-ÀüÃ¼ »çÀÌÆ® ¼öÁ¤±ÝÁö ¼³Á¤ ¶Ç´Â ÇØÁ¦
+ì „ì²´ ì‚¬ì´íŠ¸ ìˆ˜ì •ê¸ˆì§€ ì„¤ì • ë˜ëŠ” í•´ì œ
 Edit lock created.
-»çÀÌÆ® ¼öÁ¤±ÝÁö°¡ ¼³Á¤µÇ¾ú½À´Ï´Ù.
+ì‚¬ì´íŠ¸ ìˆ˜ì •ê¸ˆì§€ê°€ ì„¤ì •ë˜ì—ˆìŠµë‹ˆë‹¤.
 Edit lock removed.
-»çÀÌÆ® ¼öÁ¤±ÝÁö°¡ ÇØÁ¦µÇ¾ú½À´Ï´Ù.
+ì‚¬ì´íŠ¸ ìˆ˜ì •ê¸ˆì§€ê°€ í•´ì œë˜ì—ˆìŠµë‹ˆë‹¤.
 Set or Remove page edit lock
-ÆäÀÌÁö ¼öÁ¤±ÝÁö ¼³Á¤ ¶Ç´Â ÇØÁ¦
+íŽ˜ì´ì§€ ìˆ˜ì •ê¸ˆì§€ ì„¤ì • ë˜ëŠ” í•´ì œ
 Missing page id to lock/unlock...
-¼öÁ¤±ÝÁö ¶Ç´Â ÇØÁ¦ÇÒ ÆäÀÌÁö ÀÌ¸§ÀÌ ´©¶ôµÇ¾ú½À´Ï´Ù...
+ìˆ˜ì •ê¸ˆì§€ ë˜ëŠ” í•´ì œí•  íŽ˜ì´ì§€ ì´ë¦„ì´ ëˆ„ë½ë˜ì—ˆìŠµë‹ˆë‹¤...
 Lock for %s created.
-%s ÆäÀÌÁö¿¡ ´ëÇÑ ¼öÁ¤±ÝÁö°¡ ¼³Á¤µÇ¾ú½À´Ï´Ù.
+%s íŽ˜ì´ì§€ì— ëŒ€í•œ ìˆ˜ì •ê¸ˆì§€ê°€ ì„¤ì •ë˜ì—ˆìŠµë‹ˆë‹¤.
 Lock for %s removed.
-%s ÆäÀÌÁö¿¡ ´ëÇÑ ¼öÁ¤±ÝÁö°¡ ÇØÁ¦µÇ¾ú½À´Ï´Ù.
+%s íŽ˜ì´ì§€ì— ëŒ€í•œ ìˆ˜ì •ê¸ˆì§€ê°€ í•´ì œë˜ì—ˆìŠµë‹ˆë‹¤.
 ########## appended for UseModWiki K3 (Korean characters support)  ##########
 ########## DO NOT insert any blank line below this line            ##########
 History
-º¯°æ³»¿ª º¸±â
+ë³€ê²½ë‚´ì—­ ë³´ê¸°
 Index
-ÆäÀÌÁö¸ñ·Ï
+íŽ˜ì´ì§€ëª©ë¡
 Admin
-°ü¸®
+ê´€ë¦¬
 Links
-¸µÅ©
+ë§í¬
 Logout
-·Î±×¾Æ¿ô
+ë¡œê·¸ì•„ì›ƒ
 Logout Results
-·Î±×¾Æ¿ô °á°ú
+ë¡œê·¸ì•„ì›ƒ ê²°ê³¼
 Logout for user ID %s complete.
-»ç¿ëÀÚ %s ÀÇ ·Î±×¾Æ¿ôÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù.
+ì‚¬ìš©ìž %s ì˜ ë¡œê·¸ì•„ì›ƒì´ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.
 Open in a New Window
-»õ Ã¢À¸·Î ¿­±â
+ìƒˆ ì°½ìœ¼ë¡œ ì—´ê¸°
 Popup Preview
-¹Ì¸® º¸±â
+ë¯¸ë¦¬ ë³´ê¸°
 Compare
-º¯°æ ºñ±³
+ë³€ê²½ ë¹„êµ
 Current Revision
-ÇöÀç ¹öÀü
+í˜„ìž¬ ë²„ì „
 (Difference from %s
-(%sºÎÅÍ
+(%së¶€í„°
 to %s)
-%s±îÁöÀÇ º¯°æ»çÇ×)
+%sê¹Œì§€ì˜ ë³€ê²½ì‚¬í•­)
 Create new UserName
-»õ·Î µî·ÏÇÏ±â
+ìƒˆë¡œ ë“±ë¡í•˜ê¸°
 lock
-Àá±Ý
+ìž ê¸ˆ
 unlock
-ÇØÁ¦
+í•´ì œ
 (locked)
-(Àá°åÀ½)
+(ìž ê²¼ìŒ)
 (read-only)
-(ÀÐ±âÀü¿ë)
+(ì½ê¸°ì „ìš©)
 Editing/Deleting page titles:
-ÆäÀÌÁö Á¦¸ñ º¯°æ ¶Ç´Â ÆäÀÌÁö »èÁ¦
+íŽ˜ì´ì§€ ì œëª© ë³€ê²½ ë˜ëŠ” íŽ˜ì´ì§€ ì‚­ì œ
 Enter one command on each line.  Commands are:
-ÇÑ ÁÙ¿¡ ÇÑ ¸í·É¾¿ ÀÔ·ÂÇÏ½Ã¿À. ¸í·ÉÀº ´ÙÀ½°ú °°½À´Ï´Ù:
+í•œ ì¤„ì— í•œ ëª…ë ¹ì”© ìž…ë ¥í•˜ì‹œì˜¤. ëª…ë ¹ì€ ë‹¤ìŒê³¼ ê°™ìŠµë‹ˆë‹¤:
 <tt>!PageName</tt> -- deletes the page called PageName
-<tt>!ÆäÀÌÁö¸í</tt> -- 'ÆäÀÌÁö¸í'¿¡ ÇØ´çÇÏ´Â ÆäÀÌÁö »èÁ¦
+<tt>!íŽ˜ì´ì§€ëª…</tt> -- 'íŽ˜ì´ì§€ëª…'ì— í•´ë‹¹í•˜ëŠ” íŽ˜ì´ì§€ ì‚­ì œ
 <tt>=OldPageName=NewPageName</tt> -- Renames OldPageName
-<tt>=ÀÌÀüÆäÀÌÁö¸í=»õÆäÀÌÁö¸í</tt> -- 'ÀÌÀüÆäÀÌÁö¸í'À» '»õÆäÀÌÁö¸í'À¸·Î º¯°æ.
+<tt>=ì´ì „íŽ˜ì´ì§€ëª…=ìƒˆíŽ˜ì´ì§€ëª…</tt> -- 'ì´ì „íŽ˜ì´ì§€ëª…'ì„ 'ìƒˆíŽ˜ì´ì§€ëª…'ìœ¼ë¡œ ë³€ê²½.
 to NewPageName and updates links to OldPageName.
-'ÀÌÀüÆäÀÌÁö¸í'À» °®´Â ¸ðµç ¸µÅ© º¯°æ
+'ì´ì „íŽ˜ì´ì§€ëª…'ì„ ê°–ëŠ” ëª¨ë“  ë§í¬ ë³€ê²½
 <tt>|OldPageName|NewPageName</tt> -- Changes links to OldPageName to NewPageName.
-<tt>|ÀÌÀüÆäÀÌÁö¸í|»õÆäÀÌÁö¸í</tt> -- 'ÀÌÀüÆäÀÌÁö¸í'À» ÂüÁ¶ÇÏ´Â ¸ðµç ¸µÅ©¸¦ '»õÆäÀÌÁö¸í'À¸·Î º¯°æ
+<tt>|ì´ì „íŽ˜ì´ì§€ëª…|ìƒˆíŽ˜ì´ì§€ëª…</tt> -- 'ì´ì „íŽ˜ì´ì§€ëª…'ì„ ì°¸ì¡°í•˜ëŠ” ëª¨ë“  ë§í¬ë¥¼ 'ìƒˆíŽ˜ì´ì§€ëª…'ìœ¼ë¡œ ë³€ê²½
 (Used to rename links to non-existing pages.)
-(Á¸ÀçÇÏÁö ¾Ê´Â ÆäÀÌÁö·Î ÇâÇÏ´Â ¸µÅ©¸¦ ¼öÁ¤ÇÒ ¶§ »ç¿ë.)
+(ì¡´ìž¬í•˜ì§€ ì•ŠëŠ” íŽ˜ì´ì§€ë¡œ í–¥í•˜ëŠ” ë§í¬ë¥¼ ìˆ˜ì •í•  ë•Œ ì‚¬ìš©.)
 Main Page:
-»óÀ§ÆäÀÌÁö:
+ìƒìœ„íŽ˜ì´ì§€:
 Create a new page : %s
-»õ·Î¿î ÆäÀÌÁö ¸¸µé±â : %s
+ìƒˆë¡œìš´ íŽ˜ì´ì§€ ë§Œë“¤ê¸° : %s
 Go
-¹Ù·Î °¡±â
+ë°”ë¡œ ê°€ê¸°
 Edit %s
-%s °»½Å
+%s ê°±ì‹ 
 Substitute text for rename
-Á¦¸ñ º¯°æÀ» À§ÇØ º»¹®µµ Ä¡È¯ (¿ø¹®: Substitute text for rename)
+ì œëª© ë³€ê²½ì„ ìœ„í•´ ë³¸ë¬¸ë„ ì¹˜í™˜ (ì›ë¬¸: Substitute text for rename)
 Finished command list.
-¸í·É ¼öÇàÀ» ¿Ï·áÇß½À´Ï´Ù.
+ëª…ë ¹ ìˆ˜í–‰ì„ ì™„ë£Œí–ˆìŠµë‹ˆë‹¤.
 Updating Links
-¸µÅ© °»½Å
+ë§í¬ ê°±ì‹ 
 Editing Links
-¸µÅ© º¯°æ
+ë§í¬ ë³€ê²½
 Delete-Page: page %s is invalid
-ÆäÀÌÁö »èÁ¦: %s ´Â ¿Ã¹Ù¸¥ ÆäÀÌÁö°¡ ¾Æ´Õ´Ï´Ù
+íŽ˜ì´ì§€ ì‚­ì œ: %s ëŠ” ì˜¬ë°”ë¥¸ íŽ˜ì´ì§€ê°€ ì•„ë‹™ë‹ˆë‹¤
 error is: %s
-´ÙÀ½ ¿¡·¯°¡ ¹ß»ýÇß½À´Ï´Ù: %s
+ë‹¤ìŒ ì—ëŸ¬ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤: %s
 Return to %s
-%s ÆäÀÌÁö·Î µ¹¾Æ°¡±â
+%s íŽ˜ì´ì§€ë¡œ ëŒì•„ê°€ê¸°
 Top
-Ã³À½À¸·Î
+ì²˜ìŒìœ¼ë¡œ
 Bottom
-¸¶Áö¸·À¸·Î
+ë§ˆì§€ë§‰ìœ¼ë¡œ
 Error: Can not update prefs. That ID already exists and does not match your ID.
-¿¡·¯: ÀÌ¹Ì Á¸ÀçÇÏ´Â ¾ÆÀÌµðÀÔ´Ï´Ù. ¼³Á¤À» ÀúÀåÇÒ ¼ö ¾ø½À´Ï´Ù.
+ì—ëŸ¬: ì´ë¯¸ ì¡´ìž¬í•˜ëŠ” ì•„ì´ë””ìž…ë‹ˆë‹¤. ì„¤ì •ì„ ì €ìž¥í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.
 RecentChanges
-ÃÖ±Ùº¯°æ³»¿ª
+ìµœê·¼ë³€ê²½ë‚´ì—­
 Su
-ÀÏ
+ì¼
 Mo
-¿ù
+ì›”
 Tu
-È­
+í™”
 We
-¼ö
+ìˆ˜
 Th
-¸ñ
+ëª©
 Fr
-±Ý
+ê¸ˆ
 Sa
-Åä
+í† 
 Displaying Wiki Version
-À§Å° ¹öÀü Á¤º¸
+ìœ„í‚¤ ë²„ì „ ì •ë³´
 UserName must be 4 characters or more. (not saved)
-»ç¿ëÀÚ¸íÀº ¿µ¹® 4ÀÚ ¶Ç´Â ÇÑ±Û 2ÀÚ ÀÌ»óÀÌ¾î¾ß ÇÕ´Ï´Ù: ÀúÀåÇÏÁö ¾ÊÀ½.
+ì‚¬ìš©ìžëª…ì€ ì˜ë¬¸ 4ìž ë˜ëŠ” í•œê¸€ 2ìž ì´ìƒì´ì–´ì•¼ í•©ë‹ˆë‹¤: ì €ìž¥í•˜ì§€ ì•ŠìŒ.
 Try Again
-´Ù½Ã ½Ãµµ
+ë‹¤ì‹œ ì‹œë„
 Login completed
-·Î±×ÀÎ ¼º°ø
+ë¡œê·¸ì¸ ì„±ê³µ
 Login failed
-·Î±×ÀÎ ½ÇÆÐ
+ë¡œê·¸ì¸ ì‹¤íŒ¨
 Links to %s
-%s ÀÇ ¿ª¸µÅ©
+%s ì˜ ì—­ë§í¬
 No reverse link.
-¿ª¸µÅ©°¡ ¾ø½À´Ï´Ù.
+ì—­ë§í¬ê°€ ì—†ìŠµë‹ˆë‹¤.
 %s includes external page
-%s ÆäÀÌÁö´Â ¿ÜºÎÀÇ ÆäÀÌÁö¸¦ Ç¥½ÃÇÕ´Ï´Ù.
+%s íŽ˜ì´ì§€ëŠ” ì™¸ë¶€ì˜ íŽ˜ì´ì§€ë¥¼ í‘œì‹œí•©ë‹ˆë‹¤.
 You need the web browser which supports frame tag.
-ÀÌ ÆäÀÌÁö¸¦ º¸·Á¸é, ÇÁ·¹ÀÓÀ» º¼ ¼ö ÀÖ´Â ºê¶ó¿ìÀú°¡ ÇÊ¿äÇÕ´Ï´Ù.
+ì´ íŽ˜ì´ì§€ë¥¼ ë³´ë ¤ë©´, í”„ë ˆìž„ì„ ë³¼ ìˆ˜ ìžˆëŠ” ë¸Œë¼ìš°ì €ê°€ í•„ìš”í•©ë‹ˆë‹¤.
 Make link at the first character of an empty page
-³»¿ëÀÌ ¾ø´Â ÆäÀÌÁöÀÇ ÀÌ¸§ Ã¹ ±ÛÀÚ¿¡ ¸µÅ©¸¦ ¸¸µê
+ë‚´ìš©ì´ ì—†ëŠ” íŽ˜ì´ì§€ì˜ ì´ë¦„ ì²« ê¸€ìžì— ë§í¬ë¥¼ ë§Œë“¦
 Keep login information
-ÀÚµ¿ ·Î±×ÀÎ »ç¿ë
+ìžë™ ë¡œê·¸ì¸ ì‚¬ìš©
 Update my bookmark timestamp
-ºÏ¸¶Å© Å¸ÀÓ½ºÅÆÇÁ °»½Å
+ë¶ë§ˆí¬ íƒ€ìž„ìŠ¤íƒ¬í”„ ê°±ì‹ 
 currently set to %s
-ÇöÀç´Â %s À¸·Î ¼³Á¤µÇ¾î ÀÖÀ½
+í˜„ìž¬ëŠ” %s ìœ¼ë¡œ ì„¤ì •ë˜ì–´ ìžˆìŒ
 set bookmark
-ºÏ¸¶Å© ÁöÁ¤
+ë¶ë§ˆí¬ ì§€ì •
 cant create directory %s
-%s µð·ºÅä¸®¸¦ »ý¼ºÇÒ ¼ö ¾ø½À´Ï´Ù
+%s ë””ë ‰í† ë¦¬ë¥¼ ìƒì„±í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤
 Editing Help :
-ÆíÁý µµ¿ò¸» :
+íŽ¸ì§‘ ë„ì›€ë§ :
 Make Page
-ÆäÀÌÁö ¸¸µé±â
+íŽ˜ì´ì§€ ë§Œë“¤ê¸°
 Text Formatting
-¹®Àå ±¸¼º
+ë¬¸ìž¥ êµ¬ì„±
 Link and Image
-¸µÅ©¿Í ÀÌ¹ÌÁö
+ë§í¬ì™€ ì´ë¯¸ì§€
 Table
-Ç¥ ¸¸µé±â
+í‘œ ë§Œë“¤ê¸°
 Macro
-¸ÅÅ©·Î
+ë§¤í¬ë¡œ
 Emoticon
-ÀÌ¸ðÆ¼ÄÜ
+ì´ëª¨í‹°ì½˜
 View revision %s of this page
-%s ¹øÂ° ¼öÁ¤º» ¼Ò½º º¸±â
+%s ë²ˆì§¸ ìˆ˜ì •ë³¸ ì†ŒìŠ¤ ë³´ê¸°
 View text of this page
-ÆäÀÌÁö ¼Ò½º º¸±â
+íŽ˜ì´ì§€ ì†ŒìŠ¤ ë³´ê¸°
 Viewing %s
-%s ÆäÀÌÁöÀÇ ¼Ò½º º¸±â
+%s íŽ˜ì´ì§€ì˜ ì†ŒìŠ¤ ë³´ê¸°
 Viewing revision %s of
-%s ¹øÂ° ¼öÁ¤º» ¼Ò½º º¸±â :
+%s ë²ˆì§¸ ìˆ˜ì •ë³¸ ì†ŒìŠ¤ ë³´ê¸° :
 %s hit
 
 %s hits
 
 This is the difference between the saved text and your text:
-´ÙÀ½Àº ÀúÀåµÈ ³»¿ë°ú ±ÍÇÏ°¡ ÀÛ¼ºÇÑ ³»¿ë Áß ¼­·Î ´Ù¸¥ ºÎºÐÀÔ´Ï´Ù:
+ë‹¤ìŒì€ ì €ìž¥ëœ ë‚´ìš©ê³¼ ê·€í•˜ê°€ ìž‘ì„±í•œ ë‚´ìš© ì¤‘ ì„œë¡œ ë‹¤ë¥¸ ë¶€ë¶„ìž…ë‹ˆë‹¤:
 Go to the on-line bookstore
-¿Â¶óÀÎ ¼­Á¡À¸·Î ÀÌµ¿
+ì˜¨ë¼ì¸ ì„œì ìœ¼ë¡œ ì´ë™
 Upload File
-È­ÀÏ ¾÷·Îµå
+í™”ì¼ ì—…ë¡œë“œ
 Upload completed successfully
-¾÷·Îµå°¡ ¼º°øÀûÀ¸·Î ³¡³µ½À´Ï´Ù
+ì—…ë¡œë“œê°€ ì„±ê³µì ìœ¼ë¡œ ëë‚¬ìŠµë‹ˆë‹¤
 Invalid filename
-È­ÀÏ ÀÌ¸§ÀÌ ¿Ã¹Ù¸£Áö ¾Ê½À´Ï´Ù
+í™”ì¼ ì´ë¦„ì´ ì˜¬ë°”ë¥´ì§€ ì•ŠìŠµë‹ˆë‹¤
 You can not upload html or any executable scripts
-html ¶Ç´Â ½ÇÇà ½ºÅ©¸³Æ®´Â ¿Ã¸± ¼ö ¾ø½À´Ï´Ù
+html ë˜ëŠ” ì‹¤í–‰ ìŠ¤í¬ë¦½íŠ¸ëŠ” ì˜¬ë¦´ ìˆ˜ ì—†ìŠµë‹ˆë‹¤
 File is too large
-È­ÀÏÀÌ ³Ê¹« Å®´Ï´Ù
+í™”ì¼ì´ ë„ˆë¬´ í½ë‹ˆë‹¤
 File has no content
-È­ÀÏÀÇ ³»¿ëÀÌ ¾ø½À´Ï´Ù
+í™”ì¼ì˜ ë‚´ìš©ì´ ì—†ìŠµë‹ˆë‹¤
 Failed to get lock
-¾÷·Îµå¸¦ À§ÇÑ lock À» ¾òÁö ¸øÇß½À´Ï´Ù
+ì—…ë¡œë“œë¥¼ ìœ„í•œ lock ì„ ì–»ì§€ ëª»í–ˆìŠµë‹ˆë‹¤
 Following is the Interlink of your file
-´ÙÀ½ ÁÖ¼Ò¸¦ º¹»çÇØ¼­ »ç¿ëÇÏ¼¼¿ä
+ë‹¤ìŒ ì£¼ì†Œë¥¼ ë³µì‚¬í•´ì„œ ì‚¬ìš©í•˜ì„¸ìš”
 Uploading is not allowed
-¾÷·Îµå°¡ Çã¿ëµÇÁö ¾Ê½À´Ï´Ù
+ì—…ë¡œë“œê°€ í—ˆìš©ë˜ì§€ ì•ŠìŠµë‹ˆë‹¤
 Select the file you want to upload
-¾÷·ÎµåÇÒ È­ÀÏÀ» ¼±ÅÃÇÏ¼¼¿ä
+ì—…ë¡œë“œí•  í™”ì¼ì„ ì„ íƒí•˜ì„¸ìš”
 File must be smaller than %s MB
-È­ÀÏ Å©±â´Â %s MB ÀÌÇÏ¿©¾ß ÇÕ´Ï´Ù.
+í™”ì¼ í¬ê¸°ëŠ” %s MB ì´í•˜ì—¬ì•¼ í•©ë‹ˆë‹¤.
 Upload
-¾÷·Îµå
+ì—…ë¡œë“œ
 cant opening %s
-%s ¸¦ ¿­ ¼ö ¾ø½À´Ï´Ù
+%s ë¥¼ ì—´ ìˆ˜ ì—†ìŠµë‹ˆë‹¤
 Delete
-»èÁ¦
+ì‚­ì œ
 File Name
-È­ÀÏ¸í
+í™”ì¼ëª…
 Size (byte)
-Å©±â (byte)
+í¬ê¸° (byte)
 Date
-³¯Â¥
+ë‚ ì§œ
 Total %s files
-ÀüÃ¼ È­ÀÏ °¹¼ö : %s
+ì „ì²´ í™”ì¼ ê°¯ìˆ˜ : %s
 Delete Checked Files
-¼±ÅÃÇÑ È­ÀÏ »èÁ¦
+ì„ íƒí•œ í™”ì¼ ì‚­ì œ
 Delete Uploaded Files
-¾÷·ÎµåÇÑ È­ÀÏ »èÁ¦
+ì—…ë¡œë“œí•œ í™”ì¼ ì‚­ì œ
 Deleting is not allowed
-È­ÀÏ »èÁ¦°¡ Çã¿ëµÇÁö ¾Ê½À´Ï´Ù
+í™”ì¼ ì‚­ì œê°€ í—ˆìš©ë˜ì§€ ì•ŠìŠµë‹ˆë‹¤
 %s is deleted successfully
-%s È­ÀÏÀÌ »èÁ¦µÇ¾ú½À´Ï´Ù
+%s í™”ì¼ì´ ì‚­ì œë˜ì—ˆìŠµë‹ˆë‹¤
 %s can not be deleted
-%s È­ÀÏÀ» »èÁ¦ÇÒ ¼ö ¾ø½À´Ï´Ù
+%s í™”ì¼ì„ ì‚­ì œí•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤
 Oekaki
-¿À¿¡Ä«Å°
+ì˜¤ì—ì¹´í‚¤
 Oekaki is not allowed
-¿À¿¡Ä«Å°¸¦ »ç¿ëÇÏ´Â °ÍÀÌ Çã¿ëµÇÁö ¾Ê½À´Ï´Ù
+ì˜¤ì—ì¹´í‚¤ë¥¼ ì‚¬ìš©í•˜ëŠ” ê²ƒì´ í—ˆìš©ë˜ì§€ ì•ŠìŠµë‹ˆë‹¤
 If saving oekaki was done successfully
-±×¸²ÀÌ Á¦´ë·Î ÀúÀåµÇ¾ú´Ù¸é
+ê·¸ë¦¼ì´ ì œëŒ€ë¡œ ì €ìž¥ë˜ì—ˆë‹¤ë©´
 If you want to paint a new picture
-¶Ç´Ù¸¥ ±×¸²À» ±×¸®°í ½Í´Ù¸é
+ë˜ë‹¤ë¥¸ ê·¸ë¦¼ì„ ê·¸ë¦¬ê³  ì‹¶ë‹¤ë©´
 If the picture above is not what you had painted, find your picture from the follwing list
-À§¿¡ ÀÖ´Â ±×¸²ÀÌ ±ÍÇÏ°¡ ±×¸° °ÍÀÌ ¾Æ´Ï¶ó¸é, ¾Æ·¡ÀÇ ¸ñ·Ï¿¡¼­ ±×¸²À» Ã£¾Æ º¸¼¼¿ä
+ìœ„ì— ìžˆëŠ” ê·¸ë¦¼ì´ ê·€í•˜ê°€ ê·¸ë¦° ê²ƒì´ ì•„ë‹ˆë¼ë©´, ì•„ëž˜ì˜ ëª©ë¡ì—ì„œ ê·¸ë¦¼ì„ ì°¾ì•„ ë³´ì„¸ìš”
 Oekaki paint
-¿À¿¡Ä«Å° ±×¸®±â
+ì˜¤ì—ì¹´í‚¤ ê·¸ë¦¬ê¸°
 Oekaki save
-¿À¿¡Ä«Å° ÀúÀå
+ì˜¤ì—ì¹´í‚¤ ì €ìž¥
 Oekaki exit
-¿À¿¡Ä«Å° Á¾·á
+ì˜¤ì—ì¹´í‚¤ ì¢…ë£Œ
 Add to my interest list
-°ü½ÉÀÖ´Â ÆäÀÌÁö·Î µî·Ï
+ê´€ì‹¬ìžˆëŠ” íŽ˜ì´ì§€ë¡œ ë“±ë¡
 Remove from interest list
-°ü½ÉÀÖ´Â ÆäÀÌÁö¿¡¼­ Á¦°Å
+ê´€ì‹¬ìžˆëŠ” íŽ˜ì´ì§€ì—ì„œ ì œê±°
 Fail to access Interest Page List
-°ü½ÉÀÖ´Â ÆäÀÌÁö ¸ñ·Ï ¼öÁ¤ ½ÇÆÐ
+ê´€ì‹¬ìžˆëŠ” íŽ˜ì´ì§€ ëª©ë¡ ìˆ˜ì • ì‹¤íŒ¨
 You must login to do this action
-ÀÌ ¸í·ÉÀ» ¼öÇàÇÏ±â À§ÇØ¼­´Â ·Î±×ÀÎÀ» ÇØ¾ß ÇÕ´Ï´Ù
+ì´ ëª…ë ¹ì„ ìˆ˜í–‰í•˜ê¸° ìœ„í•´ì„œëŠ” ë¡œê·¸ì¸ì„ í•´ì•¼ í•©ë‹ˆë‹¤
 Add a page to Interest Page List
-°ü½ÉÀÖ´Â ÆäÀÌÁö ¸ñ·Ï¿¡ Ãß°¡
+ê´€ì‹¬ìžˆëŠ” íŽ˜ì´ì§€ ëª©ë¡ì— ì¶”ê°€
 Remove a page from Interest Page List
-°ü½ÉÀÖ´Â ÆäÀÌÁö ¸ñ·Ï¿¡¼­ Á¦°Å
+ê´€ì‹¬ìžˆëŠ” íŽ˜ì´ì§€ ëª©ë¡ì—ì„œ ì œê±°
 Page %s does not exist
-%s ÆäÀÌÁö°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù
+%s íŽ˜ì´ì§€ê°€ ì¡´ìž¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤
 Page %s is added to your Interest Page List
-%s ÆäÀÌÁö¸¦ °ü½ÉÀÖ´Â ÆäÀÌÁö ¸ñ·Ï¿¡ Ãß°¡Çß½À´Ï´Ù
+%s íŽ˜ì´ì§€ë¥¼ ê´€ì‹¬ìžˆëŠ” íŽ˜ì´ì§€ ëª©ë¡ì— ì¶”ê°€í–ˆìŠµë‹ˆë‹¤
 Page %s is removed from your Interest Page List
-%s ÆäÀÌÁö¸¦ °ü½ÉÀÖ´Â ÆäÀÌÁö ¸ñ·Ï¿¡¼­ Á¦°ÅÇß½À´Ï´Ù
+%s íŽ˜ì´ì§€ë¥¼ ê´€ì‹¬ìžˆëŠ” íŽ˜ì´ì§€ ëª©ë¡ì—ì„œ ì œê±°í–ˆìŠµë‹ˆë‹¤
 Interesting Page
-°ü½ÉÀÖ´Â ÆäÀÌÁö
+ê´€ì‹¬ìžˆëŠ” íŽ˜ì´ì§€
 (hidden)
-(¼û°ÜÁü)
+(ìˆ¨ê²¨ì§)
 hide
-¼û±è
+ìˆ¨ê¹€
 unhide
-µå·¯³¿
+ë“œëŸ¬ëƒ„
 Hide or Unhide page
-ÆäÀÌÁö ¼û±è ¼³Á¤ ¶Ç´Â ÇØÁ¦
+íŽ˜ì´ì§€ ìˆ¨ê¹€ ì„¤ì • ë˜ëŠ” í•´ì œ
 Missing page id to hide/unhide
-¼û±è ¶Ç´Â ÇØÁ¦ÇÒ ÆäÀÌÁö ÀÌ¸§ÀÌ ´©¶ôµÇ¾ú½À´Ï´Ù...
+ìˆ¨ê¹€ ë˜ëŠ” í•´ì œí•  íŽ˜ì´ì§€ ì´ë¦„ì´ ëˆ„ë½ë˜ì—ˆìŠµë‹ˆë‹¤...
 %s is hidden.
-%s ÆäÀÌÁöÀÇ ¼û±è ¼Ó¼ºÀ» ¼³Á¤Çß½À´Ï´Ù.
+%s íŽ˜ì´ì§€ì˜ ìˆ¨ê¹€ ì†ì„±ì„ ì„¤ì •í–ˆìŠµë‹ˆë‹¤.
 %s is revealed.
-%s ÆäÀÌÁöÀÇ ¼û±è ¼Ó¼ºÀ» Á¦°ÅÇß½À´Ï´Ù.
+%s íŽ˜ì´ì§€ì˜ ìˆ¨ê¹€ ì†ì„±ì„ ì œê±°í–ˆìŠµë‹ˆë‹¤.
 %s is a hidden page
-%s ´Â °ü¸®ÀÚ°¡ °¨Ãá ÆäÀÌÁöÀÔ´Ï´Ù.
+%s ëŠ” ê´€ë¦¬ìžê°€ ê°ì¶˜ íŽ˜ì´ì§€ìž…ë‹ˆë‹¤.
 Hiding/Unhiding page failed
-ÆäÀÌÁö °¨Ãã/µå·¯³¿ ¸í·É¿¡ ½ÇÆÐÇß½À´Ï´Ù
+íŽ˜ì´ì§€ ê°ì¶¤/ë“œëŸ¬ëƒ„ ëª…ë ¹ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤
 Name
-ÀÌ¸§
+ì´ë¦„
 Comment
-³»¿ë
+ë‚´ìš©
 Submit
-´Þ±â
+ë‹¬ê¸°
 Comment is not allowed
-±Û ´Þ±â°¡ Çã¿ëµÇÁö ¾Ê½À´Ï´Ù
+ê¸€ ë‹¬ê¸°ê°€ í—ˆìš©ë˜ì§€ ì•ŠìŠµë‹ˆë‹¤
 Footnote
-°¢ÁÖ
+ê°ì£¼
 Send Trackback
-Æ®·¢¹é ÁÖ°í¹Þ±â
+íŠ¸ëž™ë°± ì£¼ê³ ë°›ê¸°
 Send Trackback Ping of this page to:
-ÀÌ ÆäÀÌÁöÀÇ Æ®·¢¹é ÇÎÀ» ´ÙÀ½ ÁÖ¼Ò·Î º¸³¿:
+ì´ íŽ˜ì´ì§€ì˜ íŠ¸ëž™ë°± í•‘ì„ ë‹¤ìŒ ì£¼ì†Œë¡œ ë³´ëƒ„:
 Trackback URL:
-Æ®·¢¹é URL:
+íŠ¸ëž™ë°± URL:
 Permalink URL (optional):
-ÇØ´ç ±ÛÀÇ URL (¼±ÅÃ»çÇ×):
+í•´ë‹¹ ê¸€ì˜ URL (ì„ íƒì‚¬í•­):
 Send Ping
-Æ®·¢¹é ÇÎ º¸³»±â
+íŠ¸ëž™ë°± í•‘ ë³´ë‚´ê¸°
 You are not allowed to send Trackback ping of this page
-ÀÌ ÆäÀÌÁöÀÇ Æ®·¢¹é ÇÎÀ» º¸³¾ ±ÇÇÑÀÌ ¾ø½À´Ï´Ù
+ì´ íŽ˜ì´ì§€ì˜ íŠ¸ëž™ë°± í•‘ì„ ë³´ë‚¼ ê¶Œí•œì´ ì—†ìŠµë‹ˆë‹¤
 No Ping URL
-Æ®·¢¹é ÇÎÀ» ¹ÞÀ» ÁÖ¼Ò°¡ ¾ø½À´Ï´Ù
+íŠ¸ëž™ë°± í•‘ì„ ë°›ì„ ì£¼ì†Œê°€ ì—†ìŠµë‹ˆë‹¤
 New Trackback Sent
-Æ®·¢¹é ÇÎÀ» º¸³¿
+íŠ¸ëž™ë°± í•‘ì„ ë³´ëƒ„
 Error occurred: %s
-¿¡·¯°¡ ¹ß»ýÇß½À´Ï´Ù: %s
+ì—ëŸ¬ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤: %s
 Send Trackback Ping
-Æ®·¢¹é ÇÎ º¸³»±â
+íŠ¸ëž™ë°± í•‘ ë³´ë‚´ê¸°
 Ping successfully sent
-ÇÎÀ» º¸³»´Â µ¥ ¼º°øÇß½À´Ï´Ù
+í•‘ì„ ë³´ë‚´ëŠ” ë° ì„±ê³µí–ˆìŠµë‹ˆë‹¤
 Trackback address of this page:
-ÀÌ ÆäÀÌÁöÀÇ Æ®·¢¹é ÁÖ¼Ò:
+ì´ íŽ˜ì´ì§€ì˜ íŠ¸ëž™ë°± ì£¼ì†Œ:
 Copy
-º¹»ç
+ë³µì‚¬
 Copy the address to the clipboard.
-ÀÌ ÁÖ¼Ò¸¦ Å¬¸³º¸µå¿¡ º¹»çÇÕ´Ï´Ù.
+ì´ ì£¼ì†Œë¥¼ í´ë¦½ë³´ë“œì— ë³µì‚¬í•©ë‹ˆë‹¤.
 This page can not receive Trackback
-ÀÌ ÆäÀÌÁö·Î´Â Æ®·¢¹éÀ» º¸³¾ ¼ö ¾ø½À´Ï´Ù
+ì´ íŽ˜ì´ì§€ë¡œëŠ” íŠ¸ëž™ë°±ì„ ë³´ë‚¼ ìˆ˜ ì—†ìŠµë‹ˆë‹¤
 Trackback from %s
-%s ·ÎºÎÅÍÀÇ Æ®·¢¹é
+%s ë¡œë¶€í„°ì˜ íŠ¸ëž™ë°±
 Title:
-Á¦¸ñ:
+ì œëª©:
 Content:
-³»¿ë:
+ë‚´ìš©:
 New Trackback Received
-Æ®·¢¹é ÇÎÀ» ¹ÞÀ½
+íŠ¸ëž™ë°± í•‘ì„ ë°›ìŒ
 No Trackback sent
-º¸³½ Æ®·¢¹é ¾øÀ½
+ë³´ë‚¸ íŠ¸ëž™ë°± ì—†ìŒ
 Trackback sent [%s]
-º¸³½ Æ®·¢¹é [%s]
+ë³´ë‚¸ íŠ¸ëž™ë°± [%s]
 No Trackback received
-¹ÞÀº Æ®·¢¹é ¾øÀ½
+ë°›ì€ íŠ¸ëž™ë°± ì—†ìŒ
 Trackback received [%s]
-¹ÞÀº Æ®·¢¹é [%s]
+ë°›ì€ íŠ¸ëž™ë°± [%s]
 Write New Thread
-»õ ±Û ¾²±â
+ìƒˆ ê¸€ ì“°ê¸°
 Write Comment
-À§ ±Û¿¡ ÀÇ°ß´Þ±â
+ìœ„ ê¸€ì— ì˜ê²¬ë‹¬ê¸°
 Prev
-ÀÌÀü
+ì´ì „
 Next
-´ÙÀ½
+ë‹¤ìŒ
 TOC
-¸ñÂ÷
+ëª©ì°¨
 Up
-À§
+ìœ„
 Index:
-Ã£¾Æº¸±â:
+ì°¾ì•„ë³´ê¸°:
 Admin Menu
-°ü¸®ÀÚ ¸Þ´º
+ê´€ë¦¬ìž ë©”ë‰´
 Editing Banned list
-Á¢±Ù Â÷´Ü ¸ñ·Ï ¼öÁ¤
+ì ‘ê·¼ ì°¨ë‹¨ ëª©ë¡ ìˆ˜ì •
 Lock Site
-»çÀÌÆ® ¼öÁ¤±ÝÁö
+ì‚¬ì´íŠ¸ ìˆ˜ì •ê¸ˆì§€
 Unlock Site
-»çÀÌÆ® ¼öÁ¤±ÝÁö ÇØÁ¦
+ì‚¬ì´íŠ¸ ìˆ˜ì •ê¸ˆì§€ í•´ì œ
 Editing not allowed: text includes banned text
-¼öÁ¤ÇÒ ¼ö ¾ø½À´Ï´Ù: ±ÝÁöµÈ ´Ü¾î°¡ Æ÷ÇÔµÇ¾î ÀÖ½À´Ï´Ù
+ìˆ˜ì •í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤: ê¸ˆì§€ëœ ë‹¨ì–´ê°€ í¬í•¨ë˜ì–´ ìžˆìŠµë‹ˆë‹¤
 (Copy the text, go back with your browser, paste the text, and edit again please)
-(¾Æ·¡ ÅØ½ºÆ®¸¦ º¹»çÇÏ°í, ºê¶ó¿ìÀúÀÇ µÚ·Î °¡±â¸¦ »ç¿ëÇÏ¿©, ÀÌÀü È­¸é¿¡ ºÙ¿©³õ°í ´Ù½Ã ÆíÁýÇØ ÁÖ½Ã±â ¹Ù¶ø´Ï´Ù)
+(ì•„ëž˜ í…ìŠ¤íŠ¸ë¥¼ ë³µì‚¬í•˜ê³ , ë¸Œë¼ìš°ì €ì˜ ë’¤ë¡œ ê°€ê¸°ë¥¼ ì‚¬ìš©í•˜ì—¬, ì´ì „ í™”ë©´ì— ë¶™ì—¬ë†“ê³  ë‹¤ì‹œ íŽ¸ì§‘í•´ ì£¼ì‹œê¸° ë°”ëžë‹ˆë‹¤)
 Editing Banned text
-µî·Ï ±ÝÁö ´Ü¾î ¸ñ·Ï ¼öÁ¤
+ë“±ë¡ ê¸ˆì§€ ë‹¨ì–´ ëª©ë¡ ìˆ˜ì •
 Updating Banned text
-µî·Ï ±ÝÁö ´Ü¾î ¸ñ·Ï °»½Å
+ë“±ë¡ ê¸ˆì§€ ë‹¨ì–´ ëª©ë¡ ê°±ì‹ 
 Title will be converted into [[/Title]] automatically.
-Á¦¸ñÀº ÀÚµ¿À¸·Î [[/Á¦¸ñ]]ÀÇ Çü½ÄÀ¸·Î º¯È¯µË´Ï´Ù.
+ì œëª©ì€ ìžë™ìœ¼ë¡œ [[/ì œëª©]]ì˜ í˜•ì‹ìœ¼ë¡œ ë³€í™˜ë©ë‹ˆë‹¤.
 Monthly View
-¿ùº° º¸±â
+ì›”ë³„ ë³´ê¸°
 If you leave current page, the contents you are writing will not be stored.
-ÀÌ ÆäÀÌÁö¸¦ ¹þ¾î³ª¸é ÀÛ¼ºÁßÀÌ´ø ±ÛÀÌ Áö¿öÁý´Ï´Ù.
+ì´ íŽ˜ì´ì§€ë¥¼ ë²—ì–´ë‚˜ë©´ ìž‘ì„±ì¤‘ì´ë˜ ê¸€ì´ ì§€ì›Œì§‘ë‹ˆë‹¤.
 Replace strings in all pages
-¸ðµç ÆäÀÌÁöÀÇ ¹®ÀÚ¿­ ÀÏ°ý Ä¡È¯
+ëª¨ë“  íŽ˜ì´ì§€ì˜ ë¬¸ìžì—´ ì¼ê´„ ì¹˜í™˜
 (section)
-(ºÎºÐ)
+(ë¶€ë¶„)
 END_OF_TRANSLATION

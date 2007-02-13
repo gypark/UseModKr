@@ -1,4 +1,4 @@
-# blog_rss ¾×¼Ç
+# blog_rss ì•¡ì…˜
 
 my @ChannelField = ('title','link','description','language',
 		'copyright','manageingEditor','webMaster','pubDate',
@@ -6,14 +6,14 @@ my @ChannelField = ('title','link','description','language',
 		'ttl','image','rating','textInput','skipHours','skipDays');
 my @ItemField = ('title','link','description','author','category',
 		'comments','enclosure','guid','pubDate','source');
-my %NeedCdata = map { $_ => 1 } ('description');	# CDATA ·Î ¹­¾î Áà¾ß ÇÒ ÇÊµå
+my %NeedCdata = map { $_ => 1 } ('description');	# CDATA ë¡œ ë¬¶ì–´ ì¤˜ì•¼ í•  í•„ë“œ
 my (%RssChannelField, %RssItemFieldInList, %RssItemField, $ListPageAuthor);
 
 sub action_blog_rss {
 	use strict;
-	my $listpage = &GetParam("listpage","");		# ÂüÁ¶ÇÒ ¸ñÂ÷ ÆäÀÌÁö
-	my $blogpage = &GetParam("blogpage","");		# RSSÀÇ linkÇ×¸ñ¿¡ µé¾î°¥ ÆäÀÌÁö
-	my $num_items = &GetParam("items",15);			# xmlÆÄÀÏÀÇ item °¹¼ö
+	my $listpage = &GetParam("listpage","");		# ì°¸ì¡°í•  ëª©ì°¨ í˜ì´ì§€
+	my $blogpage = &GetParam("blogpage","");		# RSSì˜ linkí•­ëª©ì— ë“¤ì–´ê°ˆ í˜ì´ì§€
+	my $num_items = &GetParam("items",15);			# xmlíŒŒì¼ì˜ item ê°¯ìˆ˜
 
 	my $xml = "";
 
@@ -22,8 +22,8 @@ sub action_blog_rss {
 	$cachefile = "$TempDir/rss_$cachefile.xml";
 
 	if (-f $cachefile) {
-		# cache ÆÄÀÏÀÇ ¸¶Áö¸· ¼öÁ¤ ½Ã°¢ ÀÌÈÄ¿¡ »çÀÌÆ®¿¡ º¯µ¿ÀÌ ¾ø´Â °æ¿ì
-		# cache ÆÄÀÏÀ» ÀĞ¾î¼­ Ãâ·Â
+		# cache íŒŒì¼ì˜ ë§ˆì§€ë§‰ ìˆ˜ì • ì‹œê° ì´í›„ì— ì‚¬ì´íŠ¸ì— ë³€ë™ì´ ì—†ëŠ” ê²½ìš°
+		# cache íŒŒì¼ì„ ì½ì–´ì„œ ì¶œë ¥
 		my $cache_mtime = (stat($cachefile))[9];
 		my $rclog_mtime = (stat($RcFile))[9];
 		if ($cache_mtime > $rclog_mtime) {
@@ -35,31 +35,31 @@ sub action_blog_rss {
 	}
 
 	if ($xml eq "") {
-		# xmlÀ» »õ·Î »ı¼ºÇÔ
+		# xmlì„ ìƒˆë¡œ ìƒì„±í•¨
 		my ($rssHeader, $rssBody, $rssFooter);
 
-# Ã¤³Î Á¤º¸ÀÇ µğÆúÆ® °ªÀ» ¸ÕÀú ¼³Á¤
-# »çÀÌÆ® Á¦¸ñ
+# ì±„ë„ ì •ë³´ì˜ ë””í´íŠ¸ ê°’ì„ ë¨¼ì € ì„¤ì •
+# ì‚¬ì´íŠ¸ ì œëª©
 		$RssChannelField{'title'} = &QuoteHtml($SiteName);
-# »çÀÌÆ® ¸µÅ©
+# ì‚¬ì´íŠ¸ ë§í¬
 		$FullUrl = $q->url(-full=>1)  if ($FullUrl eq "");
 		$QuotedFullUrl = &QuoteHtml($FullUrl);
 		$RssChannelField{'link'} = $QuotedFullUrl;
  		$RssChannelField{'link'} .= &ScriptLinkChar() . $blogpage if ($blogpage);
-# »çÀÌÆ® ¼³¸í
+# ì‚¬ì´íŠ¸ ì„¤ëª…
 		$RssChannelField{'description'} = $SiteDescription;
-# ¾ğ¾î - how to detect?
+# ì–¸ì–´ - how to detect?
 		$RssChannelField{'language'} = "ko";
-# xmlÀÛ¼º ½Ã°¢
+# xmlì‘ì„± ì‹œê°
 		$RssChannelField{'pubDate'} = &BlogRssGetPubDate($Now);
 
-# ¸®½ºÆ® ÆäÀÌÁö¿¡ »ç¿ëÀÚ°¡ Á¤ÀÇÇÑ °ªÀ» ÀĞ¾î¼­ µ¤¾î ¾¸
+# ë¦¬ìŠ¤íŠ¸ í˜ì´ì§€ì— ì‚¬ìš©ìê°€ ì •ì˜í•œ ê°’ì„ ì½ì–´ì„œ ë®ì–´ ì”€
 		&OpenPage($listpage);
 		&OpenDefaultText;
 		$ListPageAuthor = $Section{'username'};
 		&BlogRssGetUserDefinedValue($Text{'text'}, "list");
 
-# rss header »ı¼º
+# rss header ìƒì„±
 		$rssHeader = <<EOF;
 <?xml version="1.0" encoding="$HttpCharset" ?>
 <rss version="2.0">
@@ -75,25 +75,25 @@ EOF
 			}
 		}
 
-# rss footer »ı¼º
+# rss footer ìƒì„±
 		$rssFooter = <<EOF;
 </channel>
 </rss>
 EOF
 
-# header¿Í footer»çÀÌÀÇ body »ı¼º
+# headerì™€ footerì‚¬ì´ì˜ body ìƒì„±
 		$rssBody = &BlogRssGetItems($listpage, $num_items);
 
-# ÀüÃ¼ xml »ı¼º
+# ì „ì²´ xml ìƒì„±
 		$xml = $rssHeader.
 			$rssBody.
 			$rssFooter;
 
-# cache ÆÄÀÏ¿¡ ÀúÀå
+# cache íŒŒì¼ì— ì €ì¥
 		&WriteStringToFile($cachefile, $xml);
 	}
 
-# ÃÖÁ¾ Ãâ·Â
+# ìµœì¢… ì¶œë ¥
 	print "Content-type: text/xml\n\n";
 	print $xml;
 
@@ -101,14 +101,14 @@ EOF
 }
 
 
-# param: ¸ñÂ÷ÆäÀÌÁö, ¾ÆÀÌÅÛ °¹¼ö
+# param: ëª©ì°¨í˜ì´ì§€, ì•„ì´í…œ ê°¯ìˆ˜
 # return: $txt
-#  $txt : Rss ÆÄÀÏÀÇ <item>...</item>Ç×¸ñµé
+#  $txt : Rss íŒŒì¼ì˜ <item>...</item>í•­ëª©ë“¤
 sub BlogRssGetItems {
 	use strict;
 	my ($tocpage, $num_items) = @_;
 
-	# ¶óÀÌºê·¯¸® ÀĞÀ½
+	# ë¼ì´ë¸ŒëŸ¬ë¦¬ ì½ìŒ
 	my ($MacrosDir, $MyMacrosDir) = ("./macros/", "./mymacros/");
 	if (-f "$MyMacrosDir/blog_library.pl") {
 		require "./$MyMacrosDir/blog_library.pl";
@@ -118,19 +118,19 @@ sub BlogRssGetItems {
 		return "";
 	}
 
-	# ¸ñÂ÷ÆäÀÌÁö·ÎºÎÅÍ ¸ñÂ÷¸®½ºÆ®¸¦ ¾ò¾î³¿
+	# ëª©ì°¨í˜ì´ì§€ë¡œë¶€í„° ëª©ì°¨ë¦¬ìŠ¤íŠ¸ë¥¼ ì–»ì–´ëƒ„
 	my ($status, $toc_mainpage, @tocitem_List) = &BlogReadToc($tocpage);
 	if (!$status) {
 		return "";
 	}
 
-	# Á¶°Ç¿¡ ¸Â´Â ¸®½ºÆ®¸¦ ±¸¼º
+	# ì¡°ê±´ì— ë§ëŠ” ë¦¬ìŠ¤íŠ¸ë¥¼ êµ¬ì„±
 	($status, @tocitem_List) = &BlogGetListOrder(1, $num_items, @tocitem_List);
 	if (!$status) {
 		return "";
 	}
 
-	# ¸®½ºÆ®ÀÇ °¢ ÆäÀÌÁö¸¦ ÀĞ¾î¼­ item Çü½ÄÀ¸·Î ¸¸µé¾î ¹İÈ¯ÇÔ
+	# ë¦¬ìŠ¤íŠ¸ì˜ ê° í˜ì´ì§€ë¥¼ ì½ì–´ì„œ item í˜•ì‹ìœ¼ë¡œ ë§Œë“¤ì–´ ë°˜í™˜í•¨
 	my $txt;
 
 	my ($page, $pagename, $date, $pageid);
@@ -142,36 +142,36 @@ sub BlogRssGetItems {
 		$pageid =~ s|^/|$toc_mainpage/|;
 		$pageid = &FreeToNormal($pageid);
 
-# ÆäÀÌÁö°¡ Á¸ÀçÇÏÁö ¾ÊÀ¸¸é Åë°ú
+# í˜ì´ì§€ê°€ ì¡´ì¬í•˜ì§€ ì•Šìœ¼ë©´ í†µê³¼
 		next if (not -f &GetPageFile($pageid));
 
-# ¾ÆÀÌÅÛ ÇÊµå ÃÊ±âÈ­
+# ì•„ì´í…œ í•„ë“œ ì´ˆê¸°í™”
 		%RssItemField = %RssItemFieldInList;
 
-# ¾ÆÀÌÅÛ Á¤º¸ÀÇ µğÆúÆ® °ªÀ» ¸ÕÀú ¼³Á¤
+# ì•„ì´í…œ ì •ë³´ì˜ ë””í´íŠ¸ ê°’ì„ ë¨¼ì € ì„¤ì •
 		&OpenPage($pageid);
 		&OpenDefaultText();
-# Á¦¸ñ
+# ì œëª©
 		$RssItemField{'title'} = $page;
-# ¸µÅ©
+# ë§í¬
 		$RssItemField{'link'} = $QuotedFullUrl.&ScriptLinkChar().&EncodeUrl($pageid);
-# ³»¿ë
+# ë‚´ìš©
 		my $description = $Text{'text'};
 		$description =~ s/<noinclude>.*?<\/noinclude>//igs;
 		$description =~ s/<blog_rss>.*?<\/blog_rss>//igs;
 		$description =~ s/\n/<br \/>\n/g;
  		$RssItemField{'description'} = $description;
-# ÀÛ¼ºÀÚ - ¸ñÂ÷ ÆäÀÌÁö¿¡ ¸í½ÃµÇ¾î ÀÖÀ¸¸é ±× °ª »ç¿ë.
-#          ¾øÀ¸¸é ¸ñÂ÷ ÆäÀÌÁöÀÇ ¸¶Áö¸· ¼öÁ¤ÀÚÀÇ ¾ÆÀÌµğ¸¦ »ç¿ë.
+# ì‘ì„±ì - ëª©ì°¨ í˜ì´ì§€ì— ëª…ì‹œë˜ì–´ ìˆìœ¼ë©´ ê·¸ ê°’ ì‚¬ìš©.
+#          ì—†ìœ¼ë©´ ëª©ì°¨ í˜ì´ì§€ì˜ ë§ˆì§€ë§‰ ìˆ˜ì •ìì˜ ì•„ì´ë””ë¥¼ ì‚¬ìš©.
 		if (not $RssItemField{'author'}) {
 			$RssItemField{'author'} = $ListPageAuthor;
 		}
-# Ä«Å×°í¸® - ´ëÃ¥¾øÀ½
+# ì¹´í…Œê³ ë¦¬ - ëŒ€ì±…ì—†ìŒ
 # 		$RssItemField{'category'} = "";
-# ÀÛ¼º½Ã°¢
+# ì‘ì„±ì‹œê°
 		$RssItemField{'pubDate'} = &BlogRssGetPubDate($Page{'tscreate'});
 
-# Æ÷½ºÆ® ÆäÀÌÁö¿¡ »ç¿ëÀÚ°¡ Á¤ÀÇÇÑ °ªÀ» ÀĞ¾î¼­ µ¤¾î ¾¸
+# í¬ìŠ¤íŠ¸ í˜ì´ì§€ì— ì‚¬ìš©ìê°€ ì •ì˜í•œ ê°’ì„ ì½ì–´ì„œ ë®ì–´ ì”€
 		&BlogRssGetUserDefinedValue($Text{'text'});
 
 		$txt .= "<item>\n";
@@ -192,9 +192,9 @@ sub BlogRssGetItems {
 }
 
 
-# param: timestamp°ª
+# param: timestampê°’
 # return: $pubDate
-#  $pubDate : <pubDate>Ç×¸ñ ¾È¿¡ µé¾î°¥ ³¯Â¥¿Í ½Ã°¢ Æ÷¸Ë
+#  $pubDate : <pubDate>í•­ëª© ì•ˆì— ë“¤ì–´ê°ˆ ë‚ ì§œì™€ ì‹œê° í¬ë§·
 sub BlogRssGetPubDate {
 	my ($ts) = @_;
 
@@ -208,8 +208,8 @@ sub BlogRssGetPubDate {
 }
 
 
-# param: ÅØ½ºÆ®[,ÃâÃ³]
-# ÅØ½ºÆ®¿¡¼­ <blog_rss> </blog_rss> ºÎºĞÀ» Ã£¾Æ¼­ ÆÄ½ÌÇÏ¿© Àü¿ªº¯¼ö¿¡ ÀúÀå
+# param: í…ìŠ¤íŠ¸[,ì¶œì²˜]
+# í…ìŠ¤íŠ¸ì—ì„œ <blog_rss> </blog_rss> ë¶€ë¶„ì„ ì°¾ì•„ì„œ íŒŒì‹±í•˜ì—¬ ì „ì—­ë³€ìˆ˜ì— ì €ì¥
 sub BlogRssGetUserDefinedValue {
 	my ($text, $where) = @_;
 	my ($text_channel, $text_item);

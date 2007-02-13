@@ -6,7 +6,7 @@
 *******************************/
 
 /********************
- * »çÀÌÆ® ÀüÃ¼
+ * ì‚¬ì´íŠ¸ ì „ì²´
  ********************/
 body {
 	margin-left: 1%;
@@ -34,7 +34,7 @@ IMG.newwindow {
 	display: none;
 }
 
-/* »ó´Ü ¸Ş´º ¹Ù */
+/* ìƒë‹¨ ë©”ë‰´ ë°” */
 DIV.gobottom {
 	display: none;
 }
@@ -43,7 +43,7 @@ TABLE.gotobar {
 	display: none;
 }
 
-/* ÆíÁı °¡ÀÌµå */
+/* í¸ì§‘ ê°€ì´ë“œ */
 DIV.editguide {
 	display: none;
 }
@@ -58,7 +58,7 @@ DIV.memo {
 	display: block;
 }
 
-/* Æ®·¢¹é ÁÖ°í¹Ş±â ¾È³»¿µ¿ª */
+/* íŠ¸ë™ë°± ì£¼ê³ ë°›ê¸° ì•ˆë‚´ì˜ì—­ */
 DIV.trackbackguide {
 	display: none;
 }

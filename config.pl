@@ -29,32 +29,32 @@ $HttpCharset = "euc-kr";              # Charset for pages, like "iso-8859-2"
 $UserGotoBar = "<a href='/'>Home</a>";              # HTML added to end of goto bar
 ##########################################################
 ### added by gypark
-### »ó´Ü ¸Ş´º¿¡ »ç¿ëÀÚÁ¤ÀÇ¸µÅ©¸¦ ´õ ´Ş ¼ö ÀÖ°Ô ÇÔ
+### ìƒë‹¨ ë©”ë‰´ì— ì‚¬ìš©ìì •ì˜ë§í¬ë¥¼ ë” ë‹¬ ìˆ˜ ìˆê²Œ í•¨
 $UserGotoBar2 = "";
 $UserGotoBar3 = "";
 $UserGotoBar4 = "";
 
-### ¹ø¿ªÈ­ÀÏ »ç¿ë
+### ë²ˆì—­í™”ì¼ ì‚¬ìš©
 do "./translations/korean.pl";    # Path of translation file
 
 ### path of source-highlight
 $SOURCEHIGHLIGHT    = "/usr/local/bin/source-highlight";    # path of source-highlight
 @SRCHIGHLANG = qw(cpp java javascript prolog perl php3 python flex changeelog);
-### Á¸ÀçÇÏÁö ¾Ê´Â ÆäÀÌÁö Ç¥½Ã ¹æ½Ä
+### ì¡´ì¬í•˜ì§€ ì•ŠëŠ” í˜ì´ì§€ í‘œì‹œ ë°©ì‹
 $LinkFirstChar = 1;    # 1 = link on first character,  0 = followed by "?" mark (classical)
-### EXTERN ÆäÀÌÁö ÇÏ´Ü¿¡ ÆíÁı °¡ÀÌµå Ç¥½Ã
+### EXTERN í˜ì´ì§€ í•˜ë‹¨ì— í¸ì§‘ ê°€ì´ë“œ í‘œì‹œ
 $EditGuideInExtern = 0; # 1 = show edit guide in bottom frame, 0 = don't show
 $SizeTopFrame = 160;
 $SizeBottomFrame = 150;
-### ÀÎÀÚ ¾øÀÌ wiki.pl À» ºÎ¸£¸é $LogoPage ¸¦ embed Çü½ÄÀ¸·Î Ãâ·Â
+### ì¸ì ì—†ì´ wiki.pl ì„ ë¶€ë¥´ë©´ $LogoPage ë¥¼ embed í˜•ì‹ìœ¼ë¡œ ì¶œë ¥
 $LogoPage   = "";	# this page will be displayed when no parameter
-### ÆäÀÌÁö Ã³¸® ½Ã°£À» Ãâ·ÂÇÑ´Ù
+### í˜ì´ì§€ ì²˜ë¦¬ ì‹œê°„ì„ ì¶œë ¥í•œë‹¤
 $CheckTime = 0;   # 1 = mesure the processing time (requires Time::HiRes module), 0 = do not 
-### ³»ºÎ ¾ÆÀÌÄÜÀÌ ÀúÀåµÈ µğ·ºÅä¸®
+### ë‚´ë¶€ ì•„ì´ì½˜ì´ ì €ì¥ëœ ë””ë ‰í† ë¦¬
 $IconDir = "./icons/";	# directory containing icon files
-### È­ÀÏ ¾÷·Îµå¿Í ¿À¿¡Ä«Å° ÀúÀåÀ» À§ÇÑ µğ·ºÅä¸® (³»ºÎ °æ·Î¸¦ »ç¿ë)
+### í™”ì¼ ì—…ë¡œë“œì™€ ì˜¤ì—ì¹´í‚¤ ì €ì¥ì„ ìœ„í•œ ë””ë ‰í† ë¦¬ (ë‚´ë¶€ ê²½ë¡œë¥¼ ì‚¬ìš©)
 $UploadDir   = "./upload";	# by gypark. file upload
-### È­ÀÏ ¾÷·Îµå¿Í ¿À¿¡Ä«Å° ÀúÀåÀ» À§ÇÑ URL (http:// ½ÃÀÛÇÏ´Â Àı´ë°æ·Î »ç¿ë)
+### í™”ì¼ ì—…ë¡œë“œì™€ ì˜¤ì—ì¹´í‚¤ ì €ì¥ì„ ìœ„í•œ URL (http:// ì‹œì‘í•˜ëŠ” ì ˆëŒ€ê²½ë¡œ ì‚¬ìš©)
 $UploadUrl   = ""; # by gypark, URL for the directory containing uploaded file
                    # if undefined, it has the same value as $UploadDir
 ### hide page
@@ -67,19 +67,19 @@ $SiteDescription  = $SiteName;  # Description of this wiki. (for RSS)
 $RssLogoUrl  = '';              # Optional image for RSS feed
 $RssDays     = 7;               # Default number of days in RSS feed
 $RssTimeZone = 9;				# Time Zone of Server (hour), 0 for GMT, 9 for Korea
-### ½ºÅ©¸³Æ® µÚ¿¡ / or ? ¼±ÅÃ from usemod1.0
+### ìŠ¤í¬ë¦½íŠ¸ ë’¤ì— / or ? ì„ íƒ from usemod1.0
 $SlashLinks   = 0;      # 1 = use script/action links, 0 = script?action
-### interwiki ¾ÆÀÌÄÜ »ç¿ë
+### interwiki ì•„ì´ì½˜ ì‚¬ìš©
 $InterIconDir = "./icons-inter/"; # directory containing interwiki icons
-### trackback º¸³»±â
+### trackback ë³´ë‚´ê¸°
 $SendPingAllowed = 0;   # 0 - anyone, 1 - who can edit, 2 - who is admin
-### java script ÇÔ¼öµé
+### java script í•¨ìˆ˜ë“¤
 $JavaScript  = "wikiscript.js";   # URL for JavaScript code (like "/wikiscript.js")
-### LaTeX º¯È¯ Áö¿ø
+### LaTeX ë³€í™˜ ì§€ì›
 $UseLatex    = 0;		# 1 = Use LaTeX conversion   2 = Don't convert
-### »ç¿ëÀÚ Á¤ÀÇ Çì´õ
+### ì‚¬ìš©ì ì •ì˜ í—¤ë”
 $UserHeader  = '';              # Optional HTML header additional content
-### Oekaki .jar ÆÄÀÏ
+### Oekaki .jar íŒŒì¼
 $OekakiJar   = "oekakibbs.jar";	# URL for oekaki *.jar file
 ##
 ##########################################################

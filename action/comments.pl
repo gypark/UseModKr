@@ -24,7 +24,7 @@ sub action_comments {
 		return;
 	}
 
-# ±İÁö´Ü¾î Ã³¸®´Â ¿©±â¼­ ¸ÕÀú
+# ê¸ˆì§€ë‹¨ì–´ ì²˜ë¦¬ëŠ” ì—¬ê¸°ì„œ ë¨¼ì €
 	if (my $bannedText = &TextIsBanned($newcomments)) {
 		print &GetHeader("", T('Editing Denied'),"");
 		print Ts('Editing not allowed: text includes banned text');
@@ -38,7 +38,7 @@ sub action_comments {
 		return;
 	}
 
-	# ºí·Î±× Áö¿øÀ» À§ÇÑ ²Ç¼ö
+	# ë¸”ë¡œê·¸ ì§€ì›ì„ ìœ„í•œ ê½ìˆ˜
 	my ($blogrcpage, $blogrccomment);
 	if ($id =~ m/(.+)(\/|%2f|%2F)(.+)/) {
 		$blogrcpage = "$1/BlogRc";
@@ -79,7 +79,7 @@ sub action_comments {
 		my ($comment_head, $comment_tail) = ("", "");
 		my $newup;
 
-		if (($abs_up >= 100) && ($abs_up <= $threshold2)) {	# Ä¿¸àÆ® ±ÇÇÑ »ó¼Ó
+		if (($abs_up >= 100) && ($abs_up <= $threshold2)) {	# ì»¤ë©˜íŠ¸ ê¶Œí•œ ìƒì†
 			$newup = $Now - $threshold2;
 		} else {
 			$newup = $Now;
@@ -92,18 +92,18 @@ sub action_comments {
 				$comment_head .= ":";
 			}
 			$comment_head .= " ";
-		} else {	# »õ±Û
+		} else {	# ìƒˆê¸€
 # 			$comment_head = "<thread>\n";
 # 			$comment_tail .= "\n</thread>";
 		}
 
 		my $thread_pattern = "\\<thread\\($id,$up(,$threadindent)?\\)\\>|\\<thread\\($up(,$threadindent)?\\)\\>";
 
-		### ¸®ÇÃÀ» ÀÛ¼º ½Ã°¢ ¼øÀ¸·Î ¹èÄ¡µÇ°Ô ÇÔ.
+		### ë¦¬í”Œì„ ì‘ì„± ì‹œê° ìˆœìœ¼ë¡œ ë°°ì¹˜ë˜ê²Œ í•¨.
 		if ($threadindent >= 1) {
 			my @thread_tags = ($string =~ /(<thread\(\d+,\d+\)>)/g);
 			my $idx = 0;
-			# ´ä±ÛÀ» ´Ş¾Ò´ø ÀÚ¸®ÀÇ ¸ÅÅ©·Î¸¦ Ã£°í
+			# ë‹µê¸€ì„ ë‹¬ì•˜ë˜ ìë¦¬ì˜ ë§¤í¬ë¡œë¥¼ ì°¾ê³ 
 			while ($idx <= $#thread_tags) {
 				last if ($thread_tags[$idx] eq "<thread($up,$threadindent)>");
 				$idx++;
@@ -112,7 +112,7 @@ sub action_comments {
 			if ($thread_tags[$idx] =~ /<thread\((\d+),(\d+)\)>/) {
 				$anchor = "#".$1;
 			}
-			# ±× ¾Æ·¡¿¡¼­ ½ÇÁ¦·Î ¹Ù²ãÄ¡±âÇÒ ¸ÅÅ©·Î¸¦ Ã£À½
+			# ê·¸ ì•„ë˜ì—ì„œ ì‹¤ì œë¡œ ë°”ê¿”ì¹˜ê¸°í•  ë§¤í¬ë¡œë¥¼ ì°¾ìŒ
 			while ($idx <= $#thread_tags-1) {
 				$thread_tags[$idx+1] =~ /<thread\((\d+),(\d+)\)>/;
 				if ($2 <= $threadindent) {
@@ -129,9 +129,9 @@ sub action_comments {
 			$match = 1;
 		}
 
-		if (($up > 0) && ($up < $threshold1)) {		# À§·Î ´Ş¸®´Â »õ±Û
+		if (($up > 0) && ($up < $threshold1)) {		# ìœ„ë¡œ ë‹¬ë¦¬ëŠ” ìƒˆê¸€
 			$string =~ s/($thread_pattern)/$comment_head$newcomments $mysign\n$comment_tail\n\n$1/;
-		} else {									# ¸®ÇÃ or ¾Æ·¡·Î ´Ş¸®´Â »õ±Û
+		} else {									# ë¦¬í”Œ or ì•„ë˜ë¡œ ë‹¬ë¦¬ëŠ” ìƒˆê¸€
 			$string =~ s/($thread_pattern)/$1\n\n$comment_head$newcomments $mysign\n$comment_tail/;
 		}
 	} elsif ($long) {				# longcomments
@@ -163,11 +163,11 @@ sub action_comments {
 		}
 	}
 
-	if (((!&UserCanEdit($id,1)) && (($abs_up < 100) || ($abs_up > $threshold2))) || (&UserIsBanned())) {		# ¿¡µğÆ® ºÒ°¡
+	if (((!&UserCanEdit($id,1)) && (($abs_up < 100) || ($abs_up > $threshold2))) || (&UserIsBanned())) {		# ì—ë””íŠ¸ ë¶ˆê°€
 		$pageid = "";
 	}
 
-# ºí·Î±× Áö¿øÀ» À§ÇÑ ²Ç¼ö
+# ë¸”ë¡œê·¸ ì§€ì›ì„ ìœ„í•œ ê½ìˆ˜
 	if ($pageid && $blogrcpage && $match) {
 		$blogrccomment =~ s/(\r?\n)/ /g;
 		$blogrccomment =~ s/\[/{/g;

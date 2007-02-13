@@ -1,4 +1,4 @@
-// ¸Ş¸ğ ¸ÅÅ©·Î, Æ®·¢¹é µî¿¡ »ç¿ë
+// ë©”ëª¨ ë§¤í¬ë¡œ, íŠ¸ë™ë°± ë“±ì— ì‚¬ìš©
 function onMemoToggle(id)
 {	
 	if (document.getElementById(id).style.display == "none")
@@ -12,7 +12,7 @@ function onMemoToggle(id)
 	return false;
 }
 
-// ÀÛ¼º Ãë¼Ò ½Ã È®ÀÎ
+// ì‘ì„± ì·¨ì†Œ ì‹œ í™•ì¸
 var previous_text = "", current_text = "", conflict = false, closeok = false;
 function chk_close(e, str) {
 	if (!e) e = event;
@@ -25,10 +25,10 @@ function chk_close(e, str) {
 	}
 }
 
-// msg - »ç¿ëÀÚ¿¡°Ô È®ÀÎÃ¢À» ¶ç¿ï¶§ Ãâ·ÂµÇ´Â ¸Ş½ÃÁö
-//     - ""ÀÌ¸é È®ÀÎÃ¢ ¶ç¿ìÁö ¾ÊÀ½
-// text - Å¬¸³º¸µå¿¡ º¹»çµÉ ÅØ½ºÆ®
-// ÃâÃ³: http://www.krikkit.net/howto_javascript_copy_clipboard.html
+// msg - ì‚¬ìš©ìì—ê²Œ í™•ì¸ì°½ì„ ë„ìš¸ë•Œ ì¶œë ¥ë˜ëŠ” ë©”ì‹œì§€
+//     - ""ì´ë©´ í™•ì¸ì°½ ë„ìš°ì§€ ì•ŠìŒ
+// text - í´ë¦½ë³´ë“œì— ë³µì‚¬ë  í…ìŠ¤íŠ¸
+// ì¶œì²˜: http://www.krikkit.net/howto_javascript_copy_clipboard.html
 // modified by raymundo, gypark@gmail.com
 
 // Copyright (C) krikkit - krikkit@gmx.net
@@ -48,9 +48,9 @@ function copy_clip(msg, text) {
 	}
 	// Firefox/Mozilla
 	else if (window.netscape) {
-		// firefox/mozilla ¿¡¼­ µ¿ÀÛÇÏ±â À§ÇØ¼­´Â »ç¿ëÀÚ ÇÁ·ÎÆÄÀÏ µğ·ºÅä¸®¿¡ prefs.js ÆÄÀÏ¿¡ ´ÙÀ½°ú °°ÀÌ Àû¾îÁØ´Ù
+		// firefox/mozilla ì—ì„œ ë™ì‘í•˜ê¸° ìœ„í•´ì„œëŠ” ì‚¬ìš©ì í”„ë¡œíŒŒì¼ ë””ë ‰í† ë¦¬ì— prefs.js íŒŒì¼ì— ë‹¤ìŒê³¼ ê°™ì´ ì ì–´ì¤€ë‹¤
 		// user_pref("signed.applets.codebase_principal_support", true);
-		// ¶Ç´Â "about:config" ÆäÀÌÁö¸¦ ¿­¾î¼­ ´ÙÀ½ Ç×¸ñÀÇ °ªÀ» true·Î ¼³Á¤ÇØ ÁØ´Ù
+		// ë˜ëŠ” "about:config" í˜ì´ì§€ë¥¼ ì—´ì–´ì„œ ë‹¤ìŒ í•­ëª©ì˜ ê°’ì„ trueë¡œ ì„¤ì •í•´ ì¤€ë‹¤
 		// signed.applets.codebase_principal_support
 
 		alert("If it fails to copy, check the option:\n\nsigned.applets.codebase_principal_support  =  true\n\nin \"about:config\" page.");
@@ -81,7 +81,7 @@ function copy_clip(msg, text) {
 	return false;
 }
 
-// ´ÜÃàÅ° °³¼±
+// ë‹¨ì¶•í‚¤ ê°œì„ 
 function GetKeyStroke(KeyStorke) {
 	var evt = KeyStorke || window.event;
 	var eventChooser = evt.keyCode || evt.which;

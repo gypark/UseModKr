@@ -18,7 +18,7 @@ sub plugin_gnuplot {
 
 	my $gnuplot = "gnuplot";		# PATH of gnuplot;
 
-# ±×¸² ÆÄÀÏÀÇ ÀÌ¸§ °áÁ¤
+# ê·¸ë¦¼ íŒŒì¼ì˜ ì´ë¦„ ê²°ì •
 	my $hash;
 	my $hasMD5 = eval "require Digest::MD5;";
 	if ($hasMD5) {
@@ -34,7 +34,7 @@ sub plugin_gnuplot {
 	my $GnuplotUrl = "$UploadUrl/gnuplot";
 
 	if (-f "$GnuplotDir/$hashimage" && not -z "$GnuplotDir/$hashimage") {
-		# ÀÌ¹Ì »ý¼ºµÇ¾î Ä³½¬¿¡ ÀÖÀ½
+		# ì´ë¯¸ ìƒì„±ë˜ì–´ ìºì‰¬ì— ìžˆìŒ
 	} else {
 		&CreateDir($UploadDir);
 		&CreateDir($GnuplotDir);
@@ -47,7 +47,7 @@ sub plugin_gnuplot {
 		my $pwd = `pwd`;
 		$pwd =~ s/(.*)(\n|\r)*/$1/;
 
-# ÀÔ·Â ÅØ½ºÆ® Áß ÆÄÀÏÀ» ºÐ¸®ÇÏ¿© ÀúÀå
+# ìž…ë ¥ í…ìŠ¤íŠ¸ ì¤‘ íŒŒì¼ì„ ë¶„ë¦¬í•˜ì—¬ ì €ìž¥
 		my @blocks = split(/\n##FILE:/, $content);
 		$plt = shift @blocks;
 		
@@ -80,7 +80,7 @@ EOT
 		open STDOUT, ">hash.log";
 		open STDERR, ">&STDOUT";
 
-# ±×¸² »ý¼º
+# ê·¸ë¦¼ ìƒì„±
 		qx($gnuplot gnuplot.dat);
 
 		close STDOUT;
@@ -88,7 +88,7 @@ EOT
 		open STDOUT, ">&SAVEOUT";
 		open STDERR, ">&SAVEERR";
 
-# ±×¸² ¿Å±è
+# ê·¸ë¦¼ ì˜®ê¹€
 		chdir($pwd);
 		if (-f "$hashdir/$hashimage" && not -z "$hashdir/$hashimage") {
 			my $png = &ReadFile("$hashdir/$hashimage");

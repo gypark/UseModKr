@@ -1,5 +1,5 @@
 # replacetext action
-# ÀÏ°ıÄ¡È¯
+# ì¼ê´„ì¹˜í™˜
 sub action_replacetext {
 	print &GetHeader("", T('Replace strings in all pages'), "");
 	return  if (!&UserIsAdminOrError());
@@ -12,7 +12,7 @@ sub action_replacetext {
 	$test = &GetParam("p_test", "0");
 	$test = "1" if ($test eq "on");
 
-# Æû Ãâ·Â
+# í¼ ì¶œë ¥
 	print &GetFormStart();
 	print &GetHiddenValue("action", "replacetext"),"\n";
 	print "Use Perl regular expression for text replacement.\n";
@@ -31,7 +31,7 @@ sub action_replacetext {
 								-label=>T('Just test'));
 	print $q->endform;
 
-# old string °ªÀÌ ¾ø´Â °æ¿ì. Á¦ÀÏ Ã³À½ ºÒ·ÈÀ» ¶§ µî
+# old string ê°’ì´ ì—†ëŠ” ê²½ìš°. ì œì¼ ì²˜ìŒ ë¶ˆë ¸ì„ ë•Œ ë“±
 	if ($oldStr eq '') {
 		print &GetCommonFooter();
 		return;
@@ -46,26 +46,26 @@ sub action_replacetext {
 
 	my ($page, $num);
 	$num = 0;
-	foreach $page (&AllPagesList()) {		# ¸ğµç ÆäÀÌÁö °Ë»ç
+	foreach $page (&AllPagesList()) {		# ëª¨ë“  í˜ì´ì§€ ê²€ì‚¬
 		&OpenPage($page);
 		&OpenDefaultText();
 		my $newText = $Text{'text'};
 		my $match = 0;
 
-# Ä¡È¯ ½Ãµµ
+# ì¹˜í™˜ ì‹œë„
 		if ($ignoreCase) {
 			$match = ($newText =~ s/$oldStr/$newStr/ige);
 		} else {
 			$match = ($newText =~ s/$oldStr/$newStr/ge);
 		}
 
-# Ä¡È¯µÇ´Â °ÍÀÌ ÀÖ´Â °æ¿ì
+# ì¹˜í™˜ë˜ëŠ” ê²ƒì´ ìˆëŠ” ê²½ìš°
 		if ($newText ne $Text{'text'}) {
 			$num++;
 			print "[$num] Processing $page ... $match string(s) were found.<br>";
 			print &DiffToHTML(&GetDiff($Text{'text'}, $newText))."<br>";
 
-			if (!$test) {	# Å×½ºÆ® ¸ğµå°¡ ¾Æ´Ò ¶§´Â ÀúÀå
+			if (!$test) {	# í…ŒìŠ¤íŠ¸ ëª¨ë“œê°€ ì•„ë‹ ë•ŒëŠ” ì €ì¥
 				DoPostMain($newText, $page, "*", $Section{'ts'}, 0, 1, "!!");
 			}
 		}

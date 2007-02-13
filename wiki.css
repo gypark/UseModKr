@@ -6,7 +6,7 @@
 *******************************/
 
 /********************
- * »çÀÌÆ® ÀüÃ¼
+ * ì‚¬ì´íŠ¸ ì „ì²´
  ********************/
 body {
 	margin-left: 1%;
@@ -18,7 +18,7 @@ body {
 }
 
 /********************
- * ÆäÀÌÁö º»¹®
+ * í˜ì´ì§€ ë³¸ë¬¸
  ********************/
 
 /* ''text'' */
@@ -26,7 +26,7 @@ em {
 	font-size: 105%;
 }
 
-/* ÁÙ ¾Õ¿¡ °ø¹éÀÌ ÀÖ´Â °æ¿ì »ı±â´Â pre */
+/* ì¤„ ì•ì— ê³µë°±ì´ ìˆëŠ” ê²½ìš° ìƒê¸°ëŠ” pre */
 pre {
 	font: normal normal normal 100%/160% dotumche, courier, monospace;
 	border: none;
@@ -36,7 +36,7 @@ pre {
 	width: 90%;
 }
 
-/* {{{ }}} ÅÂ±×¿¡ ÀÇÇÑ pre */
+/* {{{ }}} íƒœê·¸ì— ì˜í•œ pre */
 PRE.code   {
 	font: normal normal normal 100%/160% dotumche, courier, monospace;
 	border: 1px solid silver;
@@ -49,7 +49,7 @@ PRE.code   {
 	color: black;
 }
 
-/* {{{lang }}} ÅÂ±×¿¡ ÀÇÇÑ pre */
+/* {{{lang }}} íƒœê·¸ì— ì˜í•œ pre */
 PRE.syntax {
 	font: normal normal normal 100%/160% dotumche, courier, monospace;
 	border: 1px solid silver;
@@ -62,7 +62,7 @@ PRE.syntax {
 	color: black;
 }
 
-/* <code> ÅÂ±× */
+/* <code> íƒœê·¸ */
 code {
 	font: normal normal normal 100%/160% dotumche, courier, monospace;
 	margin-top: 8pt;
@@ -70,7 +70,7 @@ code {
 	white-space:pre;
 }
 
-/* Å×ÀÌºí */
+/* í…Œì´ë¸” */
 table {
 	border-style: solid;
 	border-color: silver;
@@ -97,7 +97,7 @@ td {
 	padding: 2px;
 }
 
-/* ¸®½ºÆ® */
+/* ë¦¬ìŠ¤íŠ¸ */
 li {
 	font: normal normal normal 100%/160% gulim, "Times New Roman", serif;
 	text-align:justify;
@@ -105,7 +105,7 @@ li {
 	margin-bottom: 0.2em;
 }
 
-/* °¡·Î¼± */
+/* ê°€ë¡œì„  */
 hr {
 	border: 1px solid darkred;
 	background-color: darkred;
@@ -113,7 +113,7 @@ hr {
 	margin: 0px;
 }
 
-/* Çìµù */
+/* í—¤ë”© */
 h1,h2,h3,h4,h5 {
 	font-family: Arial, Helvetica, sans-serif;
 	margin-top: 10pt;
@@ -164,14 +164,14 @@ h6 {
 	font-size: 111%;
 }
 
-/* ¼½¼Ç º° ÆíÁı */
+/* ì„¹ì…˜ ë³„ í¸ì§‘ */
 .editsection {
 	font-size: 90%;
 	float: right;
     margin-right: 0.5em;
 }
 
-/* ÀÏ¹İÀûÀÎ ¸µÅ© */
+/* ì¼ë°˜ì ì¸ ë§í¬ */
 A:link, A:active, A:visited, A:hover {
 	background: transparent;
 	color: blue;
@@ -182,7 +182,7 @@ A:hover {
 	text-decoration: underline;
 }
 
-/* ¿ÜºÎ URL */
+/* ì™¸ë¶€ URL */
 A.outer:link, A.outer:active, A.outer:visited, A.outer:hover {
 	background: transparent;
 	color: blue;
@@ -211,7 +211,7 @@ IMG.inter
 	border: none;
 }
 
-/* »çÀü ¸µÅ© */
+/* ì‚¬ì „ ë§í¬ */
 A.dic:link, A.dic:active, A.dic:visited, A.dic:hover {
 	background: transparent;
 	color: blue;
@@ -222,7 +222,7 @@ A.dic:hover
 	text-decoration: underline;
 }
 
-/* ±âÅ¸ */
+/* ê¸°íƒ€ */
 SELECT,TEXTAREA
 {
 	font: normal normal normal 110%/160% dotumche, courier, monospace;
@@ -243,12 +243,12 @@ img {
 	border: solid 0px #fffff0;
 }
 
-/* ISBN ¸µÅ©½Ã Ã¥Ç¥Áö */
+/* ISBN ë§í¬ì‹œ ì±…í‘œì§€ */
 IMG.isbn {
 	border: 1px solid silver;
 }
 
-/* ÆäÀÌÁö ¼Ò½º º¸±â ÅØ½ºÆ®¿µ¿ª */
+/* í˜ì´ì§€ ì†ŒìŠ¤ ë³´ê¸° í…ìŠ¤íŠ¸ì˜ì—­ */
 TEXTAREA.view
 {
 	font: normal normal normal 110%/160% dotumche, courier, monospace;
@@ -259,17 +259,17 @@ TEXTAREA.view
 }
 
 /**********
- * ÆäÀÌÁö »ó,ÇÏ´Ü
+ * í˜ì´ì§€ ìƒ,í•˜ë‹¨
  **********/
 
-/* ÆäÀÌÁö ÀÌ¸§ */
+/* í˜ì´ì§€ ì´ë¦„ */
 H1.pagename {
 	padding: 5pt 10pt 5pt 10pt;
 	line-height: 110%;
 	text-align: left;
 }
 
-/* ¾×¼Ç ÀÌ¸§ */
+/* ì•¡ì…˜ ì´ë¦„ */
 H1.actionname {
 	padding: 5pt 10pt 5pt 10pt;
 	font-style: italic;
@@ -277,12 +277,12 @@ H1.actionname {
 	line-height: 110%;
 }
 
-/* »çÀÌÆ® ·Î°íÀÌ¹ÌÁö */
+/* ì‚¬ì´íŠ¸ ë¡œê³ ì´ë¯¸ì§€ */
 IMG.logoimage {
 	border: none;
 }
 
-/* »ó´Ü ¸Ş´º ¹Ù */
+/* ìƒë‹¨ ë©”ë‰´ ë°” */
 TABLE.gotobar {
 	border: none;
 	border-collapse: collapse;
@@ -373,7 +373,7 @@ HR.gotobar {
 	height: 2px;
 }
 
-/* ÆíÁı °¡ÀÌµå */
+/* í¸ì§‘ ê°€ì´ë“œ */
 DIV.editguide {
 	text-align: right;
 	background: transparent;
@@ -395,7 +395,7 @@ HR.footer {
 
 
 /**********
- * diff Ãâ·Â
+ * diff ì¶œë ¥
  **********/
 
 TABLE.diff
@@ -447,7 +447,7 @@ TD.diffadd
 }
 
 /**********
- * ÃÖ±Ùº¯°æ³»¿ª 
+ * ìµœê·¼ë³€ê²½ë‚´ì—­ 
  **********/
 TABLE.rc {
 	border: none;
@@ -627,7 +627,7 @@ DIV.memo {
 	padding:5px;
 }
 
-/* memo ¸ÅÅ©·Î ¸µÅ© */
+/* memo ë§¤í¬ë¡œ ë§í¬ */
 A.memo:link, A.memo:active, A.memo:visited, A.memo:hover {
 	background: transparent;
 	color: gray;
@@ -649,7 +649,7 @@ A.footnote {
 	vertical-align: super;
 }
 
-/* Æ®·¢¹é ÁÖ°í¹Ş±â ¾È³»¿µ¿ª */
+/* íŠ¸ë™ë°± ì£¼ê³ ë°›ê¸° ì•ˆë‚´ì˜ì—­ */
 DIV.trackbackguide {
 	text-align: left;
 	background: transparent;
@@ -657,7 +657,7 @@ DIV.trackbackguide {
 	color: black;
 }
 
-/* Æ®·¢¹é ÁÖ°í¹Ş±â °¡ÀÌµå */
+/* íŠ¸ë™ë°± ì£¼ê³ ë°›ê¸° ê°€ì´ë“œ */
 DIV.trackbackguidecontent {
 	background: transparent;
 	border: none;
@@ -673,7 +673,7 @@ A.trackbackguidecontent:hover
 	text-decoration: underline;
 }
 
-/* trackbacksent, trackbackreceived ¸ÅÅ©·Î */
+/* trackbacksent, trackbackreceived ë§¤í¬ë¡œ */
 DIV.trackbacklist {
 	background-color:#F8F8F8;
 	color:#000;

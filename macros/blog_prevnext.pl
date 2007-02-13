@@ -1,5 +1,5 @@
-# <blog_prevnext(¸ñÂ÷ÆäÀÌÁö)>
-# ¸ñÂ÷ÆäÀÌÁö¸¦ ÀĞ¾î¼­, ÇöÀç º¸°í ÀÖ´Â ÆäÀÌÁöÀÇ ÀÌÀü ÆäÀÌÁö¿Í ´ÙÀ½ ÆäÀÌÁöÀÇ ¸µÅ©¸¦ Ãâ·Â
+# <blog_prevnext(ëª©ì°¨í˜ì´ì§€)>
+# ëª©ì°¨í˜ì´ì§€ë¥¼ ì½ì–´ì„œ, í˜„ì¬ ë³´ê³  ìˆëŠ” í˜ì´ì§€ì˜ ì´ì „ í˜ì´ì§€ì™€ ë‹¤ìŒ í˜ì´ì§€ì˜ ë§í¬ë¥¼ ì¶œë ¥
 
 sub blog_prevnext {
 	my ($txt) = @_;
@@ -15,7 +15,7 @@ sub MacroBlogPrevNext {
 	my ($mainpage, $subpage);
 	my $txt;
 
-	# ¶óÀÌºê·¯¸® ÀĞÀ½
+	# ë¼ì´ë¸ŒëŸ¬ë¦¬ ì½ìŒ
 	my ($MacrosDir, $MyMacrosDir) = ("./macros/", "./mymacros/");
 	if (-f "$MyMacrosDir/blog_library.pl") {
 		require "./$MyMacrosDir/blog_library.pl";
@@ -25,7 +25,7 @@ sub MacroBlogPrevNext {
 		return "<font color='red'>blog_library.pl not found</font>";
 	}
 
-	# ¸ñÂ÷ÆäÀÌÁö·ÎºÎÅÍ ¸ñÂ÷¸®½ºÆ®¸¦ ¾ò¾î³¿
+	# ëª©ì°¨í˜ì´ì§€ë¡œë¶€í„° ëª©ì°¨ë¦¬ìŠ¤íŠ¸ë¥¼ ì–»ì–´ëƒ„
 	my ($status, $toc_mainpage, @tocitem_List) = &BlogReadToc($tocpage);
 	if (!$status) {
 		return "$toc_mainpage";
@@ -37,7 +37,7 @@ sub MacroBlogPrevNext {
 		$mainpage = $OpenPageName;
 	}
 
-	# ¸ñÂ÷¿¡¼­ ÇöÀç ÆäÀÌÁöÀÇ À§Ä¡¸¦ Ã£À½
+	# ëª©ì°¨ì—ì„œ í˜„ì¬ í˜ì´ì§€ì˜ ìœ„ì¹˜ë¥¼ ì°¾ìŒ
 	my $idx = 0;
 	for ($idx = 0; $idx <= $#tocitem_List; $idx++) {
 		my $line = $tocitem_List[$idx];
@@ -56,7 +56,7 @@ sub MacroBlogPrevNext {
 		}
 	}
 
-	# ÀÌÀüÆäÀÌÁö¿Í ´ÙÀ½ÆäÀÌÁö ÀÌ¸§ Ã£À½
+	# ì´ì „í˜ì´ì§€ì™€ ë‹¤ìŒí˜ì´ì§€ ì´ë¦„ ì°¾ìŒ
 	my ($prev, $next);
 	if ($idx > $#tocitem_List) {
 		return "";
@@ -91,7 +91,7 @@ sub MacroBlogPrevNext {
 		}
 	}
 
-	# Ãâ·Â
+	# ì¶œë ¥
 	my $shortCutUrl = "$ScriptName".&ScriptLinkChar();
 	my $shortCutKey;
 	$txt = "<CENTER>";

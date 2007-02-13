@@ -1,5 +1,5 @@
 # vim plugin
-# ¹Ú¿ø±Ô´ÔÀÇ MoniWiki ÀÇ vim.php ÀÇ ÄÚµå¸¦ Èä³»³»¾úÀ½.
+# ë°•ì›ê·œë‹˜ì˜ MoniWiki ì˜ vim.php ì˜ ì½”ë“œë¥¼ í‰ë‚´ë‚´ì—ˆìŒ.
 # 
 # usage :
 # {{{#!vim sh|c|sh|.. [number]
@@ -24,7 +24,7 @@ sub plugin_vim {
 	}
 	$content =~ s/\r//g;
 
-# htmlÆÄÀÏÀÇ ÀÌ¸§ °áÁ¤
+# htmlíŒŒì¼ì˜ ì´ë¦„ ê²°ì •
 	my $hash;
 	my $hasMD5 = eval "require Digest::MD5;";
 	if ($hasMD5) {
@@ -38,7 +38,7 @@ sub plugin_vim {
 	my $VimDir = "$UploadDir/vim";
 
 	if (-f "$VimDir/$hashhtml" && not -z "$VimDir/$hashhtml") {
-		# ÀÌ¹Ì »ı¼ºµÇ¾î Ä³½¬¿¡ ÀÖÀ½
+		# ì´ë¯¸ ìƒì„±ë˜ì–´ ìºì‰¬ì— ìˆìŒ
 	} else {
 		&CreateDir($UploadDir);
 		&CreateDir($VimDir);
@@ -53,7 +53,7 @@ sub plugin_vim {
 
 		chdir ($hashdir);
 		
-# html »ı¼º
+# html ìƒì„±
 		my $tmpi = "$hash.in";
 		my $tmpo = "$hash.out";
 		open (OUT, ">$tmpi") or return "[Unable to open $tmpi file]";
@@ -72,7 +72,7 @@ sub plugin_vim {
 		open STDOUT, ">&SAVEOUT";
 		open STDERR, ">&SAVEERR";
 
-# html °¡°ø ¹× ¿Å±è
+# html ê°€ê³µ ë° ì˜®ê¹€
 		($status, $text) = &ReadFile("$tmpo");
 		if (!$status) {
 			return undef;

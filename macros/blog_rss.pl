@@ -1,5 +1,5 @@
-# <blog_rss(¸ñÂ÷ÆäÀÌÁö[,ºí·Î±×ÆäÀÌÁö])>
-# XML¾ÆÀÌÄÜ°ú RSSÀÇ URL ¸µÅ©¸¦ Ãâ·Â
+# <blog_rss(ëª©ì°¨íŽ˜ì´ì§€[,ë¸”ë¡œê·¸íŽ˜ì´ì§€])>
+# XMLì•„ì´ì½˜ê³¼ RSSì˜ URL ë§í¬ë¥¼ ì¶œë ¥
 
 sub blog_rss {
 	my ($txt) = @_;

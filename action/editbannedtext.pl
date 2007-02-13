@@ -1,5 +1,5 @@
 # editbannedtext action
-# ±ÝÁö´Ü¾î
+# ê¸ˆì§€ë‹¨ì–´
 sub action_editbannedtext {
 	my ($banList, $status);
 

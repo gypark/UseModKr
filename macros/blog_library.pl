@@ -1,17 +1,17 @@
 # blog_library.pl
-# blog_*** ¸ÅÅ©·Î ½Ã¸®ÁîµéÀÌ °øÅëÀ¸·Î »ç¿ëÇÏ´Â ÇÔ¼öµéÀ» ¸ğ¾Æ µĞ ¶óÀÌºê·¯¸®
+# blog_*** ë§¤í¬ë¡œ ì‹œë¦¬ì¦ˆë“¤ì´ ê³µí†µìœ¼ë¡œ ì‚¬ìš©í•˜ëŠ” í•¨ìˆ˜ë“¤ì„ ëª¨ì•„ ë‘” ë¼ì´ë¸ŒëŸ¬ë¦¬
 
 
-# param: ¸ñÂ÷ÆäÀÌÁö
+# param: ëª©ì°¨í˜ì´ì§€
 # return: ($status, $page, @list);
-#  $status : ¼º°øÇÏ¸é 1, ½ÇÆĞÇÏ¸é 0
-#  $page : ¼º°øÇÏ¸é ¸ñÂ÷ÆäÀÌÁöÀÇ »óÀ§ÆäÀÌÁö ÀÌ¸§, ½ÇÆĞÇÏ¸é ¿¡·¯¸Ş½ÃÁö
-#  @list : ¸ñÂ÷ÆäÀÌÁö·ÎºÎÅÍ ÀĞÀº ¸ñÂ÷ ¸®½ºÆ®
+#  $status : ì„±ê³µí•˜ë©´ 1, ì‹¤íŒ¨í•˜ë©´ 0
+#  $page : ì„±ê³µí•˜ë©´ ëª©ì°¨í˜ì´ì§€ì˜ ìƒìœ„í˜ì´ì§€ ì´ë¦„, ì‹¤íŒ¨í•˜ë©´ ì—ëŸ¬ë©”ì‹œì§€
+#  @list : ëª©ì°¨í˜ì´ì§€ë¡œë¶€í„° ì½ì€ ëª©ì°¨ ë¦¬ìŠ¤íŠ¸
 sub BlogReadToc($tocpage) {
 	use strict;
 	my ($tocpage) = @_;
 
-	# ¸ñÂ÷ÆäÀÌÁö ÀÌ¸§ ºĞ¼®
+	# ëª©ì°¨í˜ì´ì§€ ì´ë¦„ ë¶„ì„
 	$tocpage = &FreeToNormal(&RemoveLink($tocpage));
 	if (my $temp = &ValidId($tocpage)) {
 		return (0, "<font color='red'>$temp</font>");
@@ -24,7 +24,7 @@ sub BlogReadToc($tocpage) {
 		$toc_mainpage = $tocpage;
 	}
 
-	# ÆäÀÌÁö ¸ñ·Ï ÀĞÀ½
+	# í˜ì´ì§€ ëª©ë¡ ì½ìŒ
 	my ($fname, $status, $data);
 	$fname = &GetPageFile($tocpage);
 	if (!(-f $fname)) {
@@ -41,11 +41,11 @@ sub BlogReadToc($tocpage) {
 	my %temp_Text = split(/$FS3/, $temp_Section{'data'}, -1);
 	my $tocpage_Text = $temp_Text{'text'};
 
-	# ¶óÀÎ º°·Î ºĞ¸®
+	# ë¼ì¸ ë³„ë¡œ ë¶„ë¦¬
 	my @tocpage_Lines = split('\n',$tocpage_Text);
 	my @tocitem_List;
 
-	# À¯È¿ÇÑ ¶óÀÎ¸¸ ÃßÃâ
+	# ìœ íš¨í•œ ë¼ì¸ë§Œ ì¶”ì¶œ
 	foreach my $line (@tocpage_Lines) {
 		if ($line =~ m/^* (\[\[.+?\]\] \d+-\d+-\d+)\s*$/) {
 			push(@tocitem_List, $1);
@@ -56,10 +56,10 @@ sub BlogReadToc($tocpage) {
 }
 
 
-# param: ½ÃÀÛ¼ø¼­, ³¡¼ø¼­, ¸ñÂ÷¸®½ºÆ®
+# param: ì‹œì‘ìˆœì„œ, ëìˆœì„œ, ëª©ì°¨ë¦¬ìŠ¤íŠ¸
 # return: ($status, @list)
-#  $status : ¼º°øÇÏ¸é 1, ½ÇÆĞÇÏ¸é 0
-#  @list : ¼º°øÇÏ¸é ½ÃÀÛ¼ø¼­ºÎÅÍ ³¡¼ø¼­±îÁöÀÇ ¸®½ºÆ®. ½ÇÆĞÇÏ¸é ¿¡·¯¸Ş½ÃÁö
+#  $status : ì„±ê³µí•˜ë©´ 1, ì‹¤íŒ¨í•˜ë©´ 0
+#  @list : ì„±ê³µí•˜ë©´ ì‹œì‘ìˆœì„œë¶€í„° ëìˆœì„œê¹Œì§€ì˜ ë¦¬ìŠ¤íŠ¸. ì‹¤íŒ¨í•˜ë©´ ì—ëŸ¬ë©”ì‹œì§€
 sub BlogGetListOrder {
 	use strict;
 	my ($start, $end, @tocitem_List) = @_;
@@ -104,10 +104,10 @@ sub BlogGetListOrder {
 }
 
 
-# param: ½ÃÀÛ³¯Â¥, ³¡³¯Â¥, ¸ñÂ÷¸®½ºÆ®
+# param: ì‹œì‘ë‚ ì§œ, ëë‚ ì§œ, ëª©ì°¨ë¦¬ìŠ¤íŠ¸
 # return: ($status, @list)
-#  $status : ¼º°øÇÏ¸é 1, ½ÇÆĞÇÏ¸é 0
-#  @list : ¼º°øÇÏ¸é ½ÃÀÛ³¯Â¥ºÎÅÍ ³¡³¯Â¥±îÁöÀÇ ¸®½ºÆ®. ½ÇÆĞÇÏ¸é ¿¡·¯¸Ş½ÃÁö
+#  $status : ì„±ê³µí•˜ë©´ 1, ì‹¤íŒ¨í•˜ë©´ 0
+#  @list : ì„±ê³µí•˜ë©´ ì‹œì‘ë‚ ì§œë¶€í„° ëë‚ ì§œê¹Œì§€ì˜ ë¦¬ìŠ¤íŠ¸. ì‹¤íŒ¨í•˜ë©´ ì—ëŸ¬ë©”ì‹œì§€
 sub BlogGetListPeriod {
 	use strict;
 	my ($startdate, $enddate, @tocitem_List) = @_;

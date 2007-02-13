@@ -1,5 +1,5 @@
-# <blog_listorder(¸ñÂ÷ÆäÀÌÁö,½ÃÀÛ¼ø¼­,³¡¼ø¼­[,³¯Â¥Ãâ·Â¹æ½Ä])>
-# ¸ñÂ÷ÆäÀÌÁö¸¦ ÀĞ¾î¼­ ½ÃÀÛ¼ø¼­ºÎÅÍ ³¡¼ø¼­±îÁöÀÇ ÆäÀÌÁöÀÇ ¸ñ·ÏÀ» Ãâ·Â
+# <blog_listorder(ëª©ì°¨í˜ì´ì§€,ì‹œì‘ìˆœì„œ,ëìˆœì„œ[,ë‚ ì§œì¶œë ¥ë°©ì‹])>
+# ëª©ì°¨í˜ì´ì§€ë¥¼ ì½ì–´ì„œ ì‹œì‘ìˆœì„œë¶€í„° ëìˆœì„œê¹Œì§€ì˜ í˜ì´ì§€ì˜ ëª©ë¡ì„ ì¶œë ¥
 
 sub blog_listorder {
 	my ($txt) = @_;
@@ -13,7 +13,7 @@ sub MacroBlogListOrder {
 	use strict;
 	my ($tocpage, $start, $end, $showdate) = @_;
 
-	# ¶óÀÌºê·¯¸® ÀĞÀ½
+	# ë¼ì´ë¸ŒëŸ¬ë¦¬ ì½ìŒ
 	my ($MacrosDir, $MyMacrosDir) = ("./macros/", "./mymacros/");
 	if (-f "$MyMacrosDir/blog_library.pl") {
 		require "./$MyMacrosDir/blog_library.pl";
@@ -23,19 +23,19 @@ sub MacroBlogListOrder {
 		return "<font color='red'>blog_library.pl not found</font>";
 	}
 
-	# ¸ñÂ÷ÆäÀÌÁö·ÎºÎÅÍ ¸ñÂ÷¸®½ºÆ®¸¦ ¾ò¾î³¿
+	# ëª©ì°¨í˜ì´ì§€ë¡œë¶€í„° ëª©ì°¨ë¦¬ìŠ¤íŠ¸ë¥¼ ì–»ì–´ëƒ„
 	my ($status, $toc_mainpage, @tocitem_List) = &BlogReadToc($tocpage);
 	if (!$status) {
 		return "$toc_mainpage";
 	}
 
-	# Á¶°Ç¿¡ ¸Â´Â ¸®½ºÆ®¸¦ ±¸¼º
+	# ì¡°ê±´ì— ë§ëŠ” ë¦¬ìŠ¤íŠ¸ë¥¼ êµ¬ì„±
 	($status, @tocitem_List) = &BlogGetListOrder($start, $end, @tocitem_List);
 	if (!$status) {
 		return "@tocitem_List";
 	}
 
-	# ¸®½ºÆ®ÀÇ °¢ ÆäÀÌÁö¸¦ ¸ñ·Ï Ãâ·Â
+	# ë¦¬ìŠ¤íŠ¸ì˜ ê° í˜ì´ì§€ë¥¼ ëª©ë¡ ì¶œë ¥
 	my $txt;
 	$txt = "<UL>";
 	my ($page, $pagename, $date, $pageid);

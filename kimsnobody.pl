@@ -1,18 +1,18 @@
 #!/usr/bin/perl
 
 
-#   ÀÌ ÆÄÀÏ¿¡¼­ ¼öÁ¤ÇÒ °÷Àº Ã¹ÁÙÀÇ ÆÞpath(usr/bin/perl or usr/local/bin/perl)
-#   ¹Û¿¡´Â ¾ø½À´Ï´Ù.                          
+#   ì´ íŒŒì¼ì—ì„œ ìˆ˜ì •í•  ê³³ì€ ì²«ì¤„ì˜ íŽ„path(usr/bin/perl or usr/local/bin/perl)
+#   ë°–ì—ëŠ” ì—†ìŠµë‹ˆë‹¤.                          
 
 ####################################################################################
 #                                                                                  #
-#      ÇÁ·Î±×·¥ÀÌ¸§ : kimsBOARD                                                    #
-#            Á¦ÀÛÀÚ : ±è¼ºÈ£(w3master@kimsworld.net)                               #
-#            º£Æ÷Ã³ : http://www.kimsworld.net                                     #
-#          ¶óÀÌ¼¾½º : º» ¼Ò½º´Â »ó¾÷ÀûÀÎ ¿ëµµ°¡ ¾Æ´Ñ°æ¿ì¿¡ °³ÀÎ¿¡ ÇÑÇØ¼­ ÇÁ¸®¿þ¾î  #
-#                     ÀÌ¸ç ¼Ò½º¸¦ ¼öÁ¤ÇÏ¿© »ç¿ëÇÒ °æ¿ì Á¦ÀÛÀÚ¿Í ¹Ýµå½Ã »óÀÇ¸¦ °ÅÃÄ #
-#                     ¾ß ÇÏ¸ç ¼öÁ¤µÈ ¼Ò½º´Â ¾î¶°ÇÑ °æ¿ì¿¡µµ Àç¹èÆ÷ µÉ ¼ö ¾ø½À´Ï´Ù. #
-#            ÀúÀÛ±Ç : º» ¼Ò½º¿¡ ´ëÇÑ ÀúÀÛ±ÇÀº Á¦ÀÛÀÚÀÎ ±è¼ºÈ£¿¡°Ô ÀÖ½À´Ï´Ù.        #
+#      í”„ë¡œê·¸ëž¨ì´ë¦„ : kimsBOARD                                                    #
+#            ì œìž‘ìž : ê¹€ì„±í˜¸(w3master@kimsworld.net)                               #
+#            ë² í¬ì²˜ : http://www.kimsworld.net                                     #
+#          ë¼ì´ì„¼ìŠ¤ : ë³¸ ì†ŒìŠ¤ëŠ” ìƒì—…ì ì¸ ìš©ë„ê°€ ì•„ë‹Œê²½ìš°ì— ê°œì¸ì— í•œí•´ì„œ í”„ë¦¬ì›¨ì–´  #
+#                     ì´ë©° ì†ŒìŠ¤ë¥¼ ìˆ˜ì •í•˜ì—¬ ì‚¬ìš©í•  ê²½ìš° ì œìž‘ìžì™€ ë°˜ë“œì‹œ ìƒì˜ë¥¼ ê±°ì³ #
+#                     ì•¼ í•˜ë©° ìˆ˜ì •ëœ ì†ŒìŠ¤ëŠ” ì–´ë– í•œ ê²½ìš°ì—ë„ ìž¬ë°°í¬ ë  ìˆ˜ ì—†ìŠµë‹ˆë‹¤. #
+#            ì €ìž‘ê¶Œ : ë³¸ ì†ŒìŠ¤ì— ëŒ€í•œ ì €ìž‘ê¶Œì€ ì œìž‘ìžì¸ ê¹€ì„±í˜¸ì—ê²Œ ìžˆìŠµë‹ˆë‹¤.        #
 #                                                                                  #
 #                                                                                  #
 ####################################################################################
@@ -52,12 +52,12 @@ sub open_directory {
 print "<form action=$CgiUrl method=post>
        <table border=0 width=700 bgcolor=gray cellspacing=1 cellpadding=1>
   <tr>
-    <td bgcolor=C0C0C0 align=center><font face=µ¸¿ò><strong>NO.</strong></font></td>
-    <td bgcolor=C0C0C0 align=center><font face=µ¸¿ò><strong>Çü½Ä</strong></font></td>
-    <td bgcolor=C0C0C0 align=center><font face=µ¸¿ò><strong>µð·ºÅä¸® ¹× ÆÄÀÏ</strong></font> <font color=red face=µ¸¿ò>[ÇöÀç°æ·Î] <input type=text size=40 name=dir value=\"$FORM{'value'}/\">
-     <a href=$CgiUrl>[Ã³À½]</a> <a href=javascript:history.go(-1)>[µÚ·Î]</a> <a href=\"$CgiUrl?action=$FORM{'action'}&value=$FORM{'value'}\">[¸®·Îµå]</a></font></td>
-    <td bgcolor=C0C0C0 align=center><font face=µ¸¿ò><strong>¿­±â</strong></font></td>
-    <td bgcolor=C0C0C0 align=center><font face=µ¸¿ò><strong>»èÁ¦</strong></font></td>
+    <td bgcolor=C0C0C0 align=center><font face=ë‹ì›€><strong>NO.</strong></font></td>
+    <td bgcolor=C0C0C0 align=center><font face=ë‹ì›€><strong>í˜•ì‹</strong></font></td>
+    <td bgcolor=C0C0C0 align=center><font face=ë‹ì›€><strong>ë””ë ‰í† ë¦¬ ë° íŒŒì¼</strong></font> <font color=red face=ë‹ì›€>[í˜„ìž¬ê²½ë¡œ] <input type=text size=40 name=dir value=\"$FORM{'value'}/\">
+     <a href=$CgiUrl>[ì²˜ìŒ]</a> <a href=javascript:history.go(-1)>[ë’¤ë¡œ]</a> <a href=\"$CgiUrl?action=$FORM{'action'}&value=$FORM{'value'}\">[ë¦¬ë¡œë“œ]</a></font></td>
+    <td bgcolor=C0C0C0 align=center><font face=ë‹ì›€><strong>ì—´ê¸°</strong></font></td>
+    <td bgcolor=C0C0C0 align=center><font face=ë‹ì›€><strong>ì‚­ì œ</strong></font></td>
   </tr></form>\n";    
   
 if(!$FORM{'value'}) {$FORM{'value'} = $BaseDir;} else {$FORM{'value'} = "$FORM{'value'}/"; }
@@ -126,13 +126,13 @@ print "
 <!--                                                                  -->
 <!--  KIMSBOARD kimsnobody.cgi                                        -->
 <!--                                                                  -->
-<!--  ¸¸µç»ç¶÷ : ±è¼ºÈ£                                               -->
-<!--  È¨ÆäÀÌÁö : http://www.kimsworld.net                             -->
-<!--  ÀüÀÚ¿ìÆí : w3master\@kimsworld.net                               -->
-<!--  ¹èÆ÷³¯Â¥ : 2000.03.05                                           -->
+<!--  ë§Œë“ ì‚¬ëžŒ : ê¹€ì„±í˜¸                                               -->
+<!--  í™ˆíŽ˜ì´ì§€ : http://www.kimsworld.net                             -->
+<!--  ì „ìžìš°íŽ¸ : w3master\@kimsworld.net                               -->
+<!--  ë°°í¬ë‚ ì§œ : 2000.03.05                                           -->
 <!--                                                                  -->
-<!--  ÇÁ·Î±×·¥¿¡ °üÇÑ °ÍÀº È¨ÆäÀÌÁö °Ô½ÃÆÇÀÌ³ª ÀÌ¸ÞÀÏÀ» ÅëÇØ ¹®ÀÇÇØ   -->
-<!--  ÁÖ½Ã±â ¹Ù¶ø´Ï´Ù.                                                -->
+<!--  í”„ë¡œê·¸ëž¨ì— ê´€í•œ ê²ƒì€ í™ˆíŽ˜ì´ì§€ ê²Œì‹œíŒì´ë‚˜ ì´ë©”ì¼ì„ í†µí•´ ë¬¸ì˜í•´   -->
+<!--  ì£¼ì‹œê¸° ë°”ëžë‹ˆë‹¤.                                                -->
 <!--  Copyright (c) Kim Seong-ho All rights reserved.                 -->
 <!--                                                                  -->
 <!---------------------------------------------------------------------->";
@@ -147,9 +147,9 @@ print "
    p,br,body,td,input,form,textarea,option {font-size:9pt;}
    select    { background-color:white;}
   .button   { height:21px; border-width:1; border-style:ridge; border-color:#d0d0d0; background-color:;}
-  .bot { cursor: hand; font: 9pt µ¸¿ò; height: 20px; border-width: 1px 1px 1px 1px; border-color: 888888; color: white; background: 666666; }
+  .bot { cursor: hand; font: 9pt ë‹ì›€; height: 20px; border-width: 1px 1px 1px 1px; border-color: 888888; color: white; background: 666666; }
   .editbox  { border:1 solid black; background-color:white; }
-  .ver8 {font-family:Verdana,Arial,µ¸¿ò;font-size:8pt}
+  .ver8 {font-family:Verdana,Arial,ë‹ì›€;font-size:8pt}
   .ad{border:1 solid black}
   .family{line-height:140%}
  -->
@@ -164,16 +164,16 @@ print "
 ###############################################################################
 sub ending {
   print "
-  <p><hr width=700 size=0>º» ÆÄÀÏÀº nobody·Î »ý¼ºµÈ ÆÄÀÏ°ú ÆÛ¹Ì¼ÇÀÌ rwx-rwx-rwxÀÎ ÆÄÀÏ¸¸ Áö¿ï ¼ö ÀÖ½À´Ï´Ù.<br>
-     º» ÆÄÀÏÀ» ¾÷·ÎµåÇÏ±âÀü ¿ì¼± Áö¿ì°íÀÚ ÇÏ´Â µð·ºÅä¸® ¹× ÆÄÀÏÀ» ÅÚ³ÝÀÌ³ª ftp¿¡¼­ ÃÖ´ëÇÑ Áö¿öÁÝ´Ï´Ù.<br>
-     ftp³ª ÅÚ³Ý¿¡¼­ Áö¿öÁöÁö ¾Ê´Â µð·ºÅä¸®¿Í ÆÄÀÏÀ» »èÁ¦ÇØÁÝ´Ï´Ù..<br>
-     [Âü°í] nobody°¡ ¾Æ´Ñ ÆÄÀÏÀÌ nobodyÆÄÀÏ »çÀÌ¿¡ ³¢¾î ÀÖÀ¸¸é ÇÑ²¨¹ø¿¡ »èÁ¦ÇÏ±â´Â ¾ÈµË´Ï´Ù.
+  <p><hr width=700 size=0>ë³¸ íŒŒì¼ì€ nobodyë¡œ ìƒì„±ëœ íŒŒì¼ê³¼ í¼ë¯¸ì…˜ì´ rwx-rwx-rwxì¸ íŒŒì¼ë§Œ ì§€ìš¸ ìˆ˜ ìžˆìŠµë‹ˆë‹¤.<br>
+     ë³¸ íŒŒì¼ì„ ì—…ë¡œë“œí•˜ê¸°ì „ ìš°ì„  ì§€ìš°ê³ ìž í•˜ëŠ” ë””ë ‰í† ë¦¬ ë° íŒŒì¼ì„ í…”ë„·ì´ë‚˜ ftpì—ì„œ ìµœëŒ€í•œ ì§€ì›Œì¤ë‹ˆë‹¤.<br>
+     ftpë‚˜ í…”ë„·ì—ì„œ ì§€ì›Œì§€ì§€ ì•ŠëŠ” ë””ë ‰í† ë¦¬ì™€ íŒŒì¼ì„ ì‚­ì œí•´ì¤ë‹ˆë‹¤..<br>
+     [ì°¸ê³ ] nobodyê°€ ì•„ë‹Œ íŒŒì¼ì´ nobodyíŒŒì¼ ì‚¬ì´ì— ë¼ì–´ ìžˆìœ¼ë©´ í•œêº¼ë²ˆì— ì‚­ì œí•˜ê¸°ëŠ” ì•ˆë©ë‹ˆë‹¤.
   <hr width=700 size=0><br><a href=http://www.kimsworld.net>Created by kims</a></center></font></BODY>
   </HTML>
   \n";
   exit;
 }
-################################################################################[ÆÄÀÏÁ¾·ùÆÄ¾Ç]
+################################################################################[íŒŒì¼ì¢…ë¥˜íŒŒì•…]
 sub file_type {
     $word = $data;
     if($word =~ /.gif/) {$wtype = "Image";} 
