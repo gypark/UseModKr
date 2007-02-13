@@ -17,7 +17,7 @@ $FullUrl     = "";              # Set if the auto-detected URL is wrong
 $RedirType   = 1;               # 1 = CGI.pm, 2 = script, 3 = no redirect
 $AdminPass   = "admin";         # Set to non-blank to enable password(s)
 $EditPass    = "edit";          # Like AdminPass, but for editing only
-$StyleSheet  = "wiki.css";      # URL for CSS stylesheet (like "/wiki.css")
+$StyleSheet  = "/cgi-bin/utf/wiki.css";      # URL for CSS stylesheet (like "/wiki.css")
 $NotFoundPg  = "";              # Page for not-found links ("" for blank pg)
 $EmailFrom   = "Wiki";          # Text for "From: " field of email notes.
 $SendMail    = "/usr/sbin/sendmail";  # Full path to sendmail executable
@@ -25,7 +25,7 @@ $FooterNote  = "";              # HTML for bottom of every page
 $EditNote    = "";              # HTML notice above buttons on edit page
 $MaxPost     = 1024 * 1024 * 3;  # Maximum 210K posts (about 200K for pages)
 $NewText     = "";              # New page text ("" for default message)
-$HttpCharset = "euc-kr";              # Charset for pages, like "iso-8859-2"
+$HttpCharset = "UTF-8";              # Charset for pages, like "iso-8859-2"
 $UserGotoBar = "<a href='/'>Home</a>";              # HTML added to end of goto bar
 ##########################################################
 ### added by gypark
@@ -51,11 +51,11 @@ $LogoPage   = "";	# this page will be displayed when no parameter
 ### 페이지 처리 시간을 출력한다
 $CheckTime = 0;   # 1 = mesure the processing time (requires Time::HiRes module), 0 = do not 
 ### 내부 아이콘이 저장된 디렉토리
-$IconDir = "./icons/";	# directory containing icon files
+$IconDir = "/cgi-bin/utf/icons/";	# directory containing icon files
 ### 화일 업로드와 오에카키 저장을 위한 디렉토리 (내부 경로를 사용)
 $UploadDir   = "./upload";	# by gypark. file upload
 ### 화일 업로드와 오에카키 저장을 위한 URL (http:// 시작하는 절대경로 사용)
-$UploadUrl   = ""; # by gypark, URL for the directory containing uploaded file
+$UploadUrl   = "http:/cgi-bin/utf/upload"; # by gypark, URL for the directory containing uploaded file
                    # if undefined, it has the same value as $UploadDir
 ### hide page
 $HiddenPageFile = "$DataDir/hidden";  # hidden pages list file
@@ -68,13 +68,13 @@ $RssLogoUrl  = '';              # Optional image for RSS feed
 $RssDays     = 7;               # Default number of days in RSS feed
 $RssTimeZone = 9;				# Time Zone of Server (hour), 0 for GMT, 9 for Korea
 ### 스크립트 뒤에 / or ? 선택 from usemod1.0
-$SlashLinks   = 0;      # 1 = use script/action links, 0 = script?action
+$SlashLinks   = 1;      # 1 = use script/action links, 0 = script?action
 ### interwiki 아이콘 사용
-$InterIconDir = "./icons-inter/"; # directory containing interwiki icons
+$InterIconDir = "/cgi-bin/utf/icons-inter/"; # directory containing interwiki icons
 ### trackback 보내기
 $SendPingAllowed = 0;   # 0 - anyone, 1 - who can edit, 2 - who is admin
 ### java script 함수들
-$JavaScript  = "wikiscript.js";   # URL for JavaScript code (like "/wikiscript.js")
+$JavaScript  = "/cgi-bin/utf/wikiscript.js";   # URL for JavaScript code (like "/wikiscript.js")
 ### LaTeX 변환 지원
 $UseLatex    = 0;		# 1 = Use LaTeX conversion   2 = Don't convert
 ### 사용자 정의 헤더
@@ -147,7 +147,7 @@ $CountDir    = "$DataDir/count";	# by gypark. Stores view-counts
 # added by luke
 
 $UseEmoticon 	= 1;		# 1 = use emoticon, 0 = not use
-$EmoticonPath	= "http:emoticon/";	# where emoticon stored
+$EmoticonPath	= "http:/cgi-bin/utf/emoticon/";	# where emoticon stored
 $ClickEdit	 	= 1;		# 1 = edit page by double click on page, 0 = no use
 $EditPagePos	= 1;		# 1 = bottom, 2 = top, 3 = top & bottom
 $NamedAnchors   = 1;        # 0 = no anchors, 1 = enable anchors, 2 = enable but suppress display
