@@ -35,7 +35,7 @@ $UserGotoBar3 = "";
 $UserGotoBar4 = "";
 
 ### 번역화일 사용
-do "./translations/korean.pl";    # Path of translation file
+do "./translations/ko_KR.UTF-8.pl";    # Path of translation file
 
 ### path of source-highlight
 $SOURCEHIGHLIGHT    = "/usr/local/bin/source-highlight";    # path of source-highlight
