@@ -506,7 +506,7 @@ Bottom
 Error: Can not update prefs. That ID already exists and does not match your ID.
 에러: 이미 존재하는 아이디입니다. 설정을 저장할 수 없습니다.
 RecentChanges
-RecentChanges
+최근변경내역
 Su
 일
 Mo
