@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 # CGI script to copy directory for restoration
-# by gypark (raymundo@kebi.com)
+# by gypark (gypark@gmail.com)
 # 2003-03-10
 
 # 다른 곳에 백업해둔 위키 데이타를 nobody 의 권한으로 복사하여 복원하는 스크립트입니다.
@@ -50,7 +50,7 @@ sub print_header {
 	print <<END_OF_FILE;
 <html>
 <head>
-<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=EUC-KR">
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <title>restore the files to nobody's permission</title>
 </head>
 <body>
@@ -75,7 +75,7 @@ sub print_form {
 <p>
 복원할 데이타 디렉토리의 경로 : <input type="text" name="dest" size="60" value="$param{'dest'}" /><br>\n
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (예: /home/foo/public_html/cgi-bin/wiki/data)<br>\n
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (이 디렉토리가 시스템에 존재하고, 퍼미션이 777로 되어 있으며,<br>\n
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (이 디렉토리가 시스템에 존재하고, 퍼미션이 2777로 되어 있으며,<br>\n
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  디렉토리 안에 다른 화일이나 디렉토리가 없어야 합니다)<br>\n
 <p>
 <input type="submit" name="copy" value="복사" />

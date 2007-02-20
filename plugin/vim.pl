@@ -65,7 +65,7 @@ sub plugin_vim {
 		open STDOUT, ">hash.log";
 		open STDERR, ">&STDOUT";
 
-		qx($vim -T xterm -e -s $tmpi +"syntax on" +"set syntax=$type" $option +"ru! $tohtml" +"wq! $tmpo" +q);
+		qx($vim -T xterm -e -s $tmpi +"set enc=$HttpCharset" +"syntax on" +"set syntax=$type" $option +"ru! $tohtml" +"wq! $tmpo" +q);
 
 		close STDOUT;
 		close STDERR;

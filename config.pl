@@ -81,6 +81,9 @@ $UserHeader  = '';              # Optional HTML header additional content
 $OekakiJar   = "oekakibbs.jar";	# URL for oekaki *.jar file
 ### 존재하지 않는 페이지 표시 방식
 $EditNameLink = 1;      # 1 = edit links use name (CSS), 0 = '?' links
+### 브라우저의 주소창의 인코딩 추측 (utf-8 제외)
+### ex: ('euc-jp', 'shiftjis', '7bit-jis')
+@UrlEncodingGuess = ('euc-kr');
 ##
 ##########################################################
 

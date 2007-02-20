@@ -25,27 +25,17 @@
 #    Free Software Foundation, Inc.
 #    59 Temple Place, Suite 330
 #    Boston, MA 02111-1307 USA
-
 package UseModWiki;
 use strict;
 
-###############
-### added by gypark
-### wiki.pl 버전 정보
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext2rc1";
-$WikiRelease = "2007-02-13";
-
+$WikiVersion = "0.92K3-ext2rc2";
+$WikiRelease = "2007-02-20";
 $HashKey = "salt"; # 2-character string
-###
-###############
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
 
 # Configuration/constant variables:
-###############
-### modified by gypark
-### 제일 끝에 ConfigFile 등등 추가
 use vars qw(@RcDays @HtmlPairs @HtmlSingle
 	$TempDir $LockDir $DataDir $HtmlDir $UserDir $KeepDir $PageDir
 	$InterFile $RcFile $RcOldFile $IndexFile $FullUrl $SiteName $HomePage
@@ -60,11 +50,7 @@ use vars qw(@RcDays @HtmlPairs @HtmlSingle
 	$UrlProtocols $UrlPattern $ImageExtensions $RFCPattern $ISBNPattern
 	$FS $FS1 $FS2 $FS3 $CookieName $SiteBase $StyleSheet $NotFoundPg
 	$FooterNote $EditNote $MaxPost $NewText $NotifyDefault $HttpCharset);
-###
-###############
 
-###############
-### added by gypark
 ### 패치를 위해 추가된 환경설정 변수
 use vars qw(
 	$UserGotoBar $UserGotoBar2 $UserGotoBar3 $UserGotoBar4 
@@ -74,12 +60,10 @@ use vars qw(
 	$HiddenPageFile $TemplatePage
 	$InterWikiMoniker $SiteDescription $RssLogoUrl $RssDays $RssTimeZone
 	$SlashLinks $InterIconDir $SendPingAllowed $JavaScript
-	$UseLatex $UserHeader $OekakiJar
+	$UseLatex $UserHeader $OekakiJar @UrlEncodingGuess
 	);
-###
-###############
 
-use vars qw($DocID $ImageTag $ClickEdit $UseEmoticon $EmoticonPath $EditPagePos $EditFlag);		# luke
+use vars qw($DocID $ImageTag $ClickEdit $UseEmoticon $EmoticonPath $EditPagePos);		# luke
 use vars qw($TableOfContents @HeadingNumbers $NamedAnchors $AnchoredLinkPattern);
 use vars qw($TableTag $TableMode);
 
@@ -91,25 +75,18 @@ use vars qw(%Page %Section %Text %InterSite %SaveUrl %SaveNumUrl
 	$OpenPageName @KeptList @IndexList $IndexInit
 	$q $Now $UserID $TimeZoneOffset $ScriptName $BrowseCode $OtherCode);
 
-###############
-### added by gypark
 ### 패치를 위해 추가된 내부 전역 변수
 use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime $Sec_Revision $Sec_Ts
 	$ViewCount $AnchoredFreeLinkPattern %UserInterest %HiddenPage
 	$pageid $IsPDA $MemoID $QuotedFullUrl %MacroFile $UseShortcut
 	$UseShortcutPage $SectionNumber $AnchorPattern);
-###
-###############
 
 # == Configuration =====================================================
 ###############
-### replaced by gypark
 ### 보안을 위해서 데이타 저장 공간을 다른 곳으로 지정
 ### 적절히 바꾸어서 사용할 것
-# $DataDir     = "data"; # Main wiki directory
 $DataDir     = "data";    # Main wiki directory
 $ConfigFile  = "config.pl"; # path of config file
-###
 ###############
 $RunCGI      = 1;       # 1 = Run script as CGI,  0 = Load but do not run
 
@@ -168,6 +145,7 @@ $JavaScript  = "wikiscript.js";   # URL for JavaScript code (like "/wikiscript.j
 $UseLatex    = 0;		# 1 = Use LaTeX conversion   2 = Don't convert
 $UserHeader  = '';              # Optional HTML header additional content
 $OekakiJar   = "oekakibbs.jar";	# URL for oekaki *.jar file
+@UrlEncodingGuess = ('euc-kr');		# Browser's URL encoding could be one of these ones (except "utf-8")
 $EditNameLink = 0;      # 1 = edit links use name (CSS), 0 = '?' links
 
 # Major options:
@@ -247,19 +225,13 @@ $UseShortcutPage = 1;
 
 # The "main" program, called at the end of this script file.
 sub DoWikiRequest {
-###############
-### replaced by gypark
 ### 환경 변수들을 지정하는 루틴을 제거. 무조건 config file 를 읽음.
 	if (-f $ConfigFile) {
 		do "$ConfigFile";
 	} else {
 		die "Can not load config file";
 	}
-###
-###############
 
-###############
-### added by gypark
 ### 처리 시간 측정
 if ($CheckTime) {
 	eval "use Time::HiRes qw( usleep ualarm gettimeofday tv_interval )";
@@ -269,19 +241,13 @@ if ($CheckTime) {
 		$StartTime = [gettimeofday()];
 	}
 }
-###
-###############
 
-###############
-### added by gypark
 ### oekaki
 	if (($ENV{'QUERY_STRING'} eq "action=oekaki&mode=save") ||
 			($ENV{'PATH_INFO'} eq "/action=oekaki&mode=save")) {
 		&OekakiSave();
 		return;
 	}
-###
-###############
 
 	&InitLinkPatterns();
 	if (!&DoCacheBrowse()) {
@@ -304,15 +270,20 @@ sub InitLinkPatterns {
 	$FS1 = $FS . "1";   # The FS values are used to separate fields
 	$FS2 = $FS . "2";   # in stored hashtables and other data structures.
 	$FS3 = $FS . "3";   # The FS character is not allowed in user data.
-###############
 ### added by gypark
 	$FS_lt = $FS . "lt";
 	$FS_gt = $FS . "gt";
-###
-###############
-	$UpperLetter = "[A-Z\xc0-\xde]";
-	$LowerLetter = "[a-z\xdf-\xff]";
-	$AnyLetter   = "[A-Za-z\x80-\xff_0-9]";
+
+	$UpperLetter = "[A-Z";
+	$LowerLetter = "[a-z";
+	$AnyLetter   = "[A-Za-z";
+### 라틴 문자 지원
+#	$UpperLetter .= "\xc0-\xde";
+#	$LowerLetter .= "\xdf-\xff";
+#	$AnyLetter   .= "\x80-\xff";
+	$AnyLetter   .= "_0-9";
+	$UpperLetter .= "]"; $LowerLetter .= "]"; $AnyLetter .= "]";
+#	$AnyLetter   = "(?:[A-Za-z_0-9]|(?:[\xc2-\xdf][\x80-\xbf]))";
 
 	# Main link pattern: lowercase between uppercase, then anything
 	$LpA = $UpperLetter . "+" . $LowerLetter . "+" . $UpperLetter
@@ -375,24 +346,17 @@ sub DoCacheBrowse {
 	return 0  if (!$UseCache);
 	$query = $ENV{'QUERY_STRING'};
 	if (($query eq "") && ($ENV{'REQUEST_METHOD'} eq "GET")) {
-###############
-### replaced by gypark
 ### LogoPage 가 있으면 이것을 embed 형식으로 출력
-#		$query = $HomePage;  # Allow caching of home page.
 		if ($LogoPage eq "") {
 			$query = $HomePage;  # Allow caching of home page.
 		} else {
 			$query = $LogoPage;
 		}
-###
-###############
 	}
-###############
-### added by gypark
+
 ### LogoPage 가 있으면 이것을 embed 형식으로 출력
 	return 0 if ($query eq $LogoPage);
-###
-###############
+
 	if (!($query =~ /^$LinkPattern$/)) {
 		if (!($FreeLinks && ($query =~ /^$FreeLinkPattern$/))) {
 			return 0;  # Only use cache for simple links
@@ -454,13 +418,10 @@ sub InitRequest {
 	my @ScriptPath = split('/', "$ENV{SCRIPT_NAME}");
 
 	$CGI::POST_MAX = $MaxPost;
-###############
-### replaced by gypark
 ### file upload
 #	$CGI::DISABLE_UPLOADS = 1;  # no uploads
 	$CGI::DISABLE_UPLOADS = 0;  
-###
-###############
+
 ### slashlinks 처리
 	if ($SlashLinks && (length($ENV{'PATH_INFO'}) > 1)) {
 		$ENV{'QUERY_STRING'} .= '&' if ($ENV{'QUERY_STRING'});
@@ -477,16 +438,13 @@ sub InitRequest {
 #####
 	$q->autoEscape(undef);
 
-###############
-### added by gypark
 ### file upload
 	if ($q->cgi_error() =~ m/^413/) {
 		print $q->redirect(-url=>"http:$ENV{SCRIPT_NAME}".&ScriptLinkChar()."action=upload&error=3");
 		exit 1;
 	}
 	$UploadUrl = "http:$UploadDir" if ($UploadUrl eq "");
-###
-###############
+
 	$Now = time;                     # Reset in case script is persistent
 	$ScriptName = pop(@ScriptPath);  # Name used in links
 ### slashlinks 처리
@@ -507,15 +465,13 @@ sub InitRequest {
 		return 0;
 	}
 	&InitCookie();         # Reads in user data
-###############
-### added by gypark
+
 ### hide page
 	my ($status, $data) = &ReadFile($HiddenPageFile);
 	if ($status) {
 		%HiddenPage = split(/$FS1/, $data, -1);
 	}
-###
-###############
+
 	return 1;
 }
 
@@ -540,8 +496,7 @@ sub DoBrowseRequest {
 	my ($id, $action, $text);
 
 	if (!$q->param) {             # No parameter
-###############
-### replaced by gypark
+
 ### LogoPage 가 있으면 이것을 embed 형식으로 출력
 #		&BrowsePage($HomePage);
 		if ($LogoPage eq "") {
@@ -550,30 +505,22 @@ sub DoBrowseRequest {
 			$EmbedWiki = 1;
 			&BrowsePage($LogoPage);
 		}
-###
-###############
+
 		return 1;
 	}
 	$id = &GetParam('keywords', '');
-###############
+
 ### pda clip by gypark
 	$IsPDA = &GetParam("pda", "");
 	$EmbedWiki = 1 if ($IsPDA);
-###
-###############
+
 	if ($id) {                    # Just script?PageName
+### QUERY_STRING 이 utf-8이 아닌 인코딩인 경우
+		$id = guess_and_convert($id);
+				
 		if ($FreeLinks && (!-f &GetPageFile($id))) {
 			$id = &FreeToNormal($id);
 		}
-### QUERY_STRING 이 utf-8로 들어온 경우
-		if (&ValidId($id) ne "") {
-			my $converted_id = encode_korean($id, 'utf-8', "$HttpCharset");
-			if (&ValidId($converted_id) eq "") {
-				$id = $converted_id;
-			}
-		}
-#####
-
 		if (($NotFoundPg ne '') && (!-f &GetPageFile($id))) {
 			$id = $NotFoundPg;
 		}
@@ -583,16 +530,11 @@ sub DoBrowseRequest {
 	}
 	$action = lc(&GetParam('action', ''));
 	$id = &GetParam('id', '');
-### QUERY_STRING 이 utf-8로 들어온 경우
-		if (&ValidId($id) ne "") {
-			my $converted_id = encode_korean($id, 'utf-8', "$HttpCharset");
-			if (&ValidId($converted_id) eq "") {
-				$id = $converted_id;
-				$q->param('id', $converted_id);
-			}
-		}
-#####
 
+### QUERY_STRING 이 utf-8이 아닌 인코딩인 경우
+	$id = guess_and_convert($id);
+
+	$q->param('id', $id);
 	$DocID = $id;
 	if ($action eq 'browse') {
 		if ($FreeLinks && (!-f &GetPageFile($id))) {
@@ -601,19 +543,16 @@ sub DoBrowseRequest {
 		if (($NotFoundPg ne '') && (!-f &GetPageFile($id))) {
 			$id = $NotFoundPg;
 		}
-###############
-### added by gypark
+
 ### id 가 NULL 일 경우 홈으로 이동
-### from Bab2's patch
 		if ($id eq '') {
 			$id = $HomePage;
 		}
-###
-###############
+
 		&BrowsePage($id)  if &ValidIdOrDie($id);
 		return 1;
 	} elsif ($action eq 'rc') {
-###############
+
 ### pda clip by gypark
 #		&BrowsePage(T($RCName));
 		if ($IsPDA) {
@@ -624,8 +563,7 @@ sub DoBrowseRequest {
 		} else {
 			&BrowsePage(T($RCName));
 		}
-###
-###############
+
 		return 1;
 	} elsif ($action eq 'random') {
 		&DoRandom();
@@ -643,14 +581,9 @@ sub BrowsePage {
 	my ($fullHtml, $oldId, $allDiff, $showDiff, $openKept);
 	my ($revision, $goodRevision, $diffRevision, $newText);
 
-###############
-### added by gypark
 ### comments from Jof
 	$pageid = $id;
-###
-###############
-###############
-### added by gypark
+
 ### hide page
 	if (&PageIsHidden($id)) {
 		print &GetHeader($id, &QuoteHtml($id), $oldId);
@@ -658,19 +591,14 @@ sub BrowsePage {
 		print &GetCommonFooter();
 		return;
 	}
-###
-###############
-		
+
 	&OpenPage($id);
 	&OpenDefaultText();
-###############
-### added by gypark
 ### page count
 	if (-f &GetPageFile($id)) {
 		$ViewCount = &GetPageCount($id) if (-f &GetPageFile($id));
 	}
-###
-###############
+
 	$openKept = 0;
 	$revision = &GetParam('revision', '');
 	$revision =~ s/\D//g;           # Remove non-numeric chars
@@ -684,13 +612,11 @@ sub BrowsePage {
 			&OpenKeptRevision($revision);
 		}
 	}
-###############
-### added by gypark
+
 ### 매크로가 들어간 페이지의 편집가이드 문제 해결
 	$Sec_Revision = $Section{'revision'};
 	$Sec_Ts = $Section{'ts'};
-###
-###############
+
 	$newText = $Text{'text'};     # For differences
 	# Handle a single-level redirect
 	$oldId = &GetParam('oldid', '');
@@ -711,8 +637,7 @@ sub BrowsePage {
 			$oldId = '';
 		}
 	}
-###############
-### added by gypark
+
 ### #EXTERN
 	if (substr($Text{'text'}, 0, 8) eq '#EXTERN ') {
 		$oldId = &GetParam('oldid', '');
@@ -722,8 +647,8 @@ sub BrowsePage {
 			return;
 		}
 	}
-###
-###############
+#####
+
 	$MainPage = $id;
 	$MainPage =~ s|/.*||;  # Only the main page name (remove subpage)
 	$fullHtml = &GetHeader($id, &QuoteHtml($id), $oldId);
@@ -752,11 +677,9 @@ sub BrowsePage {
 		$diffRevision = &GetParam('diffrevision', $diffRevision);
 		# Later try to avoid the following keep-loading if possible?
 		&OpenKeptRevisions('text_default')  if (!$openKept);
-###############
-### added by gypark
+
 ### 최근변경내역에 북마크 기능 도입
 		if ($showDiff == 5) { 
-#			if (&GetParam('username',"") ne "") {
 			if (&LoginUser()) {
 				$diffRevision = $Page{'revision'} - 1;
 				my $userBookmark = &GetParam('bookmark',-1);
@@ -768,8 +691,7 @@ sub BrowsePage {
 			}
 			$showDiff = &GetParam("defaultdiff", 1);
 		}
-###
-###############
+
 		$fullHtml .= &GetDiffHTML($showDiff, $id, $diffRevision, "$revision", $newText);
 		$fullHtml .= "<hr>\n";
 	}
@@ -800,13 +722,11 @@ sub BrowsePage {
 	$fullHtml .= &GetFooterText($id, $goodRevision);
 	print $fullHtml;
 	return  if ($showDiff || ($revision ne ''));  # Don't cache special version
-###############
-### replaced by gypark
+
 ### redirect 로 옮겨가는 경우에는 cache 생성을 하지 않게 함
 #	&UpdateHtmlCache($id, $fullHtml)  if $UseCache;
 	&UpdateHtmlCache($id, $fullHtml)  if ($UseCache && ($oldId eq ''));
 ###
-###############
 }
 
 sub ReBrowsePage {
@@ -823,8 +743,6 @@ sub ReBrowsePage {
 	}
 }
 
-###############
-### added by gypark
 ### #EXTERN
 sub BrowseExternUrl {
 	my ($id, $oldId, $url) = @_;
@@ -861,34 +779,24 @@ sub BrowseExternUrl {
 		return;
 	}
 }
-###
-###############
 
 sub DoRc {
-###############
-### added by gypark
 ### rss from usemod1.0
 	my ($rcType) = @_;
 	my $showHTML;
-###
-###############
+
 	my ($fileData, $rcline, $i, $daysago, $lastTs, $ts, $idOnly);
 	my (@fullrc, $status, $oldFileData, $firstTs, $errorText);
 	my $starttime = 0;
 	my $showbar = 0;
 
-###############
-### added by gypark
 ### rss from usemod1.0
 	if (0 == $rcType) {
 		$showHTML = 0;
 	} else {
 		$showHTML = 1;
 	}
-###
-###############
 
-###############
 ### pda clip by gypark
 	if ($IsPDA) {
 		$daysago = &GetParam("days", 0);
@@ -897,69 +805,57 @@ sub DoRc {
 		print "<h2>$SiteName : " . 
 			Ts('Updates in the last %s day' . (($daysago != 1)?"s":""), $daysago) . "</h2>\n";
 	} else {
-###
-###############
-	if (&GetParam("sincelastvisit", 0)) {
-		$starttime = $q->cookie($CookieName ."-RC");
-	} elsif (&GetParam("from", 0)) {
-		$starttime = &GetParam("from", 0);
-###############
-### replaced by gypark
+
+		if (&GetParam("sincelastvisit", 0)) {
+			$starttime = $q->cookie($CookieName ."-RC");
+		} elsif (&GetParam("from", 0)) {
+			$starttime = &GetParam("from", 0);
+
 ### rss from usemod1.0
 #		print "<h2>" . Ts('Updates since %s', &TimeToText($starttime))
 #					. "</h2>\n";
-		if ($showHTML) {
-			print "<h2>" . Ts('Updates since %s', &TimeToText($starttime))
-						. "</h2>\n";
-		}
+			if ($showHTML) {
+				print "<h2>" . Ts('Updates since %s', &TimeToText($starttime))
+							. "</h2>\n";
+			}
 ###
-###############
-	} else {
-		$daysago = &GetParam("days", 0);
-		$daysago = &GetParam("rcdays", 0)  if ($daysago == 0);
-		if ($daysago) {
-			$starttime = $Now - ((24*60*60)*$daysago);
-###############
-### replaced by gypark
+		} else {
+			$daysago = &GetParam("days", 0);
+			$daysago = &GetParam("rcdays", 0)  if ($daysago == 0);
+			if ($daysago) {
+				$starttime = $Now - ((24*60*60)*$daysago);
+
 ### rss from usemod1.0
 #			print "<h2>" . Ts('Updates in the last %s day'
 #						 . (($daysago != 1)?"s":""), $daysago) . "</h2>\n";
-			if ($showHTML) {
-				print "<h2>" . Ts('Updates in the last %s day'
-							 . (($daysago != 1)?"s":""), $daysago) . "</h2>\n";
-			}
+				if ($showHTML) {
+					print "<h2>" . Ts('Updates in the last %s day'
+								 . (($daysago != 1)?"s":""), $daysago) . "</h2>\n";
+				}
 ###
-###############
-			# Note: must have two translations (for "day" and "days")
-			# Following comment line is for translation helper script
-			# Ts('Updates in the last %s days', '');
+				# Note: must have two translations (for "day" and "days")
+				# Following comment line is for translation helper script
+				# Ts('Updates in the last %s days', '');
+			}
 		}
-	}
-	if ($starttime == 0) {
-###############
-### replaced by gypark
+		if ($starttime == 0) {
 ### rss from usemod1.0
 #		$starttime = $Now - ((24*60*60)*$RcDefault);
 #	 	print "<h2>" . Ts('Updates in the last %s day'
 #			. (($RcDefault != 1)?"s":""), $RcDefault) . "</h2>\n";
-		if (0 == $rcType) {
-			$starttime = $Now - ((24*60*60)*$RssDays);
-		} else {
-			$starttime = $Now - ((24*60*60)*$RcDefault);
-		}
-		if ($showHTML) {
-			print "<h2>" . Ts('Updates in the last %s day'
-				. (($RcDefault != 1)?"s":""), $RcDefault) . "</h2>\n";
-		}
+			if (0 == $rcType) {
+				$starttime = $Now - ((24*60*60)*$RssDays);
+			} else {
+				$starttime = $Now - ((24*60*60)*$RcDefault);
+			}
+			if ($showHTML) {
+				print "<h2>" . Ts('Updates in the last %s day'
+					. (($RcDefault != 1)?"s":""), $RcDefault) . "</h2>\n";
+			}
 ###
-###############
-		# Translation of above line is identical to previous version
+			# Translation of above line is identical to previous version
+		}
 	}
-###############
-### pda clip by gypark
-	}
-###
-###############
 
 	# Read rclog data (and oldrclog data if needed)
 	($status, $fileData) = &ReadFile($RcFile);
@@ -998,70 +894,41 @@ sub DoRc {
 	$lastTs++  if (($Now - $lastTs) > 5);  # Skip last unless very recent
 
 	$idOnly = &GetParam("rcidonly", "");
-###############
-### replaced by gypark
 ### rss from usemod1.0
-#	if ($idOnly ne "") {
 	if ($idOnly && $showHTML) {
 ###
-###############
 		print '<b>(' . Ts('for %s only', &ScriptLink($idOnly, $idOnly))
 					. ')</b><br>';
 	}
-###############
 ### pda clip by gypark
 	if (!($IsPDA)) {
-###
-###############
-###############
-### added by gypark
 ### rss from usemod1.0
-	if ($showHTML) {
-###
-###############
-	foreach $i (@RcDays) {
-		print " | "  if $showbar;
-		$showbar = 1;
-		print &ScriptLink("action=rc&days=$i",
-			Ts('%s day' . (($i != 1)?'s':''), $i));
-			# Note: must have two translations (for "day" and "days")
-			# Following comment line is for translation helper script
-			# Ts('%s days', '');
-	}
+		if ($showHTML) {
+			foreach $i (@RcDays) {
+				print " | "  if $showbar;
+				$showbar = 1;
+				print &ScriptLink("action=rc&days=$i",
+					Ts('%s day' . (($i != 1)?'s':''), $i));
+					# Note: must have two translations (for "day" and "days")
+					# Following comment line is for translation helper script
+					# Ts('%s days', '');
+			}
 
-###############
-### replaced by gypark
 ### 최근변경내역에 북마크 기능 도입
-#	print "<br>" . &ScriptLink("action=rc&from=$lastTs",
-#		T('List new changes starting from'));
-#	print " " . &TimeToText($lastTs) . "<br>\n";
-
-#	if (&GetParam("username") eq "") {
-	if (!&LoginUser()) {
-		print "<br>" . &ScriptLink("action=rc&from=$lastTs",
-			T('List new changes starting from'));
-		print " " . &TimeToText($lastTs) . "<br>\n";
-	} else {
-		my $bookmark = &GetParam('bookmark',-1);
-		print "<br>" . &ScriptLink("action=bookmark&time=$Now",
-				T('Update my bookmark timestamp')." [m]");
-		print " (". 
-			Ts('currently set to %s', &TimeToText($bookmark)).
-			")<br>\n";
+			if (!&LoginUser()) {
+				print "<br>" . &ScriptLink("action=rc&from=$lastTs",
+					T('List new changes starting from'));
+				print " " . &TimeToText($lastTs) . "<br>\n";
+			} else {
+				my $bookmark = &GetParam('bookmark',-1);
+				print "<br>" . &ScriptLink("action=bookmark&time=$Now",
+						T('Update my bookmark timestamp')." [m]");
+				print " (". 
+					Ts('currently set to %s', &TimeToText($bookmark)).
+					")<br>\n";
+			}
+		}
 	}
-### 
-###############
-###############
-### added by gypark
-### rss from usemod1.0
-	}
-###
-###############
-###############
-### pda clip by gypark
-	}
-###
-###############
 
 	# Later consider a binary search?
 	$i = 0;
@@ -1078,24 +945,14 @@ sub DoRc {
 		($ts) = split(/$FS3/, $fullrc[$i]);
 		last if ($ts >= $starttime);
 	}
-###############
-### replaced by gypark
 ### rss from usemod1.0
-#	if ($i == @fullrc) {
 	if ($i == @fullrc && $showHTML) {
-###
-###############
 		print '<br><strong>' . Ts('No updates since %s',
-											&TimeToText($starttime)) . "</strong><br>\n";
+					&TimeToText($starttime)) . "</strong><br>\n";
 	} else {
 		splice(@fullrc, 0, $i);  # Remove items before index $i
 		# Later consider an end-time limit (items older than X)
-###############
-### replaced by gypark
 ### rss from usemod1.0
-#		print &GetRcHtml(@fullrc);
-#	}
-#	print '<p>' . Ts('Page generated %s', &TimeToText($Now)), "<br>\n";
 		if (0 == $rcType) {
 			print &GetRcRss(@fullrc);
 		} else {
@@ -1105,21 +962,16 @@ sub DoRc {
 	if ($showHTML) {
 		print '<p>' . Ts('Page generated %s', &TimeToText($Now)), "<br>\n";
 	}
-###
-###############
 }
 
 sub GetRcHtml {
 	my @outrc = @_;
 	my ($rcline, $html, $date, $sum, $edit, $count, $newtop, $author);
 	my ($showedit, $inlist, $link, $all, $idOnly);
-###############
-### replaced by gypark
 ### RcOldFile 버그 수정
 #	my ($ts, $oldts, $pagename, $summary, $isEdit, $host, $kind, $extraTemp);
 	my ($ts, $pagename, $summary, $isEdit, $host, $kind, $extraTemp);
-###
-###############
+
 	my ($tEdit, $tChanges, $tDiff);
 	my %extra = ();
 	my %changetime = ();
@@ -1131,15 +983,9 @@ sub GetRcHtml {
 	$showedit = &GetParam("rcshowedit", $ShowEdits);
 	$showedit = &GetParam("showedit", $showedit);
 
-###############
-### added by gypark
 ### 최근 변경 내역과 rss 에 아이템 갯수 지정 옵션
 	my $num_items = &GetParam("items", 0);
 	my $num_printed = 0;
-###
-###############
-###############
-### added by gypark
 ### 최근변경내역에 북마크 기능 도입
 	my $bookmark;
 	my $bookmarkuser = &GetParam('username', "");
@@ -1152,8 +998,6 @@ sub GetRcHtml {
 			"<img style='border:0' src='$IconDir/rc-interest.gif' alt='".T('Interesting Page')."'>",
 	);
 	$bookmark = &GetParam('bookmark',-1);
-###
-###############
 
 	if ($showedit != 1) {
 		my @temprc = ();
@@ -1186,8 +1030,6 @@ sub GetRcHtml {
 		($ts, $pagename, $summary) = split(/$FS3/, $rcline);
 ####
 
-###############
-### replaced by gypark
 ### 최근변경내역에 북마크 기능 도입
 #		$pagecount{$pagename}++;
 ### summary 개선 by gypark
@@ -1201,17 +1043,12 @@ sub GetRcHtml {
 				}
 			}
 		}
-####
-###
-###############
+
 		$changetime{$pagename} = $ts;
 	}
 	$date = "";
 	$inlist = 0;
-###############
-### replaced by gypark
 ### 최근 변경 내역을 테이블로 출력
-### from Jof4002's patch
 ### pda clip 기능 추가
 #	$html = "";
 	if ($IsPDA) {
@@ -1220,7 +1057,7 @@ sub GetRcHtml {
 		$html = "<TABLE class='rc'>";
 	}
 ###
-###############
+
 ### summary 개선 by gypark
 #	$all = &GetParam("rcall", 0);
 #	$all = &GetParam("all", $all);
@@ -1230,13 +1067,11 @@ sub GetRcHtml {
 ####
 
 	@outrc = reverse @outrc if ($newtop);
-###############
 ### commented by gypark
 ### RcOldFile 버그 수정
 #	($oldts, $pagename, $summary, $isEdit, $host, $kind, $extraTemp)
 #		= split(/$FS3/, $outrc[0]);
 #	$oldts += 1;
-
 
 	foreach $rcline (@outrc) {
 		($ts, $pagename, $summary, $isEdit, $host, $kind, $extraTemp)
@@ -1244,44 +1079,30 @@ sub GetRcHtml {
 		# Later: need to change $all for new-RC?
 		next  if ((!$all) && ($ts < $changetime{$pagename}));
 		next  if (($idOnly ne "") && ($idOnly ne $pagename));
-###############
-### added by gypark
 ### hide page
 		next if (&PageIsHidden($pagename));
-###
-###############
-###############
-### added by gypark
 ### 최근 변경 내역과 rss 에 아이템 갯수 지정 옵션
 		$num_printed++;
 		last if (($num_items > 0) && ($num_printed > $num_items));
-###
-###############
-###############
 ### commented by gypark
 ### RcOldFile 버그 수정
 #		next  if ($ts >= $oldts);
 #		$oldts = $ts;
-###
-###############
+
 		# print $ts . " " . $pagename . "<br>\n";
 		%extra = split(/$FS2/, $extraTemp, -1);
 		if ($date ne &CalcDay($ts)) {
 			$date = &CalcDay($ts);
 			if ($inlist) {
-###############
+
 ### commented by gypark
 ### 최근 변경 내역을 테이블로 출력
-### from Jof4002's patch
 ### pda clip 기능 추가
 #				$html .= "</UL>\n";
 				$html .= "</UL>\n" if ($IsPDA);
-###
-###############
+
 				$inlist = 0;
 			}
-###############
-### replaced by gypark
 ### 최근변경내역에 북마크 기능 도입
 ### 최근 변경 내역을 테이블로 출력 패치도 같이 적용
 ### pda clip 기능 추가
@@ -1299,24 +1120,18 @@ sub GetRcHtml {
 						. "</TD></TR>\n";
 				}
 			}
-###
-###############
 		}
 		if (!$inlist) {
-###############
 ### commented by gypark
 ### 최근 변경 내역을 테이블로 출력
-### from Jof4002's patch
 ### pda clip 기능 추가
 #			$html .= "<UL>\n";
 			$html .= "<UL>\n" if ($IsPDA);
-###
-###############
+
 			$inlist = 1;
 		}
 		$host = &QuoteHtml($host);
 		if (defined($extra{'name'}) && defined($extra{'id'})) {
-###############
 ### pda clip by gypark
 #			$author = &GetAuthorLink($host, $extra{'name'}, $extra{'id'});
 			if ($IsPDA) {
@@ -1324,21 +1139,16 @@ sub GetRcHtml {
 			} else {
 				$author = &GetAuthorLink($host, $extra{'name'}, $extra{'id'});
 			}
-###
-###############
 		} else {
 			$author = &GetAuthorLink($host, "", 0);
 		}
 		$sum = "";
 		if (($summary ne "") && ($summary ne "*")) {
 			$summary = &QuoteHtml($summary);
-###############
-### replaced by gypark
 ### 최근 변경 내역을 테이블로 출력
 #			$sum = "<strong>[$summary]</strong> ";
 			$sum = "[$summary]";
 ###
-###############
 		}
 		$edit = "";
 		$edit = "<em>$tEdit</em> "  if ($isEdit);
@@ -1354,8 +1164,6 @@ sub GetRcHtml {
 		}
 		$link = "";
 		if ($UseDiff && &GetParam("diffrclink", 1)) {
-###############
-### replaced by gypark
 ### 최근변경내역에 북마크 기능 도입
 #			$link .= &ScriptLinkDiff(4, $pagename, $tDiff, "") . "  ";
 			if (!(-f &GetPageFile($pagename))) {
@@ -1367,11 +1175,7 @@ sub GetRcHtml {
 			} else {
 				$link .= &ScriptLinkDiffRevision(5, $pagename, "", $rcupdated) . "  ";
 			}
-###
-###############
 		}
-###############
-### replaced by gypark
 ### 최근 변경 내역을 테이블로 출력
 ### from Jof4002's patch
 ### pda clip 기능 추가
@@ -1418,8 +1222,6 @@ sub GetRcHtml {
 		$html .= "</table>";
 	}
 
-###
-###############
 	return $html;
 }
 
@@ -1435,8 +1237,6 @@ sub DoHistory {
 	my ($id) = @_;
 	my ($html, $canEdit, $row, $newText);
 
-###############
-### added by gypark
 ### hide page
 	if (&PageIsHidden($id)) {
 		print &GetHeader("",&QuoteHtml(Ts('History of %s', $id)), "");
@@ -1444,8 +1244,6 @@ sub DoHistory {
 		print &GetCommonFooter();
 		return;
 	}
-###
-###############
 	
 	print &GetHeader("",&QuoteHtml(Ts('History of %s', $id)), "") . "<br>";
 	&OpenPage($id);
@@ -1508,14 +1306,11 @@ sub GetHistoryLine {
 		$html .= "<input type='radio' name='revision' value='$rev' $c2/></td><td>";
 	}
 	if (0 == $row) { # current revision
-###############
-### replaced by gypark
 ### History 화면에서, 제일 마지막 revision 은 revision 번호 대신
 ### "현재 버전" 이라고 나오게 함
 #		$html .= &GetPageLinkText($id, Ts('Revision %s', $rev)) . ' ';
 		$html .= &GetPageLinkText($id, Ts('Current Revision', $rev)) . ' ';
 ###
-###############
 		if ($canEdit) {
 			$html .= &GetEditLink($id, T('Edit')) . ' ';
 		}
@@ -1536,9 +1331,6 @@ sub GetHistoryLine {
 }
 
 # ==== HTML and page-oriented functions ====
-###############
-### added by gypark
-### 스크립트 뒤에 / or ? 선택 from usemod1.0
 sub ScriptLinkChar {
 	if ($SlashLinks) {
 		return '/';
@@ -1557,10 +1349,6 @@ sub ScriptLinkClass {
 
 	return "<a href=\"$ScriptName" . &ScriptLinkChar() . "$action\" class=\"$class\">$text</a>";
 }
-###
-###############
-
-# luke added
 
 sub HelpLink {
 	my ($id, $text) = @_;
@@ -1570,8 +1358,6 @@ sub HelpLink {
 #	return "<a href=\"javascript:help('$url')\">$text</a>";
 	return "<a onclick=\"closeok=true;\" href=\"javascript:help('$url')\">$text</a>";
 }
-
-# end
 
 sub GetPageLink {
 	my ($id) = @_;
@@ -1587,13 +1373,11 @@ sub GetPageLinkText {
 		$id = &FreeToNormal($id);
 		$name =~ s/_/ /g;
 	}
-###############
 ### pda clip by gypark
 	if ($IsPDA) {
 		return 	&ScriptLink("action=browse&pda=1&id=$id", $name);
 	}
-###
-###############
+
 	return &ScriptLinkClass($id, $name, 'wikipagelink');
 }
 
@@ -1607,18 +1391,6 @@ sub GetEditLink {
 	return &ScriptLinkClass("action=edit&id=$id", $name, 'wikipageedit');
 }
 
-###############
-### replaced by gypark
-### from usemod1.0
-# sub GetOldPageLink {
-# 	my ($kind, $id, $revision, $name) = @_;
-# 
-# 	if ($FreeLinks) {
-# 		$id = &FreeToNormal($id);
-# 		$name =~ s/_/ /g;
-# 	}
-# 	return &ScriptLink("action=$kind&id=$id&revision=$revision", $name);
-# }
 sub GetOldPageParameters {
 	my ($kind, $id, $revision) = @_;
 
@@ -1632,8 +1404,6 @@ sub GetOldPageLink {
 	$name =~ s/_/ /g if $FreeLinks;
 	return &ScriptLink(&GetOldPageParameters($kind, $id, $revision), $name);
 }
-###
-###############
 
 sub GetPageOrEditAnchoredLink {
 	my ($id, $anchor, $name) = @_;
@@ -1669,12 +1439,46 @@ sub GetPageOrEditAnchoredLink {
 		}
 	}
 	if ($EditNameLink) {
-		return &GetEditLink($id, $name);
+		return &GetFirstCharLink($id, $name);
 	} else {
 		return $name . &GetEditLink($id,"?");
 	}
 }
 
+sub GetFirstCharLink {
+# 첫 글자에 링크를 거는 함수
+	my ($id, $name) = @_;
+	my @trailingBytesForUTF8 = (
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,4,4,4,4,5,5,5,5
+	);
+
+	my ($mainpage, $slash, $page) = ($name =~ m/(?:(.*)(\/))?(.+)/);
+
+# utf-8
+	if ($HttpCharset =~ /utf-8|utf8/i) {
+		my $length = $trailingBytesForUTF8[ord(substr($page,0,1))] + 1;
+		my $first = substr($page,0,$length);
+		my $tail = substr($page,$length);
+		return $mainpage . &GetEditLink($id,$slash.$first) . $tail;
+	}
+
+# euc-kr
+	if ($HttpCharset =~ /euc-kr/i) {
+		my ($first, $tail) = ($page =~ /([a-zA-Z0-9]|[\x80-\xff][\x80-\xff])(.*)/);
+
+		return $mainpage . &GetEditLink($id,$slash.$first) . $tail;
+	}
+
+# default
+	return &GetEditLink($id, $name);
+}
 
 sub GetPageOrEditLink {
 	my ($id, $name) = @_;
@@ -1693,20 +1497,16 @@ sub GetSearchLink {
 	return &ScriptLink("search=$id", $name);
 }
 
-###############
-### added by gypark
 ### 역링크 추가
 sub GetReverseLink {
-	my ($id) = @_;
-	my $name = $id;
+	my ($id, $name) = @_;
+	$name = $id if ($name eq "");
 
 	if ($FreeLinks) {
 		$name =~ s/_/ /g;  # Display with spaces
 	}
 	return &ScriptLink("action=reverse&id=$id", $name);
 }
-###
-###############
 
 sub GetPrefsLink {
 	return &ScriptLink("action=editprefs", T('Preferences'));
@@ -1789,79 +1589,45 @@ sub GetHeader {
 		$title =~ s/_/ /g;   # Display as spaces
 	}
 	$result .= &GetHtmlHeader("$title : $SiteName", $title);
-###############
 ### pda clip by gypark
 	if ($IsPDA) {
 		$result .= "<h1>$title</h1>\n<hr>";
 	}
-###
-###############
 
 	return $result  if ($embed);
-
-###############
-### added by gypark
 ### #EXTERN
 	return $result if (&GetParam('InFrame','') eq '2');
-###
-###############
-
-###############
-### replaced by gypark
-### #EXTERN
-#	if ($oldId ne '') {
-#		$result .= $q->h3('(' . Ts('redirected from %s',
-#															 &GetEditLink($oldId, $oldId)) . ')');
-#	}
 
 	my $topMsg = "";
 	if ($oldId ne '') {
 		$topMsg .= '('.Ts('redirected from %s',&GetEditLink($oldId, $oldId)).')  ';
 	}
+### #EXTERN
 	if (&GetParam('InFrame','') eq '1') {
 		$topMsg .= '('.Ts('%s includes external page',&GetEditLink($id,$id)).')';
 	}
 	$result .= $q->h3($topMsg) if (($oldId ne '') || (&GetParam('InFrame','') eq '1'));
-###
-###############
 
 	if ((!$embed) && ($LogoUrl ne "")) {
 		$logoImage = "IMG class='logoimage' src=\"$LogoUrl\" alt=\"$altText\" border=0";
 		if (!$LogoLeft) {
 			$logoImage .= " align=\"right\"";
 		}
-###############
-### replaced by gypark
-### 로고 이미지에 단축키 alt+w 지정
-#		$header = &ScriptLink($HomePage, "<$logoImage>");
 		$header = "<a accesskey=\"w\" href=\"$ScriptName\"><$logoImage></a>";
-###
-###############
 	}
 	if ($id ne '') {
-###############
-### replaced by gypark
-### 사이트 로고가, action 이 들어가는 페이지에서만 표시되는 문제를 해결
-### from http://host9.swidc.com/~ncc1701/wiki/wiki.cgi?FAQ
-#		$result .= $q->h1(&GetSearchLink($id));
 ### 역링크 개선
 #		$result .= $q->h1($header . &GetSearchLink($id));
 		$result .= $q->h1({-class=>"pagename"}, $header . &GetReverseLink($id));
-###
-###############
 	} else {
 		$result .= $q->h1({-class=>"actionname"}, $header . $title);
 	}
 
-###############
-### added by gypark
 ### page 처음에 bottom 으로 가는 링크를 추가
 ### #EXTERN
 	if (&GetParam('InFrame','') eq '') {
 		$result .= "\n<div class=\"gobottom\" align=\"right\"><a accesskey=\"z\" name=\"PAGE_TOP\" href=\"#PAGE_BOTTOM\">". T('Bottom')." [b]" . "</a></div>\n";
 	}
-###
-###############
 
 	if (&GetParam("toplinkbar", 1)) {
 		# Later consider smaller size?
@@ -1877,10 +1643,7 @@ sub GetHttpHeader {
 
 	$t = gmtime;
 	if (defined($SetCookie{'id'})) {
-###############
-### replaced by gypark
 ### 로긴할 때 자동 로그인 여부 선택
-### from Bab2's patch
 #		$cookie = "$CookieName="
 #						. "rev&" . $SetCookie{'rev'}
 #						. "&id&" . $SetCookie{'id'}
@@ -1905,12 +1668,11 @@ sub GetHttpHeader {
 			}
 		}
 		$cookie .= "path=$cookie_path;";
-#####
+
 		if ($SetCookie{'expire'} eq "1") {
 			$cookie .= "expires=Fri, 08-Sep-2010 19:47:23 GMT";
 		}
-###
-###############
+
 		if ($HttpCharset ne '') {
 			return $q->header(-cookie=>$cookie,
 				-pragma=>"no-cache",
@@ -1949,16 +1711,13 @@ sub GetHtmlHeader {
 		$html .= qq(<LINK REL="stylesheet" HREF="$StyleSheet">\n);
 	}
 	# Insert other header stuff here (like inline style sheets?)
-###############
-### added by gypark
+
 ### 헤더 출력 개선
 	$html .= qq(<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=$HttpCharset">\n);
 	$html .= qq(<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">\n);
 	$html .= qq|<link rel="alternate" type="application/rss+xml" title="$SiteName" href="http://$ENV{SERVER_NAME}$ENV{SCRIPT_NAME}${\(&ScriptLinkChar())}action=rss">\n|;
 	$html .= qq(<script src="$JavaScript" language="javascript" type="text/javascript"></script>);
 	$html .= "\n";
-###
-###############
 
 ### RobotsMetaTag
 	my $action = lc(&GetParam('action',''));
@@ -1982,18 +1741,7 @@ sub GetHtmlHeader {
 	if ($bgcolor ne '') {
 		$bodyExtra = qq( BGCOLOR="$bgcolor");
 	}
-###############
-### replaced by gypark
 ### #EXTERN
-	# added luke
-#	if ($ClickEdit) {
-#		if ($FreeLinks) {
-#			$id = &FreeToNormal($id);
-#		}
-#		$bodyExtra .= qq(ondblclick="location.href='$ScriptName?action=edit&id=$id'");
-#	}
-	# end
-
 	if (&GetParam('InFrame','') ne '') {
 		$html .= qq(<base target="_parent">\n);
 	} else {
@@ -2004,8 +1752,6 @@ sub GetHtmlHeader {
 			$bodyExtra .= qq| ondblclick="location.href='$ScriptName${\(&ScriptLinkChar())}action=edit&id=$id'" |;
 		}
 	}
-###
-###############
 
 ### 작성 취소시 확인
 	if (
@@ -2072,8 +1818,6 @@ sub GetEditGuide {
 	my $result = "\n<HR class='footer'>\n<DIV class='editguide'>";
 #		print "<HR class='footer'>\n"  if (!&GetParam('embed', $EmbedWiki));
 
-###############
-### added by gypark
 ### 관리자가 페이지를 볼 때는 하단에 수정 금지 여부를 알려주고 금지 설정/해제를 할 수 있게 함
 	if (&UserIsAdmin()) {
 		if (-f &GetLockedPageFile($id)) {
@@ -2089,79 +1833,29 @@ sub GetEditGuide {
 		$result .= &ScriptLink("action=pagehide&set=1&id=" . $id, T('hide'));
 		$result .= " | " . &ScriptLink("action=pagehide&set=0&id=". $id, T('unhide'));
 	}
-###
-###############
 
-###############
-### replaced by gypark
-### 페이지 하단에 출력되는 순서를 바꿈
-# 	if (&UserCanEdit($id, 0)) {
-# 		if ($rev ne '') {
-# 			$result .= &GetOldPageLink('edit',   $id, $rev,
-# 																 Ts('Edit revision %s of this page', $rev));
-# 		} else {
-# 			$result .= &GetEditLink($id, T('Edit text of this page'));
-# 		}
-# 	} else {
-# 		$result .= T('This page is read-only');
-# 	}
-# 	$result .= ' | ';
-# 	$result .= &GetHistoryLink($id, T('History'));
-# 	if ($rev ne '') {
-# 		$result .= ' | ';
-# 		$result .= &GetPageLinkText($id, T('View current revision'));
-# 	}
-# 	if ($Section{'revision'} > 0) {
-# 		$result .= '<br>';
-# 		if ($rev eq '') {  # Only for most current rev
-# 			$result .= T('Last edited');
-# 		} else {
-# 			$result .= T('Edited');
-# 		}
-# 		$result .= ' ' . &TimeToText($Section{ts});
-# 	}
-# 	if ($UseDiff) {
-# 		$result .= ' ' . &ScriptLinkDiff(4, $id, T('(diff)'), $rev);
-# 	}
-# 
-# 	$result .= "</div>";
-
-###############
-### replaced by gypark
 ### 매크로가 들어간 페이지의 편집가이드 문제 해결
-#	if ($Section{'revision'} > 0) {
 	if ($Sec_Revision > 0) {
-###
-###############
+
 		$result .= '<br>';
 		if ($rev eq '') {  # Only for most current rev
 			$result .= T('Last edited');
 		} else {
 			$result .= T('Edited');
 		}
-###############
-### replaced by gypark
 ### 매크로가 들어간 페이지의 편집가이드 문제 해결
 #		$result .= ' ' . &TimeToText($Section{ts});
 		$result .= ' ' . &TimeToText($Sec_Ts);
-###
-###############
 	}
 	if ($UseDiff) {
 		$result .= ' ' . &ScriptLinkDiff(4, $id, T('(diff [d])'), $rev);
 	}
 
 	$result .= '<br>';
-###############
-### added by gypark
 ### page count
 	$result .= Ts('%s hit' . (($ViewCount > 1)?'s':'') , $ViewCount)." | " if ($ViewCount ne "");
-###
-###############
-###############
-### added by gypark
+
 ### 관심 페이지
-#	if (&GetParam('username') ne "") {
 	if (&LoginUser()) {
 		if (defined($UserInterest{$id})) {
 			$result .= &ScriptLink("action=interest&mode=remove&id=$id", T('Remove from interest list'));
@@ -2170,8 +1864,6 @@ sub GetEditGuide {
 		}
 		$result .= " | ";
 	}
-###
-###############
 	$result .= &GetHistoryLink($id, T('History')." [h]");
 	if ($rev ne '') {
 		$result .= ' | ';
@@ -2188,8 +1880,6 @@ sub GetEditGuide {
 			$result .= &GetEditLink($id, T('Edit text of this page')." [e]");
 		}
 	} else {
-###############
-### replaced by gypark
 ### view action 추가
 #		$result .= T('This page is read-only');
 		if ($rev ne '') {
@@ -2198,12 +1888,9 @@ sub GetEditGuide {
 		} else {
 			$result .= &GetEditLink($id, T('View text of this page'));
 		}
-###
-###############
 	}
 	$result .= "</DIV>";
-###
-###############
+
 	return $result;
 }
 
@@ -2235,19 +1922,10 @@ sub GetCommonFooter {
 }
 
 sub GetMinimumFooter {
-###############
-### replaced by gypark
-### page 마지막에 top 으로 가는 링크를 추가
-#	if ($FooterNote ne '') {
-#		return T($FooterNote) . $q->end_html;  # Allow local translations
-#	}
-#	return $q->end_html;
-
 ### #EXTERN
 	if (&GetParam('InFrame','') ne '') {
 		return $q->end_html;
 	}
-###
 	my $result = '';
 	if ($FooterNote ne '') {
 		$result .= T($FooterNote);  # Allow local translations
@@ -2259,18 +1937,11 @@ sub GetMinimumFooter {
 		$result .= "<i>" . sprintf("%8.3f",&tv_interval($StartTime)) . " sec </i>";
 	}
 	$result .= "<a accesskey=\"x\" name=\"PAGE_BOTTOM\" href=\"#PAGE_TOP\">" . T('Top')." [t]" . "</a></DIV>\n" . $q->end_html;
-### 
 
 	return $result;
-###
-###############
 }
 
 sub GetFormStart {
-	#return $q->startform("POST", "$ScriptName", "");
-
-###############
-### replaced by gypark
 ### form 에 이름을 넣을 수 있도록 함
 #	return $q->startform("POST", "$ScriptName", "application/x-www-form-urlencoded");
 
@@ -2281,8 +1952,6 @@ sub GetFormStart {
 	} else {
 		return $q->startform(-method=>"POST", -action=>"$ScriptName", -enctype=>"application/x-www-form-urlencoded" ,-name=>"$name") ;
 	}
-###
-###############
 }
 
 sub GetGotoBar {
@@ -2298,19 +1967,13 @@ sub GetGotoBar {
 	if ($id =~ m|/|) {
 		$main = $id;
 		$main =~ s|/.*||;  # Only the main page name (remove subpage)
-###############
-### replaceed by gypark
 ### subpage 의 경우, 상위페이지 이름 앞에 아이콘 표시
 #		$bartext .= " </td><td> " . &GetPageLink($main);
 		$bartext .= "</TD>\n<TD class='gotoparentpage'><img src=\"$IconDir/parentpage.gif\" border=\"0\" alt=\""
 					. T('Main Page:') . " $main\" align=\"absmiddle\">" . &GetPageLink($main);
-###
-###############
 	}
-###############
-### added by gypark
+
 ### 상단 메뉴 바에 사용자 정의 항목을 추가
-### UserGotoBar2~4 라는 이름으로 지정해주면 된다
 	if ($UserGotoBar2 ne '') {
 		$bartext .= "</TD>\n<TD class='gotouser'>" . $UserGotoBar2;
 	}
@@ -2320,8 +1983,7 @@ sub GetGotoBar {
 	if ($UserGotoBar4 ne '') {
 		$bartext .= "</TD>\n<TD class='gotouser'>" . $UserGotoBar4;
 	}
-###
-###############
+
 	$bartext .= "</TD>\n<TD class='gotopref'>" . &GetPrefsLink();
 	if (&GetParam("linkrandom", 0)) {
 		$bartext .= "</TD>\n<TD class='gotorandom'>" . &GetRandomLink();
@@ -2352,18 +2014,10 @@ sub GetGotoBar {
 sub GetSearchForm {
 	my ($result);
 
-###############
-### repalced by gypark
-### 상단메뉴에 "Search:" 도 번역을 시킴
 ### 단축키 alt-s 지정
-#	$result = "Search: <input class=text type=text name='search' size=10>" 
-# . $q->textfield(-name=>'search', -size=>12)
-#						. &GetHiddenValue("dosearch", 1);
-
 	$result = T('Search:') . " <input accesskey=\"s\"class=text type=text name='search' size=10>"
 						. &GetHiddenValue("dosearch", 1);
-###
-###############
+
 	return $result;
 }
 
@@ -2413,49 +2067,25 @@ sub WikiToHTML {
 	$SaveUrlIndex = 0;
 	$SaveNumUrlIndex = 0;
 	$pageText =~ s/$FS//g;              # Remove separators (paranoia)
-###############
-### added by gypark
 ### include 매크로 안에서 위키태그를 작동하게 함
-### http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
 	$pageText = &MacroIncludeSubst($pageText);
-###
-###############
 
 	if ($RawHtml) {
 		$pageText =~ s/<html>((.|\n)*?)<\/html>/&StoreRaw($1)/ige;
 	}
-###############
-### replaced by gypar
 ### {{{ }}} 처리를 위해, 본문 소스는 특별하게 Quote 한다
 #	$pageText = &QuoteHtml($pageText);
 	$pageText = &QuoteHtmlForPageContent($pageText);
-###
-###############
 
-###############
-### replaced by gypark
 ### {{{ }}} 처리를 위해서, 줄 끝에 오는 백슬래쉬 두개와 하나도 임시태그를 거쳐 변환시킨다
 #	$pageText =~ s/\\\\ *\r?\n/<BR>/g;		# double backslash for forced <BR> - comes in handy for <LI>
 #	$pageText =~ s/\\ *\r?\n/ /g;			# Join lines with backslash at end
 
 	$pageText =~ s/\\\\ *\r?\n/&__DOUBLEBACKSLASH__;/g;		# double backslash for forced <BR> - comes in handy for <LI>
 	$pageText =~ s/\\ *\r?\n/&__SINGLEBACKSLASH__;/g;			# Join lines with backslash at end
-
 ###
-###############
-
-###############
-### replaced by gypark
-### {{{ }}} 처리를 위해 아래 두 라인의 순서를 바꿈
-### from danny's patch.
-
-#	$pageText = &WikiLinesToHtml($pageText);      # Line-oriented markup
-#	$pageText = &CommonMarkup($pageText, 1, 0);   # Multi-line markup # line wraped. luke
-
 	$pageText = &CommonMarkup($pageText, 1, 0);   # Multi-line markup # line wraped. luke
 	$pageText = &WikiLinesToHtml($pageText);      # Line-oriented markup
-###
-###############
 
 	$pageText =~ s/$FS(\d+)$FS/$SaveUrl{$1}/ge;   # Restore saved text
 	$pageText =~ s/$FS(\d+)$FS/$SaveUrl{$1}/ge;   # Restore nested saved text
@@ -2464,16 +2094,10 @@ sub WikiToHTML {
 		pop @HeadingNumbers;
 		$TableOfContents .= "</dd></dl>\n\n";
 	}
-###############
-### added by gypark
 ### WikiHeading 개선 from Jof
 	$pageText =~ s/&__LT__;toc&__GT__;/<a name="toc"><\/a>$TableOfContents/i;
 	$pageText =~ s/&__LT__;toc&__GT__;/$TableOfContents/gi;
-###
-###############
 
-###############
-### added by gypark
 ### {{{ }}} 처리를 위해 추가. 임시 태그를 원래대로 복원
 	$pageText =~ s/&__DOUBLEBACKSLASH__;/<BR>\n/g;
 	$pageText =~ s/&__SINGLEBACKSLASH__;/ /g;
@@ -2482,12 +2106,8 @@ sub WikiToHTML {
 	$pageText =~ s/&__AMP__;/&amp;/g;
 	$pageText =~ s/$FS_lt/&lt;/g;
 	$pageText =~ s/$FS_gt/&gt;/g;
-###
-###############
 
 	return &RestoreSavedText($pageText);
-
-#	return $pageText;
 }
 
 sub CommonMarkup {
@@ -2495,8 +2115,6 @@ sub CommonMarkup {
 	local $_ = $text;
 
 	if ($doLines < 2) { # 2 = do line-oriented only
-###############
-### added by gypark
 ### {{{ }}} 처리 
 		s/(^|\n)\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/&StoreRaw("\n<PRE class=\"code\">") . &StoreCodeRaw($2) . &StoreRaw("\n<\/PRE>") . "\n"/igem;
 
@@ -2505,15 +2123,9 @@ sub CommonMarkup {
 
 ### {{{lang|n|t }}} 처리
 		s/(^|\n)\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/&StoreRaw("<PRE class=\"syntax\">") . &StoreSyntaxHighlight($2, $4, $5) . &StoreRaw("<\/PRE>") . "\n"/igem;
-###
-###############
 
-###############
-### added by gypark
 ### <raw> 태그 - quoting 도 하지 않는다
 		s/\&__LT__;raw\&__GT__;(([^\n])*?)\&__LT__;\/raw\&__GT__;/&StoreCodeRaw($1)/ige;
-###
-###############
 
 		# The <nowiki> tag stores text with no markup (except quoting HTML)
 		s/\&__LT__;nowiki\&__GT__;((.|\n)*?)\&__LT__;\/nowiki\&__GT__;/&StoreRaw($1)/ige;
@@ -2521,25 +2133,16 @@ sub CommonMarkup {
 		s/\&__LT__;pre\&__GT__;((.|\n)*?)\&__LT__;\/pre\&__GT__;/&StorePre($1, "pre")/ige;
 		s/\&__LT__;code\&__GT__;((.|\n)*?)\&__LT__;\/code\&__GT__;/&StorePre($1, "code")/ige;
 
-###############
-### added by gypark
 ### LaTeX 지원
 		if ($UseLatex) {
-#			s/\$\$((.|\n)*?)\$\$/&StoreRaw(&MakeLaTeX("\$"."$1"."\$", "display"))/ige;
-#			s/\$((.|\n)*?)\$/&StoreRaw(&MakeLaTeX("\$"."$1"."\$", "inline"))/ige;
 			s/\\\[((.|\n)*?)\\\]/&StoreRaw(&MakeLaTeX("\$"."$1"."\$", "display"))/ige;
 			s/\$\$((.|\n)*?)\$\$/&StoreRaw(&MakeLaTeX("\$"."$1"."\$", "inline"))/ige;
 		}
-###
-###############
 
-###############
-### replaced by gypark
 ### anchor 에 한글 사용
 #		s/\[\#(\w+)\]/&StoreHref(" name=\"$1\"")/ge if $NamedAnchors;
 		s/\[$AnchorPattern\]/&StoreHref(" name=\"$1\"")/ge if $NamedAnchors;
-###
-###############
+
 		if ($HtmlTags) {
 			my ($t);
 			foreach $t (@HtmlPairs) {
@@ -2564,14 +2167,10 @@ sub CommonMarkup {
 			# Also, consider that one could write [[Bad Page|Good Page]]?
 			s/\[\[$FreeLinkPattern\|([^\]]+)\]\]/&StorePageOrEditLink($1, $2)/geo;
 			s/\[\[$FreeLinkPattern\]\]/&StorePageOrEditLink($1, "")/geo;
-###############
-### added by gypark
-### 한글패이지에 anchor 사용
-### from Bab2's patch
+### 한글페이지에 anchor 사용
 			s/\[\[$AnchoredFreeLinkPattern\|([^\]]+)\]\]/&StoreBracketAnchoredLink($1, $2, $3)/geos if $NamedAnchors;
 			s/\[\[$AnchoredFreeLinkPattern\]\]/&StoreRaw(&GetPageOrEditAnchoredLink($1, $2, ""))/geos if $NamedAnchors;
-###
-###############
+#####
 		}
 		if ($BracketText) {  # Links like [URL text of link]
 			s/\[$UrlPattern\s+([^\]]+?)\]/&StoreBracketUrl($1, $2)/geos;
@@ -2595,20 +2194,14 @@ sub CommonMarkup {
 
 		s/\[$UrlPattern\]/&StoreBracketUrl($1, "")/geo;
 		s/\[$InterLinkPattern\]/&StoreBracketInterPage($1, "")/geo;
-###############
-### added by gypark
 ### 개별적인 IMG: 태그
 		s/IMG:([^<>\n]*)\n?$UrlPattern/&StoreImgUrl($1, $2, $useImage)/geo;
 ###
-###############
 		s/$UrlPattern/&StoreUrl($1, $useImage)/geo;
-###############
-### replaced by gypark
 ### InterWiki 로 적힌 이미지 처리
 #		s/$InterLinkPattern/&StoreInterPage($1)/geo;
 		s/$InterLinkPattern/&StoreInterPage($1, $useImage)/geo;
 ###
-###############
 
 		if ($WikiLinks) {
 			s/$AnchoredLinkPattern/&StoreRaw(&GetPageOrEditAnchoredLink($1, $2, ""))/geo if $NamedAnchors;
@@ -2621,17 +2214,7 @@ sub CommonMarkup {
 
 		$_ = &MacroSubst($_); 				# luke added
 
-###############
-### replaced by gypark
 ### ==== 가 hr 과 헤드라인 양쪽에서 처리되어 충돌이 생긴다. hr 패턴을 수정
-### http://www.usemod.com/cgi-bin/wiki.pl?ThinLine
-# 		if ($ThinLine) {
-# 			s/----+/<hr noshade size=1>/g;
-# 			s/====+/<hr noshade size=2>/g;
-# 		} else {
-# 			s/----+/<hr>/g;
-# 		}
-
 		if ($ThinLine) {
 			s/--------+/<hr noshade style="height:5px">/g;
 			s/-------+/<hr noshade style="height:4px">/g;
@@ -2642,9 +2225,6 @@ sub CommonMarkup {
 			s/----+/<hr>/g;
 		}
 
-###
-###############
-
 	}
 	if ($doLines) { # 0 = no line-oriented, 1 or 2 = do line-oriented
 		# The quote markup patterns avoid overlapping tags (with 5 quotes)
@@ -2653,8 +2233,6 @@ sub CommonMarkup {
 		s/''(.*?)''/<em>$1<\/em>/g;
 		if ($UseHeadings) {
 			s/(^|\n)\s*(\=+)\s+([^\n]+)\s+\=+/&WikiHeading($1, $2, $3)/geo;
-###############
-### replaced by gypark
 ### table 내 셀 별로 정렬
 #			s/((\|\|)+)/"<\/TD><TD COLSPAN=\"" . (length($1)\/2) . "\">"/ge if $TableMode;
 
@@ -2666,21 +2244,8 @@ sub CommonMarkup {
 			my %td_align = ("&__LT__;", "left", "&__GT__;", "right", "|", "center");
 			s/((\|\|)*)(\|(&__LT__;|&__GT__;|\|)((v(\d*))?))/"<\/TD><TD align=\"$td_align{$4}\" COLSPAN=\""
 				. ((length($1)\/2)+1) . ((length($5))?"\" ROWSPAN=\"" . ((length($7))?"$7":"2"):"") . "\">"/ge if $TableMode;
-###
-###############
 		}
 	}
-
-###############
-### commented by gypark
-### {{{ }}} 처리 때문에 함수 호출 순서를 바꾸면 표작성이 안된다
-### 다음 두 줄을 주석처리해주어 해결
-
-#	s/^\|([^|]+)[^|]/<TR><TD>$1<\/TD>\n/g;      # start of line: new table-row -- luke
-#	s/\|([^|]+)[^|]/<td>$1<\/td>\n/g;           # new field -- luke
-
-###
-###############
 
 	return $_;
 }
@@ -2703,19 +2268,19 @@ sub EmoticonSubst {
 		$e7 = $EmoticonPath . "/emoticon-unsure.gif ";
 		$e8 = $EmoticonPath . "/emoticon-wink.gif ";
 
-		$txt =~ s/\s\^[oO_\-]*\^[;]*/$e2/g;
-		$txt =~ s/\s-[_]+-[;]*/$e7/g;
-		$txt =~ s/\so\.O[^A-z]/$e5/g;
-		$txt =~ s/\s\*\.\*/$e5/g;
-		$txt =~ s/\s\=\.\=[;]*/$e7/g;
-		$txt =~ s/\s\:-[sS][^A-z]/$e7/g;
+		$txt =~ s/(\s)\^[oO_\-]*\^[;]*/$1$e2/g;
+		$txt =~ s/(\s)-[_]+-[;]*/$1$e7/g;
+		$txt =~ s/(\s)o\.O([^A-z])/$1$e5$2/g;
+		$txt =~ s/(\s)\*\.\*/$1$e5/g;
+		$txt =~ s/(\s)\=\.\=[;]*/$1$e7/g;
+		$txt =~ s/(\s)\:-[sS]([^A-z])/$1$e7$2/g;
 
-		$txt =~ s/\s\:[-]*D[^A-z]/$e2/g;
-		$txt =~ s/\s\:[-]*\([^A-z]/$e3/g;
-		$txt =~ s/\s\:[-]*\)[^A-z]/$e4/g;
-		$txt =~ s/\s\:[-]*[oO][^A-z]/$e5/g;
-		$txt =~ s/\s\:[-]*[pP][^A-z]/$e6/g;
-		$txt =~ s/\s\;[-]*\)[^A-z]/$e8/g;
+		$txt =~ s/(\s)\:[-]*D([^A-z])/$1$e2$2/g;
+		$txt =~ s/(\s)\:[-]*\(([^A-z])/$1$e3$2/g;
+		$txt =~ s/(\s)\:[-]*\)([^A-z])/$1$e4$2/g;
+		$txt =~ s/(\s)\:[-]*[oO]([^A-z])/$1$e5$2/g;
+		$txt =~ s/(\s)\:[-]*[pP]([^A-z])/$1$e6$2/g;
+		$txt =~ s/(\s)\;[-]*\)([^A-z])/$1$e8$2/g;
 	}
 
 	return $txt;
@@ -2765,7 +2330,6 @@ sub MacroSubst {
 }
 
 
-###############
 ### added by gypark
 sub RemoveLink {
 	my ($string) = @_;
@@ -2777,13 +2341,8 @@ sub RemoveLink {
 
 	return $string;
 }
-###
-###############
 
-###############
-### added by gypark
 ### include 매크로 안에서 위키태그를 작동하게 함
-### http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
 sub MacroIncludeSubst {
 	my ($txt) = @_;
 
@@ -2812,11 +2371,7 @@ sub MacroIncludeSubst {
 
 	return $txt;
 }
-###
-###############
 
-###############
-### added by gypark
 ### 추가한 매크로의 동작부
 ### trackback
 sub MacroTrackbackSent {
@@ -3066,7 +2621,7 @@ sub MacroUploadedFiles {
 			$txt .= "</TD>";
 		}
 		$txt .= "<TD class='uploadedfiles'>";
-		$txt .= &ScriptLink("reverse=Upload:$_", $uploadsearch) . " ";
+		$txt .= &GetReverseLink("Upload:$_", $uploadsearch) . " ";
 		$txt .= "<a href='$UploadUrl/$_'>$_</a>";
 		$txt .= "</TD>";
 
@@ -3114,14 +2669,11 @@ sub MacroInclude {
 		return "";
 	}
 		
-###############
-### added by gypark
 ### hide page
 	if (&PageIsHidden($name)) {
 		return "";
 	}
-###
-###############
+
 	my $data = &ReadFileOrDie($fname);
 	my %SubPage = split(/$FS1/, $data, -1);  # -1 keeps trailing null fields
 
@@ -3157,11 +2709,9 @@ sub WikiLinesToHtml {
 	my ($pageHtml, @htmlStack, $code, $depth, $oldCode);
 	my ($tag);
 
-###############
 ### added by gypark
 	my %td_align = ("&__LT__;", "left", "&__GT__;", "right", "|", "center");
-###
-###############
+
 	@htmlStack = ();
 	$depth = 0;
 	$pageHtml = "";
@@ -3223,8 +2773,6 @@ sub WikiLinesToHtml {
 		#  $pageHtml .=  "</" . pop(@htmlStack) . ">\n";		-- deleted luke
 			$tag = pop(@htmlStack);								# added luke
 			if ($tag eq "TABLE") {
-###############
-### replaced by gypark
 ### 줄 중간 || 문제 해결
 ### from Jof4002's patch
 #				$pageHtml .=  "</TR>\n";
@@ -3232,7 +2780,6 @@ sub WikiLinesToHtml {
 
 				$TableMode = 0;
 ###
-###############
 			};
 			$pageHtml .=  "</" . $tag . ">\n";					# added end luke
 		}
@@ -3241,15 +2788,12 @@ sub WikiLinesToHtml {
 			if (@htmlStack) {  # Non-empty stack
 				$oldCode = pop(@htmlStack);
 				if ($oldCode ne $code) {
-###############
-### added by gypark
 ### 줄 중간 || 문제 해결
 ### from Jof4002's patch
 					if ($oldCode eq "TABLE") {
 						$TableMode = 0;
 					}
 ###
-###############
 					$pageHtml .= "</$oldCode><$code>\n";
 				}
 				push(@htmlStack, $code);
@@ -3288,8 +2832,6 @@ sub QuoteHtml {
 	return $html;
 }
 
-###############
-### added by gypark
 ### {{{ }}} 처리를 위해 본문 처리시에는 Quote 를 다르게 함
 sub QuoteHtmlForPageContent {
 	my ($html) = @_;
@@ -3304,39 +2846,21 @@ sub QuoteHtmlForPageContent {
 
 	return $html;
 }
-###
-###############
 
 sub StoreInterPage {
-###############
-### replaced by gypark
-### InterWiki 로 적힌 이미지 처리
-#	my ($id) = @_;
 	my ($id, $useImage) = @_;
-###
-###############
+
 	my ($link, $extra);
 
-###############
-### replaced by gypark
-### InterWiki 로 적힌 이미지 처리
-#	($link, $extra) = &InterPageLink($id);
 	($link, $extra) = &InterPageLink($id, $useImage);
-###
-###############
+
 	# Next line ensures no empty links are stored
 	$link = &StoreRaw($link)  if ($link ne "");
 	return $link . $extra;
 }
 
 sub InterPageLink {
-###############
-### replaced by gypark
-### InterWiki 로 적힌 이미지 처리
-#	my ($id) = @_;
 	my ($id, $useImage) = @_;
-###
-###############
 	my ($name, $site, $remotePage, $url, $punct);
 
 	($id, $punct) = &SplitUrlPunct($id);
@@ -3344,38 +2868,29 @@ sub InterPageLink {
 	$name = $id;
 	($site, $remotePage) = split(/:/, $id, 2);
 	$url = &GetSiteUrl($site);
-###############
-### added by gypark
 ### interwiki 아이콘
 	my ($image, $url_main, $encoding);
 	($url, $image, $encoding) = split(/\|/, $url);
 	$url_main = $url;
 ###
-###############
 	return ("", $id . $punct)  if ($url eq "");
 	$remotePage =~ s/&amp;/&/g;  # Unquote common URL HTML
 #	$url .= $remotePage;
 ### intermap 에 인코딩 지정
 	my $encoded_page = $remotePage;
 	if (($encoding ne "") && (lc($encoding) ne lc($HttpCharset))) {
-		$encoded_page = &encode_korean($encoded_page, $HttpCharset, $encoding);
+		$encoded_page = &convert_encode($encoded_page, $HttpCharset, $encoding);
 	}
 	$encoded_page = &EncodeUrl($encoded_page);
 	$url .= $encoded_page;
 
-###############
-### added by gypark
 ### InterWiki 로 적힌 이미지 처리
 ### from Jof's patch
 	if ($useImage && ($url =~ /^(http:|https:|ftp:).+\.$ImageExtensions$/)) {
 		$url = $1 if ($url =~ /^https?:(.*)/ && $1 !~ /^\/\//);
 		return ("<img $ImageTag src=\"$url\" alt=\"$id\">", $punct);
 	}
-###
-###############
 
-###############
-### replaced by gypark
 ### interwiki 아이콘
 #	return ("<a href=\"$url\">$name</a>", $punct);
 	my $link_html = '';
@@ -3392,9 +2907,6 @@ sub InterPageLink {
 ### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
 	$link_html .= "<a href=\"$url\" target=\"_blank\"><img class=\"newwindow\" src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>";
 	return ($link_html, $punct);
-###
-###############
-
 }
 
 sub StoreBracketInterPage {
@@ -3404,16 +2916,13 @@ sub StoreBracketInterPage {
 	($site, $remotePage) = split(/:/, $id, 2);
 	$remotePage =~ s/&amp;/&/g;  # Unquote common URL HTML
 	$url = &GetSiteUrl($site);
-###############
-### added by gypark
 ### interwiki 아이콘
 	my ($image, $url_main);
 	if ($url =~ /\|/) {
 		($url, $image) = split(/\|/, $url, 2);		
 	}
 	$url_main = $url;
-###
-###############
+
 	if ($text ne "") {
 		return "[$id $text]"  if ($url eq "");
 	} else {
@@ -3421,8 +2930,6 @@ sub StoreBracketInterPage {
 		$text = &GetBracketUrlIndex($id);
 	}
 	$url .= $remotePage;
-###############
-### replaced by gypark
 ### interwiki 아이콘
 #	return &StoreRaw("<a href=\"$url\">[$text]</a>");
 	my $link_html = '';
@@ -3432,8 +2939,6 @@ sub StoreBracketInterPage {
 				"<img class=\"newwindow\" src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\">" .
 				"</a>";
 	return &StoreRaw($link_html);
-###
-###############
 }
 
 sub GetBracketUrlIndex {
@@ -3455,26 +2960,17 @@ sub GetSiteUrl {
 
 	if (!$InterSiteInit) {
 		$InterSiteInit = 1;
-###############
-### replaced by gypark
 ### file upload
-#		($status, $data) = &ReadFile($InterFile);
-#		return ""  if (!$status);
-#		%InterSite = split(/\s+/, $data);  # Later consider defensive code
 		($status, $data) = &ReadFile($InterFile);
 		if ($status) {
 ### intermap에 #을 사용한 주석 추가 지원
-#			%InterSite = split(/\s+/, $data);
 			%InterSite = map { s/\s*#.*//; split /\s+/; } grep { s/^\s*//; /^[^#]/ } split /\n/, $data;
 		}
 		if (!defined($InterSite{'Upload'})) {
 ### interwiki 아이콘
 			$InterSite{'Upload'} = "$UploadUrl\/|default-upload.gif";
 		}
-###
-###############
-###############
-### added by gypark
+
 ### Local, LocalWiki 인터위키 from usemod 1.0
 ### interwiki 아이콘 같이 적용
 		if (!defined($InterSite{'LocalWiki'})) {
@@ -3483,8 +2979,6 @@ sub GetSiteUrl {
 		if (!defined($InterSite{'Local'})) {
 			$InterSite{'Local'} = $ScriptName . &ScriptLinkChar() . "|default-local.gif";
 		}
-###
-###############
 
 	}
 	$url = $InterSite{$site}  if (defined($InterSite{$site}));
@@ -3498,10 +2992,7 @@ sub StoreRaw {
 	return $FS . $SaveUrlIndex . $FS;
 }
 
-###############
-### added by gypark
 ### 몇 가지 함수들 추가
-
 ### {{{ }}} 처리를 위해
 sub StoreCodeRaw {
 	my ($html) = @_;
@@ -3572,8 +3063,6 @@ EnDoFwIkIcOdE`;
 	return $result;
 }
 
-###############
-### added by gypark
 ### 외부 plugin 지원
 sub StorePlugin {
 	my ($command, $content) = @_;
@@ -3621,8 +3110,6 @@ sub StorePlugin {
 
 	return &StoreRaw($txt);
 }
-###
-###############
 
 ### 글을 작성한 직후에 수행되는 매크로들
 sub ProcessPostMacro {
@@ -3652,18 +3139,12 @@ sub PostMacroMySign {
 	return $string;
 }
 
-###
-###############
-
-
 sub StorePre {
 	my ($html, $tag) = @_;
 
 	return &StoreRaw("<$tag>" . $html . "</$tag>");
 }
 
-###############
-### added by gypark
 sub UnquoteHtmlForPageContent {
 	my ($html) = @_;
 	$html =~ s/&__GT__;/>/g;
@@ -3673,11 +3154,7 @@ sub UnquoteHtmlForPageContent {
 	$html =~ s/&__SINGLEBACKSLASH__;/\\\n/g;
 	return $html;
 }
-###
-###############
 
-###############
-### added by gypark
 ### LaTeX 지원
 sub MakeLaTeX {
 	my ($latex,  $type) = @_;
@@ -3801,8 +3278,6 @@ EOT
 	}
 	return $imgpath;
 }
-###
-###############
 
 sub StoreHref {
 	my ($anchor, $text) = @_;
@@ -3820,8 +3295,6 @@ sub StoreUrl {
 	return $link . $extra;
 }
 
-###############
-### added by gypark
 ### 개별적인 IMG: 태그
 sub StoreImgUrl {
 	my ($imgTag, $name, $useImage) = @_;
@@ -3834,8 +3307,6 @@ sub StoreImgUrl {
 	$ImageTag = "";
 	return $link . $extra;
 }
-###
-###############
 
 sub UrlLink {
 	my ($rawname, $useImage) = @_;
@@ -3852,30 +3323,15 @@ sub UrlLink {
 	# Restricted image URLs so that mailto:foo@bar.gif is not an image
 	if ($useImage && ($name =~ /^(http:|https:|ftp:).+\.$ImageExtensions$/)) {
 		$name = $1 if ($name =~ /^https?:(.*)/ && $1 !~ /^\/\//);
-###############
-### replaced by gypark
 ### 이미지에 alt 태그를 넣어 원래 주소를 보임
-#		return ("<img $ImageTag src=\"$name\">", $punct);
 		return ("<img $ImageTag src=\"$name\" alt=\"$name\">", $punct);
-###
-###############
 	}
-###############
-### added by gypark
 ### 상대 경로로 적힌 URL 을 제대로 처리
 	my $protocol;
 	($protocol, $name) = ($1, $2) if ($name =~ /^(https?:)(.*)/ && $2 !~ /^\/\//);
-###
-###############
 
-###############
-### replaced by gypark
 ### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
-### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
-#	return ("<a href=\"$name\">$name</a>", $punct);
 	return ("<A class='outer' href=\"$name\">$protocol$name</A><a href=\"$name\" target=\"_blank\"><img class=\"newwindow\" src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>", $punct);
-###
-###############
 }
 
 sub StoreBracketUrl {
@@ -3885,14 +3341,8 @@ sub StoreBracketUrl {
 	if ($text eq "") {
 		$text = &GetBracketUrlIndex($url);
 	}
-###############
-### replaced by gypark
 ### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
-### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
-#	return &StoreRaw("<a href=\"$url\">[$text]</a>");
 	return &StoreRaw("<A class='outer' href=\"$url\">[$text]</A><a href=\"$url\" target=\"_blank\"><img class=\"newwindow\" src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>");
-###
-###############
 }
 
 sub StoreBracketLink {
@@ -4013,9 +3463,6 @@ sub ISBNLink {
 		"alt='".T('Go to the on-line bookstore')." ISBN:$rawprint'>".
 		"</a>";
 
-### 
-###############
-
 }
 
 sub SplitUrlPunct {
@@ -4025,18 +3472,13 @@ sub SplitUrlPunct {
 	if ($url =~ s/\"\"$//) { return ($url, "");   # Delete double-quote delimiters here
 	}
 	$punct = "";
-###############
-### replaced by gypark
 ### 한글이 포함된 인터위키에서 일부 한글을 인식하지 못하는 문제 해결
-### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
-
 #	($punct) = ($url =~ /([^a-zA-Z0-9\/\xc0-\xff]+)$/);
 #	$url =~ s/([^a-zA-Z0-9\/\xc0-\xff]+)$//;
 
 	($punct) = ($url =~ /([^a-zA-Z0-9\/\x80-\xff]+)$/);
 	$url =~ s/([^a-zA-Z0-9\/\x80-\xff]+)$//;
 ###
-###############
 	return ($url, $punct);
 }
 
@@ -4094,22 +3536,13 @@ sub WikiHeadingNumber {
 ###############
 
 
-###############
-### replaced by gypark
 ### <toc> 개선
-### http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁
 #	$TableOfContents .= $number . &ScriptLink("$OpenPageName#$anchor",$text) . "</dd>\n<dt> </dt><dd>";
 	$TableOfContents .= $number . "<a href=\"#$anchor\">" . $text . "</a></dd>\n<dt> </dt><dd>";
-###
-###############
 
-###############
-### replaced by gypark
 ### WikiHeading 개선 from Jof
 #	return &StoreHref(" name=\"$anchor\"") . $number;
 	return &StoreHref(" name='$anchor' href='#toc'",$number);
-###
-###############
 }
 
 sub WikiHeading {
@@ -4128,6 +3561,7 @@ sub WikiHeading {
 			&ScriptLink("action=edit&id=$pageid&section=$SectionNumber",&T("edit")).
 			']</SPAN>';
 		$edit_section = '' if ($depth == 1);
+		$edit_section = '' if (&GetParam("action") =~ /help|preview/i);
 	}
 	return $pre . "<H$depth>$edit_section$text</H$depth>\n";
 ######
@@ -4209,12 +3643,9 @@ sub GetDiffHTML {
 	if ($revOld ne "") {
 		my $currentRevision = T('Current Revision');
 		$currentRevision = Ts('Revision %s', $revNew) if $revNew;
-###############
-### added by gypark
 ### 번역의 편의를 위하여
 		my $fromRevision = Ts('Revision %s', $revOld);
 ###
-###############
 		$html = '<b>'
 			. Ts('(Difference from %s', $fromRevision) . " " . Ts('to %s)', $currentRevision)
 			. "</b>\n$links<br>" . &DiffToHTML($diffText);
@@ -4232,15 +3663,11 @@ sub GetDiffHTML {
 		}
 	}
 	
-###############
-### added by gypark
 ### {{{ }}} 처리를 위해 추가. 임시 태그를 원래대로 복원
 ### diff 화면에서도 \\ 와 \ 처리를 해 주는 게 나을려나?
 	$html =~ s/&__LT__;/&lt;/g;
 	$html =~ s/&__GT__;/&gt;/g;
 	$html =~ s/&__AMP__;/&amp;/g;
-###
-###############
 
 	return $html;
 }
@@ -4284,24 +3711,19 @@ sub GetDiff {
 	}
 	&WriteStringToFile($oldName, $old);
 	&WriteStringToFile($newName, $new);
-###############
-### replaced by gypark
 ### diff 출력 개선
 #	$diff_out = `diff $oldName $newName`;
 	$diff_out = `diff -u $oldName $newName`;
 	if ($diff_out eq "") {
 		$diff_out = `diff $oldName $newName`;
 	}
-###
-###############
+
 	&ReleaseDiffLock()  if ($lock);
 	$diff_out =~ s/\\ No newline.*\n//g;   # Get rid of common complaint.
 	# No need to unlink temp files--next diff will just overwrite.
 	return $diff_out;
 }
 
-###############
-### added by gypark
 ### diff 출력 개선
 sub DiffToHTML {
 	my ($html) = @_;
@@ -4311,16 +3733,11 @@ sub DiffToHTML {
 		return &DiffToHTMLplain($html);
 	}
 }
-###
-###############
 
-###############
-### replaced by gypark
 ### diff 출력 개선
 # sub DiffToHTML {
 sub DiffToHTMLplain {
 ###
-###############
 	my ($html) = @_;
 	my ($tChanged, $tRemoved, $tAdded);
 
@@ -4337,8 +3754,6 @@ sub DiffToHTMLplain {
 	return $html;
 }
 
-###############
-### added by gypark
 ### diff 출력 개선
 sub DiffToHTMLunified {
 	my ($html) = @_;
@@ -4385,8 +3800,6 @@ sub DiffToHTMLunified {
 	$result .= "</TABLE>\n" if ($output_exist);
 	return $result;
 }
-###
-###############
 
 sub ColorDiff {
 	my ($diff, $color) = @_;
@@ -4445,8 +3858,6 @@ sub OpenNewText {
 		$Text{'text'} = T('Describe the new page here.') . "\n";
 	}
 
-###############
-### added by gypark
 ### template page
 	if (($TemplatePage) && (&GetParam("action","") eq "edit")) {
 		my $temp;
@@ -4456,8 +3867,6 @@ sub OpenNewText {
 		}
 	}
 ###
-###############
-
 	$Text{'text'} .= "\n"  if (substr($Text{'text'}, -1, 1) ne "\n");
 	$Text{'minor'} = 0;      # Default as major edit
 	$Text{'newauthor'} = 1;  # Default as new author
@@ -4583,8 +3992,6 @@ sub SaveKeepSection {
 	my $file = &KeepFileName();
 	my $data;
 
-###############
-### replaced by gypark
 ### 페이지 삭제 시에 keep 화일은 보존해 둠
 #	return  if ($Section{'revision'} < 1);  # Don't keep "empty" revision
 	if ($Section{'revision'} < 1) {
@@ -4593,8 +4000,6 @@ sub SaveKeepSection {
 		}
 		return;
 	}
-###
-###############
 
 	$Section{'keepts'} = $Now;
 	$data = $FS1 . join($FS2, %Section);
@@ -4685,22 +4090,16 @@ sub OpenKeptRevisions {
 
 	%KeptRevisions = ();
 	&OpenKeptList();
-###############
-### added by gypark
 ### 최근변경내역에 북마크 기능 도입
 	%RevisionTs = ();
-###
-###############
+
 	foreach (@KeptList) {
 		%tempSection = split(/$FS2/, $_, -1);
 		next  if ($tempSection{'name'} ne $name);
 		$KeptRevisions{$tempSection{'revision'}} = $_;
-###############
-### added by gypark
 ### 최근변경내역에 북마크 기능 도입
 		$RevisionTs{$tempSection{'revision'}} = $tempSection{'ts'};
-###
-###############
+
 	}
 }
 
@@ -4714,12 +4113,8 @@ sub LoadUserData {
 		return;
 	}
 	%UserData = split(/$FS1/, $data, -1);  # -1 keeps trailing null fields
-###############
-### added by gypark
 ### 관심 페이지
 	%UserInterest = split(/$FS2/, $UserData{'interest'}, -1);
-###
-###############
 }
 
 sub UserDataFilename {
@@ -4796,14 +4191,10 @@ sub UserCanEdit {
 	my ($id, $deepCheck) = @_;
 
 	return 1  if (&UserIsAdmin());
-###############
-### added by gypark
 ### hide page
 	if (($id ne "") && (&PageIsHidden($id))) {
 		return 0;
 	}
-###
-###############
 	
 	# Optimized for the "everyone can edit" case (don't check passwords)
 	if (($id ne "") && (-f &GetLockedPageFile($id))) {
@@ -4850,14 +4241,10 @@ sub UserIsAdmin {
 	return 0  if ($userPassword eq "");
 	foreach (split(/\s+/, $AdminPass)) {
 		next  if ($_ eq "");
-###############
-### replaced by gypark
 ### 암호를 암호화해서 저장
 ### from Bab2's patch
 #		return 1  if ($userPassword eq $_);
 		return 1  if (crypt($_, $userPassword) eq $userPassword);
-###
-###############
 	}
 	return 0;
 }
@@ -4872,14 +4259,10 @@ sub UserIsEditor {
 	return 0  if ($userPassword eq "");
 	foreach (split(/\s+/, $EditPass)) {
 		next  if ($_ eq "");
-###############
-### replaced by gypark
 ### 암호를 암호화해서 저장
 ### from Bab2's patch
 #		return 1  if ($userPassword eq $_);
 		return 1  if (crypt($_, $userPassword) eq $userPassword);
-###
-###############
 	}
 	return 0;
 }
@@ -5004,15 +4387,12 @@ sub AppendStringToFile {
 sub CreateDir {
 	my ($newdir) = @_;
 
-###############
-### replaced by gypark
 ### 디렉토리 생성에 실패할 경우 에러 출력
 #	mkdir($newdir, 0775)  if (!(-d $newdir));
 	if (!(-d $newdir)) {
 		mkdir($newdir, 0775) or die(Ts('cant create directory %s', $newdir) . ": $!");
 	}
 ###
-###############
 }
 
 sub CreatePageDir {
@@ -5262,8 +4642,6 @@ sub DoPreview {
 	$ClickEdit = 0;
 	print &GetHttpHeader();
 	print &GetHtmlHeader(T('Preview') . " : $SiteName", "Preview");
-###############
-### replaced by gypark
 ### 미리보기에서 <mysign> 등의 preprocessor 사용
 #	print &WikiToHTML(&GetParam("text", undef));
 
@@ -5271,12 +4649,8 @@ sub DoPreview {
 	$MainPage = &GetParam("id", ".");
 	$MainPage =~ s|/.*||;
 	print &WikiToHTML(&ProcessPostMacro($textPreview));
-###
-###############
 }
 
-###############
-### replaceed by gypark
 ### 도움말 별도의 화일로 분리
 sub DoHelp {
 	my $idx = &GetParam("index", "");
@@ -5295,8 +4669,6 @@ sub DoHelp {
 	print &GetHtmlHeader(T('Editing Help :'). " $title", "$title");
 	print &WikiToHTML($text);
 }
-###
-###############
 
 sub DoOtherRequest {
 	my ($id, $action, $text, $search);
@@ -5307,8 +4679,6 @@ sub DoOtherRequest {
 	$id = &GetParam("id", "");
 	if ($action ne "") {
 		$action = lc($action);
-###############
-### replaced by gypark
 ### action 모듈화
 		my $action_file = "";
 		my ($MyActionDir, $ActionDir) = ("./myaction/", "./action/");
@@ -5332,7 +4702,6 @@ sub DoOtherRequest {
 			return;
 		}
 ###
-###############
 		if ($action eq "edit") {
 			$UseShortcut = 0;	# 단축키
 			&DoEdit($id, 0, 0, "", 0)  if &ValidIdOrDie($id);
@@ -5340,15 +4709,12 @@ sub DoOtherRequest {
 			&DoUnlock();
 		} elsif ($action eq "index") {
 			&DoIndex();
-###############
-### added by gypark
 ### titleindex action 추가
 ### from Bab2's patch
 		} elsif ($action eq "titleindex") {
 			$UseShortcut = 0;
 			&DoTitleIndex();
 ###
-###############
 		} elsif ($action eq "help") {				# luke added
 			$UseShortcut = 0;
 			&DoHelp();								# luke added
@@ -5378,8 +4744,6 @@ sub DoOtherRequest {
 			&DoEditPrefs();  # Also creates new ID
 		} elsif ($action eq "version") {
 			&DoShowVersion();
-###############
-### added by gypark
 ### 최근변경내역에 북마크 기능 도입
 		} elsif ($action eq "bookmark") {
 			&DoBookmark();
@@ -5408,7 +4772,6 @@ sub DoOtherRequest {
 		} elsif ($action eq "send_ping") {
 			&DoSendTrackbackPing($id);
 ###
-###############
 		} else {
 			# Later improve error reporting
 			$UseShortcut = 0;
@@ -5453,45 +4816,17 @@ sub DoEdit {
 	my ($header, $editRows, $editCols, $userName, $revision, $oldText);
 	my ($summary, $isEdit, $pageTime);
 
-###############
-### added by gypark
 ### view action 추가
 	my $canEdit = &UserCanEdit($id,1);
-###
-###############
-
-###############
-### commented by gypark
-### view action 추가
-#	if (!&UserCanEdit($id, 1)) {
-#		print &GetHeader("", T('Editing Denied'), "");
-#		if (&UserIsBanned()) {
-#			print T('Editing not allowed: user, ip, or network is blocked.');
-#			print "<p>";
-#			print T('Contact the wiki administrator for more information.');
-#		} else {
-### 수정 불가를 알리는 메세지에, 사이트 제목이 아니라 
-### 해당 페이지명이 나오도록 수정
-#			print Ts('Editing not allowed: %s is read-only.', $SiteName);
-#			print Ts('Editing not allowed: %s is read-only.', $id);
-#		}
-#		print &GetCommonFooter();
-#		return;
-#	}
-###
-###############
 
 	# Consider sending a new user-ID cookie if user does not have one
 	&OpenPage($id);
 	&OpenDefaultText();
 	$pageTime = $Section{'ts'};
 	$header = Ts('Editing %s', $id);
-###############
-### added by gypark
 ### view action 추가
 	$header = Ts('Viewing %s', $id) if (!$canEdit);
-###
-###############
+
 	# Old revision handling
 	$revision = &GetParam('revision', '');
 	$revision =~ s/\D//g;  # Remove non-numeric chars
@@ -5503,12 +4838,9 @@ sub DoEdit {
 		} else {
 			&OpenKeptRevision($revision);
 			$header = Ts('Editing revision %s of', $revision) . " $id";
-###############
-### added by gypark
 ### view action 추가
 			$header = Ts('Viewing revision %s of', $revision) . " $id" if (!$canEdit);
 ###
-###############
 		}
 	}
 	$oldText = $Text{'text'};
@@ -5570,18 +4902,13 @@ sub DoEdit {
 	$editRows = &GetParam("editrows", 20);
 	$editCols = &GetParam("editcols", 65);
 	print &GetHeader('', &QuoteHtml($header), '');
-###############
-### added by gypark
 ### hide page
 	if (&PageIsHidden($id)) {
 		print Ts('%s is a hidden page', $id);
 		print &GetCommonFooter();
 		return;
 	}
-###
-###############
-###############
-### added by gypark
+
 ### view action 추가
 	if (!$canEdit) {
 		if (&UserIsBanned()) {
@@ -5593,27 +4920,21 @@ sub DoEdit {
 		}
 		print "<br>\n";
 	}
-###
-###############
-###############
-### replaced by gypark
+
 ### view action 추가
 # 	if ($revision ne '') {
 	if ($canEdit && ($revision ne '')) {
 ###
-###############
 		print "\n<b>"
 				. Ts('Editing old revision %s.', $revision) . "  "
 		. T('Saving this page will replace the latest revision with this text.')
 				. '</b><br>'
 	}
-###############
-### replaced by gypark
+
 ### view action 추가
 # 	if ($isConflict) {
 	if ($canEdit && $isConflict) {
 ###
-###############
 		$editRows -= 10  if ($editRows > 19);
 		print "\n<H1>" . T('Edit Conflict!') . "</H1>\n";
 		if ($isConflict>1) {
@@ -5682,18 +5003,10 @@ function oekaki()
 //-->
 </script>
 |;
-###
-###############
 
-###############
-### added by gypark
 ### view action 추가
 	if ($canEdit) {
-###
-###############
 		print T('Editing Help :') . "&nbsp;";
-###############
-### replaced by gypark
 ### 도움말 별도의 화일로 분리
 
 # 	print &HelpLink(1, T('Make Page')) . " | ";
@@ -5707,29 +5020,14 @@ function oekaki()
 			print " | " if ($_ ne $#HelpItem);
 		}
 		print "<br>\n";
-###
-###############
-###############
-### added by gypark
-### view action 추가
 	}
-###
-###############
 
-###############
-### replaced by gypark
 ### 편집모드에 들어갔을때 포커스가 편집창에 있도록 한다
 #	print &GetFormStart();
 	print $q->startform(-method=>"POST", -action=>"$ScriptName", -enctype=>"application/x-www-form-urlencoded",
 			-name=>"form_edit", -onSubmit=>"closeok=true; return true;");
-###
-###############
-###############
-### added by gypark
 ### view action 추가
 	if ($canEdit) {
-###
-###############
 		print &GetHiddenValue("title", $id), "\n",
 					&GetHiddenValue("oldtime", $pageTime), "\n",
 					&GetHiddenValue("oldconflict", $isConflict), "\n";
@@ -5739,7 +5037,6 @@ function oekaki()
 # ECode
 		my $ecode = &simple_crypt(length($id).substr(&CalcDay($Now),5));
 		print &GetHiddenValue("ecode","$ecode")."\n";
-###
 ### 섹션 단위 편집
 		if ($section >= 1) {
 			print &GetHiddenValue("section", $section)."\n";
@@ -5779,17 +5076,11 @@ function oekaki()
 		} else {
 			print ' (', Ts('Visit %s to set your user name.', &GetPrefsLink()), ') ';
 		}
-###############
-### replaced by gypark 
 ### 미리보기 버튼에 번역함수 적용
 		print q(<input accesskey="p" type="button" name="prev1" value="). 
 			T('Popup Preview')." [alt+p]" . 
 			q(" onclick="javascript:preview();">); # luke added
-###
-###############
 
-###############
-### added by gypark
 ### file upload
 		print " ".q(<input accesskey="u" type="button" name="prev1" value="). 
 			T('Upload File')." [alt+u]" . 
@@ -5799,14 +5090,11 @@ function oekaki()
 			T('Oekaki')." [alt+o]" . 
 			q(" onclick="javascript:oekaki();">);
 ###
-###############
 		if ($isConflict) {
 			print "\n<br><hr noshade size=1><p><strong>", T('This is the text you submitted:'),
 					"</strong><p>",
 					&GetTextArea('newtext', $newText, $editRows, $editCols),
 					"<p>\n";
-###############
-### added by gypark
 ### conflict 발생시 양쪽의 입력을 비교
 			my $conflictdiff = &GetDiff($oldText, $newText, 1);
 			$conflictdiff = T('No diff available.') if ($conflictdiff eq "");
@@ -5815,11 +5103,7 @@ function oekaki()
 				"</strong><p>",
 				&DiffToHTML($conflictdiff),
 				"<p>\n";
-###
-###############
 		}
-###############
-### added by gypark
 ### view action 추가
 	} else {
 		print $q->textarea(-class=>'view', -accesskey=>'i', -name=>'text', 
@@ -5828,7 +5112,6 @@ function oekaki()
 				-readonly=>'true');
 	}
 ###
-###############
 	print "<hr class='footer'>\n";
 	if ($preview) {
 		print "<h2>", T('Preview:'), "</h2>\n";
@@ -5842,18 +5125,12 @@ function oekaki()
 		print &WikiToHTML($oldText) . "<hr noshade size=1>\n";
 		print "<h2>", T('Preview only, not yet saved'), "</h2>\n";
 	}
-###############
-### added by gypark
 ### 편집 화면 아래에 편집을 취소하고 원래 페이지로 돌아가는 링크 추가
-### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
 	print Ts('Return to %s' , &GetPageLink($id)) . " | ";
-###
-###############
+
 	print &GetHistoryLink($id, T('View other revisions')) . "<br>\n";
 	# print &GetGotoBar($id);
 	print $q->endform;
-###############
-### added by gypark
 ### 편집모드에 들어갔을때 포커스가 편집창에 있도록 한다
 	print "\n<script language=\"JavaScript\" type=\"text/javascript\">\n"
 		. "<!--\n"
@@ -5862,36 +5139,16 @@ function oekaki()
 		. "document.form_edit.text.focus();\n"
 		. "//-->\n"
 		. "</script>\n";
-###
-###############
+
 	print &GetMinimumFooter();
 }
 
 sub GetTextArea {
 	my ($name, $text, $rows, $cols) = @_;
-###############
-### added by gypark
-### &lt; 와 &gt; 가 들어가 있는 페이지를 수정할 경우 자동으로 부등호로 바뀌어
-### 버리는 문제를 해결
-### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
+### &lt; 와 &gt; 가 들어가 있는 페이지를 수정할 경우 자동으로 부등호로 바뀌어 버리는 문제를 해결
 	$text =~ s/(<!--.*?-->)/&StoreRaw($1)/ges;
 	$text =~ s/(\&)/\&amp;/g;
 	$text = &RestoreSavedText($text);
-###
-###############
-
-###############
-### replaced by gypark
-### 편집창에 alt+i 단축키 추가
-# 	if (&GetParam("editwide", 1)) {
-# 		return $q->textarea(-name=>$name, -default=>$text,
-# 												-rows=>$rows, -columns=>$cols, -override=>1,
-# 												-style=>'width:100%', -wrap=>'virtual');
-# 	}
-# 	return $q->textarea(-name=>$name, -default=>$text,
-# 											-rows=>$rows, -columns=>$cols, -override=>1,
-# 											-wrap=>'virtual');
-
 	if (&GetParam("editwide", 1)) {
 		return $q->textarea(-accesskey=>'i', -name=>$name, -default=>$text,
 												-rows=>$rows, -columns=>$cols, -override=>1,
@@ -5900,10 +5157,6 @@ sub GetTextArea {
 	return $q->textarea(-accesskey=>'i', -name=>$name, -default=>$text,
 											-rows=>$rows, -columns=>$cols, -override=>1,
 											-wrap=>'virtual');
-
-###
-###############
-
 }
 
 sub DoEditPrefs {
@@ -6007,39 +5260,25 @@ sub GetFormCheck {
 
 sub DoUpdatePrefs {
 	my ($username, $password);
-###############
-### added by gypark
 ### 암호를 암호화해서 저장
 ### from Bab2's patch
 	my $hashpass = "";
-###
-###############
 
 	# All link bar settings should be updated before printing the header
 	&UpdatePrefCheckbox("toplinkbar");
-###############
-### added by gypark
 ### 빈 페이지 링크 스타일을 환경 설정에서 결정
 ### from Bab2's patch
 	&UpdatePrefCheckbox("linkstyle");
-###
-###############
+
 	&UpdatePrefCheckbox("linkrandom");
 	print &GetHeader('',T('Saving Preferences'), '');
 	print '<br>';
 
-###############
-### replaced by gypark
 ### 아이디 첫글자를 대문자로 변환
-
 #	$UserID = &GetParam("p_username",  "");
 #	$username = &GetParam("p_username",  "");
 	$UserID = &FreeToNormal(&GetParam("p_username",  ""));
 	$username = &FreeToNormal(&GetParam("p_username",  ""));
-###
-###############
-###############
-### added by gypark
 ### 다른 사용자의 환경설정 변경을 금지
 	my ($status, $data) = &ReadFile(&UserDataFilename($UserID));
 	if ($status) {
@@ -6049,15 +5288,13 @@ sub DoUpdatePrefs {
 			return;
 		}
 	}
-###
-###############
+
 	if ($FreeLinks) {
 		$username =~ s/^\[\[(.+)\]\]/$1/;  # Remove [[ and ]] if added
 		$username =  &FreeToNormal($username);
 		$username =~ s/_/ /g;
 	}
-###############
-### replaced by gypark
+
 ### 아이디 항목을 공란으로 놓지 못하게 하고, 최소 4자 이상이어야 하도록 제한
 ### based on Bab2's patch
 #	if ($username eq "") {
@@ -6100,49 +5337,33 @@ sub DoUpdatePrefs {
 		$UserData{'username'} = $username;
 	}
 	$password = &GetParam("p_password",  "");
-###############
-### added by gypark
 ### 암호를 암호화해서 저장
 ### from Bab2's patch
 	$hashpass = crypt($password, $HashKey);
-###
-###############
 	if ($password eq "") {
 		print T('Password removed.'), '<br>';
 		undef $UserData{'password'};
 	} elsif ($password ne "*") {
 		print T('Password changed.'), '<br>';
-###############
-### replaced by gypark
 ### 암호를 암호화해서 저장
 ### from Bab2's patch
 #		$UserData{'password'} = $password;
 		$UserData{'password'} = $hashpass;
-###
-###############
 	}
 	if ($AdminPass ne "") {
 		$password = &GetParam("p_adminpw",  "");
-###############
-### added by gypark
 ### 암호를 암호화해서 저장
 ### from Bab2's patch
 		$hashpass = crypt($password, $HashKey);
-###
-###############
 		if ($password eq "") {
 			print T('Administrator password removed.'), '<br>';
 			undef $UserData{'adminpw'};
 		} elsif ($password ne "*") {
 			print T('Administrator password changed.'), '<br>';
-###############
-### replaced by gypark
 ### 암호를 암호화해서 저장
 ### from Bab2's patch
 #			$UserData{'adminpw'} = $password;
 			$UserData{'adminpw'} = $hashpass;
-###
-###############
 			if (&UserIsAdmin()) {
 				print T('User has administrative abilities.'), '<br>';
 			} elsif (&UserIsEditor()) {
@@ -6242,21 +5463,17 @@ sub UpdatePrefNumber {
 	# Later consider returning status?
 }
 
-###############
-### added by gypark
 ### titleindex action 추가
 ### from Bab2's patch
 sub DoTitleIndex {
 	my (@list);
 	my $index;
-	print "Content-type: text/plain\n\n";
+	print "Content-type: text/plain; charset=$HttpCharset\n\n";
 	@list = &AllPagesList();
 	foreach $index (@list) {
 		print $index."\r\n";
 	}
 }
-###
-###############
 
 sub DoIndex {
 	print &GetHeader('', T('Index of all pages'), '');
@@ -6282,13 +5499,10 @@ sub DoNewLogin {
 
 sub DoEnterLogin {
 	print &GetHeader('', T('Login'), "");
-###############
-### replaced by gypark
 ### 사용자 아이디를 입력하는 란에 포커스를 준다
 #	print &GetFormStart();
 	print &GetFormStart("form_login");
-###
-###############
+
 	print &ScriptLink("action=newlogin", T('Create new UserName') . "<br>");
 	print &GetHiddenValue('enter_login', 1), "\n";
 	print '<br>', T('UserName:'), ' ',
@@ -6297,18 +5511,14 @@ sub DoEnterLogin {
 	print '<br>', T('Password:'), ' ',
 				$q->password_field(-name=>'p_password', -value=>'',
 													 -size=>15, -maxlength=>50);
-###############
-### added by gypark
 ### 로긴할 때 자동 로그인 여부 선택
 ### from Bab2's patch
 	print '<br>', &GetFormCheck('expire', 0, T('Keep login information'));
-###
-###############
+
 	print '<br>', $q->submit(-name=>'Login', -value=>T('Login')), "\n";
 	print "<hr class='footer'>\n";
 	print $q->endform;
-###############
-### added by gypark
+
 ### 사용자 아이디를 입력하는 란에 포커스를 준다
 	print "\n<script language=\"JavaScript\" type=\"text/javascript\">\n"
 		. "<!--\n"
@@ -6316,7 +5526,6 @@ sub DoEnterLogin {
 		. "//-->\n"
 		. "</script>\n";
 ###
-###############
 	print &GetMinimumFooter();
 }
 
@@ -6324,30 +5533,20 @@ sub DoLogin {
 	my ($uid, $password, $success);
 
 	$success = 0;
-###############
-### replaced by gypark
 ### 아이디 첫글자를 무조건 대문자로 변환
 #	$uid = &GetParam("p_userid", "");
 	$uid = &FreeToNormal(&GetParam("p_userid", ""));
-###
-###############
 	$password = &GetParam("p_password",  "");
 	if (($password ne "") && ($password ne "*")) {
 		$UserID = $uid;
 
 		&LoadUserData();
-###############
-### replaced by gypark
 ### 암호를 암호화해서 저장
 ### from Bab2's patch
 #		if (defined($UserData{'password'}) &&
 #				($UserData{'password'} eq $password)) {
 		if (defined($UserData{'password'}) &&
 				(crypt($password, $UserData{'password'}) eq $UserData{'password'})) {
-###
-###############
-###############
-### added by gypark
 ### 로긴할 때 자동 로그인 여부 선택
 ### from Bab2's patch
 			my $expire_mode = &UpdatePrefCheckbox("expire");
@@ -6356,8 +5555,7 @@ sub DoLogin {
 			} else {
 				$SetCookie{'expire'} = $expire_mode;
 			}
-###
-###############
+
 			$SetCookie{'id'} = $uid;
 			$SetCookie{'randkey'} = $UserData{'randkey'};
 			$SetCookie{'rev'} = 1;
@@ -6365,31 +5563,13 @@ sub DoLogin {
 		}
 		else {
 			$SetCookie{'id'} = "";
-###############
-### added by gypark
 ### 잘못된 아이디를 넣었을 때의 처리 추가
 ### from Bab2's patch
 			$UserID = "";
 			&LoadUserData();
-###
-###############
 		}
 	}
 
-###############
-### replaced by gypark
-### 로긴 성공 또는 실패시의 메시지 수정
-
-#	print &GetHeader('', T('Login Results'), '');
-#
-# 	if ($success) {
-# 		print Ts('Login for user ID %s complete.', $uid);
-# 		%UserCookie = %SetCookie;
-# 	} else {
-# 		print Ts('Login for user ID %s failed.', $uid);
-# 		%UserCookie = %SetCookie;
-# 		$UserID = "";
-# 	}
 	if ($success) {
 		print &GetHeader('', T('Login completed'), '');
 		print Ts('Login for user ID %s complete.', $uid);
@@ -6402,8 +5582,6 @@ sub DoLogin {
 		print "<br>" . &ScriptLink("action=login", T('Try Again'));
 	}
 
-###
-###############
 	print "<hr class='footer'>\n";
 	#print &GetGotoBar('');
 	print $q->endform;
@@ -6417,18 +5595,13 @@ sub DoLogout {
 	$SetCookie{'randkey'} = $UserData{'randkey'};
 	$SetCookie{'rev'} = 1;
 
-###############
-### replaced by gypark
 ### logout 직후에도 상단메뉴에 logout 링크가 남아 있는 문제 해결
-### 근본적인 조치가 되지 못한다. 주의
 #	print &GetHeader('', T('Logout Results'), '');
 
 	my $tempUserID = $UserID;
 	$UserID = "113";
 	print &GetHeader('', T('Logout Results'), '');
 	$UserID = $tempUserID;
-###
-###############
 
 #	if (($UserID ne "113") && ($UserID ne "112")) {
 	if (&LoginUser()) {
@@ -6446,12 +5619,8 @@ sub DoLogout {
 # Later get user-level lock
 sub SaveUserData {
 	my ($userFile, $data);
-###############
-### added by gypark
 ### 설치 후 처음으로 사용자 아이디를 만들 때 에러가 나는 것을 해결
 	&CreateDir($UserDir);
-###
-###############
 	$userFile = &UserDataFilename($UserID);
 	$data = join($FS1, %UserData);
 	&WriteStringToFile($userFile, $data);
@@ -6548,12 +5717,9 @@ sub PrintPageList {
 	$count2 = 0;
 
 	foreach $pagename(@_) {
-###############
-### added by gypark
 ### hide page
 		next if (&PageIsHidden($pagename));
-###
-###############
+
 		until (
 			$pagename lt @indexSearch[$count]
 			&& ($count == 0 || $pagename ge @indexSearch[$count-1])
@@ -6584,34 +5750,23 @@ sub PrintPageList {
 		print &GetPageLink($pagename);
 
 		if (&UserIsAdmin()) {
-###############
-### added by gypark
 ### 관리자의 인덱스 화면에서는 잠긴 페이지를 별도로 표시
 			if (-f &GetLockedPageFile($pagename)) {
 				print " " . T('(locked)');
 			}
-### 
-###############
 			print " | " . &ScriptLink("action=pagelock&set=1&id=" . $pagename, T('lock'));
 			print " | " . &ScriptLink("action=pagelock&set=0&id=" . $pagename, T('unlock'));
-###############
-### added by gypark
 ### hide page
 			if (defined($HiddenPage{$pagename})) {
 				print " | " . T('(hidden)');
 			}
 			print " | " . &ScriptLink("action=pagehide&set=1&id=" . $pagename, T('hide'));
 			print " | " . &ScriptLink("action=pagehide&set=0&id=" . $pagename, T('unhide'));
-###
-###############
 		}
 		print $q->br;
 		print "\n";
 	}
 }
-
-### jof4002 의 index 화면 패치
-###############
 
 sub DoLinks {
 	print &GetHeader('', &QuoteHtml(T('Full Link List')), '');
@@ -6649,14 +5804,10 @@ sub PrintLinkList {
 	$editlink = &GetParam("editlink", 0);
 	foreach $pagelines (@_) {
 		@links = ();
-###############
-### replaced by gypark
 ### full link list 개선
 #		foreach $page (split(' ', $pagelines)) {
 		my @pages = split(' ', $pagelines);
 		foreach $page (@pages) {
-###
-###############
 			if ($page =~ /\:/) {  # URL or InterWiki form
 				if ($page =~ /$UrlPattern/) {
 					($link, $extra) = &UrlLink($page);
@@ -6666,13 +5817,9 @@ sub PrintLinkList {
 			} else {
 				if ($pgExists{$page}) {
 					$link = &GetPageLink($page);
-###############
-### added by gypark
 ### full link list 개선
 				} elsif ($page =~ /^\// && $pgExists{(split ('/',$pages[0]))[0].$page}) {
 					($link, $extra) = &GetPageLinkText((split ('/',$pages[0]))[0].$page, $page);
-###
-###############
 				} else {
 					$link = $page;
 					if ($editlink) {
@@ -6690,8 +5837,6 @@ sub PrintLinkList {
 }
 
 sub GetFullLinkList {
-###############
-### added by gypark
 ### GetFullLinkList 에 인자처리 기능 추가
 	my ($opt) = @_;
 	my $opt_item;
@@ -6711,21 +5856,14 @@ sub GetFullLinkList {
 			$args{$1} = $2;
 		}
 	}
-###
-###############
 
-###############
-### replaceed by gypark
 ### 역링크 검색 옵션 추가
 #	my ($name, $unique, $sort, $exists, $empty, $link, $search);
 	my ($name, $unique, $sort, $exists, $empty, $link, $search, $reverse);
-###
-###############
+
 	my ($pagelink, $interlink, $urllink);
 	my (@found, @links, @newlinks, @pglist, %pgExists, %seen);
 
-###############
-### replaced by gypark
 ### GetFullLinkList 에 인자처리 기능 추가
 # 	$unique = &GetParam("unique", 1);
 # 	$sort = &GetParam("sort", 1);
@@ -6743,15 +5881,10 @@ sub GetFullLinkList {
 	$exists = &GetParam("exists", $args{"exists"});
 	$empty = &GetParam("empty", $args{"empty"});
 	$search = &GetParam("search", $args{"search"});
-###
-###############
 
-###############
-### added by gypark
 ### 역링크 기능 추가
 	$reverse = &GetParam("reverse", $args{"reverse"});
-###
-###############
+
 	if (($interlink == 2) || ($urllink == 2)) {
 		$pagelink = 0;
 	}
@@ -6767,28 +5900,15 @@ sub GetFullLinkList {
 		if ($unique != 2) {
 			%seen = ();
 		}
-###############
-### replaced by gypark
 ### 링크 목록을 별도로 관리
 #		@links = &GetPageLinks($name, $pagelink, $interlink, $urllink);
 		@links = &GetPageLinksFromFile($name, $pagelink, $interlink, $urllink);
-###
-###############
 
 		foreach $link (@links) {
 			$seen{$link}++;
 			if (($unique > 0) && ($seen{$link} != 1)) {
 				next;
 			}
-###############
-### replaced by gypark
-### /페이지 형식의 하위페이지의 존재에 대한 버그수정
-#			if (($exists == 0) && ($pgExists{$link} == 1)) {
-# 				next;
-# 			}
-# 			if (($exists == 1) && ($pgExists{$link} != 1)) {
-# 				next;
-# 			}
 
 			my $link2 = $link;
 			$link2 = (split ('/',$name))[0]."$link" if ($link =~ /^\//);
@@ -6798,13 +5918,9 @@ sub GetFullLinkList {
 			if (($exists == 1) && ($pgExists{$link2} != 1)) {
 				next;
 			}
-###
-###############
 			if (($search ne "") && !($link =~ /$search/)) {
 				next;
 			}
-###############
-### added by gypark
 ### 역링크 기능 추가
 			if ($reverse ne "") {
 				my ($mainpage, $subpage) = ("", "");
@@ -6816,8 +5932,6 @@ sub GetFullLinkList {
 				}
 			}
 
-###
-###############
 			push(@newlinks, $link);
 		}
 		@links = @newlinks;
@@ -6844,14 +5958,11 @@ sub GetPageLinks {
 	$text =~ s/<nowiki>(.|\n)*?\<\/nowiki>/ /ig;
 	$text =~ s/<pre>(.|\n)*?\<\/pre>/ /ig;
 	$text =~ s/<code>(.|\n)*?\<\/code>/ /ig;
-###############
-### added by gypark
 ### {{{ }}} 내의 내용은 태그로 간주하지 않음
 	$text =~ s/(^|\n)(\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1 \n/igm;
 	$text =~ s/(^|\n)(\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1 \n/igm;
 	$text =~ s/(^|\n)(\{\{\{#!((\w+)( .+)?)[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1 \n/igm;
 ###
-###############
 	if ($interlink) {
 		$text =~ s/''+/ /g;  # Quotes can adjacent to inter-site links
 		$text =~ s/$InterLinkPattern/push(@links, &StripUrlPunct($1)), ' '/ge;
@@ -6877,8 +5988,6 @@ sub GetPageLinks {
 	return @links;
 }
 
-###############
-### added by gypark
 ### comments from Jof
 sub DoPost {
 	my $string = &GetParam("text", undef);
@@ -6901,11 +6010,7 @@ sub DoPost {
 	return;
 }
 ###
-###############
 
-
-###############
-### replaced by gypark
 ### comments from Jof
 # sub DoPost {
 # 	my ($editDiff, $old, $newAuthor, $pgtime, $oldrev, $preview, $user);
@@ -6927,13 +6032,10 @@ sub DoPostMain {
 ###############
 
 
-###############
-### replaced by gypark
 ### comments 기능
 #	if (!&UserCanEdit($id, 1)) {
 	if (($rebrowseid eq "") && (!&UserCanEdit($id, 1))) {
 ###
-###############
 		# This is an internal interface--we don't need to explain
 		&ReportError(Ts('Editing not allowed for %s.', $id));
 		return;
@@ -6971,13 +6073,10 @@ sub DoPostMain {
 	# Remove "\r"-s (0x0d) from the string
 	$string =~ s/\r//g;
 	
-###############
-### added by gypark
 ### <mysign> 등 글작성 직후 수행할 매크로
 ### comments 구현을 위해 $id 추가, from Jof
 	$string = &ProcessPostMacro($string, $id);
 ###
-###############
 	# Lock before getting old page to prevent races
 	&RequestLock() or die(T('Could not get editing lock'));
 	# Consider extracting lock section into sub, and eval-wrap it?
@@ -7039,8 +6138,6 @@ sub DoPostMain {
 	}
 	# Later extract comparison?
 #	if (($UserID > 399) || ($Section{'id'} > 399))  {
-###############
-### replaced by gypark
 ### 로그인 하지 않은 경우의 conflict
 #	if (($UserID ne "") || ($Section{'id'} ne ""))  {
 	if (
@@ -7049,7 +6146,6 @@ sub DoPostMain {
 		(($Section{'id'} ne "") && ($Section{'id'} ne "112") && ($Section{'id'} ne "113"))
 		) {
 ###
-###############
 		$newAuthor = ($UserID ne $Section{'id'});       # known user(s)
 	} else {
 		$newAuthor = ($Section{'ip'} ne $authorAddr);  # hostname fallback
@@ -7101,19 +6197,12 @@ sub DoPostMain {
 	$Section{'host'} = &GetRemoteHost(0);
 	&SaveDefaultText();
 	&SavePage();
-###############
-### added by gypark
 ### 링크 목록을 별도로 관리
 	&SaveLinkFile($id);
-###
-###############
-###############
-### replaced by gypark
 ### rss from usemod1.0
 #	&WriteRcLog($id, $summary, $isEdit, $editTime, $user, $Section{'host'});
 	&WriteRcLog($id, $summary, $isEdit, $editTime, $user, $Section{'host'}, $Section{'revision'});
 ###
-###############
 	if ($UseCache) {
 		UnlinkHtmlCache($id);          # Old cached copy is invalid
 		if ($Page{'revision'} < 2) {   # If this is a new page...
@@ -7124,14 +6213,11 @@ sub DoPostMain {
 		unlink($IndexFile);  # Regenerate index on next request
 	}
 	&ReleaseLock();
-###############
-### added by gypark
 ### comments from Jof
 	if ($rebrowseid ne "") {
 		$id = $rebrowseid;
 	}
 ###
-###############
 	&ReBrowsePage($id, "", 1) if ($id ne "!!");
 }
 
@@ -7305,25 +6391,19 @@ sub DoUnlock {
 
 # Note: all diff and recent-list operations should be done within locks.
 sub WriteRcLog {
-###############
-### replaced by gypark
 ### rss from usemod1.0
 #	my ($id, $summary, $isEdit, $editTime, $name, $rhost) = @_;
 	my ($id, $summary, $isEdit, $editTime, $name, $rhost, $revision) = @_;
 ###
-###############
 	my ($extraTemp, %extra);
 
 	%extra = ();
 	$extra{'id'} = $UserID  if ($UserID ne "");
 	$extra{'name'} = $name  if ($name ne "");
-###############
-### added by gypark
 ### 최근변경내역에 북마크 기능 도입
 	$extra{'tscreate'} = $Page{'tscreate'};
 ### rss from usemod 1.0
 	$extra{'revision'} = $revision if ($revision ne "");
-###############
 
 	$extraTemp = join($FS2, %extra);
 	# The two fields at the end of a line are kind and extension-hash
@@ -7364,8 +6444,6 @@ sub DoMaintain {
 		&OpenPage($name);
 		&OpenDefaultText();
 		&ExpireKeepFile();
-###############
-### added by gypark
 ### 링크 목록을 별도로 관리
 		&SaveLinkFile($name);
 ### page count
@@ -7374,7 +6452,6 @@ sub DoMaintain {
 			&WriteStringToFile(&GetCountFile($name), "0");
 		}
 ###
-###############
 		print ".... "  if ($name =~ m|/|);
 		print &GetPageLink($name), "<br>\n";
 	}
@@ -7575,13 +6652,10 @@ sub BuildLinkIndexPage {
 	my ($page) = @_;
 	my (@links, $link, %seen);
 
-###############
-### replaced by gypark
 ### 링크 목록을 별도로 관리
 #	@links = &GetPageLinks($page, 1, 0, 0);
 	@links = &GetPageLinksFromFile($page, 1, 0, 0);
 ###
-###############
 	%seen = ();
 	foreach $link (@links) {
 		if (defined($LinkIndex{$link})) {
@@ -7622,13 +6696,10 @@ sub EditRecentChanges {
 	my ($action, $old, $new) = @_;
 
 	&EditRecentChangesFile($RcFile,    $action, $old, $new);
-###############
-### replaced by gypark
 ### RcOldFile 버그 수정
 #	&EditRecentChangesFile($RcOldFile, $action, $old, $new);
 	&EditRecentChangesFile($RcOldFile, $action, $old, $new) if (-f $RcOldFile);
 ###
-###############
 }
 
 sub EditRecentChangesFile {
@@ -7679,8 +6750,6 @@ sub DeletePage {
 		return;
 	}
 
-###############
-### added by gypark
 ### 페이지 삭제 시에 keep 화일은 보존해 둠
 	&OpenPage($page);
 	&OpenDefaultText();
@@ -7688,19 +6757,13 @@ sub DeletePage {
 	&ExpireKeepFile();
 	&WriteRcLog($OpenPageName, "*", 0, $Now, &GetParam("username",""), &GetRemoteHost(0));
 ###
-###############
 	$fname = &GetPageFile($page);
 	unlink($fname)  if (-f $fname);
-###############
-### commented by gypark
 ### 페이지 삭제 시에 keep 화일은 보존해 둠
 #	$fname = $KeepDir . "/" . &GetPageDirectory($page) .  "/$page.kp";
 #	unlink($fname)  if (-f $fname);
 ###
-###############
 
-#########################################################3
-### added by gypark
 ### lck 화일도 같이 삭제
 	$fname = &GetLockedPageFile($page);
 	unlink($fname) if (-f $fname);
@@ -7718,21 +6781,14 @@ sub DeletePage {
 		delete $HiddenPage{$page};
 		&SaveHiddenPageFile();
 	}
-#########################################################3
-###############
-### added by gypark
 ### 링크 목록을 별도로 관리
 	$fname = &GetLinkFile($page);
 	unlink($fname) if (-f $fname);
 ###
-###############
 	unlink($IndexFile)  if ($UseIndex);
-###############
-### commented by gypark
 ### 페이지 삭제 시에 keep 화일은 보존해 둠
 #	&EditRecentChanges(1, $page, "")  if ($doRC);  # Delete page
 ###
-###############
 	# Currently don't do anything with page text
 }
 
@@ -7750,14 +6806,11 @@ sub SubstituteTextLinks {
 	$text =~ s/(<pre>((.|\n)*?)<\/pre>)/&StoreRaw($1)/ige;
 	$text =~ s/(<code>((.|\n)*?)<\/code>)/&StoreRaw($1)/ige;
 	$text =~ s/(<nowiki>((.|\n)*?)<\/nowiki>)/&StoreRaw($1)/ige;
-###############
-### added by gypark
 ### {{{ }}} 내의 내용은 태그로 간주하지 않음
 	$text =~ s/(^|\n)(\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1.&StoreRaw($2)."\n"/igem;
 	$text =~ s/(^|\n)(\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1.&StoreRaw($2)."\n"/igem;
 	$text =~ s/(^|\n)(\{\{\{#!((\w+)( .+)?)[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1.&StoreRaw($2)."\n"/igem;
 ###
-###############
 
 	if ($FreeLinks) {
 		$text =~
@@ -7915,12 +6968,8 @@ sub RenameTextLinks {
 		if ($changed) {
 			$file = &GetPageFile($page);
 			&WriteStringToFile($file, join($FS1, %Page));
-###############
-### added by gypark
 ### 링크 목록을 별도로 관리
 			&SaveLinkFile($page);
-###
-###############
 		}
 		&RenameKeepText($page, $old, $new);
 	}
@@ -7961,8 +7010,6 @@ sub RenamePage {
 	unlink($newkeep)  if (-f $newkeep);  # Clean up if needed.
 	rename($oldkeep,  $newkeep);
 	unlink($IndexFile)  if ($UseIndex);
-###############
-### added by gypark
 ### 페이지 이름 변경시, lock 화일도 같이 변경
 	my ($oldlock, $newlock);
 	$oldlock = &GetLockedPageFile($old);
@@ -7986,11 +7033,7 @@ sub RenamePage {
 		$HiddenPage{$new} = "1";
 		&SaveHiddenPageFile();
 	}
-###
-###############
 
-###############
-### added by gypark
 ### 링크 목록을 별도로 관리
 	my ($oldlink, $newlink);
 	$oldlink = &GetLinkFile($old);
@@ -7999,8 +7042,6 @@ sub RenamePage {
 		&CreatePageDir($LinkDir, $new);  # It might not exist yet
 		rename($oldlink, $newlink) || die "error while renaming link file";
 	}
-###
-###############
 	&EditRecentChanges(2, $old, $new)  if ($doRC);
 	if ($doText) {
 		&BuildLinkIndexPage($new);  # Keep index up-to-date
@@ -8010,21 +7051,16 @@ sub RenamePage {
 
 sub DoShowVersion {
 	print &GetHeader("", T('Displaying Wiki Version'), "");
-###############
-### replaced by gypark
 ### 버전 정보를 별도의 변수에 보관
 # 	print "<p>UseModWiki version 0.92K2<p>\n";
 	print "<p>UseModWiki version $WikiVersion ($WikiRelease)<p>\n";
-###
-###############
+
 	print &GetCommonFooter();
 }
 
 
 #END_OF_OTHER_CODE
 
-###############
-### added by gypark
 ### 통채로 추가한 함수들은 여기에 둠
 
 ### 로그인한 사용자인지 검사
@@ -8036,8 +7072,6 @@ sub LoginUser {
 	}
 }
 
-###############
-### added by gypark
 ### 최근변경내역에 북마크 기능 도입
 sub DoBookmark {
 	if (&GetParam('username') eq "") {		# 로그인하지 않은 경우
@@ -8053,11 +7087,7 @@ sub DoBookmark {
 	&BrowsePage(T($RCName));
 	return 1;
 }
-###
-###############
 
-###############
-### added by gypark
 ### 링크 목록을 별도로 관리
 sub GetLinkFile {
 	my ($id) = @_;
@@ -8092,14 +7122,10 @@ sub GetPageLinksFromFile {
 	my ($name, $pagelink, $interlink, $urllink) = @_;
 	my ($status, $data, %links, @result, $fname);
 
-###############
-### added by gypark
 ### hide page
 	if (&PageIsHidden($name)) {
 		return;
 	}
-###
-###############
 
 	@result = ();
 	$fname = &GetLinkFile($name);
@@ -8776,13 +7802,10 @@ sub GetRc {
 	# Slice minor edits
 	$showedit = &GetParam("rcshowedit", $ShowEdits);
 	$showedit = &GetParam("showedit", $showedit);
-###############
-### added by gypark
 ### 최근 변경 내역과 rss 에 아이템 갯수 지정 옵션
 	my $num_items = &GetParam("items", 0);
 	my $num_printed = 0;
-###
-###############
+
 	if ($showedit != 1) {
 		my @temprc = ();
 		foreach $rcline (@outrc) {
@@ -8801,13 +7824,10 @@ sub GetRc {
 	$tEdit    = T('(edit)');
 	$tDiff    = T('(diff)');
 	$tChanges = T('changes');
-###############
-### replaced by gypark
 ### 북마크
 #	$diffPrefix = $QuotedFullUrl . &QuoteHtml("?action=browse\&diff=4\&id=");
 	$diffPrefix = $QuotedFullUrl . &QuoteHtml(&ScriptLinkChar()."action=browse\&diff=5\&id=");
 ###
-###############
 	$historyPrefix = $QuotedFullUrl . &QuoteHtml(&ScriptLinkChar()."action=history\&id=");
 	foreach $rcline (@outrc) {
 		($ts, $pagename) = split(/$FS3/, $rcline);
@@ -8831,13 +7851,10 @@ sub GetRc {
 		next  if (($idOnly ne "") && ($idOnly ne $pagename));
 ### hide page
 		next if (&PageIsHidden($pagename));
-###############
-### added by gypark
 ### 최근 변경 내역과 rss 에 아이템 갯수 지정 옵션
 		$num_printed++;
 		last if (($num_items > 0) && ($num_printed > $num_items));
 ###
-###############
 		%extra = split(/$FS2/, $extraTemp, -1);
 		if ($date ne &CalcDay($ts)) {
 			$date = &CalcDay($ts);
@@ -9117,7 +8134,7 @@ sub TextIsBanned {
 }
 
 # UTF-8 -> EUC-KR
-sub encode_korean {
+sub convert_encode {
 	my ($str, $from, $to) = @_;
 
 	eval { require Encode; };
@@ -9158,8 +8175,32 @@ sub store_raw_codes {
 	return $text;
 }
 
+# 스트링의 인코딩을 추측해서, 내 HttpCharset으로 컨버트
+sub guess_and_convert {
+	my ($string) = @_;
+	
+	# legal UTF-8인지 체크
+	if (eval "require Unicode::CheckUTF8;") {
+		if (Unicode::CheckUTF8::is_utf8($string)) {
+			# ok
+			return $string;
+		}
+	}
+
+	# 추측
+	if (eval "require Encode; require Encode::Guess;") {
+		my @suspects = (@UrlEncodingGuess, 'utf8');
+		my $decoder = Encode::Guess::guess_encoding($string, @suspects);
+		if (ref($decoder)) {
+			# 추측 성공
+			return convert_encode($string, $decoder->name, $HttpCharset);
+		}
+	}
+
+	# 모듈이 없거나, 있지만 추측 실패. 변환 포기
+	return $string;
+}
 ### 통채로 추가한 함수들의 끝
-###############
 
 &DoWikiRequest()  if ($RunCGI && ($_ ne 'nocgi'));   # Do everything.
 1; # In case we are loaded from elsewhere

@@ -19,11 +19,12 @@ sub action_tb {
 		return;
 	}
 
-# UTF-8 -> EUC-KR 전환
-	if ($ENV{'CONTENT_TYPE'} and ($ENV{'CONTENT_TYPE'} =~ m/utf-8/i)) {
-		$title = encode_korean($title, 'utf-8', 'euc-kr');
-		$blog_name = encode_korean($blog_name, 'utf-8', 'euc-kr');
-		$excerpt = encode_korean($excerpt, 'utf-8', 'euc-kr');
+# 인코딩 컨버트
+	if ($ENV{'CONTENT_TYPE'} =~ /charset=(.+)\b/i) {
+		my $remote_enc = $1;
+		$title = convert_encode($title, "$remote_enc", "$HttpCharset");
+		$blog_name = convert_encode($blog_name, "$remote_enc", "$HttpCharset");
+		$excerpt = convert_encode($excerpt, "$remote_enc", "$HttpCharset");
 	}
 
 # 블로그 지원을 위한 꽁수
