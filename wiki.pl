@@ -29,7 +29,7 @@ package UseModWiki;
 use strict;
 
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext2rc2";
+$WikiVersion = "0.92K3-ext2rc3";
 $WikiRelease = "2007-02-20";
 $HashKey = "salt"; # 2-character string
 
@@ -114,7 +114,7 @@ $FooterNote  = "";              # HTML for bottom of every page
 $EditNote    = "";              # HTML notice above buttons on edit page
 $MaxPost     = 1024 * 1024 * 1;  # Maximum 210K posts (about 200K for pages)
 $NewText     = "";              # New page text ("" for default message)
-$HttpCharset = "euc-kr";              # Charset for pages, like "iso-8859-2"
+$HttpCharset = "UTF-8";              # Charset for pages, like "iso-8859-2"
 $UserGotoBar = "<a href='/'>Home</a>";              # HTML added to end of goto bar
 $UserGotoBar2 = "";
 $UserGotoBar3 = "";
@@ -5676,36 +5676,59 @@ sub PrintPageList {
 	my ($pagename);
 	my $count = 0;
 	my $titleIsPrinted = 0;
-	my @han = qw(가 나 다 라 마 바 사 아 자 차 카 타 파 하);
+
+	my $newlineInToc = "-1";	# TOC에서 몇 번째 항목마다 줄바꿈을 넣을 것인가?
+
+# Basic Latin
 	my @indexTitle = (0, "A".."Z");
-	push (@indexTitle, @han, "기타");
-	my @indexSearch=("A".."Z");
-	push (@indexSearch, @han, "豈");
+	my @indexSearch=    ("A".."Z");
+# Korean
+	my $i_korean =		# "가" "나" ... "하"
+		"\x{AC00} \x{B098} \x{B2E4} \x{B77C} \x{B9C8} \x{BC14} ".
+		"\x{C0AC} \x{C544} \x{C790} \x{CC28} \x{CE74} \x{D0C0} ".
+		"\x{D30C} \x{D558}";
+# Japanese
+	my $i_japanese =	# "ぁ" "ァ"
+		"\x{3041} \x{30A1}";
+# Any other characters in TOC here...
+
+
+# HttpCharset 값에 따라서 TOC 구성
+# utf-8
+	if ($HttpCharset =~ /utf-8|utf8/i) {
+		my @i_korean = split(/ /, uni_to_charset($i_korean));
+		my @i_japanese = split(/ /, uni_to_charset($i_japanese));
+		push (@indexTitle,
+				"etc1",			# \x{0080}-
+				@i_japanese,	# \x{3041}-
+				"etc2",			# \x{3100}-
+				@i_korean,		# \x{AC00}-
+				"etc3");		# \x{D7B0}-
+		push (@indexSearch,
+				uni_to_charset("\x{0080}"),
+				@i_japanese,
+				uni_to_charset("\x{3100}"),
+				@i_korean,
+				uni_to_charset("\x{D7B0}"));
+		$newlineInToc = "27";
+	}
+# euc-kr
+	if ($HttpCharset =~ /euc-kr/i) {
+		my @i_korean = split(/ /, uni_to_charset($i_korean));
+		push (@indexTitle, @i_korean, "others");
+		push (@indexSearch, @i_korean, uni_to_charset("\x{4F3D}"));		# append "伽"
+#		push (@indexSearch, @i_korean, "豈");
+		$newlineInToc = "27";
+	}
+# Any other encodings for TOC here...
 
 	print "<a name='TOC'></a><h2>", Ts('%s pages found:', ($#_ + 1)), "</h2>\n";
-
-###############
-### replaced by gypark
-### index 또는 검색결과 창의 제일 상단에 구분탭 링크를 넣음
-
-# 	foreach $pagename(@_) {
-# 		until (
-# 			$pagename lt @indexSearch[$count]
-# 			&& ($count == 0 || $pagename gt @indexSearch[$count-1])
-# 		) {
-# 			$count++;
-# 			$titleIsPrinted = 0;
-# 			last if $count > 40;
-# 		}
-# 		if (!$titleIsPrinted) {
-#			print $q->h3($indexTitle[$count]);
 
 	# 상단에 앵커를 가리키는 인덱스 나열
 	my $count2 = 0;
 	print("\n|");
 	while ( $count2 <= $#indexTitle ) {
-#		if ($indexTitle[$count2] == 'Z') {
-		if ($count2 == 27) {
+		if ($count2 =~ /^($newlineInToc)$/) {
 			print("<br>\n|");
 		}
 		print("<a href=\"#H_$indexTitle[$count2]\"><b>");
@@ -5714,8 +5737,8 @@ sub PrintPageList {
 		$count2++;
 	}
 	print "<br><br>";
-	$count2 = 0;
 
+	$count2 = 0;
 	foreach $pagename(@_) {
 ### hide page
 		next if (&PageIsHidden($pagename));
@@ -5726,7 +5749,7 @@ sub PrintPageList {
 		) {
 			$count++;
 			$titleIsPrinted = 0;
-			last if $count > 40;
+			last if $count > $#indexSearch;
 		}
 		if (!$titleIsPrinted) {
 			# 페이지가 없는 색인의 앵커 처리
@@ -5741,8 +5764,6 @@ sub PrintPageList {
 # 앵커를 삽입
 			print $q->h3("<a name=\"H_$indexTitle[$count]\" title=\"". T('Top') ."\" href=\"#TOC\">$indexTitle[$count]</A>"); 
 			$count2 = $count + 1;
-### gypark 의 색인 패치
-###############
 			$titleIsPrinted=1;
 		}
 
@@ -5775,22 +5796,6 @@ sub DoLinks {
 	print "</pre><HR class='footer'>\n";
 	print &GetMinimumFooter();
 }
-
-###############
-### added by gypark
-### 역링크를 찾는 함수 추가
-# sub MacroReverse {
-# 	my $pagelines;
-# 	my @result = ();
-# 
-# 	foreach $pagelines (&GetFullLinkList(@_)) {
-# 		my @pages = split(' ', $pagelines);
-# 		@result = (@result, shift(@pages));
-# 	}
-# 	return @result;
-# }
-###
-###############
 
 sub PrintLinkList {
 	my ($pagelines, $page, $names, $editlink);
@@ -8199,6 +8204,13 @@ sub guess_and_convert {
 
 	# 모듈이 없거나, 있지만 추측 실패. 변환 포기
 	return $string;
+}
+
+# 펄의 "\x{16진수}" 형식으로 된 스트링을 HttpCharset에 맞춰 변환
+sub uni_to_charset {
+	my ($str) = @_;
+	
+	return convert_encode($str, "unicode", "$HttpCharset");
 }
 ### 통채로 추가한 함수들의 끝
 
