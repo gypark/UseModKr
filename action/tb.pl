@@ -20,7 +20,14 @@ sub action_tb {
 	}
 
 # 인코딩 컨버트
-	if ($ENV{'CONTENT_TYPE'} =~ /charset=(.+)\b/i) {
+	if ($ENV{'REQUEST_METHOD'} eq 'GET') {
+		# GET 메쏘드로 들어올 경우는 인코딩을 추측해서 변환
+		$title = guess_and_convert($title);
+		$blog_name = guess_and_convert($blog_name);
+		$excerpt = guess_and_convert($excerpt);
+	} 
+	elsif ($ENV{'CONTENT_TYPE'} =~ /charset=(.+)\b/i) {
+		# 인코딩이 명시되어 있는 경우
 		my $remote_enc = $1;
 		$title = convert_encode($title, "$remote_enc", "$HttpCharset");
 		$blog_name = convert_encode($blog_name, "$remote_enc", "$HttpCharset");
@@ -40,11 +47,10 @@ sub action_tb {
 		$blogrcpage = "";
 	}
 
-	if (length($excerpt) > 255) {
-		$excerpt = substr($excerpt, 0, 252);
-		$excerpt =~ s/(([\x80-\xff].)*)[\x80-\xff]?$/$1/;
-		$excerpt .= "...";
-	}
+	# 처음 200글자까지만 남김
+	$excerpt = (&split_string($excerpt, 200))[0];
+	$excerpt .= " ...";
+
 	$excerpt =~ s/(\r?\n)/ /g;
 	$excerpt = &QuoteHtml($excerpt);
 	$excerpt = "<nowiki>$excerpt</nowiki>";
@@ -82,11 +88,11 @@ sub action_tb {
 			$blogrccomment =~ s/(\r?\n)/ /g;
 			$blogrccomment =~ s/\[/{/g;
 			$blogrccomment =~ s/\]/}/g;
-			if (length($blogrccomment) > 30) {
-				$blogrccomment = substr($blogrccomment, 0, 27);
-				$blogrccomment =~ s/(([\x80-\xff].)*)[\x80-\xff]?$/$1/;
-				$blogrccomment .= "...";
-			}
+
+			# 처음 30글자까지만 남김
+			$blogrccomment = (&split_string($blogrccomment, 30))[0];
+			$blogrccomment .= " ...";
+
 			$blogrccomment = &QuoteHtml($blogrccomment);
 			$blogrccomment =~ s/----+/---/g;
 			$blogrccomment =~ s/^ *//;

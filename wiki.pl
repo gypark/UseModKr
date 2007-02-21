@@ -29,8 +29,8 @@ package UseModWiki;
 use strict;
 
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext2rc3";
-$WikiRelease = "2007-02-20";
+$WikiVersion = "0.92K3-ext2rc4";
+$WikiRelease = "2007-02-22";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -1445,40 +1445,50 @@ sub GetPageOrEditAnchoredLink {
 	}
 }
 
-sub GetFirstCharLink {
 # 첫 글자에 링크를 거는 함수
+sub GetFirstCharLink {
 	my ($id, $name) = @_;
-	my @trailingBytesForUTF8 = (
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,4,4,4,4,5,5,5,5
-	);
 
 	my ($mainpage, $slash, $page) = ($name =~ m/(?:(.*)(\/))?(.+)/);
+	my ($first, $last) = &split_string($page, 1);
 
-# utf-8
-	if ($HttpCharset =~ /utf-8|utf8/i) {
-		my $length = $trailingBytesForUTF8[ord(substr($page,0,1))] + 1;
-		my $first = substr($page,0,$length);
-		my $tail = substr($page,$length);
-		return $mainpage . &GetEditLink($id,$slash.$first) . $tail;
-	}
-
-# euc-kr
-	if ($HttpCharset =~ /euc-kr/i) {
-		my ($first, $tail) = ($page =~ /([a-zA-Z0-9]|[\x80-\xff][\x80-\xff])(.*)/);
-
-		return $mainpage . &GetEditLink($id,$slash.$first) . $tail;
-	}
-
-# default
-	return &GetEditLink($id, $name);
+	return $mainpage . &GetEditLink($id,$slash.$first) . $last;
 }
+
+# sub GetFirstCharLink {
+# # 첫 글자에 링크를 거는 함수
+# 	my ($id, $name) = @_;
+# 	my @trailingBytesForUTF8 = (
+# 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+# 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+# 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+# 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+# 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+# 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+# 		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+# 		2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,4,4,4,4,5,5,5,5
+# 	);
+# 
+# 	my ($mainpage, $slash, $page) = ($name =~ m/(?:(.*)(\/))?(.+)/);
+# 
+# # utf-8
+# 	if ($HttpCharset =~ /utf-8|utf8/i) {
+# 		my $length = $trailingBytesForUTF8[ord(substr($page,0,1))] + 1;
+# 		my $first = substr($page,0,$length);
+# 		my $tail = substr($page,$length);
+# 		return $mainpage . &GetEditLink($id,$slash.$first) . $tail;
+# 	}
+# 
+# # euc-kr
+# 	if ($HttpCharset =~ /euc-kr/i) {
+# 		my ($first, $tail) = ($page =~ /([a-zA-Z0-9]|[\x80-\xff][\x80-\xff])(.*)/);
+# 
+# 		return $mainpage . &GetEditLink($id,$slash.$first) . $tail;
+# 	}
+# 
+# # default
+# 	return &GetEditLink($id, $name);
+# }
 
 sub GetPageOrEditLink {
 	my ($id, $name) = @_;
@@ -8088,12 +8098,15 @@ sub GetTrackbackGuide {
 		}
 		my $excerpt = $Text{'text'};
 		$excerpt =~ s/<.*?>//g;
-		if (length($excerpt) > 255) {
-			$excerpt = substr($excerpt, 0, 252);
-			$excerpt =~ s/(([\x80-\xff].)*)[\x80-\xff]?$/$1/;
-			$excerpt .= "...";
-		}
 		$excerpt =~ s/(\r?\n)/ /g;
+
+### exceprt 값은 최대 200글자 (UTF-8에서 최악의 경우 600바이트) 까지로 끊음
+# 		if (length($excerpt) > 255) {
+# 			$excerpt = substr($excerpt, 0, 255);
+# 		}
+		$excerpt = (&split_string($excerpt, 200))[0];
+###
+
 		$excerpt = &QuoteHtml($excerpt);
 		$excerpt =~ s/"/&quot;/g;
 
@@ -8138,7 +8151,7 @@ sub TextIsBanned {
 	return undef;
 }
 
-# UTF-8 -> EUC-KR
+# $str 의 인코딩을 $from 에서 $to 로 컨버트
 sub convert_encode {
 	my ($str, $from, $to) = @_;
 
@@ -8185,10 +8198,12 @@ sub guess_and_convert {
 	my ($string) = @_;
 	
 	# legal UTF-8인지 체크
-	if (eval "require Unicode::CheckUTF8;") {
-		if (Unicode::CheckUTF8::is_utf8($string)) {
-			# ok
-			return $string;
+	if ($HttpCharset =~ /utf-8|utf8/i) {
+		if (eval "require Unicode::CheckUTF8;") {
+			if (Unicode::CheckUTF8::is_utf8($string)) {
+				# ok
+				return $string;
+			}
 		}
 	}
 
@@ -8212,6 +8227,21 @@ sub uni_to_charset {
 	
 	return convert_encode($str, "unicode", "$HttpCharset");
 }
+
+# $str - 쪼갤 스트링
+# $length - 앞에서부터의 문자 갯수
+# return: (처음 length 길이의 스트링, 나머지 스트링)
+sub split_string {
+	my ($str, $length) = @_;
+
+	$str = &convert_encode($str, "$HttpCharset", "unicode");
+	my ($first, $last) = ($str =~ /^(.{1,$length})(.*)$/s);
+	$first = &convert_encode($first, "unicode", "$HttpCharset");
+	$last = &convert_encode($last, "unicode", "$HttpCharset");
+
+	return ($first, $last);
+}
+
 ### 통채로 추가한 함수들의 끝
 
 &DoWikiRequest()  if ($RunCGI && ($_ ne 'nocgi'));   # Do everything.
