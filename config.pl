@@ -1,6 +1,9 @@
 # === !/usr/local/bin/perl
 # == Configuration =======================================================
 # Original version from UseModWiki 0.92 (April 21, 2001)
+### 
+$UrlPrefix = "http:/cgi-bin/utf";  # URL prefix for other variables ($...Url)
+                                   # like "http:/wiki","http://mydomain.com/wiki",etc.
 
 $CookieName   = "Wiki";          # Name for this wiki (for multi-wiki sites)
 $SiteName     = "Wiki";          # Name of site (used for titles)
@@ -17,7 +20,7 @@ $FullUrl      = "";              # Set if the auto-detected URL is wrong
 $RedirType    = 1;               # 1  = CGI.pm, 2  = script, 3  = no redirect
 $AdminPass    = "admin";         # Set to non-blank to enable password(s)
 $EditPass     = "edit";          # Like AdminPass, but for editing only
-$StyleSheetUrl= "/cgi-bin/utf/wiki.css";      # URL for CSS stylesheet (like "/wiki.css")
+$StyleSheetUrl= "$UrlPrefix/wiki.css";      # URL for CSS stylesheet (like "/wiki.css")
 $NotFoundPg   = "";              # Page for not-found links ("" for blank pg)
 $EmailFrom    = "Wiki";          # Text for "From: " field of email notes.
 $SendMail     = "/usr/sbin/sendmail";  # Full path to sendmail executable
@@ -40,21 +43,21 @@ $LogoPage     = "";                             # this page will be displayed wh
 ### 페이지 처리 시간 출력
 $CheckTime    = 0;                              # 1 = mesure the page-processing time (requires Time::HiRes module), 0 = do not 
 ### 아이콘 디렉토리 URL
-$IconUrl      = "/cgi-bin/utf/icons/";          # URL for directory containing icon files
+$IconUrl      = "$UrlPrefix/icons/";          # URL for directory containing icon files
 ### interwiki 아이콘 디렉토리 URL
-$InterIconUrl = "/cgi-bin/utf/icons-inter/";    # URL for directory containing interwiki icons files
+$InterIconUrl = "$UrlPrefix/icons-inter/";    # URL for directory containing interwiki icons files
 ### 이모티콘 디렉토리 URL
-$EmoticonUr   = "http:/cgi-bin/utf/emoticon/";  # URL for directory containing emoticon files
+$EmoticonUr   = "$UrlPrefix/emoticon/";  # URL for directory containing emoticon files
 ### 업로드한 파일이 저장되는 디렉토리 경로와, 브라우저 출력에 사용되는 URL
 $UploadDir    = "./upload";                     # directory containing uploaded files
-$UploadUrl    = "http:/cgi-bin/utf/upload";     # URL for the directory containing uploaded files
+$UploadUrl    = "$UrlPrefix/upload";     # URL for the directory containing uploaded files
                                                 #  if $UploadUrl = "", it has the same value as $UploadDir
 ### 템플릿 페이지
 $TemplatePage = "TemplatePage";                 # name of template page for creating new page
 ### java script 함수
-$JavaScriptUrl= "/cgi-bin/utf/wikiscript.js";   # URL for JavaScript code (like "/wikiscript.js")
+$JavaScriptUrl= "$UrlPrefix/wikiscript.js";   # URL for JavaScript code (like "/wikiscript.js")
 ### Oekaki용 .jar 파일
-$OekakiJarUrl = "/cgi-bin/utf/oekakibbs.jar";   # URL for oekaki .jar file
+$OekakiJarUrl = "$UrlPrefix/oekakibbs.jar";   # URL for oekaki .jar file
 
 ### for {{{lang }}} block
 $SOURCEHIGHLIGHT = "/usr/local/bin/source-highlight";    # Path of "source-highlight" binary
