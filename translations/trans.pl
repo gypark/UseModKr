@@ -1,5 +1,3 @@
-# 영문 원몬
-
 %Translate = split('\n',<<END_OF_TRANSLATION);
 Could not create %s
 
@@ -38,6 +36,8 @@ Page generated %s
 (edit)
 
 (diff)
+
+(diff [d])
 
 changes
 
@@ -410,5 +410,353 @@ Missing page id to lock/unlock...
 Lock for %s created.
 
 Lock for %s removed.
+
+History
+
+Index
+
+Admin
+
+Links
+
+Logout
+
+Logout Results
+
+Logout for user ID %s complete.
+
+Open in a New Window
+
+Popup Preview
+
+Compare
+
+Current Revision
+
+(Difference from %s
+
+to %s)
+
+Create new UserName
+
+lock
+
+unlock
+
+(locked)
+
+(read-only)
+
+Editing/Deleting page titles:
+
+Enter one command on each line.  Commands are:
+
+<tt>!PageName</tt> -- deletes the page called PageName
+
+<tt>=OldPageName=NewPageName</tt> -- Renames OldPageName
+
+to NewPageName and updates links to OldPageName.
+
+<tt>|OldPageName|NewPageName</tt> -- Changes links to OldPageName to NewPageName.
+
+(Used to rename links to non-existing pages.)
+
+Main Page:
+
+Create a new page : %s
+
+Go
+
+Edit %s
+
+Substitute text for rename
+
+Finished command list.
+
+Updating Links
+
+Editing Links
+
+Delete-Page: page %s is invalid
+
+error is: %s
+
+Return to %s
+
+Top
+
+Bottom
+
+Error: Can not update prefs. That ID already exists and does not match your ID.
+
+RecentChanges
+
+Su
+
+Mo
+
+Tu
+
+We
+
+Th
+
+Fr
+
+Sa
+
+Displaying Wiki Version
+
+UserName must be 4 characters or more. (not saved)
+
+Try Again
+
+Login completed
+
+Login failed
+
+Links to %s
+
+No reverse link.
+
+%s includes external page
+
+You need the web browser which supports frame tag.
+
+Keep login information
+
+Update my bookmark timestamp
+
+currently set to %s
+
+set bookmark
+
+cant create directory %s
+
+Editing Help :
+
+Make Page
+
+Text Formatting
+
+Link and Image
+
+Table
+
+Macro
+
+Emoticon
+
+View revision %s of this page
+
+View text of this page
+
+Viewing %s
+
+Viewing revision %s of
+
+%s hit
+
+%s hits
+
+This is the difference between the saved text and your text:
+
+Go to the on-line bookstore
+
+Upload File
+
+Upload completed successfully
+
+Invalid filename
+
+You can not upload html or any executable scripts
+
+File is too large
+
+File has no content
+
+Failed to get lock
+
+Following is the Interlink of your file
+
+Uploading is not allowed
+
+Select the file you want to upload
+
+File must be smaller than %s MB
+
+Upload
+
+cant opening %s
+
+Delete
+
+File Name
+
+Size (byte)
+
+Date
+
+Total %s files
+
+Delete Checked Files
+
+Delete Uploaded Files
+
+Deleting is not allowed
+
+%s is deleted successfully
+
+%s can not be deleted
+
+Oekaki
+
+Oekaki is not allowed
+
+If saving oekaki was done successfully
+
+If you want to paint a new picture
+
+If the picture above is not what you had painted, find your picture from the follwing list
+
+Oekaki paint
+
+Oekaki save
+
+Oekaki exit
+
+Add to my interest list
+
+Remove from interest list
+
+Fail to access Interest Page List
+
+You must login to do this action
+
+Add a page to Interest Page List
+
+Remove a page from Interest Page List
+
+Page %s does not exist
+
+Page %s is added to your Interest Page List
+
+Page %s is removed from your Interest Page List
+
+Interesting Page
+
+(hidden)
+
+hide
+
+unhide
+
+Hide or Unhide page
+
+Missing page id to hide/unhide
+
+%s is hidden.
+
+%s is revealed.
+
+%s is a hidden page
+
+Hiding/Unhiding page failed
+
+Name
+
+Comment
+
+Submit
+
+Comment is not allowed
+
+Footnote
+
+Send Trackback
+
+Send Trackback Ping of this page to:
+
+Trackback URL:
+
+Permalink URL (optional):
+
+Send Ping
+
+You are not allowed to send Trackback ping of this page
+
+No Ping URL
+
+New Trackback Sent
+
+Error occurred: %s
+
+Send Trackback Ping
+
+Ping successfully sent
+
+Trackback address of this page:
+
+Copy
+
+Copy the address to the clipboard.
+
+This page can not receive Trackback
+
+Trackback from %s
+
+Title:
+
+Content:
+
+New Trackback Received
+
+No Trackback sent
+
+Trackback sent [%s]
+
+No Trackback received
+
+Trackback received [%s]
+
+Write New Thread
+
+Write Comment
+
+Prev
+
+Next
+
+TOC
+
+Up
+
+Index:
+
+Admin Menu
+
+Editing Banned list
+
+Lock Site
+
+Unlock Site
+
+Editing not allowed: text includes banned text
+
+(Copy the text, go back with your browser, paste the text, and edit again please)
+
+Editing Banned text
+
+Updating Banned text
+
+Title will be converted into [[/Title]] automatically.
+
+Monthly View
+
+If you leave current page, the contents you are writing will not be stored.
+
+Replace strings in all pages
+
+(section)
 
 END_OF_TRANSLATION
