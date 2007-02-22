@@ -5,16 +5,16 @@
 # example:
 #    WikiPediaKo         http://ko.wikipedia.org/wiki/                           # no option
 #    WikiPediaKo         http://ko.wikipedia.org/wiki/|wikipedia-16.png          # icon
-#    WikiPediaKo         http://ko.wikipedia.org/wiki/||utf-8                    # encoding
-#    WikiPediaKo         http://ko.wikipedia.org/wiki/|wikipedia-16.png|utf-8    # full option
+#    WikiPediaKo         http://ko.wikipedia.org/wiki/||UTF-8                    # encoding
+#    WikiPediaKo         http://ko.wikipedia.org/wiki/|wikipedia-16.png|UTF-8    # full option
 ###
 AcadWiki            http://xarch.tu-graz.ac.at/autocad/wiki/
 Acronym             http://www.acronymfinder.com/af-query.asp?String=exact&Acronym=|acronym-16.png
 Advogato            http://advogato.org/proj/
 AladdinMusic        http://www.aladdin.co.kr/music/catalog/music.asp?ISBN=
-AlbireoWiki         http://janice.kaist.ac.kr/~gomeisa/wiki/wiki.php/|albireowiki-16.png
+AlbireoWiki         http://janice.kaist.ac.kr/~gomeisa/wiki/wiki.php/|albireowiki-16.png|EUC-KR
 AndStuff            http://andstuff.org/wiki.php?|andstuff-16.png
-Babel               http://nyxity.com/wiki/wiki.pl?
+Babel               http://nyxity.com/wiki/wiki.pl?||EUC-KR
 BenefitsWiki        http://www.benefitslink.com/cgi-bin/wiki.cgi?
 BridgesWiki         http://c2.com/w2/bridges/
 BugZilla            http://bugzilla.gnome.org/show_bug.cgi?id=|bugzilla-16.png
@@ -41,7 +41,7 @@ GentooKorea         http://gentoo.or.kr/wiki/moin.cgi/
 GnomeKorea          http://www.gnome.or.kr/moin.cgi/|gnomekorea-16.png
 GoogleGroups        http://groups.google.com/groups?q=
 Google              http://www.google.com/search?q=|google-16.png
-GyparkWiki          http://gypark.pe.kr/wiki/|GyparkWiki.png
+GyparkWiki          http://gypark.pe.kr/wiki/|GyparkWiki.png|UTF-8
 HammondWiki         http://www.dairiki.org/HammondWiki/index.php3?
 Hssg                http://cgi.chollian.net/~hspia/wiki/wiki.pl?
 Hwanseo             http://cgi.chollian.net/~hspia/wiki/wiki.pl?
@@ -51,7 +51,7 @@ Jangnan             http://www.jangnan.org/wiki/moin.cgi/|jangnan-16.png
 JargonFile          http://sunir.org/apps/meta.pl?wiki=JargonFile&redirect=
 Jay                 http://host9.swidc.com/~ncc1701/wiki/wiki.cgi?|Jay.png
 JiniWiki            http://www.cdegroot.com/cgi-bin/jini?
-Jof                 http://jof4002.net/?|Jof.png
+Jof                 http://jof4002.net/?|Jof.png|EUC-KR
 JoiWiki             http://joi.ito.com/joiwiki/|joiwiki-16.png
 KLE                 http://kle.kldp.org/moin.php/$PAGE?action=urlencode&amp;ie=UTF-8&amp;oe=EUC-KR|kle-16.png
 KLDPWiki            http://wiki.kldp.org/wiki.php/
@@ -101,10 +101,10 @@ UseModKr            http://cgi.chollian.net/~royalpink/wiki/wiki.pl?
 VisualWorks         http://wiki.cs.uiuc.edu/VisualWorks/
 Why                 http://clublet.com/c/c/why?
 Wiki                http://c2.com/cgi/wiki?|wiki-16.png
-WikiPedia           http://en.wikipedia.org/wiki/|wikipedia-16.png|utf-8
-Wikipedia           http://en.wikipedia.org/wiki/|wikipedia-16.png|utf-8
-KoWikiPedia         http://ko.wikipedia.org/wiki/|wikipedia-16.png|utf-8
-KoWikipedia         http://ko.wikipedia.org/wiki/|wikipedia-16.png|utf-8
+WikiPedia           http://en.wikipedia.org/wiki/|wikipedia-16.png|UTF-8
+Wikipedia           http://en.wikipedia.org/wiki/|wikipedia-16.png|UTF-8
+KoWikiPedia         http://ko.wikipedia.org/wiki/|wikipedia-16.png|UTF-8
+KoWikipedia         http://ko.wikipedia.org/wiki/|wikipedia-16.png|UTF-8
 WikiX               http://wikix.ath.cx/index.php?display=|wikixnet-16.png
 WIM                 http://linux.mizi.com/wim/|wim-16.png
 Xper                http://xper.org/wiki/xp/|xper-16.png

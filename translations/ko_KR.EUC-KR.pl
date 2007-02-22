@@ -1,14 +1,14 @@
-# korean.pl
-# UseModWiki language pack for Korean language
-# by gypark < raymundo AT kebi.com >
+# ko_KR.EUC-KR.pl
+# UseModWiki language pack for Korean language, EUC-KR encoding
+# by gypark < gypark@gmail.com >
 
-# 한국어 언어팩입니다.
+# EUC-KR로 인코딩된 한국어 언어팩입니다.
 # 아래에 나열된 번역문 중 일부는  Luke 님의 한글 패치로부터,
 # 일부는 danny 님의 패치로부터 가져오고 나머지는 직접 수정했습니다.
 
 # 이 화일을 위키위키가 설치된 디렉토리에 두고, config.pl 화일 마지막에
 #
-#             do "./korean.pl";
+#             do "./ko_KR.EUC-KR.pl";
 #
 # 과 같이 적어주시면 됩니다. (왼쪽의 #은 제거하세요)
 

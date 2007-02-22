@@ -29,7 +29,7 @@ package UseModWiki;
 use strict;
 
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext2rc4";
+$WikiVersion = "0.92K3-ext2rc5";
 $WikiRelease = "2007-02-22";
 $HashKey = "salt"; # 2-character string
 
@@ -2885,13 +2885,14 @@ sub InterPageLink {
 ###
 	return ("", $id . $punct)  if ($url eq "");
 	$remotePage =~ s/&amp;/&/g;  # Unquote common URL HTML
-#	$url .= $remotePage;
+
 ### intermap 에 인코딩 지정
+#	$url .= $remotePage;
 	my $encoded_page = $remotePage;
 	if (($encoding ne "") && (lc($encoding) ne lc($HttpCharset))) {
 		$encoded_page = &convert_encode($encoded_page, $HttpCharset, $encoding);
 	}
-	$encoded_page = &EncodeUrl($encoded_page);
+	$encoded_page = &EncodeUrl($encoded_page) if ($site ne "Upload");
 	$url .= $encoded_page;
 
 ### InterWiki 로 적힌 이미지 처리
@@ -2927,11 +2928,10 @@ sub StoreBracketInterPage {
 	$remotePage =~ s/&amp;/&/g;  # Unquote common URL HTML
 	$url = &GetSiteUrl($site);
 ### interwiki 아이콘
-	my ($image, $url_main);
-	if ($url =~ /\|/) {
-		($url, $image) = split(/\|/, $url, 2);		
-	}
+	my ($image, $url_main, $encoding);
+	($url, $image, $encoding) = split(/\|/, $url);
 	$url_main = $url;
+###
 
 	if ($text ne "") {
 		return "[$id $text]"  if ($url eq "");
@@ -2939,7 +2939,16 @@ sub StoreBracketInterPage {
 		return "[$id]"  if ($url eq "");
 		$text = &GetBracketUrlIndex($id);
 	}
-	$url .= $remotePage;
+
+### intermap 에 인코딩 지정
+#	$url .= $remotePage;
+	my $encoded_page = $remotePage;
+	if (($encoding ne "") && (lc($encoding) ne lc($HttpCharset))) {
+		$encoded_page = &convert_encode($encoded_page, $HttpCharset, $encoding);
+	}
+	$encoded_page = &EncodeUrl($encoded_page) if ($site ne "Upload");
+	$url .= $encoded_page;
+
 ### interwiki 아이콘
 #	return &StoreRaw("<a href=\"$url\">[$text]</a>");
 	my $link_html = '';
