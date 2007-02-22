@@ -48,7 +48,7 @@ use vars qw(@RcDays @HtmlPairs @HtmlSingle
 	$FreeLinks $WikiLinks $AdminDelete $FreeLinkPattern $RCName $RunCGI
 	$ShowEdits $ThinLine $LinkPattern $InterLinkPattern $InterSitePattern
 	$UrlProtocols $UrlPattern $ImageExtensions $RFCPattern $ISBNPattern
-	$FS $FS1 $FS2 $FS3 $CookieName $SiteBase $StyleSheet $NotFoundPg
+	$FS $FS1 $FS2 $FS3 $CookieName $SiteBase $StyleSheetUrl $NotFoundPg
 	$FooterNote $EditNote $MaxPost $NewText $NotifyDefault $HttpCharset);
 
 ### 패치를 위해 추가된 환경설정 변수
@@ -56,14 +56,14 @@ use vars qw(
 	$UserGotoBar $UserGotoBar2 $UserGotoBar3 $UserGotoBar4 
 	$ConfigFile $SOURCEHIGHLIGHT @SRCHIGHLANG $EditNameLink
 	$EditGuideInExtern $SizeTopFrame $SizeBottomFrame
-	$LogoPage $CheckTime $LinkDir $IconDir $CountDir $UploadDir $UploadUrl
+	$LogoPage $CheckTime $LinkDir $IconUrl $CountDir $UploadDir $UploadUrl
 	$HiddenPageFile $TemplatePage
 	$InterWikiMoniker $SiteDescription $RssLogoUrl $RssDays $RssTimeZone
-	$SlashLinks $InterIconDir $SendPingAllowed $JavaScript
-	$UseLatex $UserHeader $OekakiJar @UrlEncodingGuess
+	$SlashLinks $InterIconUrl $SendPingAllowed $JavaScriptUrl
+	$UseLatex $UserHeader $OekakiJarUrl @UrlEncodingGuess
 	);
 
-use vars qw($DocID $ImageTag $ClickEdit $UseEmoticon $EmoticonPath $EditPagePos);		# luke
+use vars qw($DocID $ImageTag $ClickEdit $UseEmoticon $EmoticonUrl $EditPagePos);		# luke
 use vars qw($TableOfContents @HeadingNumbers $NamedAnchors $AnchoredLinkPattern);
 use vars qw($TableTag $TableMode);
 
@@ -106,7 +106,7 @@ $FullUrl     = "";              # Set if the auto-detected URL is wrong
 $RedirType   = 1;               # 1 = CGI.pm, 2 = script, 3 = no redirect
 $AdminPass   = "admin";         # Set to non-blank to enable password(s)
 $EditPass    = "edit";          # Like AdminPass, but for editing only
-$StyleSheet  = "wiki.css";      # URL for CSS stylesheet (like "/wiki.css")
+$StyleSheetUrl  = "wiki.css";      # URL for CSS stylesheet (like "/wiki.css")
 $NotFoundPg  = "";              # Page for not-found links ("" for blank pg)
 $EmailFrom   = "Wiki";          # Text for "From: " field of email notes.
 $SendMail    = "/usr/sbin/sendmail";  # Full path to sendmail executable
@@ -127,7 +127,7 @@ $SizeTopFrame = 160;
 $SizeBottomFrame = 110;
 $LogoPage   = "";	# this page will be displayed when no parameter
 $CheckTime = 0;   # 1 = mesure the processing time (requires Time::HiRes module), 0 = do not 
-$IconDir = "./icons/";	# directory containing icon files
+$IconUrl = "./icons/";	# directory containing icon files
 $UploadDir   = "./upload";	# by gypark. file upload
 $UploadUrl   = ""; # by gypark, URL for the directory containing uploaded file
                    # if undefined, it has the same value as $UploadDir
@@ -139,12 +139,12 @@ $RssLogoUrl  = '';              # Optional image for RSS feed
 $RssDays     = 7;               # Default number of days in RSS feed
 $RssTimeZone = 9;				# Time Zone of Server (hour), 0 for GMT, 9 for Korea
 $SlashLinks   = 0;      # 1 = use script/action links, 0 = script?action
-$InterIconDir = "./icons-inter/"; # directory containing interwiki icons
+$InterIconUrl = "./icons-inter/"; # directory containing interwiki icons
 $SendPingAllowed = 0;   # 0 - anyone, 1 - who can edit, 2 - who is admin
-$JavaScript  = "wikiscript.js";   # URL for JavaScript code (like "/wikiscript.js")
+$JavaScriptUrl  = "wikiscript.js";   # URL for JavaScript code (like "/wikiscript.js")
 $UseLatex    = 0;		# 1 = Use LaTeX conversion   2 = Don't convert
 $UserHeader  = '';              # Optional HTML header additional content
-$OekakiJar   = "oekakibbs.jar";	# URL for oekaki *.jar file
+$OekakiJarUrl   = "oekakibbs.jar";	# URL for oekaki *.jar file
 @UrlEncodingGuess = ('euc-kr');		# Browser's URL encoding could be one of these ones (except "utf-8")
 $EditNameLink = 0;      # 1 = edit links use name (CSS), 0 = '?' links
 
@@ -209,7 +209,7 @@ $CountDir    = "$DataDir/count";	# by gypark. Stores view-counts
 # added by luke
 
 $UseEmoticon 	= 1;		# 1 = use emoticon, 0 = not use
-$EmoticonPath	= "http:emoticon/";	# where emoticon stored
+$EmoticonUrl	= "http:emoticon/";	# where emoticon stored
 $ClickEdit	 	= 1;		# 1 = edit page by double click on page, 0 = no use
 $EditPagePos	= 1;		# 1 = bottom, 2 = top, 3 = top & bottom
 $NamedAnchors   = 1;        # 0 = no anchors, 1 = enable anchors, 2 = enable but suppress display
@@ -990,12 +990,12 @@ sub GetRcHtml {
 	my $bookmark;
 	my $bookmarkuser = &GetParam('username', "");
 	my ($rcnew, $rcupdated, $rcdiff, $rcdeleted, $rcinterest) = (
-			"<img style='border:0' src='$IconDir/rc-new.gif'>",
-			"<img style='border:0' src='$IconDir/rc-updated.gif'>",
-			"<img style='border:0' src='$IconDir/rc-diff.gif'>",
-			"<img style='border:0' src='$IconDir/rc-deleted.gif'>",
+			"<img style='border:0' src='$IconUrl/rc-new.gif'>",
+			"<img style='border:0' src='$IconUrl/rc-updated.gif'>",
+			"<img style='border:0' src='$IconUrl/rc-diff.gif'>",
+			"<img style='border:0' src='$IconUrl/rc-deleted.gif'>",
 ### 관심 페이지
-			"<img style='border:0' src='$IconDir/rc-interest.gif' alt='".T('Interesting Page')."'>",
+			"<img style='border:0' src='$IconUrl/rc-interest.gif' alt='".T('Interesting Page')."'>",
 	);
 	$bookmark = &GetParam('bookmark',-1);
 
@@ -1717,8 +1717,8 @@ sub GetHtmlHeader {
 	if ($SiteBase ne "") {
 		$html .= qq(<BASE HREF="$SiteBase">\n);
 	}
-	if ($StyleSheet ne '') {
-		$html .= qq(<LINK REL="stylesheet" HREF="$StyleSheet">\n);
+	if ($StyleSheetUrl ne '') {
+		$html .= qq(<LINK REL="stylesheet" HREF="$StyleSheetUrl">\n);
 	}
 	# Insert other header stuff here (like inline style sheets?)
 
@@ -1726,7 +1726,7 @@ sub GetHtmlHeader {
 	$html .= qq(<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=$HttpCharset">\n);
 	$html .= qq(<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">\n);
 	$html .= qq|<link rel="alternate" type="application/rss+xml" title="$SiteName" href="http://$ENV{SERVER_NAME}$ENV{SCRIPT_NAME}${\(&ScriptLinkChar())}action=rss">\n|;
-	$html .= qq(<script src="$JavaScript" language="javascript" type="text/javascript"></script>);
+	$html .= qq(<script src="$JavaScriptUrl" language="javascript" type="text/javascript"></script>);
 	$html .= "\n";
 
 ### RobotsMetaTag
@@ -1979,7 +1979,7 @@ sub GetGotoBar {
 		$main =~ s|/.*||;  # Only the main page name (remove subpage)
 ### subpage 의 경우, 상위페이지 이름 앞에 아이콘 표시
 #		$bartext .= " </td><td> " . &GetPageLink($main);
-		$bartext .= "</TD>\n<TD class='gotoparentpage'><img src=\"$IconDir/parentpage.gif\" border=\"0\" alt=\""
+		$bartext .= "</TD>\n<TD class='gotoparentpage'><img src=\"$IconUrl/parentpage.gif\" border=\"0\" alt=\""
 					. T('Main Page:') . " $main\" align=\"absmiddle\">" . &GetPageLink($main);
 	}
 
@@ -2269,14 +2269,14 @@ sub EmoticonSubst {
 	if ($UseEmoticon) {
 		my ($e, $e1, $e2, $e3, $e4, $e5, $e6, $e7, $e8);
 
-		$e1 = $EmoticonPath . "/emoticon-ambivalent.gif ";
-		$e2 = $EmoticonPath . "/emoticon-laugh.gif ";
-		$e3 = $EmoticonPath . "/emoticon-sad.gif ";
-		$e4 = $EmoticonPath . "/emoticon-smile.gif ";
-		$e5 = $EmoticonPath . "/emoticon-surprised.gif ";
-		$e6 = $EmoticonPath . "/emoticon-tongue-in-cheek.gif ";
-		$e7 = $EmoticonPath . "/emoticon-unsure.gif ";
-		$e8 = $EmoticonPath . "/emoticon-wink.gif ";
+		$e1 = $EmoticonUrl . "/emoticon-ambivalent.gif ";
+		$e2 = $EmoticonUrl . "/emoticon-laugh.gif ";
+		$e3 = $EmoticonUrl . "/emoticon-sad.gif ";
+		$e4 = $EmoticonUrl . "/emoticon-smile.gif ";
+		$e5 = $EmoticonUrl . "/emoticon-surprised.gif ";
+		$e6 = $EmoticonUrl . "/emoticon-tongue-in-cheek.gif ";
+		$e7 = $EmoticonUrl . "/emoticon-unsure.gif ";
+		$e8 = $EmoticonUrl . "/emoticon-wink.gif ";
 
 		$txt =~ s/(\s)\^[oO_\-]*\^[;]*/$1$e2/g;
 		$txt =~ s/(\s)-[_]+-[;]*/$1$e7/g;
@@ -2584,7 +2584,7 @@ sub MacroUploadedFiles {
 	my ($itself) = (@_);
 	my (@files, %filesize, %filemtime, $size, $totalSize);
 	my $txt;
-	my $uploadsearch = "<img style='border:0' src='$IconDir/upload-search.gif'>";
+	my $uploadsearch = "<img style='border:0' src='$IconUrl/upload-search.gif'>";
 	my $canDelete = &UserIsAdmin();
 	
 	if (!(-e $UploadDir)) {
@@ -2909,14 +2909,14 @@ sub InterPageLink {
 		$image = "default-inter.gif";
 	}
 	if (!($image =~ m/\//)) {
-		$image = "$InterIconDir/$image";
+		$image = "$InterIconUrl/$image";
 	}
 	$link_html = "<A class='inter' href='$url_main'>" .
 				"<IMG class='inter' src='$image' alt='$site:' title='$site:'>" .
 				"</A>";
 	$link_html .= "<A class='inter' href='$url' title='$id'>$remotePage</A>";
 ### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
-	$link_html .= "<a href=\"$url\" target=\"_blank\"><img class=\"newwindow\" src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>";
+	$link_html .= "<a href=\"$url\" target=\"_blank\"><img class=\"newwindow\" src=\"$IconUrl/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>";
 	return ($link_html, $punct);
 }
 
@@ -2955,7 +2955,7 @@ sub StoreBracketInterPage {
 	$link_html = "<A class='inter' href='$url' title='$id'>[$text]</A>" .
 ### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
 				"<a href=\"$url\" target=\"_blank\">" .
-				"<img class=\"newwindow\" src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\">" .
+				"<img class=\"newwindow\" src=\"$IconUrl/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\">" .
 				"</a>";
 	return &StoreRaw($link_html);
 }
@@ -3350,7 +3350,7 @@ sub UrlLink {
 	($protocol, $name) = ($1, $2) if ($name =~ /^(https?:)(.*)/ && $2 !~ /^\/\//);
 
 ### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
-	return ("<A class='outer' href=\"$name\">$protocol$name</A><a href=\"$name\" target=\"_blank\"><img class=\"newwindow\" src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>", $punct);
+	return ("<A class='outer' href=\"$name\">$protocol$name</A><a href=\"$name\" target=\"_blank\"><img class=\"newwindow\" src=\"$IconUrl/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>", $punct);
 }
 
 sub StoreBracketUrl {
@@ -3361,7 +3361,7 @@ sub StoreBracketUrl {
 		$text = &GetBracketUrlIndex($url);
 	}
 ### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
-	return &StoreRaw("<A class='outer' href=\"$url\">[$text]</A><a href=\"$url\" target=\"_blank\"><img class=\"newwindow\" src=\"$IconDir/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>");
+	return &StoreRaw("<A class='outer' href=\"$url\">[$text]</A><a href=\"$url\" target=\"_blank\"><img class=\"newwindow\" src=\"$IconUrl/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>");
 }
 
 sub StoreBracketLink {
@@ -3443,9 +3443,9 @@ sub ISBNLink {
 	}
 
 ### 책표지가 없는 경우
-	my ($noCoverIcon, $iconNum) = ("$IconDir/isbn-nocover.jpg", ($num % 5));
-	$noCoverIcon = "$IconDir/isbn-nocover-$iconNum.jpg"
-		if (-f "$IconDir/isbn-nocover-$iconNum.jpg");
+	my ($noCoverIcon, $iconNum) = ("$IconUrl/isbn-nocover.jpg", ($num % 5));
+	$noCoverIcon = "$IconUrl/isbn-nocover-$iconNum.jpg"
+		if (-f "$IconUrl/isbn-nocover-$iconNum.jpg");
 
 ### 국내 서적
 	if ($num =~ /^(89|60)/) {
@@ -7518,7 +7518,7 @@ height [1000-40]<input type="text" name="height" size="4" maxlength="4" value="$
 
 <p align="center">
 
-<applet name="oekakibbs" codebase="./" code="a.p.class" archive="$OekakiJar" width="$appletWidth" height="$appletHeight" mayscript>
+<applet name="oekakibbs" codebase="./" code="a.p.class" archive="$OekakiJarUrl" width="$appletWidth" height="$appletHeight" mayscript>
 <param name="cgi" value="$ScriptName${\(&ScriptLinkChar())}action=oekaki&mode=save">
 <param name="url" value="$ScriptName${\(&ScriptLinkChar())}action=oekaki&mode=exit">
 

@@ -2,90 +2,99 @@
 # == Configuration =======================================================
 # Original version from UseModWiki 0.92 (April 21, 2001)
 
-$CookieName  = "Wiki";          # Name for this wiki (for multi-wiki sites)
-$SiteName    = "Wiki";          # Name of site (used for titles)
-$HomePage    = "HomePage";      # Home page (change space to _)
-$RCName      = "RecentChanges"; # Name of changes page (change space to _)
-$LogoUrl     = "";     # URL for site logo ("" for no logo)
-$ENV{PATH}   = "/bin:/usr/bin/:/usr/local/bin/";     # Path used to find "diff"
-$ScriptTZ    = "";              # Local time zone ("" means do not print)
-$RcDefault   = 30;              # Default number of RecentChanges days
-@RcDays      = qw(1 3 7 30 90); # Days for links on RecentChanges
-$KeepDays    = 14;              # Days to keep old revisions
-$SiteBase    = "";              # Full URL for <BASE> header
-$FullUrl     = "";              # Set if the auto-detected URL is wrong
-$RedirType   = 1;               # 1 = CGI.pm, 2 = script, 3 = no redirect
-$AdminPass   = "admin";         # Set to non-blank to enable password(s)
-$EditPass    = "edit";          # Like AdminPass, but for editing only
-$StyleSheet  = "/cgi-bin/utf/wiki.css";      # URL for CSS stylesheet (like "/wiki.css")
-$NotFoundPg  = "";              # Page for not-found links ("" for blank pg)
-$EmailFrom   = "Wiki";          # Text for "From: " field of email notes.
-$SendMail    = "/usr/sbin/sendmail";  # Full path to sendmail executable
-$FooterNote  = "";              # HTML for bottom of every page
-$EditNote    = "";              # HTML notice above buttons on edit page
-$MaxPost     = 1024 * 1024 * 3;  # Maximum 210K posts (about 200K for pages)
-$NewText     = "";              # New page text ("" for default message)
-$HttpCharset = "UTF-8";              # Charset for pages, like "iso-8859-2"
-$UserGotoBar = "<a href='/'>Home</a>";              # HTML added to end of goto bar
-##########################################################
-### added by gypark
-### 상단 메뉴에 사용자정의링크를 더 달 수 있게 함
+$CookieName   = "Wiki";          # Name for this wiki (for multi-wiki sites)
+$SiteName     = "Wiki";          # Name of site (used for titles)
+$HomePage     = "HomePage";      # Home page (change space to _)
+$RCName       = "RecentChanges"; # Name of changes page (change space to _)
+$LogoUrl      = "";              # URL for site logo ("" for no logo)
+$ENV{PATH}    = "/bin:/usr/bin/:/usr/local/bin/";     # Path used to find "diff"
+$ScriptTZ     = "";              # Local time zone ("" means do not print)
+$RcDefault    = 30;              # Default number of RecentChanges days
+@RcDays       = qw(1 3 7 30 90); # Days for links on RecentChanges
+$KeepDays     = 14;              # Days to keep old revisions
+$SiteBase     = "";              # Full URL for <BASE> header
+$FullUrl      = "";              # Set if the auto-detected URL is wrong
+$RedirType    = 1;               # 1  = CGI.pm, 2  = script, 3  = no redirect
+$AdminPass    = "admin";         # Set to non-blank to enable password(s)
+$EditPass     = "edit";          # Like AdminPass, but for editing only
+$StyleSheetUrl= "/cgi-bin/utf/wiki.css";      # URL for CSS stylesheet (like "/wiki.css")
+$NotFoundPg   = "";              # Page for not-found links ("" for blank pg)
+$EmailFrom    = "Wiki";          # Text for "From: " field of email notes.
+$SendMail     = "/usr/sbin/sendmail";  # Full path to sendmail executable
+$FooterNote   = "";              # HTML for bottom of every page
+$EditNote     = "";              # HTML notice above buttons on edit page
+$MaxPost      = 1024 * 1024 * 3; # Maximum 3MB posts (file upload limit)
+$NewText      = "";              # New page text ("" for default message)
+$HttpCharset  = "UTF-8";         # Charset for pages, like "iso-8859-2"
+$UserGotoBar  = "";              # HTML added to end of goto bar
 $UserGotoBar2 = "";
 $UserGotoBar3 = "";
 $UserGotoBar4 = "";
 
-### 번역화일 사용
-do "./translations/ko_KR.UTF-8.pl";    # Path of translation file
+### Translation
+do "./translations/ko_KR.UTF-8.pl";     # korean, UTF-8 encoding
+# do "./translations/ko_KR.EUC-KR.pl";    # korean, EUC-kR encoding
 
-### path of source-highlight
-$SOURCEHIGHLIGHT    = "/usr/local/bin/source-highlight";    # path of source-highlight
-@SRCHIGHLANG = qw(cpp java javascript prolog perl php3 python flex changeelog);
-### EXTERN 페이지 하단에 편집 가이드 표시
-$EditGuideInExtern = 0; # 1 = show edit guide in bottom frame, 0 = don't show
-$SizeTopFrame = 160;
-$SizeBottomFrame = 150;
 ### 인자 없이 wiki.pl 을 부르면 $LogoPage 를 embed 형식으로 출력
-$LogoPage   = "";	# this page will be displayed when no parameter
-### 페이지 처리 시간을 출력한다
-$CheckTime = 0;   # 1 = mesure the processing time (requires Time::HiRes module), 0 = do not 
-### 내부 아이콘이 저장된 디렉토리
-$IconDir = "/cgi-bin/utf/icons/";	# directory containing icon files
-### 화일 업로드와 오에카키 저장을 위한 디렉토리 (내부 경로를 사용)
-$UploadDir   = "./upload";	# by gypark. file upload
-### 화일 업로드와 오에카키 저장을 위한 URL (http:// 시작하는 절대경로 사용)
-$UploadUrl   = "http:/cgi-bin/utf/upload"; # by gypark, URL for the directory containing uploaded file
-                   # if undefined, it has the same value as $UploadDir
-### hide page
-$HiddenPageFile = "$DataDir/hidden";  # hidden pages list file
-### template page
-$TemplatePage = "TemplatePage"; # name of template page for creating new page
+$LogoPage     = "";                             # this page will be displayed when no parameter
+### 페이지 처리 시간 출력
+$CheckTime    = 0;                              # 1 = mesure the page-processing time (requires Time::HiRes module), 0 = do not 
+### 아이콘 디렉토리 URL
+$IconUrl      = "/cgi-bin/utf/icons/";          # URL for directory containing icon files
+### interwiki 아이콘 디렉토리 URL
+$InterIconUrl = "/cgi-bin/utf/icons-inter/";    # URL for directory containing interwiki icons files
+### 이모티콘 디렉토리 URL
+$EmoticonUr   = "http:/cgi-bin/utf/emoticon/";  # URL for directory containing emoticon files
+### 업로드한 파일이 저장되는 디렉토리 경로와, 브라우저 출력에 사용되는 URL
+$UploadDir    = "./upload";                     # directory containing uploaded files
+$UploadUrl    = "http:/cgi-bin/utf/upload";     # URL for the directory containing uploaded files
+                                                #  if $UploadUrl = "", it has the same value as $UploadDir
+### 템플릿 페이지
+$TemplatePage = "TemplatePage";                 # name of template page for creating new page
+### java script 함수
+$JavaScriptUrl= "/cgi-bin/utf/wikiscript.js";   # URL for JavaScript code (like "/wikiscript.js")
+### Oekaki용 .jar 파일
+$OekakiJarUrl = "/cgi-bin/utf/oekakibbs.jar";   # URL for oekaki .jar file
+
+### for {{{lang }}} block
+$SOURCEHIGHLIGHT = "/usr/local/bin/source-highlight";    # Path of "source-highlight" binary
+@SRCHIGHLANG     = qw(
+		bib bison caml changelog cpp csharp diff flex fortran html java javascript
+		langdef latex logtalk lua nohilite outlang pascal perl php postscript
+		prolog python ruby sh sml sql style syslog tcl xml
+	);													# Supported languages
+
+### for "#EXTERN " directive
+$EditGuideInExtern = 0;    # 1 = show edit guide in bottom frame, 0 = don't show
+$SizeTopFrame      = 160;  # Height of top frame
+$SizeBottomFrame   = 150;  # Height of bottom frame
+
 ### rss from usemod 1.0
 $InterWikiMoniker = '';         # InterWiki moniker for this wiki. (for RSS)
 $SiteDescription  = $SiteName;  # Description of this wiki. (for RSS)
-$RssLogoUrl  = '';              # Optional image for RSS feed
-$RssDays     = 7;               # Default number of days in RSS feed
-$RssTimeZone = 9;				# Time Zone of Server (hour), 0 for GMT, 9 for Korea
+$RssLogoUrl       = '';         # Optional image for RSS feed
+$RssDays          = 7;          # Default number of days in RSS feed
+$RssTimeZone      = 9;          # Time Zone of Server (hour), 0 for GMT, 9 for Korea
 ### 스크립트 뒤에 / or ? 선택 from usemod1.0
 $SlashLinks   = 1;      # 1 = use script/action links, 0 = script?action
-### interwiki 아이콘 사용
-$InterIconDir = "/cgi-bin/utf/icons-inter/"; # directory containing interwiki icons
 ### trackback 보내기
 $SendPingAllowed = 0;   # 0 - anyone, 1 - who can edit, 2 - who is admin
-### java script 함수들
-$JavaScript  = "/cgi-bin/utf/wikiscript.js";   # URL for JavaScript code (like "/wikiscript.js")
 ### LaTeX 변환 지원
 $UseLatex    = 0;		# 1 = Use LaTeX conversion   2 = Don't convert
 ### 사용자 정의 헤더
-$UserHeader  = '';              # Optional HTML header additional content
-### Oekaki .jar 파일
-$OekakiJar   = "oekakibbs.jar";	# URL for oekaki *.jar file
+$UserHeader  = '';      # Optional HTML header additional content
 ### 존재하지 않는 페이지 표시 방식
 $EditNameLink = 1;      # 1 = edit links use name (CSS), 0 = '?' links
-### 브라우저의 주소창의 인코딩 추측 (utf-8 제외)
+### 방문자 브라우저의 주소창의 인코딩 추측 (utf-8 은 쓰지 말 것)
+### The encoding of URL request from visitor's browser may be one of these:
 ### ex: ('euc-jp', 'shiftjis', '7bit-jis')
+### caution: Don't write 'utf-8'. It is included implicitly.
 @UrlEncodingGuess = ('euc-kr');
-##
-##########################################################
+### by luke
+$UseEmoticon 	= 1;		# 1 = use emoticon, 0 = not use
+$ClickEdit	 	= 1;		# 1 = edit page by double click on page, 0 = no use
+$EditPagePos	= 1;		# 1 = bottom, 2 = top, 3 = top & bottom
+$NamedAnchors   = 1;        # 0 = no anchors, 1 = enable anchors, 2 = enable but suppress display
 
 # Major options:
 $UseSubpage  = 1;       # 1 = use subpages,       0 = do not use subpages
@@ -125,7 +134,7 @@ $FastGlob    = 1;       # 1 = new faster code,    0 = old compatible code
 # so they are *not* particularly "safe".
 # Tags that must be in <tag> ... </tag> pairs:
 @HtmlPairs = qw(b i u font big small sub sup h1 h2 h3 h4 h5 h6 cite code
-  em s strike strong tt var div center blockquote ol ul dl table caption);
+  em s strike strong tt var div center blockquote ol ul dl table caption span);
 # Single tags (that do not require a closing /tag)
 @HtmlSingle = qw(br p hr li dt dd tr td th);
 @HtmlPairs = (@HtmlPairs, @HtmlSingle);  # All singles can also be pairs
@@ -144,12 +153,6 @@ $RcOldFile   = "$DataDir/oldrclog"; # Old RecentChanges logfile
 $IndexFile   = "$DataDir/pageidx";  # List of all pages
 $LinkDir     = "$DataDir/link";    # by gypark. Stores the links of each page
 $CountDir    = "$DataDir/count";	# by gypark. Stores view-counts
+$HiddenPageFile = "$DataDir/hidden";  # hidden pages list file
 
-# added by luke
-
-$UseEmoticon 	= 1;		# 1 = use emoticon, 0 = not use
-$EmoticonPath	= "http:/cgi-bin/utf/emoticon/";	# where emoticon stored
-$ClickEdit	 	= 1;		# 1 = edit page by double click on page, 0 = no use
-$EditPagePos	= 1;		# 1 = bottom, 2 = top, 3 = top & bottom
-$NamedAnchors   = 1;        # 0 = no anchors, 1 = enable anchors, 2 = enable but suppress display
 # == End of Configuration =================================================

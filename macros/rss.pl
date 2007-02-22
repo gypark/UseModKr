@@ -19,7 +19,7 @@ sub MacroRss {
 	}
 
 	$txt = &ScriptLink("action=rss$arg",
-			"<img align='absmiddle' src='$IconDir/xml_rss.gif'> Get RSS of Entire Wiki");
+			"<img align='absmiddle' src='$IconUrl/xml_rss.gif'> Get RSS of Entire Wiki");
 
 	return $txt;
 }

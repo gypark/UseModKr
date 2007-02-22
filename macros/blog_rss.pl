@@ -31,7 +31,7 @@ sub MacroBlogRss {
 	$blogpage = &FreeToNormal($blogpage);
 
 	$txt = &ScriptLink("action=blog_rss&listpage=$listpage&blogpage=$blogpage",
-			"<img align='absmiddle' src='$IconDir/xml_rss.gif'> Get RSS of $blogname");
+			"<img align='absmiddle' src='$IconUrl/xml_rss.gif'> Get RSS of $blogname");
 
 	return $txt;
 }

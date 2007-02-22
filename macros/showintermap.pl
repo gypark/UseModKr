@@ -14,7 +14,7 @@ sub MacroShowInterMap() {
 
 	if ($status) {
 		$data =~ s/(#.*)/&StoreRaw("<SPAN style='color: blue;'>$1<\/SPAN>")/ge;
-		$data =~ s/\|([^\|\n]+\.$ImageExtensions)/ <IMG class='inter' src='$InterIconDir\/$1' alt='$1'>/g;
+		$data =~ s/\|([^\|\n]+\.$ImageExtensions)/ <IMG class='inter' src='$InterIconUrl\/$1' alt='$1'>/g;
 		$data =~ s/\|([^\|\n]+)/ <SPAN style='color: green;'>$1<\/SPAN>/g;
 		$data =~ s/\|//g;
 		$data = &RestoreSavedText($data);
