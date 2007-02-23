@@ -2892,7 +2892,7 @@ sub InterPageLink {
 	if (($encoding ne "") && (lc($encoding) ne lc($HttpCharset))) {
 		$encoded_page = &convert_encode($encoded_page, $HttpCharset, $encoding);
 	}
-	$encoded_page = &EncodeUrl($encoded_page) if ($site ne "Upload");
+	$encoded_page = &EncodeUrl($encoded_page) if ($site !~ /^(Upload|Local|LocalWiki)$/);
 	$url .= $encoded_page;
 
 ### InterWiki 로 적힌 이미지 처리
@@ -2946,7 +2946,7 @@ sub StoreBracketInterPage {
 	if (($encoding ne "") && (lc($encoding) ne lc($HttpCharset))) {
 		$encoded_page = &convert_encode($encoded_page, $HttpCharset, $encoding);
 	}
-	$encoded_page = &EncodeUrl($encoded_page) if ($site ne "Upload");
+	$encoded_page = &EncodeUrl($encoded_page) if ($site !~ /^(Upload|Local|LocalWiki)$/);
 	$url .= $encoded_page;
 
 ### interwiki 아이콘
@@ -8068,7 +8068,7 @@ sub PageCanReceiveTrackbackPing {
 
 sub EncodeUrl {
 	my ($string) = @_;
-	$string =~ s!([^/a-zA-Z0-9_.-])!uc sprintf "%%%02x", ord($1)!eg;
+	$string =~ s!([^/?=a-zA-Z0-9_.-])!uc sprintf "%%%02x", ord($1)!eg;
 	return $string;
 }
 
