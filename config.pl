@@ -47,7 +47,7 @@ $IconUrl      = "$UrlPrefix/icons/";          # URL for directory containing ico
 ### interwiki 아이콘 디렉토리 URL
 $InterIconUrl = "$UrlPrefix/icons-inter/";    # URL for directory containing interwiki icons files
 ### 이모티콘 디렉토리 URL
-$EmoticonUr   = "$UrlPrefix/emoticon/";  # URL for directory containing emoticon files
+$EmoticonUrl  = "$UrlPrefix/emoticon/";  # URL for directory containing emoticon files
 ### 업로드한 파일이 저장되는 디렉토리 경로와, 브라우저 출력에 사용되는 URL
 $UploadDir    = "./upload";                     # directory containing uploaded files
 $UploadUrl    = "$UrlPrefix/upload";     # URL for the directory containing uploaded files
