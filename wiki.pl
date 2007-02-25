@@ -29,8 +29,8 @@ package UseModWiki;
 use strict;
 
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext2rc5";
-$WikiRelease = "2007-02-22";
+$WikiVersion = "0.92K3-ext2rc6";
+$WikiRelease = "2007-02-25";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
