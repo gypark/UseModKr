@@ -22,8 +22,7 @@ sub index {
 
 	$MyIndexCounter = 0;
 
-	$txt =~ s/&__LT__;index\((.+?)\)&__GT__;/&MacroIndex($1)/gei;
-	$txt =~ s/&__LT__;ix\((.+?)\)&__GT__;/&MacroIndex($1)/gei;    # ix() 로 축약
+	$txt =~ s/&__LT__;(?:index|ix)\((.+?)\)&__GT__;/&MacroIndex($1)/gei;
 
 	return if ($MyIndexCounter == 0);
 
