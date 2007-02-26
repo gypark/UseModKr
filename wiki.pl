@@ -29,8 +29,8 @@ package UseModWiki;
 use strict;
 
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext2rc6";
-$WikiRelease = "2007-02-25";
+$WikiVersion = "0.92K3-ext2rc7";
+$WikiRelease = "2007-02-26";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -3581,6 +3581,7 @@ sub WikiHeading {
 			']</SPAN>';
 		$edit_section = '' if ($depth == 1);
 		$edit_section = '' if (&GetParam("action") =~ /help|preview/i);
+		$edit_section = '' if (&GetParam("embed", $EmbedWiki));
 	}
 	return $pre . "<H$depth>$edit_section$text</H$depth>\n";
 ######
