@@ -29,8 +29,8 @@ package UseModWiki;
 use strict;
 
 use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext2rc7";
-$WikiRelease = "2007-02-26";
+$WikiVersion = "0.92K3-ext2rc8";
+$WikiRelease = "2007-02-28";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -8069,7 +8069,7 @@ sub PageCanReceiveTrackbackPing {
 
 sub EncodeUrl {
 	my ($string) = @_;
-	$string =~ s!([^/?=a-zA-Z0-9_.-])!uc sprintf "%%%02x", ord($1)!eg;
+	$string =~ s!([^/?#=a-zA-Z0-9_.-])!uc sprintf "%%%02x", ord($1)!eg;
 	return $string;
 }
 
