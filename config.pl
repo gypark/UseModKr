@@ -2,6 +2,7 @@
 # == Configuration =======================================================
 # Original version from UseModWiki 0.92 (April 21, 2001)
 ### 
+$DataDir      = "data";          # Main wiki directory
 $UrlPrefix = "http:/cgi-bin/utf";  # URL prefix for other variables ($...Url)
                                    # like "http:/wiki","http://mydomain.com/wiki",etc.
 

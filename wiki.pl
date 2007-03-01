@@ -28,9 +28,12 @@
 package UseModWiki;
 use strict;
 
-use vars qw($WikiVersion $WikiRelease $HashKey);
-$WikiVersion = "0.92K3-ext2rc8";
-$WikiRelease = "2007-02-28";
+use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
+### 환경설정 파일의 경로
+$ConfigFile  = "config.pl";             # path of config file
+
+$WikiVersion = "0.92K3-ext2rc9";
+$WikiRelease = "2007-03-01";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -54,13 +57,13 @@ use vars qw(@RcDays @HtmlPairs @HtmlSingle
 ### 패치를 위해 추가된 환경설정 변수
 use vars qw(
 	$UserGotoBar $UserGotoBar2 $UserGotoBar3 $UserGotoBar4 
-	$ConfigFile $SOURCEHIGHLIGHT @SRCHIGHLANG $EditNameLink
+	$SOURCEHIGHLIGHT @SRCHIGHLANG $EditNameLink
 	$EditGuideInExtern $SizeTopFrame $SizeBottomFrame
 	$LogoPage $CheckTime $LinkDir $IconUrl $CountDir $UploadDir $UploadUrl
 	$HiddenPageFile $TemplatePage
 	$InterWikiMoniker $SiteDescription $RssLogoUrl $RssDays $RssTimeZone
 	$SlashLinks $InterIconUrl $SendPingAllowed $JavaScriptUrl
-	$UseLatex $UserHeader $OekakiJarUrl @UrlEncodingGuess
+	$UseLatex $UserHeader $OekakiJarUrl @UrlEncodingGuess $UrlPrefix
 	);
 
 use vars qw($DocID $ImageTag $ClickEdit $UseEmoticon $EmoticonUrl $EditPagePos);		# luke
@@ -82,15 +85,11 @@ use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime $Sec_Revision $Sec_Ts
 	$UseShortcutPage $SectionNumber $AnchorPattern);
 
 # == Configuration =====================================================
-###############
-### 보안을 위해서 데이타 저장 공간을 다른 곳으로 지정
-### 적절히 바꾸어서 사용할 것
-$DataDir     = "data";    # Main wiki directory
-$ConfigFile  = "config.pl"; # path of config file
-###############
-$RunCGI      = 1;       # 1 = Run script as CGI,  0 = Load but do not run
-
 # Default configuration
+$DataDir     = "data";          # Main wiki directory
+$UrlPrefix   = "";              # URL prefix for other variables ($...Url)
+                                # like "http:/wiki","http://mydomain.com/wiki",etc.
+
 $CookieName  = "Wiki";          # Name for this wiki (for multi-wiki sites)
 $SiteName    = "Wiki";          # Name of site (used for titles)
 $HomePage    = "HomePage";      # Home page (change space to _)
@@ -1248,8 +1247,8 @@ sub DoHistory {
 	print &GetHeader("",&QuoteHtml(Ts('History of %s', $id)), "") . "<br>";
 	&OpenPage($id);
 	&OpenDefaultText();
-	$canEdit = &UserCanEdit($id,1);
 	$canEdit = 0;  # Turn off direct "Edit" links
+	$canEdit = &UserCanEdit($id,1);
 	if ( $UseDiff ) {
 		print <<FORMEOF ;
 			<form action='$ScriptName' METHOD='GET'>
@@ -1312,12 +1311,12 @@ sub GetHistoryLine {
 		$html .= &GetPageLinkText($id, Ts('Current Revision', $rev)) . ' ';
 ###
 		if ($canEdit) {
-			$html .= &GetEditLink($id, T('Edit')) . ' ';
+			$html .= "&lt;- ". &GetEditLink($id, T('Edit')) . ' ';
 		}
 	} else {
 		$html .= &GetOldPageLink('browse', $id, $rev, Ts('Revision %s', $rev)) . ' ';
 		if ($canEdit) {
-			$html .= &GetOldPageLink('edit',   $id, $rev, T('Edit')) . ' ';
+			$html .= "&lt;- ". &GetOldPageLink('edit',   $id, $rev, T('Edit')) . ' ';
 		}
 	}
 	$html .= ". . . . " . $minor . &TimeToText($ts) . " ";
@@ -1454,41 +1453,6 @@ sub GetFirstCharLink {
 
 	return $mainpage . &GetEditLink($id,$slash.$first) . $last;
 }
-
-# sub GetFirstCharLink {
-# # 첫 글자에 링크를 거는 함수
-# 	my ($id, $name) = @_;
-# 	my @trailingBytesForUTF8 = (
-# 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-# 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-# 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-# 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-# 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-# 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-# 		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-# 		2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,4,4,4,4,5,5,5,5
-# 	);
-# 
-# 	my ($mainpage, $slash, $page) = ($name =~ m/(?:(.*)(\/))?(.+)/);
-# 
-# # utf-8
-# 	if ($HttpCharset =~ /utf-8|utf8/i) {
-# 		my $length = $trailingBytesForUTF8[ord(substr($page,0,1))] + 1;
-# 		my $first = substr($page,0,$length);
-# 		my $tail = substr($page,$length);
-# 		return $mainpage . &GetEditLink($id,$slash.$first) . $tail;
-# 	}
-# 
-# # euc-kr
-# 	if ($HttpCharset =~ /euc-kr/i) {
-# 		my ($first, $tail) = ($page =~ /([a-zA-Z0-9]|[\x80-\xff][\x80-\xff])(.*)/);
-# 
-# 		return $mainpage . &GetEditLink($id,$slash.$first) . $tail;
-# 	}
-# 
-# # default
-# 	return &GetEditLink($id, $name);
-# }
 
 sub GetPageOrEditLink {
 	my ($id, $name) = @_;
@@ -8235,7 +8199,10 @@ sub guess_and_convert {
 sub uni_to_charset {
 	my ($str) = @_;
 	
-	return convert_encode($str, "unicode", "$HttpCharset");
+	if (eval "require Encode;") {
+		return Encode::encode("$HttpCharset", $str);
+	}
+	return "";
 }
 
 # $str - 쪼갤 스트링
@@ -8243,11 +8210,14 @@ sub uni_to_charset {
 # return: (처음 length 길이의 스트링, 나머지 스트링)
 sub split_string {
 	my ($str, $length) = @_;
+	my ($first, $last);
 
-	$str = &convert_encode($str, "$HttpCharset", "unicode");
-	my ($first, $last) = ($str =~ /^(.{1,$length})(.*)$/s);
-	$first = &convert_encode($first, "unicode", "$HttpCharset");
-	$last = &convert_encode($last, "unicode", "$HttpCharset");
+# UTF-16BE로 변환하고, 2바이트 단위로 분리한 후, 다시 원래 인코딩으로 변환
+	$str = &convert_encode($str, "$HttpCharset", "UTF-16BE");
+	$length *= 2;
+	($first, $last) = ($str =~ /^(.{0,$length})(.*)$/s);
+	$first = &convert_encode($first, "UTF_16BE", "$HttpCharset");
+	$last = &convert_encode($last, "UTF_16BE", "$HttpCharset");
 
 	return ($first, $last);
 }
