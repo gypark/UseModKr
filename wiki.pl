@@ -47,7 +47,7 @@ use vars qw(@RcDays @HtmlPairs @HtmlSingle
 	$KeepDays $HtmlTags $HtmlLinks $UseDiffLog $KeepMajor $KeepAuthor
 	$FreeUpper $EmailNotify $SendMail $EmailFrom $FastGlob $EmbedWiki
 	$ScriptTZ $BracketText $UseAmPm $UseIndex $UseLookup
-	$RedirType $AdminPass $EditPass $UseHeadings $NetworkFile $BracketWiki
+	$RedirType $AdminPass $EditPass $NetworkFile $BracketWiki
 	$FreeLinks $WikiLinks $AdminDelete $FreeLinkPattern $RCName $RunCGI
 	$ShowEdits $ThinLine $LinkPattern $InterLinkPattern $InterSitePattern
 	$UrlProtocols $UrlPattern $ImageExtensions $RFCPattern $ISBNPattern
@@ -210,7 +210,6 @@ $ThinLine    = 1;       # 1 = fancy <hr> tags,    0 = classic wiki <hr>
 $BracketText = 1;       # 1 = allow [URL text],   0 = no link descriptions
 $UseAmPm     = 1;       # 1 = use am/pm in times, 0 = use 24-hour times
 $UseIndex    = 0;       # 1 = use index file,     0 = slow/reliable method
-$UseHeadings = 1;       # 1 = allow = h1 text =,  0 = no header formatting
 $NetworkFile = 1;       # 1 = allow remote file:, 0 = no file:// links
 $BracketWiki = 1;       # 1 = [WikiLnk txt] link, 0 = no local descriptions
 $UseLookup   = 0;       # 1 = lookup host names,  0 = skip lookup (IP only)
@@ -2229,20 +2228,18 @@ sub CommonMarkup {
 		# by matching the inner quotes for the strong pattern.
 		s/('*)'''(.*?)'''/$1<strong>$2<\/strong>/g;
 		s/''(.*?)''/<em>$1<\/em>/g;
-		if ($UseHeadings) {
-			s/(^|\n)\s*(\=+)\s+([^\n]+)\s+\=+/&WikiHeading($1, $2, $3)/geo;
+		s/(^|\n)\s*(\=+)\s+([^\n]+)\s+\=+/&WikiHeading($1, $2, $3)/geo;
 ### table 내 셀 별로 정렬
-#			s/((\|\|)+)/"<\/TD><TD COLSPAN=\"" . (length($1)\/2) . "\">"/ge if $TableMode;
+#		s/((\|\|)+)/"<\/TD><TD COLSPAN=\"" . (length($1)\/2) . "\">"/ge if $TableMode;
 
 # rowspan 을 vvv.. 로 표현하는 경우 (차후에 다시 고려할 예정)
-#			my %td_align = ("&__LT__;", "left", "&__GT__;", "right", "|", "center");
-#			s/((\|\|)*)(\|(&__LT__;|&__GT__;|\|)(v*))/"<\/TD><TD align=\"$td_align{$4}\" COLSPAN=\""
+#		my %td_align = ("&__LT__;", "left", "&__GT__;", "right", "|", "center");
+#		s/((\|\|)*)(\|(&__LT__;|&__GT__;|\|)(v*))/"<\/TD><TD align=\"$td_align{$4}\" COLSPAN=\""
 #				. ((length($1)\/2)+1) . ((length($5))?"\" ROWSPAN=\"".(length($5)+1):"") . "\">"/ge if $TableMode;
 # rowspan 을 v3 으로 표현하는 경우
-			my %td_align = ("&__LT__;", "left", "&__GT__;", "right", "|", "center");
-			s/((\|\|)*)(\|(&__LT__;|&__GT__;|\|)((v(\d*))?))/"<\/TD><TD align=\"$td_align{$4}\" COLSPAN=\""
-				. ((length($1)\/2)+1) . ((length($5))?"\" ROWSPAN=\"" . ((length($7))?"$7":"2"):"") . "\">"/ge if $TableMode;
-		}
+		my %td_align = ("&__LT__;", "left", "&__GT__;", "right", "|", "center");
+		s/((\|\|)*)(\|(&__LT__;|&__GT__;|\|)((v(\d*))?))/"<\/TD><TD align=\"$td_align{$4}\" COLSPAN=\""
+			. ((length($1)\/2)+1) . ((length($5))?"\" ROWSPAN=\"" . ((length($7))?"$7":"2"):"") . "\">"/ge if $TableMode;
 	}
 
 	return $_;
@@ -2693,9 +2690,7 @@ sub MacroInclude {
 	$txt =~ s/(<thread\()([-+]?\d+(,\d+)?)(\)>)/$1$name,$2$4/gi;
 
 # 섹션 단위 편집 - include 될 때는 하지 않음
-	if ($UseHeadings) {
-		$txt =~ s/((^|\n)\s*\=+\s+[^\n]+)(\s+\=+)/$1${FS}noedit$FS$3/go;
-	}
+	$txt =~ s/((^|\n)\s*\=+\s+[^\n]+)(\s+\=+)/$1${FS}noedit$FS$3/go;
 
 	return $txt;
 }

@@ -115,7 +115,7 @@ $EmbedWiki   = 0;       # 1 = no headers/footers, 0 = normal wiki pages
 # Minor options:
 $LogoLeft    = 0;       # 1 = logo on left,       0 = logo on right
 $RecentTop   = 1;       # 1 = recent on top,      0 = recent on bottom
-$UseDiffLog  = 1;       # 1 = save diffs to log,  0 = do not save diffs
+$UseDiffLog  = 0;       # 1 = save diffs to log,  0 = do not save diffs
 $KeepMajor   = 1;       # 1 = keep major rev,     0 = expire all revisions
 $KeepAuthor  = 1;       # 1 = keep author rev,    0 = expire all revisions
 $ShowEdits   = 0;       # 1 = show minor edits,   0 = hide edits by default
@@ -124,7 +124,6 @@ $ThinLine    = 1;       # 1 = fancy <hr> tags,    0 = classic wiki <hr>
 $BracketText = 1;       # 1 = allow [URL text],   0 = no link descriptions
 $UseAmPm     = 1;       # 1 = use am/pm in times, 0 = use 24-hour times
 $UseIndex    = 0;       # 1 = use index file,     0 = slow/reliable method
-$UseHeadings = 1;       # 1 = allow = h1 text =,  0 = no header formatting
 $NetworkFile = 1;       # 1 = allow remote file:, 0 = no file:// links
 $BracketWiki = 1;       # 1 = [WikiLnk txt] link, 0 = no local descriptions
 $UseLookup   = 0;       # 1 = lookup host names,  0 = skip lookup (IP only)
