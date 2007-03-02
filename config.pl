@@ -1,7 +1,5 @@
 # === !/usr/local/bin/perl
 # == Configuration =======================================================
-# Original version from UseModWiki 0.92 (April 21, 2001)
-### 
 $DataDir      = "data";          # Main wiki directory
 $UrlPrefix = "http:/cgi-bin/utf";  # URL prefix for other variables ($...Url)
                                    # like "http:/wiki","http://mydomain.com/wiki",etc.
@@ -37,7 +35,7 @@ $UserGotoBar4 = "";
 
 ### Translation
 do "./translations/ko_KR.UTF-8.pl";     # korean, UTF-8 encoding
-# do "./translations/ko_KR.EUC-KR.pl";    # korean, EUC-kR encoding
+# do "./translations/ko_KR.EUC-KR.pl";    # korean, EUC-KR encoding
 
 ### 인자 없이 wiki.pl 을 부르면 $LogoPage 를 embed 형식으로 출력
 $LogoPage     = "";                             # this page will be displayed when no parameter
