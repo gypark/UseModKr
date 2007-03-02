@@ -5635,141 +5635,111 @@ sub DoSearch {
 	print &GetCommonFooter();
 }
 
-###############
-### replaced by gypark
-### 목차를 A,B,..,가,나,... 등으로 구분해서 출력하도록 함
-### from http://whitejames.x-y.net/cgi-bin/jofcgi/wiki/wiki.pl?프로그래밍팁/Wiki
+### 페이지 이름을 인자로 받아서 디렉토리명을 반환
+### GetPageDirectory 함수의 확장.
+sub GetPageDirectoryExt {
+	my ($id) = @_;
 
-# sub PrintPageList {
-# 	my $pagename;
-# 
-# 	print "<h2>", Ts('페이지 수: %s', ($#_ + 1)), "</h2>\n";
-# 	foreach $pagename (@_) {
-# 		print ".... "  if ($pagename =~ m|/|);
-# 		print &GetPageLink($pagename);
-# 
-# 		if (&UserIsAdmin()) {
-# 			print " | " . &ScriptLink("action=pagelock&set=1&id=" . $pagename, T('lock'));
-# 			print " | " . &ScriptLink("action=pagelock&set=0&id=" . $pagename, T('unlock'));
-# 		}
-# 		print "<br>\n";
-# 	}
-# }
+# Number and Alphabet index
+	if ($id =~ /^([0-9])/) { return "0"; }
+	if ($id =~ /^([a-zA-Z])/) { return uc($1); }
+	if (not eval "require Encode;") { return "others"; }
 
+# Korean index
+	my @i_korean = (		# "가" "나" ... "하"
+		"\x{AC00}", "\x{B098}", "\x{B2E4}", "\x{B77C}", "\x{B9C8}",
+		"\x{BC14}", "\x{C0AC}", "\x{C544}", "\x{C790}", "\x{CC28}",
+		"\x{CE74}", "\x{D0C0}", "\x{D30C}", "\x{D558}"
+	);
+
+# Japanese index
+	my @i_japanese = (		# "ぁ" "ァ"
+		"\x{3041}", "\x{30A1}"
+	);
+
+# Any other characters for TOC here...
+#	my @i_other_lang = ( "\x{unicode number}", ... );
+# It would be appreciated if anyone inform me (gypark@gmail.com) about his/her language
+
+
+# Directory index of all languages, and the "print form" of that index:
+# For example:
+#   "나" (\x{B098}) would be returned if $id is "난초" (begins with \x{B09C})
+#   "others"        would be returned if $id begins with Thai character (\x{0E**})
+#
+# Insert @i_other_lang into @index and @index_print, but be careful of the position
+#   so that all elements of @index are sorted in ascending order
+#   and that they match those of @index_print.
+	my @index = (
+			"\x{0000}",
+			@i_japanese,
+			"\x{3100}",
+			@i_korean,
+			"\x{D7B0}",
+		 );
+	my @index_print = (
+			"others",			# \x{0000}- (except Number and Alphabet)
+			@i_japanese,		# \x{3041}-
+			"others",			# \x{3100}-
+			@i_korean,			# \x{AC00}-
+			"others"			# \x{D7B0}-
+		 );
+
+# Now, find the index character for $id
+	my $id_uni = Encode::decode("$HttpCharset", $id);
+	for (my $i=0; $i <= $#index; $i++) {
+		if (($index[$i] le $id_uni) &&
+				(($i == $#index) || ($id_uni lt $index[$i+1]))) {
+			my $retval = $index_print[$i];
+			if (Encode::is_utf8($retval)) {
+				$retval = Encode::encode($HttpCharset, $retval);
+			}
+			return $retval;
+		}
+	}
+
+	return "others!"; # must not reach here
+}
+
+### new PrintPageList subroutine. source is based on OddMuse:Index_Extension
 sub PrintPageList {
-	my ($pagename);
-	my $count = 0;
-	my $titleIsPrinted = 0;
+	my @pages = @_;
+	my %hash;
 
-	my $newlineInToc = "-1";	# TOC에서 몇 번째 항목마다 줄바꿈을 넣을 것인가?
+	map { push( @{$hash{GetPageDirectoryExt($_)}}, $_); } @pages;
 
-# Basic Latin
-	my @indexTitle = (0, "A".."Z");
-	my @indexSearch=    ("A".."Z");
-# Korean
-	my $i_korean =		# "가" "나" ... "하"
-		"\x{AC00} \x{B098} \x{B2E4} \x{B77C} \x{B9C8} \x{BC14} ".
-		"\x{C0AC} \x{C544} \x{C790} \x{CC28} \x{CE74} \x{D0C0} ".
-		"\x{D30C} \x{D558}";
-# Japanese
-	my $i_japanese =	# "ぁ" "ァ"
-		"\x{3041} \x{30A1}";
-# Any other characters in TOC here...
+# TOC 출력
+	print $q->a({-name=>"TOC"}), "<h2>", Ts('%s pages found:', ($#pages + 1)), "</h2>\n";
+	print $q->p( map { "| ". $q->a({-href=>"#$_"}, $_); } sort keys %hash);
+	print "\n";
 
-
-# HttpCharset 값에 따라서 TOC 구성
-# utf-8
-	if ($HttpCharset =~ /utf-8|utf8/i) {
-		my @i_korean = split(/ /, uni_to_charset($i_korean));
-		my @i_japanese = split(/ /, uni_to_charset($i_japanese));
-		push (@indexTitle,
-				"etc1",			# \x{0080}-
-				@i_japanese,	# \x{3041}-
-				"etc2",			# \x{3100}-
-				@i_korean,		# \x{AC00}-
-				"etc3");		# \x{D7B0}-
-		push (@indexSearch,
-				uni_to_charset("\x{0080}"),
-				@i_japanese,
-				uni_to_charset("\x{3100}"),
-				@i_korean,
-				uni_to_charset("\x{D7B0}"));
-		$newlineInToc = "27";
-	}
-# euc-kr
-	if ($HttpCharset =~ /euc-kr/i) {
-		my @i_korean = split(/ /, uni_to_charset($i_korean));
-		push (@indexTitle, @i_korean, "others");
-		push (@indexSearch, @i_korean, uni_to_charset("\x{4F3D}"));		# append "伽"
-#		push (@indexSearch, @i_korean, "豈");
-		$newlineInToc = "27";
-	}
-# Any other encodings for TOC here...
-
-	print "<a name='TOC'></a><h2>", Ts('%s pages found:', ($#_ + 1)), "</h2>\n";
-
-	# 상단에 앵커를 가리키는 인덱스 나열
-	my $count2 = 0;
-	print("\n|");
-	while ( $count2 <= $#indexTitle ) {
-		if ($count2 =~ /^($newlineInToc)$/) {
-			print("<br>\n|");
-		}
-		print("<a href=\"#H_$indexTitle[$count2]\"><b>");
-		print("&nbsp;$indexTitle[$count2]&nbsp;");
-		print("</b></a>|");
-		$count2++;
-	}
-	print "<br><br>";
-
-	$count2 = 0;
-	foreach $pagename(@_) {
-### hide page
-		next if (&PageIsHidden($pagename));
-
-		until (
-			$pagename lt @indexSearch[$count]
-			&& ($count == 0 || $pagename ge @indexSearch[$count-1])
-		) {
-			$count++;
-			$titleIsPrinted = 0;
-			last if $count > $#indexSearch;
-		}
-		if (!$titleIsPrinted) {
-			# 페이지가 없는 색인의 앵커 처리
-			while ( $count2 <= ($count - 1) ) {
-				print "\n<a name=\"H_$indexTitle[$count2]\">";
-# 아래 주석을 해제하면 페이지가 없는 색인도 헤드라인이 나오나,
-# 사용하지 않는 것이 좋다. 역링크를 사용해보면 이해가 될 듯
-#				print $q->h3($indexTitle[$count2]);
-				print "</a>";
-				$count2++;
-			}
-# 앵커를 삽입
-			print $q->h3("<a name=\"H_$indexTitle[$count]\" title=\"". T('Top') ."\" href=\"#TOC\">$indexTitle[$count]</A>"); 
-			$count2 = $count + 1;
-			$titleIsPrinted=1;
-		}
-
-		print ".... " if ($pagename =~ m|/|);
-		print &GetPageLink($pagename);
-
-		if (&UserIsAdmin()) {
+# 페이지 목록 출력
+	foreach my $title (sort keys %hash) {
+		print $q->h2($q->a({-name=>$title, -href=>"#TOC"}, $title)), "\n";
+		foreach my $pagename (@{$hash{$title}}) {
+			print ".... " if ($pagename =~ m|/|);
+			print &GetPageLink($pagename);
+ 			if (&UserIsAdmin()) {
 ### 관리자의 인덱스 화면에서는 잠긴 페이지를 별도로 표시
-			if (-f &GetLockedPageFile($pagename)) {
-				print " " . T('(locked)');
-			}
-			print " | " . &ScriptLink("action=pagelock&set=1&id=" . $pagename, T('lock'));
-			print " | " . &ScriptLink("action=pagelock&set=0&id=" . $pagename, T('unlock'));
+				print " | ";
+				if (-f &GetLockedPageFile($pagename)) {
+					print T('(locked)')." ";
+					print &ScriptLink("action=pagelock&set=0&id=" . $pagename, T('unlock'));
+				} else {
+					print &ScriptLink("action=pagelock&set=1&id=" . $pagename, T('lock'));
+				}
 ### hide page
-			if (defined($HiddenPage{$pagename})) {
-				print " | " . T('(hidden)');
-			}
-			print " | " . &ScriptLink("action=pagehide&set=1&id=" . $pagename, T('hide'));
-			print " | " . &ScriptLink("action=pagehide&set=0&id=" . $pagename, T('unhide'));
+				print " | ";
+				if (defined($HiddenPage{$pagename})) {
+					print T('(hidden)')." ";
+					print &ScriptLink("action=pagehide&set=0&id=" . $pagename, T('unhide'));
+				} else {
+					print &ScriptLink("action=pagehide&set=1&id=" . $pagename, T('hide'));
+				}
+ 			}
+# 
+			print "<BR>\n";
 		}
-		print $q->br;
-		print "\n";
 	}
 }
 
