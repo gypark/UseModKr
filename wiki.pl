@@ -32,7 +32,7 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.1";
+$WikiVersion = "0.92K3-ext2.1a";
 $WikiRelease = "2007-03-02";
 $HashKey = "salt"; # 2-character string
 
@@ -254,12 +254,6 @@ $UseShortcutPage = 1;
 
 # The "main" program, called at the end of this script file.
 sub DoWikiRequest {
-### 환경 변수들을 지정하는 루틴을 제거. 무조건 config file 를 읽음.
-	if (-f $ConfigFile) {
-		do "$ConfigFile";
-	} else {
-		die "Can not load config file";
-	}
 
 ### 처리 시간 측정
 if ($CheckTime) {
@@ -8231,6 +8225,13 @@ sub split_string {
 }
 
 ### 통채로 추가한 함수들의 끝
+
+### 환경 변수들을 지정하는 루틴을 제거. 무조건 config file 를 읽음.
+if (-f $ConfigFile) {
+	do "$ConfigFile";
+} else {
+	die "Can not load config file";
+}
 
 &DoWikiRequest()  if ($RunCGI && ($_ ne 'nocgi'));   # Do everything.
 1; # In case we are loaded from elsewhere
