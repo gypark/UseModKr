@@ -1,0 +1,47 @@
+
+  UseModWiki 0.92K3-ext
+
+by Geunyoung Park <gypark at gmail.com , http://gypark.pe.kr>
+
+This wiki engine is based on UseModWiki 0.92 (http://www.usemod.com/)
+
+0.92K3 is luke's Korean patch in 2002
+
+0.92K3-ext*.* started from 0.92K3, has been applied a lot of patches
+including those of usemod 1.0 by Geunyoung and other users in Korea.
+
+Changes include:
+* supporting UTF-8
+* bug fixes
+* stylesheet and useful javascript functions
+* various macros which can produce useful output
+** calendar, 
+** webboard-like comment
+** information of pages (like searching text, finding orphaned pages)
+** blog features
+* supporting plugins to use external program like Vim
+
+You can all the list of changes in
+http://gypark.pe.kr/wiki/UseModWikiModification  (written in Korean)
+
+You can see an example site and also test in there:
+http://gypark.pe.kr/cgi-bin/english/wiki.pl
+
+
+FEEDBACK
+
+Please send all bug reports or suggestions by e-mail to:
+gypark at gmail.com
+
+
+CREDITS
+
+Thanks to people who helped me and still gives me a lot of
+suggestions, advices, bug notifications, feedbacks with testing
+results, etc.
+
+* Luke
+* Jof <http://jof4002.net>
+* Nyxity <http://nyxity.com>
+* Bab2 <http://piwd.net>
+* and whom I forgot to mention ;-)

@@ -32,7 +32,7 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2rc10";
+$WikiVersion = "0.92K3-ext2.1";
 $WikiRelease = "2007-03-02";
 $HashKey = "salt"; # 2-character string
 
@@ -7013,6 +7013,14 @@ sub DoShowVersion {
 ### 버전 정보를 별도의 변수에 보관
 # 	print "<p>UseModWiki version 0.92K2<p>\n";
 	print "<p>UseModWiki version $WikiVersion ($WikiRelease)<p>\n";
+
+	if (open (FH, "<./README")) {
+		local $/ = undef;
+		my $readme = &QuoteHtml(<FH>);
+
+		print "<pre>\n". $readme. "\n</pre>\n\n";
+		close(FH);
+	}
 
 	print &GetCommonFooter();
 }
