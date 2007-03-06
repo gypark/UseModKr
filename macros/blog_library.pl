@@ -124,7 +124,10 @@ sub BlogGetListPeriod {
 	}
 
 	my @list;
-	my ($page, $pagename, $date);
+	my ($page, $pagename, $date, $reverse);
+	if ($startdate > $enddate) {
+		($startdate, $enddate, $reverse) = ($enddate, $startdate, 1);
+	}
 	foreach my $item (@tocitem_List) {
 		if ($item =~ /\[\[(.+?)(\|.*)?\]\] (\d+)-(\d+)-(\d+)/) {
 			$page = $1;
@@ -138,6 +141,7 @@ sub BlogGetListPeriod {
 			}
 		}
 	}
+	@list = reverse @list if ($reverse);
 	return (1, @list);
 }
 
