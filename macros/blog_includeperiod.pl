@@ -4,7 +4,7 @@
 sub blog_includeperiod {
 	my ($txt) = @_;
 
-	$txt =~ s/<blog_includeperiod\(([^,]+),([\d-]+),([\d-]+)\)>/&MacroBlogIncludePeriod($1,$2,$3)/geim;
+	$txt =~ s/(^|\n)<blog_includeperiod\(([^,]+),([\d-]+),([\d-]+)\)>([\r\f]*\n)/$1.&MacroBlogIncludePeriod($2,$3,$4).$5/geim;
 
 	return $txt;
 }

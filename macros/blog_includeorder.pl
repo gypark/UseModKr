@@ -4,7 +4,7 @@
 sub blog_includeorder {
 	my ($txt) = @_;
 
-	$txt =~ s/<blog_includeorder\(([^,]+),([-+]?\d+),([-+]?\d+)\)>/&MacroBlogIncludeOrder($1,$2,$3)/geim;
+	$txt =~ s/(^|\n)<blog_includeorder\(([^,]+),([-+]?\d+),([-+]?\d+)\)>([\r\f]*\n)/$1.&MacroBlogIncludeOrder($2,$3,$4).$5/geim;
 
 	return $txt;
 }
