@@ -4,11 +4,15 @@ sub action_replacetext {
 	print &GetHeader("", T('Replace strings in all pages'), "");
 	return  if (!&UserIsAdminOrError());
 
-	my ($old, $new, $ignoreCase, $test);
+	my ($old, $new, $ignoreCase, $evaluate, $test);
 	$oldStr = &GetParam("old", "");
 	$newStr = &GetParam("new", "");
 	$ignoreCase = &GetParam("p_ignore", "0");
 	$ignoreCase = "1" if ($ignoreCase eq "on");
+	$regular = &GetParam("p_regular", "0");
+	$regular = "1" if ($regular eq "on");
+	$evaluate = &GetParam("p_evaluate", "0");
+	$evaluate = "1" if ($evaluate eq "on");
 	$test = &GetParam("p_test", "0");
 	$test = "1" if ($test eq "on");
 
@@ -21,9 +25,14 @@ sub action_replacetext {
 	print "<br>\n";
 	print $q->checkbox(-name=>"p_ignore", -override=>1, -checked=>$ignoreCase,
 						-label=>T('Ignore case'));
+	print $q->checkbox(-name=>"p_regular", -override=>1, -checked=>$regular,
+						-label=>T('Use regular expression'));
 
 	print "\n<p><b>New string:</b><br>\n";
 	print $q->textfield(-name=>"new",-size=>"100",-maxlength=>"255",-default=>"$newStr"). "\n";
+	print "<br>\n";
+	print $q->checkbox(-name=>"p_evaluate", -override=>1, -checked=>$evaluate,
+						-label=>T('Evaluate'));
 
 	print "<p>";
 	print $q->submit(-name=>'Replace'), "\n";
@@ -46,6 +55,10 @@ sub action_replacetext {
 
 	my ($page, $num);
 	$num = 0;
+
+	$oldStr = "\Q$oldStr\E" if (not $regular);
+	$oldStr = "(?i)$oldStr" if ($ignoreCase);
+
 	foreach $page (&AllPagesList()) {		# 모든 페이지 검사
 		&OpenPage($page);
 		&OpenDefaultText();
@@ -53,10 +66,10 @@ sub action_replacetext {
 		my $match = 0;
 
 # 치환 시도
-		if ($ignoreCase) {
-			$match = ($newText =~ s/$oldStr/$newStr/ige);
+		if ($evaluate) {
+			$match = ($newText =~ s/$oldStr/$newStr/goee);
 		} else {
-			$match = ($newText =~ s/$oldStr/$newStr/ge);
+			$match = ($newText =~ s/$oldStr/$newStr/go);
 		}
 
 # 치환되는 것이 있는 경우
