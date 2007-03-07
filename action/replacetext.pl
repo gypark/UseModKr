@@ -19,7 +19,6 @@ sub action_replacetext {
 # 폼 출력
 	print &GetFormStart();
 	print &GetHiddenValue("action", "replacetext"),"\n";
-	print "Use Perl regular expression for text replacement.\n";
 	print "<p><b>Old string:</b><br>\n";
 	print $q->textfield(-name=>"old",-size=>"100",-maxlength=>"255",-default=>"$oldStr");
 	print "<br>\n";
