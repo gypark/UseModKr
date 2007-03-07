@@ -32,7 +32,7 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.1d";
+$WikiVersion = "0.92K3-ext2.1e";
 $WikiRelease = "2007-03-07";
 $HashKey = "salt"; # 2-character string
 
@@ -5933,13 +5933,13 @@ sub GetPageLinks {
 	&OpenDefaultText();
 	$text = $Text{'text'};
 	$text =~ s/<html>((.|\n)*?)<\/html>/ /ig;
-	$text =~ s/<nowiki>(.|\n)*?\<\/nowiki>/ /ig;
-	$text =~ s/<pre>(.|\n)*?\<\/pre>/ /ig;
-	$text =~ s/<code>(.|\n)*?\<\/code>/ /ig;
 ### {{{ }}} 내의 내용은 태그로 간주하지 않음
 	$text =~ s/(^|\n)(\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1 \n/igm;
 	$text =~ s/(^|\n)(\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1 \n/igm;
 	$text =~ s/(^|\n)(\{\{\{#!((\w+)( .+)?)[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1 \n/igm;
+	$text =~ s/<nowiki>(.|\n)*?\<\/nowiki>/ /ig;
+	$text =~ s/<pre>(.|\n)*?\<\/pre>/ /ig;
+	$text =~ s/<code>(.|\n)*?\<\/code>/ /ig;
 ###
 	if ($interlink) {
 		$text =~ s/''+/ /g;  # Quotes can adjacent to inter-site links
@@ -6781,13 +6781,13 @@ sub SubstituteTextLinks {
 	if ($RawHtml) {
 		$text =~ s/(<html>((.|\n)*?)<\/html>)/&StoreRaw($1)/ige;
 	}
-	$text =~ s/(<pre>((.|\n)*?)<\/pre>)/&StoreRaw($1)/ige;
-	$text =~ s/(<code>((.|\n)*?)<\/code>)/&StoreRaw($1)/ige;
-	$text =~ s/(<nowiki>((.|\n)*?)<\/nowiki>)/&StoreRaw($1)/ige;
 ### {{{ }}} 내의 내용은 태그로 간주하지 않음
 	$text =~ s/(^|\n)(\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1.&StoreRaw($2)."\n"/igem;
 	$text =~ s/(^|\n)(\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1.&StoreRaw($2)."\n"/igem;
 	$text =~ s/(^|\n)(\{\{\{#!((\w+)( .+)?)[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1.&StoreRaw($2)."\n"/igem;
+	$text =~ s/(<pre>((.|\n)*?)<\/pre>)/&StoreRaw($1)/ige;
+	$text =~ s/(<code>((.|\n)*?)<\/code>)/&StoreRaw($1)/ige;
+	$text =~ s/(<nowiki>((.|\n)*?)<\/nowiki>)/&StoreRaw($1)/ige;
 ###
 
 	if ($FreeLinks) {
@@ -8154,12 +8154,12 @@ sub store_raw_codes {
 
 	# 코드는 GetPageLinks 에서 다시 가져옴
 	$text =~ s/(<html>((.|\n)*?)<\/html>)/&StoreRaw($1)/ige;
-	$text =~ s/(<nowiki>(.|\n)*?\<\/nowiki>)/&StoreRaw($1)/ige;
-	$text =~ s/(<pre>(.|\n)*?\<\/pre>)/&StoreRaw($1)/ige;
-	$text =~ s/(<code>(.|\n)*?\<\/code>)/&StoreRaw($1)/ige;
 	$text =~ s/(^|\n)(\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1.&StoreRaw($2)."\n"/igem;
 	$text =~ s/(^|\n)(\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1.&StoreRaw($2)."\n"/igem;
 	$text =~ s/(^|\n)(\{\{\{#!((\w+)( .+)?)[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1.&StoreRaw($2)."\n"/igem;
+	$text =~ s/(<nowiki>(.|\n)*?\<\/nowiki>)/&StoreRaw($1)/ige;
+	$text =~ s/(<pre>(.|\n)*?\<\/pre>)/&StoreRaw($1)/ige;
+	$text =~ s/(<code>(.|\n)*?\<\/code>)/&StoreRaw($1)/ige;
 
 	return $text;
 }
