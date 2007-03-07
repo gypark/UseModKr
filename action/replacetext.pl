@@ -1,10 +1,12 @@
 # replacetext action
 # 일괄치환
+use strict;
+
 sub action_replacetext {
 	print &GetHeader("", T('Replace strings in all pages'), "");
 	return  if (!&UserIsAdminOrError());
 
-	my ($old, $new, $ignoreCase, $evaluate, $test);
+	my ($oldStr, $newStr, $ignoreCase, $regular, $evaluate, $test);
 	$oldStr = &GetParam("old", "");
 	$newStr = &GetParam("new", "");
 	$ignoreCase = &GetParam("p_ignore", "0");
