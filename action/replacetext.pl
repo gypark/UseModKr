@@ -68,9 +68,9 @@ sub action_replacetext {
 
 # 치환 시도
 		if ($evaluate) {
-			$match = ($newText =~ s/$oldStr/$newStr/goee);
+			$match = ($newText =~ s/$oldStr/$newStr/mgoee);
 		} else {
-			$match = ($newText =~ s/$oldStr/$newStr/go);
+			$match = ($newText =~ s/$oldStr/$newStr/mgo);
 		}
 
 # 치환되는 것이 있는 경우
