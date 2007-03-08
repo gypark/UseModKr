@@ -8,6 +8,7 @@ sub action_tb {
 	my $title = &GetParam('title', $url);
 	my $blog_name = &GetParam('blog_name');
 	my $excerpt = &GetParam('excerpt');
+
 # tcode
 	my $tcode = &GetParam('tc',"");
 	my ($code_today, $code_yesterday);
@@ -20,19 +21,18 @@ sub action_tb {
 	}
 
 # 인코딩 컨버트
-	if ($ENV{'REQUEST_METHOD'} eq 'GET') {
-		# GET 메쏘드로 들어올 경우는 인코딩을 추측해서 변환
-		$title = guess_and_convert($title);
-		$blog_name = guess_and_convert($blog_name);
-		$excerpt = guess_and_convert($excerpt);
-	} 
-	elsif ($ENV{'CONTENT_TYPE'} =~ /charset=(.+)\b/i) {
-		# 인코딩이 명시되어 있는 경우
+	if ($q->content_type() =~ /charset=(.+)\b/i) {
+		# POST요청이면서, 인코딩이 명시되어 있는 경우
 		my $remote_enc = $1;
 		$title = convert_encode($title, "$remote_enc", "$HttpCharset");
 		$blog_name = convert_encode($blog_name, "$remote_enc", "$HttpCharset");
 		$excerpt = convert_encode($excerpt, "$remote_enc", "$HttpCharset");
-	}
+	} else {
+		# 인코딩을 추측해서 변환
+		$title = guess_and_convert($title);
+		$blog_name = guess_and_convert($blog_name);
+		$excerpt = guess_and_convert($excerpt);
+	} 
 
 # 블로그 지원을 위한 꽁수
 	my ($blogrcpage, $blogrccomment);
