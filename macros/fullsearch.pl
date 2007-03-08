@@ -1,7 +1,7 @@
 sub fullsearch {
 	my ($txt) = @_;
 
-	$txt =~ s/\&__LT__;FullSearch\((.*)\)\&__GT__;/&MacroFullSearch($1)/gei;
+	$txt =~ s/\&__LT__;FullSearch\((.*?)\)\&__GT__;/&MacroFullSearch($1)/gei;
 
 	return $txt;
 }

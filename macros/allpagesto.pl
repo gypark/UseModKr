@@ -1,7 +1,7 @@
 sub allpagesto {
 	my ($txt) = @_;
 
-	$txt =~ s/\&__LT__;allpagesto\(([^\n]+)\)\&__GT__;/&MacroAllPagesTo($1)/gei;
+	$txt =~ s/\&__LT__;allpagesto\((.+?)\)\&__GT__;/&MacroAllPagesTo($1)/gei;
 
 	return $txt;
 }

@@ -64,7 +64,7 @@ sub action_comments {
 	$name = &GetRemoteHost(0) if ($name eq "");
 	$name =~ s/,/./g;
 	my $mysign = "<mysign($name,$timestamp)>";
-	$newcomments = &QuoteHtml($newcomments);
+#	$newcomments = &QuoteHtml($newcomments);
 
 	&OpenPage($id);
 	&OpenDefaultText();

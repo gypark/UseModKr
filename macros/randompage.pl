@@ -1,7 +1,7 @@
 sub randompage {
 	my ($txt) = @_;
 
-	$txt =~ s/\&__LT__;RandomPage\((.*)\)\&__GT__;/&MacroRandompage($1)/gei;
+	$txt =~ s/\&__LT__;RandomPage\((\d*?)\)\&__GT__;/&MacroRandompage($1)/gei;
 
 	return $txt;
 }

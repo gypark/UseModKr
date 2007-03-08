@@ -1,7 +1,7 @@
 sub kdic {
 	my ($txt) = @_;
 
-	$txt =~ s/\&__LT__;kdic\(([^)]+)\)\&__GT__;/&MacroKDic($1)/gei;
+	$txt =~ s/\&__LT__;kdic\((.+?)\)\&__GT__;/&MacroKDic($1)/gei;
 
 	return $txt;
 }

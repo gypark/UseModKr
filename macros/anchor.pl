@@ -1,7 +1,7 @@
 sub anchor {
 	my ($txt) = @_;
 
-	$txt =~ s/\&__LT__;Anchor\((.*)\)\&__GT__;/&MacroAnchor($1)/gei;
+	$txt =~ s/\&__LT__;Anchor\((.*?)\)\&__GT__;/&MacroAnchor($1)/gei;
 
 	return $txt;
 }

@@ -1,7 +1,7 @@
 sub titlesearch {
 	my ($txt) = @_;
 
-	$txt =~ s/\&__LT__;titlesearch\((.*)\)\&__GT__;/&MacroTitleSearch($1)/gei;
+	$txt =~ s/\&__LT__;titlesearch\((.*?)\)\&__GT__;/&MacroTitleSearch($1)/gei;
 
 	return $txt;
 }

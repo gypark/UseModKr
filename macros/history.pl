@@ -1,7 +1,7 @@
 sub history {
 	my ($txt) = @_;
 
-	$txt =~ s/\&__LT__;history\((.*)\)\&__GT__;/&MacroHistory($1)/gei;
+	$txt =~ s/\&__LT__;history\((.*?)\)\&__GT__;/&MacroHistory($1)/gei;
 
 	return $txt;
 }

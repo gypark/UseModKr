@@ -5,7 +5,7 @@
 sub blog_newpost {
 	my ($txt) = @_;
 
-	$txt =~ s/\&__LT__;blog_newpost\((.+)\)\&__GT__;/&MacroBlogNewPost($1)/gei;
+	$txt =~ s/\&__LT__;blog_newpost\((.+?)\)\&__GT__;/&MacroBlogNewPost($1)/gei;
 
 	return $txt;
 }

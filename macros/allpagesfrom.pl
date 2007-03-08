@@ -1,7 +1,7 @@
 sub allpagesfrom {
 	my ($txt) = @_;
 
-	$txt =~ s/\&__LT__;allpagesfrom\(([^,\n]+)(,\d)?\)\&__GT__;/&MacroAllPagesFrom($1, $2)/gei;
+	$txt =~ s/\&__LT__;allpagesfrom\(([^,]+?)(,\d)?\)\&__GT__;/&MacroAllPagesFrom($1, $2)/gei;
 
 	return $txt;
 }

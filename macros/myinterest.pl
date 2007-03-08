@@ -1,7 +1,7 @@
 sub myinterest {
 	my ($txt) = @_;
 
-	$txt =~ s/(\&__LT__;myinterest(\(([^\n]+)\))?\&__GT__;)/&MacroMyInterest($1, $3)/gei;
+	$txt =~ s/(\&__LT__;myinterest(\((.+?)\))?\&__GT__;)/&MacroMyInterest($1, $3)/gei;
 
 	return $txt;
 }

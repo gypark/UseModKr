@@ -1,7 +1,7 @@
 sub jdic {
 	my ($txt) = @_;
 
-	$txt =~ s/\&__LT__;jdic\(([^)]+)\)\&__GT__;/&MacroJDic($1)/gei;
+	$txt =~ s/\&__LT__;jdic\((.+?)\)\&__GT__;/&MacroJDic($1)/gei;
 
 	return $txt;
 }
