@@ -17,15 +17,26 @@ sub action_addtopic {
 	$EmbedWiki = 1;
 
 	# 필요한 데이타를 쿼리스트링으로부터 가져옴
-	my ($id, $up, $url, $title, $text);
+	my ($id, $up, $url, $title, $text, $macro);
 	$id    = &GetParam("id", "");
 	$up    = &GetParam("up", "");
 	$url   = &GetParam("url", "");
 	$title = &GetParam("title", "");
 	$text  = &GetParam("text", "");
+	$macro  = &GetParam("m", 3);
 
 	# 그 외 출력할 때 사용될 변수들
 	my ($header_msg, $ccode, $idvalue, $name_field, $default_text, $comment_field);
+	my ($threadindent, $long);
+
+	# 매크로 종류
+	if ($macro == 1) {		# comments
+		($threadindent, $long) = ("", "0");
+	} elsif ($macro == 2) {	# longcomments
+		($threadindent, $long) = ("", "1");
+	} else {				# thread
+		($threadindent, $long) = ("0", "1");
+	}
 
 	# 인코딩 관련 처리들
 	$guide_msg = &guess_and_convert($guide_msg);
@@ -66,7 +77,7 @@ sub action_addtopic {
 	print &GetHeader("", $header_msg, "");
 
 	print 
-		$q->h3($header_msg).
+		$q->h2($header_msg).
 		"<DIV class='threadnew'>".
 		$guide_msg.
 		$q->startform(-name=>"comments",-method=>"POST",-action=>"$ScriptName",
@@ -77,8 +88,8 @@ sub action_addtopic {
 		&GetHiddenValue("pageid","$id").
 		&GetHiddenValue("up","$up").
 		&GetHiddenValue("ccode","$ccode") .
-		&GetHiddenValue("long","1").
-		&GetHiddenValue("threadindent","0").
+		&GetHiddenValue("long","$long").
+		&GetHiddenValue("threadindent","$threadindent").
 		T('Name') . ": ".
 		$name_field . "&nbsp;".
 		T('Comment') . ":<br>".
