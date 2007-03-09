@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.1g";
-$WikiRelease = "2007-03-08";
+$WikiVersion = "0.92K3-ext2.1h";
+$WikiRelease = "2007-03-09";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -271,6 +271,15 @@ if ($CheckTime) {
 		return;
 	}
 
+### slashlinks 처리
+	if ($SlashLinks && (length($ENV{'PATH_INFO'}) > 1)) {
+		$ENV{'QUERY_STRING'} .= '&' if ($ENV{'QUERY_STRING'});
+		$ENV{'QUERY_STRING'} .= substr($ENV{'PATH_INFO'}, 1);
+	}
+
+### QUERY_STRING 또는 PATH_INFO가 utf-8이 아닌 인코딩인 경우
+    $ENV{'QUERY_STRING'} = guess_and_convert($ENV{'QUERY_STRING'});
+
 	&InitLinkPatterns();
 	if (!&DoCacheBrowse()) {
 		eval $BrowseCode;
@@ -445,10 +454,10 @@ sub InitRequest {
 	$CGI::DISABLE_UPLOADS = 0;  
 
 ### slashlinks 처리
-	if ($SlashLinks && (length($ENV{'PATH_INFO'}) > 1)) {
-		$ENV{'QUERY_STRING'} .= '&' if ($ENV{'QUERY_STRING'});
-		$ENV{'QUERY_STRING'} .= substr($ENV{'PATH_INFO'}, 1);
-	}
+# 	if ($SlashLinks && (length($ENV{'PATH_INFO'}) > 1)) {
+# 		$ENV{'QUERY_STRING'} .= '&' if ($ENV{'QUERY_STRING'});
+# 		$ENV{'QUERY_STRING'} .= substr($ENV{'PATH_INFO'}, 1);
+# 	}
 # slahslink 관련 패치이나, POST 에서 에러가 난다 - 일단 보류
 #	if   ($ENV{'REQUEST_METHOD'} eq 'GET') {
 #		$q = new CGI($ENV{'QUERY_STRING'});
@@ -538,7 +547,7 @@ sub DoBrowseRequest {
 
 	if ($id) {                    # Just script?PageName
 ### QUERY_STRING 이 utf-8이 아닌 인코딩인 경우
-		$id = guess_and_convert($id);
+# 		$id = guess_and_convert($id);
 				
 		if ($FreeLinks && (!-f &GetPageFile($id))) {
 			$id = &FreeToNormal($id);
@@ -554,9 +563,9 @@ sub DoBrowseRequest {
 	$id = &GetParam('id', '');
 
 ### QUERY_STRING 이 utf-8이 아닌 인코딩인 경우
-	$id = guess_and_convert($id);
+# 	$id = guess_and_convert($id);
+# 	$q->param('id', $id);
 
-	$q->param('id', $id);
 	$DocID = $id;
 	if ($action eq 'browse') {
 		if ($FreeLinks && (!-f &GetPageFile($id))) {
@@ -1362,14 +1371,28 @@ sub ScriptLinkChar {
 
 sub ScriptLink {
 	my ($action, $text) = @_;
+	my $rel;
 
-	return "<a href=\"$ScriptName" . &ScriptLinkChar() . "$action\">$text</a>";
+	if ($action =~ /action=(.+?)\b/i) {
+		if (($1 ne "index") && ($1 ne "rc")) {
+			$rel = 'rel="nofollow"';
+		}
+	}
+
+	return "<a $rel href=\"$ScriptName" . &ScriptLinkChar() . "$action\">$text</a>";
 }
 
 sub ScriptLinkClass {
 	my ($action, $text, $class) = @_;
+	my $rel;
 
-	return "<a href=\"$ScriptName" . &ScriptLinkChar() . "$action\" class=\"$class\">$text</a>";
+	if ($action =~ /action=(.+?)\b/i) {
+		if (($1 ne "index") && ($1 ne "rc")) {
+			$rel = 'rel="nofollow"';
+		}
+	}
+
+	return "<a $rel href=\"$ScriptName" . &ScriptLinkChar() . "$action\" class=\"$class\">$text</a>";
 }
 
 sub HelpLink {
