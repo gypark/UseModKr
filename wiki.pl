@@ -2353,8 +2353,7 @@ sub RemoveLink {
 	my ($string) = @_;
 
 	$string = &RestoreSavedText($string);
-	$string =~ s/<a href[^>]*>(\?<\/a>)?//ig;
-	$string =~ s/<\/?b>//ig;
+	$string =~ s/<a\s+href[^>]*>(\?<\/a>)?//ig;
 	$string =~ s/<\/a>//ig;
 
 	return $string;
