@@ -1374,7 +1374,7 @@ sub ScriptLink {
 	my $rel;
 
 	if ($action =~ /action=(.+?)\b/i) {
-		if (($1 ne "index") && ($1 ne "rc")) {
+		if ((lc($1) ne "index") && (lc($1) ne "rc")) {
 			$rel = 'rel="nofollow"';
 		}
 	}
@@ -1387,7 +1387,7 @@ sub ScriptLinkClass {
 	my $rel;
 
 	if ($action =~ /action=(.+?)\b/i) {
-		if (($1 ne "index") && ($1 ne "rc")) {
+		if ((lc($1) ne "index") && (lc($1) ne "rc")) {
 			$rel = 'rel="nofollow"';
 		}
 	}
