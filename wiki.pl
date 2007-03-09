@@ -1741,7 +1741,7 @@ sub GetHtmlHeader {
 
 ### RobotsMetaTag
 	my $action = lc(&GetParam('action',''));
-	my $search = &GetParam('search','').&GetParam('dosearch','').&GetParam('reverse','');
+	my $search = &GetParam('search','').&GetParam('dosearch','');
 	if (
 			($search eq "") &&			# not search result
 			($action eq "" ||			# regular page browse
