@@ -5745,7 +5745,7 @@ sub PrintSearchResults {
 #  show a snippet from the top of the document
 			$j = index( $pageText, " ", $snippetlen ) ;  #  end on word boundary
 			$t = substr($pageText, 0, $j);
-			$t =~ s/($searchstring)/<b>\1<\/b>/gi ;
+			$t =~ s/($searchstring)/<SPAN class='highlight'>\1<\/SPAN>/gi ;
 			$output .= $t . " <b>...</b> " ;
 			$pageText = substr( $pageText, $j ) ;  #  to avoid rematching
 
@@ -5762,7 +5762,7 @@ sub PrintSearchResults {
 					$end = length( $pageText )  if ( $end == -1 ) ;
 					$t = substr( $pageText, $start, $end-$start ) ;
 #  highlight occurrences and tack on to output stream.
-					$t =~ s/($searchstring)/<b>\1<\/b>/gi ;
+					$t =~ s/($searchstring)/<SPAN class='highlight'>\1<\/SPAN>/gi ;
 					$output .= $t . " <b>...</b> " ;
 #  truncate text to avoid rematching the same string.
 					$pageText = substr( $pageText, $end ) ;

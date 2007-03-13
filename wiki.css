@@ -779,3 +779,7 @@ SPAN.searchresultpageinfo {
 
 BLOCKQUOTE.searchresultcontext {
 }
+
+SPAN.highlight {
+	font-weight: bold;
+}
