@@ -5700,7 +5700,6 @@ sub PrintSearchResults {
 		$maxsnippets = $1;
 	}
 
-	die "[maxsnippets: $maxsnippets]";
 # TOC 출력
 	my %hash;
 	map { push( @{$hash{GetPageDirectoryExt($_)}}, $_); } @results;
