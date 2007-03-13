@@ -1377,6 +1377,8 @@ sub ScriptLink {
 		if ((lc($1) ne "index") && (lc($1) ne "rc")) {
 			$rel = 'rel="nofollow"';
 		}
+	} elsif ($action =~ /search=/i) {
+		$rel = 'rel="nofollow"';
 	}
 
 	return "<a $rel href=\"$ScriptName" . &ScriptLinkChar() . "$action\">$text</a>";
