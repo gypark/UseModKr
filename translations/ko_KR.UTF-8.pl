@@ -775,4 +775,6 @@ Replace strings in all pages
 모든 페이지의 문자열 일괄 치환
 (section)
 (부분)
+Context
+내용출력
 END_OF_TRANSLATION

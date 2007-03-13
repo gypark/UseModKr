@@ -767,3 +767,14 @@ SPAN.wordindex {
 	display: none;
 }
 
+SPAN.searchresultpagename {
+	font-size: 120%;
+	font-weight: bold;
+}
+
+SPAN.searchresultpageinfo {
+	font-style: italic;
+}
+
+BLOCKQUOTE.searchresultcontext {
+}

@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.1j";
-$WikiRelease = "2007-03-12";
+$WikiVersion = "0.92K3-ext2.2";
+$WikiRelease = "2007-03-13";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -2035,8 +2035,15 @@ sub GetSearchForm {
 	my ($result);
 
 ### 단축키 alt-s 지정
-	$result = T('Search:') . " <input accesskey=\"s\"class=text type=text name='search' size=10>"
-						. &GetHiddenValue("dosearch", 1);
+	my $checked = &GetParam("context","");
+	$result = T('Search:') 
+		." <input accesskey=\"s\" class=text type=text name='search' size=10>"
+		.$q->checkbox(
+				-name=>'context',
+				-checked=>($checked)?1:'',
+				-value=>'on',
+				-label=>T('Context'))
+		. &GetHiddenValue("dosearch", 1);
 
 	return $result;
 }
@@ -5662,7 +5669,12 @@ sub DoSearch {
 	print &GetHeader('', &QuoteHtml(Ts('Search for: %s', $string)), '');
 	print '<br>';
 	@x = &SearchTitleAndBody($string);
-	&PrintPageList(@x);
+# 	&PrintPageList(@x);
+	if (&GetParam("context", "")) {
+		&PrintSearchResults($string, @x);
+	} else {
+		&PrintPageList(@x);
+	}
 
 ### 검색 결과 하단에 새 페이지 만들기 항상 출력
 #	if ($#x eq -1) {
@@ -5674,6 +5686,93 @@ sub DoSearch {
 	}
 
 	print &GetCommonFooter();
+}
+
+# Print search results with context
+# based on UseMod:WikiPatches/BetterSearchOutput
+sub PrintSearchResults {
+	my ($searchstring, @results) = @_;
+	my ($output);
+
+	my ($name, $pageText, $t, $j, $jsnippet, $start, $end) ;
+	my ($snippetlen, $maxsnippets) = ( 100, 5 ) ; #  these seem nice.
+	if (&GetParam("context") =~ /^(\d+)$/) {
+		$maxsnippets = $1;
+	}
+
+	die "[maxsnippets: $maxsnippets]";
+# TOC 출력
+	my %hash;
+	map { push( @{$hash{GetPageDirectoryExt($_)}}, $_); } @results;
+	print $q->a({-name=>"TOC"}), "<h2>", Ts('%s pages found:', ($#results + 1)), "</h2>\n";
+	print $q->p( map { "| ". $q->a({-href=>"#$_"}, $_); } sort keys %hash);
+	print "\n";
+
+	foreach my $title (sort keys %hash) {
+		print $q->h2($q->a({-name=>$title, -href=>"#TOC"}, $title)), "\n";
+
+		foreach $name (@{$hash{$title}}) {
+#  get the page, filter it, remove all tags (since we're presenting in
+#  plaintext, not HTML, a la google(tm)).
+			&OpenPage($name);
+			&OpenDefaultText();
+			$pageText = $Text{'text'};
+			foreach $t (@HtmlPairs, "pre", "nowiki", "code" ) {
+				$pageText =~ s/\<$t(\s[^<>]+?)?\>(.*?)\<\/$t\>/$2/gis;
+			}
+			foreach $t (@HtmlSingle) {
+				$pageText =~ s/\<$t(\s[^<>]+?)?\>//gi;
+			}
+			$pageText = &QuoteHtml($pageText);
+			$pageText =~ s/$FS//g;  # Remove separators (paranoia)
+			$pageText =~ s/[\s]+/ /g;  #  Shrink whitespace
+			$pageText =~ s/([-_=\\*\\.]){10,}/$1$1$1$1$1/g ; # e.g. shrink "----------"
+
+#  entry header
+			$output = "";
+			$output .= "... "  if ($name =~ m|/|);
+			$output .= "<SPAN class='searchresultpagename'>". &GetPageLink($name) ."</SPAN><BR>\n";
+#  entry trailer
+# 			$output .= "<br><i><font size=-1>"
+			$output .= "<SPAN class='searchresultpageinfo'>"
+			. int((length($pageText)/1024)+1) . "KB - "
+			. T("Last edited") . &TimeToText($Section{ts})
+			. "</SPAN><br>\n" ;
+
+			$output .= "<BLOCKQUOTE class='searchresultcontext'>";
+
+#  show a snippet from the top of the document
+			$j = index( $pageText, " ", $snippetlen ) ;  #  end on word boundary
+			$t = substr($pageText, 0, $j);
+			$t =~ s/($searchstring)/<b>\1<\/b>/gi ;
+			$output .= $t . " <b>...</b> " ;
+			$pageText = substr( $pageText, $j ) ;  #  to avoid rematching
+
+#  search for occurrences of searchstring
+			$jsnippet = 0 ;
+			while ( $jsnippet < $maxsnippets
+			&&  $pageText =~ m/($searchstring)/i ) {  #  captures match as $1
+				$jsnippet++ ;  #  paranoid about looping
+				if ( ($j = index( $pageText, $1 )) > -1 ) {  #  get index of match
+#  get substr containing (start of) match, ending on word boundaries
+					$start = index( $pageText, " ", $j-($snippetlen/2) ) ;
+					$start = 0  if ( $start == -1 ) ;
+					$end = index( $pageText, " ", $j+($snippetlen/2) ) ;
+					$end = length( $pageText )  if ( $end == -1 ) ;
+					$t = substr( $pageText, $start, $end-$start ) ;
+#  highlight occurrences and tack on to output stream.
+					$t =~ s/($searchstring)/<b>\1<\/b>/gi ;
+					$output .= $t . " <b>...</b> " ;
+#  truncate text to avoid rematching the same string.
+					$pageText = substr( $pageText, $end ) ;
+				}
+			}
+
+			$output .= "</BLOCKQUOTE><br>\n";
+
+			print $output ;
+		}
+	}
 }
 
 ### 페이지 이름을 인자로 받아서 디렉토리명을 반환
