@@ -1678,13 +1678,14 @@ sub GetHttpHeader {
 			. ";";
 ### slashlinks 지원 - 로긴,로그아웃시에 쿠키의 path를 동일하게 해줌
 		my $cookie_path = $q->url(-absolute=>1);
-		if ($ENV{'SCRIPT_NAME'} eq $cookie_path) {		# mod_rewrite 가 사용되지 않은 경우
-			$cookie_path =~ s/[^\/]*$//;					# 스크립트 이름만 제거
+		if ((my $postfix = $q->script_name()) eq $cookie_path) {	# mod_rewrite 가 사용되지 않은 경우
+			$cookie_path =~ s/[^\/]*$//;							# 스크립트 이름만 제거
 		} else {										# mod_rewrite
-			if ($ENV{'PATH_INFO'} ne '') {					# wiki.pl/ 로 rewrite 된 경우	
-				$cookie_path =~ s/$ENV{'PATH_INFO'}$//;
+			if ((my $postfix = $q->path_info()) ne '') {	# wiki.pl/ 로 rewrite 된 경우	
+				$cookie_path =~ s/$postfix$//;
 			} else {										# wiki.pl? 로 rewrite 된 경우
-				$cookie_path =~ s/$ENV{'QUERY_STRING'}$//;
+				my $postfix = $q->query_string();
+				$cookie_path =~ s/$postfix$//;
 			}
 		}
 		$cookie .= "path=$cookie_path;";
@@ -1786,8 +1787,7 @@ sub GetHtmlHeader {
 	my $headExtra;
 	if ($UseShortcut) {
 		my $shortCutUrl = "$ScriptName".&ScriptLinkChar();
-		my $shortCutLogin = (&LoginUser()?"logout":"login")
-							. "&pageid=$pageid";
+		my $shortCutLogin = (&LoginUser()?"logout":"login&pageid=$pageid");
 		my $shortCutHome = &FreeToNormal($HomePage);
 
 		$headExtra .= <<EOH;
@@ -2036,7 +2036,7 @@ sub GetGotoBar {
 					. &GetPageLink(&GetParam('username')) . "</LI>\n"
 					. "<LI>"
 					. &GetPrefsLink() . " | "
-					. &ScriptLink("action=logout&pageid=$pageid", T('Logout'). "[l]")
+					. &ScriptLink("action=logout", T('Logout'). "[l]")
 					. "</LI>\n";
 	}
 	$bar_user .= "</UL>";
@@ -5725,11 +5725,6 @@ sub DoLogout {
 	my $tempUserID = $UserID;
 	%UserCookie = %SetCookie;
 	$UserID = "113";
-
-	if (&GetParam("pageid","") ne "") {
-		BrowsePage(&GetParam("pageid"));
-		return;
-	}
 
 	print &GetHeader('', T('Logout Results'), '');
 
