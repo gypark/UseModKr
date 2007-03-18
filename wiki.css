@@ -304,93 +304,87 @@ IMG.logoimage {
 }
 
 /* 상단 메뉴 바 */
-TABLE.gotobar {
-	border: none;
-	border-collapse: collapse;
+DIV.gotobar {
+	border-top: 2px solid silver;
+	border-bottom: 2px solid silver;
+}
+
+DIV.gotobar_menu {
+	margin: 0;
+	padding: 5px 5px 5px 5px;
+	height: 60px;
+	text-align: left;
+}
+
+DIV.gotobar_user {
+	float: right;
+	margin: 0 0 0 10px;
+	padding: 2px 5px 2px 5px;
+	height: 60px;
+	border-left: 1px solid gray;
+}
+
+DIV.gotobar_search {
+	float: right;
+	margin: 0 0 0 10px;
+	padding: 2px 5px 2px 5px;
+	height: 60px;
+	border-left: 1px solid gray;
+}
+
+DIV.gotobar UL {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+DIV.gotobar LI {
+	margin: 0;
+	vertical-align: baseline;
+	padding: 2px 0 2px 0;
+}
+
+DIV.gotobar_menu LI {
+	display: inline;
+	height: 30px;
+	margin: 3px 20px 0 0;
 	text-align: center;
-	vertical-align: middle;
 }
 
-TR.gotobar {
-	height: 24px;
+DIV.gotobar_user LI {
+	text-align: center;
+	margin: 0;
 }
 
-TD.gotobar 
-{
-	border: 1px solid silver;
+INPUT.goto, INPUT.search {
+	height: 22px;
 }
 
-TD.gotohomepage
-{
-	border: 1px solid silver;
+DIV.gotobar LI FORM {
+	display: inline;
 }
 
-TD.gotoindex
-{
-	border: 1px solid silver;
+DIV.gotobar_search DIV {
+	display: inline;
 }
 
-TD.gotorecentchanges
-{
-	border: 1px solid silver;
-}
-
-TD.gotoparentpage
-{
-	border: 1px solid silver;
-}
-
-TD.gotouser
-{
-	border: 1px solid silver;
-}
-
-TD.gotopref
-{
-	border: 1px solid silver;
-}
-
-TD.gotorandom
-{
-	border: 1px solid silver;
-}
-
-TD.gotoadmin
-{
-	border: 1px solid silver;
-}
-
-TD.gotolinks
-{
-	border: 1px solid silver;
-}
-
-TD.gotologin
-{
-	border: 1px solid silver;
-}
-
-TD.gotosearch
-{
-	border: 1px solid silver;
-}
-
-TABLE.gotobar A:link, 
-TABLE.gotobar A:visited, 
-TABLE.gotobar A:active, 
-TABLE.gotobar A:hover
+DIV.gotobar A:link, 
+DIV.gotobar A:visited, 
+DIV.gotobar A:active, 
+DIV.gotobar A:hover
 {
 	background: transparent;
 	color: blue;
 	text-decoration: none;
 }
-TABLE.gotobar A:hover
+DIV.gotobar A:hover
 {
 	text-decoration: underline;
 }
 
 HR.gotobar {
 	border-color: silver;
+	margin-top: 2px;
 	height: 2px;
 }
 

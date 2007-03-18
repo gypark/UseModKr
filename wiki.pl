@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.2";
-$WikiRelease = "2007-03-13";
+$WikiVersion = "0.92K3-ext2.3";
+$WikiRelease = "2007-03-18";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -82,7 +82,7 @@ use vars qw(%Page %Section %Text %InterSite %SaveUrl %SaveNumUrl
 use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime $Sec_Revision $Sec_Ts
 	$ViewCount $AnchoredFreeLinkPattern %UserInterest %HiddenPage
 	$pageid $IsPDA $MemoID $QuotedFullUrl %MacroFile $UseShortcut
-	$UseShortcutPage $SectionNumber $AnchorPattern);
+	$UseShortcutPage $SectionNumber $AnchorPattern $GotoTextFieldId);
 
 # == Configuration =====================================================
 # Default configuration
@@ -626,9 +626,7 @@ sub BrowsePage {
 	&OpenPage($id);
 	&OpenDefaultText();
 ### page count
-	if (-f &GetPageFile($id)) {
-		$ViewCount = &GetPageCount($id) if (-f &GetPageFile($id));
-	}
+	$ViewCount = &GetPageCount($id) if (-f &GetPageFile($id));
 
 	$openKept = 0;
 	$revision = &GetParam('revision', '');
@@ -1781,14 +1779,15 @@ sub GetHtmlHeader {
 			((lc(&GetParam("action","")) eq "edit") && (&UserCanEdit($id,1)))
 	   ) {
 		my $close_string = T('If you leave current page, the contents you are writing will not be stored.');
-		$bodyExtra .= qq( onbeforeunload="chk_close(event, '$close_string')" );
+		$bodyExtra .= qq( onbeforeunload="chk_close(event, '$close_string');" );
 	}
 
 ### 단축키
 	my $headExtra;
 	if ($UseShortcut) {
 		my $shortCutUrl = "$ScriptName".&ScriptLinkChar();
-		my $shortCutLogin = &LoginUser()?"logout":"login";
+		my $shortCutLogin = (&LoginUser()?"logout":"login")
+							. "&pageid=$pageid";
 		my $shortCutHome = &FreeToNormal($HomePage);
 
 		$headExtra .= <<EOH;
@@ -1978,59 +1977,131 @@ sub GetFormStart {
 
 sub GetGotoBar {
 	my ($id) = @_;
-	my ($main, $bartext);
+	my ($main, $bar_menu, $bar_user, $bar_search);
 
-	$bartext = "\n<TABLE class='gotobar' width='100%'>";
-	$bartext .= &GetFormStart();
-	$bartext .= "<TR class='gotobar'>\n<TD class='gotohomepage'>";
-	$bartext .= &GetPageLink($HomePage).&GetPageLinkText($HomePage, " [f]");
-	$bartext .= "</TD>\n<TD class='gotoindex'>" . &ScriptLink("action=index", T('Index')." [i]");
-	$bartext .= "</TD>\n<TD class='gotorecentchanges'>" . &GetPageLink(T($RCName)).&ScriptLink("action=rc", " [r]");
+# gotobar_menu
+	$bar_menu .= "<DIV class='gotobar_menu'>\n";
+	$bar_menu .= "<UL>\n";
+	$bar_menu .= "<LI>"
+				. &GetPageLink($HomePage).&GetPageLinkText($HomePage, "[f]") 
+				. "</LI>\n";
+	$bar_menu .= "<LI>"
+				. &GetPageLink(T($RCName)).&ScriptLink("action=rc", "[r]")
+				. "</LI>\n";
+	$bar_menu .= "<LI>"
+				. &ScriptLink("action=index", T('Index')."[i]")
+				. "</LI>\n";
 	if ($id =~ m|/|) {
+### subpage 의 경우, 상위페이지 이름 앞에 아이콘 표시
 		$main = $id;
 		$main =~ s|/.*||;  # Only the main page name (remove subpage)
-### subpage 의 경우, 상위페이지 이름 앞에 아이콘 표시
-#		$bartext .= " </td><td> " . &GetPageLink($main);
-		$bartext .= "</TD>\n<TD class='gotoparentpage'><img src=\"$IconUrl/parentpage.gif\" border=\"0\" alt=\""
-					. T('Main Page:') . " $main\" align=\"absmiddle\">" . &GetPageLink($main);
+		$bar_menu .= "<LI>"
+					. "<img src=\"$IconUrl/parentpage.gif\" border=\"0\" alt=\""
+					. T('Main Page:') . " $main\" align=\"absmiddle\">"
+					. &GetPageLink($main)
+					. "</LI>\n";
 	}
-
-### 상단 메뉴 바에 사용자 정의 항목을 추가
-	if ($UserGotoBar2 ne '') {
-		$bartext .= "</TD>\n<TD class='gotouser'>" . $UserGotoBar2;
+	if ($UserGotoBar ne '') {
+		$bar_menu .= "<LI>" . $UserGotoBar . "</LI>\n";
 	}
-	if ($UserGotoBar3 ne '') {
-		$bartext .= "</TD>\n<TD class='gotouser'>" . $UserGotoBar3;
+	foreach ($UserGotoBar2, $UserGotoBar3, $UserGotoBar4) {
+		if ($_ ne '') {
+			$bar_menu .= "<LI>" . $_ . "</LI>\n";
+		}
 	}
-	if ($UserGotoBar4 ne '') {
-		$bartext .= "</TD>\n<TD class='gotouser'>" . $UserGotoBar4;
-	}
-
-	$bartext .= "</TD>\n<TD class='gotopref'>" . &GetPrefsLink();
 	if (&GetParam("linkrandom", 0)) {
-		$bartext .= "</TD>\n<TD class='gotorandom'>" . &GetRandomLink();
+		$bar_menu .= "<LI>" . &GetRandomLink() . "</LI>\n";
 	}
+	$bar_menu .= "<LI>"
+				. &ScriptLink("action=links", T('Links'))
+				. "</LI>\n";
 	if (&UserIsAdmin()) {
-		$bartext .= "</TD>\n<TD class='gotoadmin'>" . &ScriptLink("action=adminmenu", T('Admin'));
+		$bar_menu .= "<LI>"
+					. &ScriptLink("action=adminmenu", T('Admin'))
+					. "</LI>\n";
 	}
-	$bartext .= "</TD>\n<TD class='gotolinks'>" . &ScriptLink("action=links", T('Links'));
-#	if (($UserID eq "113") || ($UserID eq "112")) {
+	$bar_menu .= "</UL>";
+	$bar_menu .= "</DIV>\n";
+
+# gotobar_user
+	$bar_user .= "<DIV class='gotobar_user'>\n";
+	$bar_user .= "<UL>\n";
 	if (!&LoginUser()) {
-		$bartext .= "</TD>\n<TD class='gotologin'>" . &ScriptLink("action=login", T('Login')." [l]");
+		$bar_user .= "<LI>"
+					. &ScriptLink("action=login&pageid=$pageid", T('Login')."[l]")
+					. "</LI>\n";
 	}
 	else {
-		$bartext .= "</TD>\n<TD class='gotologin'>".
-			&GetPageLink(&GetParam('username'));
-		$bartext .= "</TD>\n<TD class='gotologin'>" . &ScriptLink("action=logout", T('Logout'). " [l]");
+		$bar_user .= "<LI>"
+					. &GetPageLink(&GetParam('username')) . "</LI>\n"
+					. "<LI>"
+					. &GetPrefsLink() . " | "
+					. &ScriptLink("action=logout&pageid=$pageid", T('Logout'). "[l]")
+					. "</LI>\n";
 	}
-	$bartext .= "</TD>\n<TD class='gotosearch'>" . &GetSearchForm();
-	if ($UserGotoBar ne '') {
-		$bartext .= "</TD>\n<TD class='gotouser'>" . $UserGotoBar;
-	}
-	$bartext .= "</TD></TR>";
-	$bartext .= $q->endform;
-	$bartext .= "</TABLE><HR class='gotobar'>\n";
-	return $bartext;
+	$bar_user .= "</UL>";
+	$bar_user .= "</DIV>\n";
+
+# gotobar_search, goto
+	$bar_search .= "<DIV class='gotobar_search'>\n";
+	$bar_search .= "<UL>\n";
+	$bar_search .= "<LI>" . &GetGotoForm() . "</LI>\n";
+			
+	$bar_search .= "<LI>" . &GetSearchForm() . "</LI>\n";
+	$bar_search .= "</UL>";
+	$bar_search .= "</DIV>\n";
+
+	return
+		"<DIV class='gotobar'>"
+		. $bar_search
+		. $bar_user
+		. $bar_menu
+		. "</DIV>"
+		. "<HR class='gotobar'>\n"
+		;
+}
+
+sub GetGotoForm {
+	my ($string) = @_;
+	my $result;
+	my $location_prefix = $ScriptName . &ScriptLinkChar();
+	my $param_backup = $q->param("id");
+	$q->param("id", "$string");
+	$GotoTextFieldId++;
+
+	$result = 
+		$q->start_form(
+				-method			=> "POST",
+				-action			=> "$ScriptName",
+				-enctype		=> "application/x-www-form-urlencoded",
+				-accept_charset	=> "$HttpCharset",
+				-onSubmit		=>
+						"document.location.href = "
+						. "'$location_prefix'+document.getElementById('goto_$GotoTextFieldId').value;"
+						. "return false;"
+						,
+				)
+		. &GetHiddenValue("action", "browse")
+		. $q->textfield(
+				-name	=> "id",
+				-id		=> "goto_$GotoTextFieldId",
+				-class	=> "goto",
+				-size	=> "15",
+				-value	=> "$string",
+				-accesskey => "g",
+				-title  => "Alt + g",
+				)
+		. " "
+		. $q->submit(
+				-class	=> "goto",
+				-name	=> "Submit",
+				-value	=> T("Go"),
+				)
+		. $q->endform
+		;
+
+	$q->param("id", $param_backup);
+	return $result;
 }
 
 sub GetSearchForm {
@@ -2038,14 +2109,30 @@ sub GetSearchForm {
 
 ### 단축키 alt-s 지정
 	my $checked = &GetParam("context","");
-	$result = T('Search:') 
-		." <input accesskey=\"s\" class=text type=text name='search' size=10>"
-		.$q->checkbox(
-				-name=>'context',
-				-checked=>($checked)?1:'',
-				-value=>'on',
-				-label=>T('Context'))
-		. &GetHiddenValue("dosearch", 1);
+	$result =
+		&GetFormStart()
+		. &GetHiddenValue("dosearch", 1)
+		. $q->textfield(
+				-name	=> "search",
+				-class	=> "search",
+				-size	=> "15",
+				-accesskey => "s",
+				-title  => "Alt + s",
+				)
+		. $q->checkbox(
+				-name		=> 'context',
+				-checked	=> ($checked)?1:'',
+				-value		=> 'on',
+				-label		=> T('Context'),
+			)
+		. " "
+		. $q->submit(
+				-class	=> "search",
+				-name	=> "Submit",
+				-value	=> T("Search"),
+				)
+		. $q->endform
+		;
 
 	return $result;
 }
@@ -4988,6 +5075,8 @@ sub DoEdit {
 
 	# luke added
 
+# 	w.document.getElementById('form_edit').elements['text'].value = window.document.getElementById('form_edit').elements['text'].value;
+# 	w.document.getElementById('form_edit').submit();
 	print qq|
 <script language="javascript" type="text/javascript">
 <!--
@@ -4997,7 +5086,7 @@ function preview()
 	w.focus();
 
 	var body = '<html><head><title>Wiki Preview</title><meta http-equiv="Content-Type" content="text/html; charset=$HttpCharset"></head>';
-	body += '<body><form method="post" action="$ScriptName" accept-charset="$HttpCharset">';
+	body += '<body><form method="post" action="$ScriptName" accept-charset="$HttpCharset" name="form_edit">';
 	body += '<input type="hidden" name="id" value="$id">';
 	body += '<input type="hidden" name="action" value="preview"><input type=hidden name="text"></form></body></html>';
 
@@ -5005,8 +5094,8 @@ function preview()
 	w.document.charset = '$HttpCharset';
 	w.document.write(body);
 	w.document.close();
-	w.document.forms[0].elements['text'].value = window.document.forms[1].elements['text'].value;
-	w.document.forms[0].submit();
+	w.document.form_edit.text.value = window.document.form_edit.text.value;
+	w.document.form_edit.submit();
 }
 function help(s)
 {
@@ -5539,6 +5628,7 @@ sub DoEnterLogin {
 
 	print &ScriptLink("action=newlogin", T('Create new UserName') . "<br>");
 	print &GetHiddenValue('enter_login', 1), "\n";
+	print &GetHiddenValue('pageid', &GetParam("pageid"));
 	print '<br>', T('UserName:'), ' ',
 				$q->textfield(-name=>'p_userid', -value=>'',
 											-size=>15, -maxlength=>50);
@@ -5577,8 +5667,6 @@ sub DoLogin {
 		&LoadUserData();
 ### 암호를 암호화해서 저장
 ### from Bab2's patch
-#		if (defined($UserData{'password'}) &&
-#				($UserData{'password'} eq $password)) {
 		if (defined($UserData{'password'}) &&
 				(crypt($password, $UserData{'password'}) eq $UserData{'password'})) {
 ### 로긴할 때 자동 로그인 여부 선택
@@ -5605,10 +5693,15 @@ sub DoLogin {
 	}
 
 	if ($success) {
+		%UserCookie = %SetCookie;
+		if (&GetParam("pageid","") ne "") {
+			BrowsePage(&GetParam("pageid"));
+			return;
+		}
 		print &GetHeader('', T('Login completed'), '');
 		print Ts('Login for user ID %s complete.', $uid);
-		%UserCookie = %SetCookie;
-	} else {
+	}
+	else {
 		print &GetHeader('', T('Login failed'), '');
 		print Ts('Login for user ID %s failed.', $uid);
 		%UserCookie = %SetCookie;
@@ -5616,36 +5709,33 @@ sub DoLogin {
 		print "<br>" . &ScriptLink("action=login", T('Try Again'));
 	}
 
+	if (&GetParam("pageid","") ne "") {
+		print "<BR>" . Ts( 'Return to %s' , &GetPageLink(&GetParam("pageid")) );
+	}
+
 	print "<hr class='footer'>\n";
-	#print &GetGotoBar('');
-	print $q->endform;
 	print &GetMinimumFooter();
 }
 
 sub DoLogout {
-	my ($uid);
-
 	$SetCookie{'id'} = "";
 	$SetCookie{'randkey'} = $UserData{'randkey'};
 	$SetCookie{'rev'} = 1;
 
-### logout 직후에도 상단메뉴에 logout 링크가 남아 있는 문제 해결
-#	print &GetHeader('', T('Logout Results'), '');
-
 	my $tempUserID = $UserID;
+	%UserCookie = %SetCookie;
 	$UserID = "113";
-	print &GetHeader('', T('Logout Results'), '');
-	$UserID = $tempUserID;
 
-#	if (($UserID ne "113") && ($UserID ne "112")) {
-	if (&LoginUser()) {
-		print Ts('Logout for user ID %s complete.', $UserID);
+	if (&GetParam("pageid","") ne "") {
+		BrowsePage(&GetParam("pageid"));
+		return;
 	}
 
+	print &GetHeader('', T('Logout Results'), '');
+
+	print Ts('Logout for user ID %s complete.', $tempUserID);
+
 	print "<hr class='footer'>\n";
-	%UserCookie = %SetCookie;
-	$UserID = "";
-	#print &GetGotoBar('');
 	print $q->endform;
 	print &GetMinimumFooter();
 }

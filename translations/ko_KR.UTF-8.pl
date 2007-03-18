@@ -777,4 +777,6 @@ Replace strings in all pages
 (부분)
 Context
 내용출력
+Search
+검색
 END_OF_TRANSLATION
