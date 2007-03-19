@@ -2098,9 +2098,9 @@ sub GetGotoForm {
 				-class	=> "goto",
 				-size	=> "30",
 				-value	=> "$string",
-				-accesskey => "g",
-				-title  => "Alt + g",
-				-onKeyup => ( $not_macro?
+				-accesskey => ($not_macro?"g":""),
+				-title  => ($not_macro?"Alt + g":""),
+				-onKeyup=> ( $not_macro?
 								"document.getElementById('goto_list').style.display='block';"
 								."getMsg(this,'$ScriptName')"
 								:
