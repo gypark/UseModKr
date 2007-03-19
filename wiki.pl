@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.3";
-$WikiRelease = "2007-03-18";
+$WikiVersion = "0.92K3-ext2.4rc1";
+$WikiRelease = "2007-03-19";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -2062,7 +2062,13 @@ sub GetGotoBar {
 }
 
 sub GetGotoForm {
-	my ($string) = @_;
+	my ($not_macro, $string);
+	if (@_) {
+		($string) = @_;
+	} else {
+		$not_macro = 1;
+	}
+
 	my $result;
 	my $location_prefix = $ScriptName . &ScriptLinkChar();
 	my $param_backup = $q->param("id");
@@ -2071,25 +2077,35 @@ sub GetGotoForm {
 
 	$result = 
 		$q->start_form(
+				-name			=> ($not_macro?"goto_form":""),
 				-method			=> "POST",
 				-action			=> "$ScriptName",
 				-enctype		=> "application/x-www-form-urlencoded",
 				-accept_charset	=> "$HttpCharset",
 				-onSubmit		=>
 						"document.location.href = "
-						. "'$location_prefix'+document.getElementById('goto_$GotoTextFieldId').value;"
+						. "'$location_prefix'+document.getElementById('goto_$GotoTextFieldId')"
+						. ".value.replace(/\\s*\$/,'').replace(' ','_');"
 						. "return false;"
 						,
 				)
+		. "\n"
 		. &GetHiddenValue("action", "browse")
+		. "\n"
 		. $q->textfield(
-				-name	=> "id",
+				-name	=> ($not_macro?"goto_text":""),
 				-id		=> "goto_$GotoTextFieldId",
 				-class	=> "goto",
-				-size	=> "15",
+				-size	=> "30",
 				-value	=> "$string",
 				-accesskey => "g",
 				-title  => "Alt + g",
+				-onKeyup => ( $not_macro?
+								"document.getElementById('goto_list').style.display='block';"
+								."getMsg(this,'$ScriptName')"
+								:
+								"return false"
+							),
 				)
 		. " "
 		. $q->submit(
@@ -2097,6 +2113,23 @@ sub GetGotoForm {
 				-name	=> "Submit",
 				-value	=> T("Go"),
 				)
+
+		# 자동 완성 목록이 나올 DIV
+		. ($not_macro? "<BR>\n"
+			. "<DIV id=\"goto_list\" "
+			. "style=\"display:none; border:1px solid red;"
+			. "\">\n"
+			. "<SELECT name=\"goto_select\" size=\"15\" onChange=\"resOj.onselectedOption(this)\""
+			.	" onBlur=\"document.getElementById('goto_list').style.display='none';\""
+			.   " style=\"width:300px;\""
+			. ">\n"
+			. "<OPTION>-- Loading page list... --</OPTION>\n"
+			. "</SELECT>"
+			. "</DIV>\n"
+			:
+			""
+		  )
+
 		. $q->endform
 		;
 
@@ -2115,7 +2148,7 @@ sub GetSearchForm {
 		. $q->textfield(
 				-name	=> "search",
 				-class	=> "search",
-				-size	=> "15",
+				-size	=> "30",
 				-accesskey => "s",
 				-title  => "Alt + s",
 				)
