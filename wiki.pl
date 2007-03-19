@@ -2101,17 +2101,15 @@ sub GetGotoForm {
 				-accesskey => ($not_macro?"g":""),
 				-title  => ($not_macro?"Alt + g":""),
 				-tabindex => ($not_macro?"1000":""),
+				# IE&FF
 				-onKeyup=> ( $not_macro?
-								"document.getElementById('goto_list').style.display='block';"
-								."getMsg('$ScriptName')"
+								"getMsg('$ScriptName')"
 								:
 								""
 							),
-				# FF에서 처음부터 한글을 입력하는 경우를 위해서
-				-onKeypress=> ( $not_macro?
-								"if (keypress) {keypress=0;"
-								. "document.getElementById('goto_list').style.display='block';"
-								. "getMsg('$ScriptName');}"
+				# FF에서 처음에 한글로 입력을 시작할 때를 위해서
+				-onKeydown=> ( $not_macro?
+								"getMsg('$ScriptName')"
 								:
 								""
 							),
@@ -2126,15 +2124,17 @@ sub GetGotoForm {
 
 		# 자동 완성 목록이 나올 DIV
 		. ($not_macro? "<BR>\n"
-			. "<DIV id=\"goto_list\" "
-			. "style=\"display:none;"
-			. "\">\n"
-			. "<SELECT name=\"goto_select\" size=\"15\" onChange=\"resOj.onselectedOption(this)\""
-			.	($not_macro?" tabindex=\"1001\"":"")
-			.	" onBlur=\"document.getElementById('goto_list').style.display='none';\""
-			. ">\n"
-			. "<OPTION>-- Loading page list... --</OPTION>\n"
-			. "</SELECT>"
+			. "<DIV id=\"goto_list\" style=\"display:none;\">\n"
+			. $q->popup_menu(
+					-name	  => "goto_select",
+					-size	  => "15",
+					-tabindex => "1001",
+					-onBlur	  => "div_blur = 1;"
+							. "resOj.onselectedOption(this);"
+							. " document.getElementById('goto_list').style.display='none';"
+							,
+					-values=>["-- Loading page list... --"],
+				)
 			. "</DIV>\n"
 			:
 			""

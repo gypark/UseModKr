@@ -292,18 +292,22 @@ var previous_search = 'previous';
 var relOj;
 var timeout = 0;
 var timeout_url;
-var keypress = 1;
+var div_blur = 0;
 
 //송수신 함수
 function getMsg(url) {
+
+	// 0.2초 이내에는 다시 갱신하지 않음 - 타이핑 속도를 못 따라잡는 문제
+	if (timeout) {
+		return;
+	}
+	timeout=1
+	timeout_url=url
+//	setTimeout("timeout=0;",200)
+	setTimeout("timeout=0; getMsg(timeout_url);",200)
+
 	if (have_data) {
-		if (!timeout) {
-			renew_select()
-			timeout=1
-			timeout_url=url
-			// 0.2초 이내에는 다시 갱신하지 않음 - 타이핑 속도를 못 따라잡는 문제
-			setTimeout("timeout=0; getMsg(timeout_url);",200)
-		}
+		renew_select()
 	}
 	else {
 		// 처음 한번만 서버에서 목록을 받아옴
@@ -335,12 +339,18 @@ function renew_select() {
 	// 사용자가 입력한 값을 포함한 페이지 제목만 추려냄
 	var search = document.goto_form.goto_text.value;
 
-	// 입력값에 변동이 있을 때만 진행
+	// 입력값에 변동이 없다면 진행하지 않는다
 	if (previous_search == search || !page_list) {
-		return false;
+		return;
+	}
+	previous_search = search
+
+	// 목록에서 선택한 직후라면 진행하지 않는다
+	if (div_blur) {
+		div_blur = 0;
+		return;
 	}
 
-	previous_search = search
 	// 뒤의 공백을 제거하고, 중간 공백은 "_"로 치환하고, 대소문자 구분 안함
 	search = search.replace(/\s*$/, '').replace(' ','_');
 
@@ -358,6 +368,7 @@ function renew_select() {
 	}
 
 	// select 목록 갱신
+	document.getElementById('goto_list').style.display='block'
 	resOj = new chgARRAYtoHTMLOptions(new_list,document.goto_form.goto_select)
 	resOj.addOptions()
 }
