@@ -2105,7 +2105,15 @@ sub GetGotoForm {
 								"document.getElementById('goto_list').style.display='block';"
 								."getMsg('$ScriptName')"
 								:
-								"return false"
+								""
+							),
+				# FF에서 처음부터 한글을 입력하는 경우를 위해서
+				-onKeypress=> ( $not_macro?
+								"if (keypress) {keypress=0;"
+								. "document.getElementById('goto_list').style.display='block';"
+								. "getMsg('$ScriptName');}"
+								:
+								""
 							),
 				)
 		. " "

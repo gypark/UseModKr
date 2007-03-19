@@ -292,6 +292,7 @@ var previous_search = 'previous';
 var relOj;
 var timeout = 0;
 var timeout_url;
+var keypress = 1;
 
 //송수신 함수
 function getMsg(url) {
