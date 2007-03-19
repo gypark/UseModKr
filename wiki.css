@@ -333,6 +333,7 @@ DIV.gotobar_search {
 	border-left: 1px solid gray;
 	width: 360px;
 	position: relative;
+	z-index: 10;
 
 border: 1px solid green;
 }

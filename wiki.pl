@@ -2135,15 +2135,6 @@ sub GetGotoForm {
 		. $q->endform
 		;
 
-# 페이지가 로드될 때 getMsg()를 한 번 호출해서 목록을 미리 받아오게 한다
-		$result .= <<EOF;
-<script>
-<!--
-getMsg(document.goto_form.goto_text,'$ScriptName');
--->
-</script>
-EOF
-
 	$q->param("id", $param_backup);
 	return $result;
 }

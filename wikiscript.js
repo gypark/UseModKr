@@ -333,9 +333,14 @@ function renew_select() {
 		search = new RegExp(search, "i")
 
 		var new_list = new Array();
-		for( i = 0 ; i < page_list.length ; i++ ){
-			if (page_list[i].match(search)) {
-				new_list.push(page_list[i])
+		if (search == '') {
+			new_list = page_list
+		}
+		else {
+			for( i = 0 ; i < page_list.length ; i++ ){
+				if (page_list[i].match(search)) {
+					new_list.push(page_list[i])
+				}
 			}
 		}
 
