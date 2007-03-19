@@ -290,11 +290,19 @@ var have_data = 0;
 var page_list;
 var previous_search = 'previous';
 var relOj;
+var timeout = 0;
+var timeout_url;
 
 //송수신 함수
-function getMsg(oj, url) {
+function getMsg(url) {
 	if (have_data) {
-		renew_select()
+		if (!timeout) {
+			renew_select()
+			timeout=1
+			timeout_url=url
+			// 0.2초 이내에는 다시 갱신하지 않음 - 타이핑 속도를 못 따라잡는 문제
+			setTimeout("timeout=0; getMsg(timeout_url);",200)
+		}
 	}
 	else {
 		// 처음 한번만 서버에서 목록을 받아옴

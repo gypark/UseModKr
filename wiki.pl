@@ -2103,7 +2103,7 @@ sub GetGotoForm {
 				-tabindex => ($not_macro?"1000":""),
 				-onKeyup=> ( $not_macro?
 								"document.getElementById('goto_list').style.display='block';"
-								."getMsg(this,'$ScriptName')"
+								."getMsg('$ScriptName')"
 								:
 								"return false"
 							),
