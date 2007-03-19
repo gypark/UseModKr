@@ -322,14 +322,16 @@ DIV.gotobar_user {
 	padding: 2px 5px 2px 5px;
 	height: 60px;
 	border-left: 1px solid gray;
+	width: 150px;
 }
 
 DIV.gotobar_search {
 	float: right;
-	margin: 0 0 0 10px;
+	margin: 0 0 0 5px;
 	padding: 2px 5px 2px 5px;
 	height: 60px;
 	border-left: 1px solid gray;
+	width: 360px;
 }
 
 DIV.gotobar UL {
