@@ -326,28 +326,31 @@ function renew_select() {
 	// 사용자가 입력한 값을 포함한 페이지 제목만 추려냄
 	var search = document.goto_form.goto_text.value;
 
-	if (previous_search != search && page_list) {
-		previous_search = search
-		// 뒤의 공백을 제거하고, 중간 공백은 "_"로 치환하고, 대소문자 구분 안함
-		search = search.replace(/\s*$/, '').replace(' ','_');
-		search = new RegExp(search, "i")
-
-		var new_list = new Array();
-		if (search == '') {
-			new_list = page_list
-		}
-		else {
-			for( i = 0 ; i < page_list.length ; i++ ){
-				if (page_list[i].match(search)) {
-					new_list.push(page_list[i])
-				}
-			}
-		}
-
-		// select 목록 갱신
-		resOj = new chgARRAYtoHTMLOptions(new_list,document.goto_form.goto_select)
-		resOj.addOptions()
+	// 입력값에 변동이 있을 때만 진행
+	if (previous_search == search || !page_list) {
+		return false;
 	}
+
+	previous_search = search
+	// 뒤의 공백을 제거하고, 중간 공백은 "_"로 치환하고, 대소문자 구분 안함
+	search = search.replace(/\s*$/, '').replace(' ','_');
+
+	// 입력값이 널 문자 또는 일정 길이 이하면 중단 - 속도 문제
+	if (search.length < 1) {
+		return false;
+	}
+
+	search = new RegExp(search, "i")
+	var new_list = new Array();
+	for( i = 0 ; i < page_list.length ; i++ ){
+		if (page_list[i].match(search)) {
+			new_list.push(page_list[i])
+		}
+	}
+
+	// select 목록 갱신
+	resOj = new chgARRAYtoHTMLOptions(new_list,document.goto_form.goto_select)
+	resOj.addOptions()
 }
 
 // 배열을 인자로 받아서, oj에 해당하는 select 목록을 조작하는 객체를 반환
