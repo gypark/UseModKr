@@ -2043,7 +2043,7 @@ sub GetGotoBar {
 	$bar_user .= "</DIV>\n";
 
 # gotobar_search, goto
-	$bar_search .= "<DIV class='gotobar_search' style='border: 1px solid green; '>\n";
+	$bar_search .= "<DIV class='gotobar_search'>\n";
 	$bar_search .= "<UL>\n";
 	$bar_search .= "<LI>" . &GetGotoForm() . "</LI>\n";
 			
@@ -2119,12 +2119,11 @@ sub GetGotoForm {
 		# 자동 완성 목록이 나올 DIV
 		. ($not_macro? "<BR>\n"
 			. "<DIV id=\"goto_list\" "
-			. "style=\"display:none; border:1px solid red;"
+			. "style=\"display:none;"
 			. "\">\n"
 			. "<SELECT name=\"goto_select\" size=\"15\" onChange=\"resOj.onselectedOption(this)\""
 			.	($not_macro?" tabindex=\"1001\"":"")
 			.	" onBlur=\"document.getElementById('goto_list').style.display='none';\""
-			.   " style=\"width:340px;\""
 			. ">\n"
 			. "<OPTION>-- Loading page list... --</OPTION>\n"
 			. "</SELECT>"

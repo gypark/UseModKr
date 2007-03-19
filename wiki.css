@@ -332,6 +332,19 @@ DIV.gotobar_search {
 	height: 60px;
 	border-left: 1px solid gray;
 	width: 360px;
+	position: relative;
+
+border: 1px solid green;
+}
+
+#goto_list {
+	width: 340px;
+border: 1px solid red;
+}
+
+#goto_list SELECT {
+	width: 340px;
+	position: relative;
 }
 
 DIV.gotobar UL {
