@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.4rc1";
-$WikiRelease = "2007-03-19";
+$WikiVersion = "0.92K3-ext2.4";
+$WikiRelease = "2007-03-20";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -2173,7 +2173,7 @@ sub GetSearchForm {
 				-class	=> "search",
 				-size	=> "30",
 				-accesskey => "s",
-				-title  => "Alt + s",
+				-title  => T("Search")."(Alt + s)",
 				)
 		. $q->checkbox(
 				-name		=> 'context',
