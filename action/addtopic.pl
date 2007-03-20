@@ -79,26 +79,65 @@ sub action_addtopic {
 	print 
 		$q->h2($header_msg).
 		"<DIV class='threadnew'>".
-		$guide_msg.
+		$guide_msg."\n".
 		$q->startform(-name=>"comments",-method=>"POST",-action=>"$ScriptName",
 				-enctype=>"application/x-www-form-urlencoded",
-				-accept_charset=>"$HttpCharset").
-		&GetHiddenValue("action","comments").
-		&GetHiddenValue("id","$id").
-		&GetHiddenValue("pageid","$id").
-		&GetHiddenValue("up","$up").
-		&GetHiddenValue("ccode","$ccode") .
-		&GetHiddenValue("long","$long").
-		&GetHiddenValue("threadindent","$threadindent").
+				-accept_charset=>"$HttpCharset")."\n".
+		&GetHiddenValue("action","comments")."\n".
+		&GetHiddenValue("id","$id")."\n".
+		&GetHiddenValue("pageid","$id")."\n".
+		&GetHiddenValue("up","$up")."\n".
+		&GetHiddenValue("ccode","$ccode") ."\n".
+		&GetHiddenValue("long","$long")."\n".
+		&GetHiddenValue("threadindent","$threadindent")."\n".
 		T('Name') . ": ".
-		$name_field . "&nbsp;".
+		$name_field . "&nbsp;"."\n".
 		T('Comment') . ":<br>".
-		$comment_field . "&nbsp;" .
-		$q->submit(-name=>"Submit",-value=>T("Submit")).
-		$q->endform.
+		$comment_field . "&nbsp;" ."\n".
+		$q->submit(-name=>"Submit",-value=>("&nbsp;"x5).T("Submit").("&nbsp;"x5))."\n".
+		"<DIV"
+		. " onMouseOver=\"document.getElementById('secret').style.visibility='visible'\""
+		. " onMouseOut=\"document.getElementById('secret').style.visibility='hidden'\""
+		. ">"."\n".
+		"<DIV id=\"secret\""
+		. " style='text-align: right; visibility: hidden; border: 1px dashed red;'"
+		. ">"."\n".
+		$q->button(
+				-name=>T("Copy to clipboard"),
+				-onClick=>"copy_clip('',document.comments.comment.value)"
+				).
+		" ".
+		$q->button(
+				-name=>T("Toggle format"),
+				-onClick=>"change_format(document.comments.comment)"
+				)."\n".
+		"</DIV>"."\n".
+		"</DIV>"."\n".
+		$q->endform."\n".
 		"</DIV>";
 
-	print &GetCommonFooter();
+## "[URL 설명]" 형태와 "설명[URL]" 형태를 토글해주는 함수
+	print <<EOF;
+
+<script>
+var to_bracket_url=true;
+<!--
+function change_format(obj) {
+	var str = obj.value;
+	if (to_bracket_url) {
+		str = str.replace(/\\[(\\S+?)\\s(.*?)\\]/g,"\$2\[\$1\]");
+	}
+	else {
+		str = str.replace(/(\\S.*)\\[(\\S+?)\\]/g,"\[\$2 \$1\]");
+	}
+	to_bracket_url = !to_bracket_url;
+
+	obj.value = str;
+}
+-->
+</script>
+EOF
+	print $q->end_html;
 
 	return;
 }
