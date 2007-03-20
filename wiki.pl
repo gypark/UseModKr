@@ -2112,6 +2112,7 @@ sub GetGotoForm {
 								"if (goto_text_keydown(this,event)) "
 								. "{"
 								. "_list_div.style.display = 'block';"
+								. "_search_field.focus(); " # 웹마 때문에 우회함
 								. "_select_field.focus()} "
 								. "getMsg('$ScriptName')"
 								:

@@ -299,11 +299,13 @@ var user_last_input;
 var _goto_field;
 var _select_field;
 var _list_div;
+var _search_field;
 
 function gotobar_init() {
 	_goto_field   = document.goto_form.goto_text;
 	_select_field = document.goto_form.goto_select;
 	_list_div = document.getElementById('goto_list');
+	_search_field = document.search_form.search;
 }
 
 //송수신 함수
@@ -460,7 +462,7 @@ function goto_list_keydown(oj, KeyStorke) {
 		goto_list_blur(oj, false, true);
 		_goto_field.focus();
 		_goto_field.value = user_last_input;
-		setTimeout("document.search_form.search.focus(); _goto_field.focus(); _goto_field.value = user_last_input;", 20); // for IE
+		setTimeout("_search_field.focus(); _goto_field.focus(); _goto_field.value = user_last_input;", 20); // for IE
 		return false;
 	}
 	else if (nKeyCode == 8) {
@@ -468,7 +470,7 @@ function goto_list_keydown(oj, KeyStorke) {
 		user_last_input = _goto_field.value.substring(0,_goto_field.value.length-1);
 		_goto_field.focus();
 		_goto_field.value = user_last_input;
-		setTimeout("document.search_form.search.focus(); _goto_field.focus(); _goto_field.value = user_last_input;", 20); // for IE
+		setTimeout("_search_field.focus(); _goto_field.focus(); _goto_field.value = user_last_input;", 20); // for IE
 		return true;
 	}
 	else {
