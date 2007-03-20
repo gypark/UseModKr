@@ -2116,13 +2116,10 @@ sub GetGotoForm {
 								:
 								""
 							),
-				# FF에서 처음에 한글로 입력을 시작할 때를 위해서
+				# FF에서 처음에 한글로 입력을 시작할 때
+				# up,down 키로 목록과 필드를 오갈때
 				-onKeydown=> ( $not_macro?
-								"if (goto_text_keydown(this,event)) "
-								. "{"
-								. "_list_div.style.display = 'block';"
-								. "_search_field.focus(); " # 웹마 때문에 우회함
-								. "_select_field.focus()} "
+								"goto_text_keydown(this,event); "
 								. "getMsg('$ScriptName')"
 								:
 								""

@@ -456,7 +456,7 @@ function goto_list_keydown(oj, KeyStorke) {
 		_goto_field.focus();
 		return false;
 	}
-	else if (nKeyCode == 27 || (nKeyCode == 38 && oj.selectedIndex == 0)) {
+	else if (nKeyCode == 27 || (nKeyCode == 38 && oj.selectedIndex <= 0)) {
 		// esc가 눌렸거나
 		// up이 눌렸고 목록의 제일 위에 있었을 때 - 필드 갱신 없이 닫기만 함
 		goto_list_blur(oj, false, true);
@@ -483,9 +483,13 @@ function goto_text_keydown(oj, KeyStorke) {
 	var nKeyCode = evt.keyCode;
 
 	if (nKeyCode == 40 && resOj) {	// down
-		return true;
+		_list_div.style.display = 'block'
+		if (_select_field.options.length > 0) {
+			_search_field.focus()		// 웹마 때문에 우회함
+			_select_field.focus()
+		}
 	}
-	else {
-		return false;
+	else if (nKeyCode == 38) {		// up
+		_list_div.style.display = 'none'
 	}
 }
