@@ -305,7 +305,7 @@ function gotobar_init() {
 	_goto_field   = document.goto_form.goto_text;
 	_select_field = document.goto_form.goto_select;
 	_list_div = document.getElementById('goto_list');
-	_search_field = document.search_form.search;
+	_search_field = document.search_form.search_text;
 }
 
 //송수신 함수

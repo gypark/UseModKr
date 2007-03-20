@@ -2051,12 +2051,21 @@ sub GetGotoBar {
 	$bar_search .= "</UL>";
 	$bar_search .= "</DIV>\n";
 
+	my $gotobar_script = <<EOF;
+<script>
+<!--
+gotobar_init();
+-->
+</script>
+EOF
+
 	return
 		"<DIV class='gotobar'>"
 		. $bar_search
 		. $bar_user
 		. $bar_menu
 		. "</DIV>"
+		. $gotobar_script
 		. "<HR class='gotobar'>\n"
 		;
 }
@@ -2147,14 +2156,6 @@ sub GetGotoForm {
 		. $q->endform
 		;
 
-	$result .= <<EOF;
-<script>
-<!--
-gotobar_init();
--->
-</script>
-EOF
-
 	$q->param("id", $param_backup);
 	return $result;
 }
@@ -2168,7 +2169,7 @@ sub GetSearchForm {
 		&GetFormStart("search_form")
 		. &GetHiddenValue("dosearch", 1)
 		. $q->textfield(
-				-name	=> "search",
+				-name	=> "search_text",
 				-class	=> "search",
 				-size	=> "30",
 				-accesskey => "s",
