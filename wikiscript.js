@@ -428,6 +428,7 @@ function chgARRAYtoHTMLOptions(arr,oj) {
 		//option이 선택된 때의 처리
 		onselectedOption : function(oj) {
 			_goto_field.value = oj.options[oj.selectedIndex].value
+			previous_search = _goto_field.value;
 		}
 	}
 }
@@ -447,21 +448,28 @@ function goto_list_keydown(oj, KeyStorke) {
 	var nKeyCode = evt.keyCode;
 
 	// 목록을 닫고 텍스트 필드로 되돌아갈 지 여부 판단
-	if (nKeyCode == 13) {
-		// enter가 눌렸을 때 - 필드 갱신 후 닫음
+	if (nKeyCode == 13 || nKeyCode == 32) {
+		// enter,space가 눌렸을 때 - 필드 갱신 후 닫음
 		goto_list_blur(oj, true, true);
 		_goto_field.focus();
 		return false;
 	}
-	else if (nKeyCode == 38) {
+	else if (nKeyCode == 27 || (nKeyCode == 38 && oj.selectedIndex == 0)) {
+		// esc가 눌렸거나
 		// up이 눌렸고 목록의 제일 위에 있었을 때 - 필드 갱신 없이 닫기만 함
-		if (oj.selectedIndex == 0) {
-			goto_list_blur(oj, false, true);
-			_goto_field.focus();
-			_goto_field.value = user_last_input;
-			setTimeout("_goto_field.value = user_last_input", 100); // for IE
-			return false;
-		}
+		goto_list_blur(oj, false, true);
+		_goto_field.focus();
+		_goto_field.value = user_last_input;
+		setTimeout("document.search_form.search.focus(); _goto_field.focus(); _goto_field.value = user_last_input;", 20); // for IE
+		return false;
+	}
+	else if (nKeyCode == 8) {
+		// BS - 필드 값에서 한 글자 지우고 포커스 이동
+		user_last_input = _goto_field.value.substring(0,_goto_field.value.length-1);
+		_goto_field.focus();
+		_goto_field.value = user_last_input;
+		setTimeout("document.search_form.search.focus(); _goto_field.focus(); _goto_field.value = user_last_input;", 20); // for IE
+		return true;
 	}
 	else {
 		return true;

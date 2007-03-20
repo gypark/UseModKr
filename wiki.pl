@@ -2133,7 +2133,7 @@ sub GetGotoForm {
 					-name	  => "goto_select",
 					-size	  => "15",
 					-tabindex => "1001",
-					-onBlur   => "goto_list_blur(this,true,true);",
+					-onBlur   => "goto_list_blur(this,true,true);_goto_field.select()",
 					-onChange => "goto_list_blur(this,true,false);",
 					-values   => ["-- Loading page list... --"],
 					-onKeydown=> "return goto_list_keydown(this,event);",
@@ -2164,7 +2164,7 @@ sub GetSearchForm {
 ### 단축키 alt-s 지정
 	my $checked = &GetParam("context","");
 	$result =
-		&GetFormStart()
+		&GetFormStart("search_form")
 		. &GetHiddenValue("dosearch", 1)
 		. $q->textfield(
 				-name	=> "search",
