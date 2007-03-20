@@ -286,13 +286,25 @@ function GetKeyStroke(KeyStorke) {
 	}
 
 // 여기서부터는 UseModWiki ext버전에서 바로가기 필드 자동완성을 위해 수정했음
+// 필요한 전역변수
 var have_data = 0;
 var page_list;
 var previous_search = 'previous';
-var relOj;
+var resOj;
 var timeout = 0;
 var timeout_url;
 var div_blur = 0;
+var user_last_input;
+// 엘리먼트들의 이름을 짧게 쓰기 위한 변수
+var _goto_field;
+var _select_field;
+var _list_div;
+
+function gotobar_init() {
+	_goto_field   = document.goto_form.goto_text;
+	_select_field = document.goto_form.goto_select;
+	_list_div = document.getElementById('goto_list');
+}
 
 //송수신 함수
 function getMsg(url) {
@@ -304,7 +316,7 @@ function getMsg(url) {
 	timeout=1
 	timeout_url=url
 //	setTimeout("timeout=0;",200)
-	setTimeout("timeout=0; getMsg(timeout_url);",200)
+	setTimeout("timeout=0; getMsg(timeout_url);",300)
 
 	if (have_data) {
 		renew_select()
@@ -337,7 +349,7 @@ function on_loaded1(oj)
 
 function renew_select() {
 	// 사용자가 입력한 값을 포함한 페이지 제목만 추려냄
-	var search = document.goto_form.goto_text.value;
+	var search = _goto_field.value;
 
 	// 입력값에 변동이 없다면 진행하지 않는다
 	if (previous_search == search || !page_list) {
@@ -359,6 +371,8 @@ function renew_select() {
 		return false;
 	}
 
+	user_last_input = search;	// up키로 되돌아갔을때 복원하기 위한 값
+
 	search = new RegExp(search, "i")
 	var new_list = new Array();
 	for( i = 0 ; i < page_list.length ; i++ ){
@@ -368,8 +382,8 @@ function renew_select() {
 	}
 
 	// select 목록 갱신
-	document.getElementById('goto_list').style.display='block'
-	resOj = new chgARRAYtoHTMLOptions(new_list,document.goto_form.goto_select)
+	_list_div.style.display='block'
+	resOj = new chgARRAYtoHTMLOptions(new_list,_select_field)
 	resOj.addOptions()
 }
 
@@ -413,9 +427,55 @@ function chgARRAYtoHTMLOptions(arr,oj) {
 
 		//option이 선택된 때의 처리
 		onselectedOption : function(oj) {
-			document.goto_form.goto_text.value = oj.options[oj.selectedIndex].value
+			_goto_field.value = oj.options[oj.selectedIndex].value
 		}
 	}
 }
 
+function goto_list_blur(oj, field_update, close_div) {
+	div_blur = 1	// 텍스트필드값이 변경되더라도 목록 갱신을 하지 않게 함
+	if (field_update) {
+		resOj.onselectedOption(oj)
+	}
+	if (close_div) {
+		_list_div.style.display = 'none'
+	}
+}
 
+function goto_list_keydown(oj, KeyStorke) {
+	var evt = KeyStorke || window.event;
+	var nKeyCode = evt.keyCode;
+
+	// 목록을 닫고 텍스트 필드로 되돌아갈 지 여부 판단
+	if (nKeyCode == 13) {
+		// enter가 눌렸을 때 - 필드 갱신 후 닫음
+		goto_list_blur(oj, true, true);
+		_goto_field.focus();
+		return false;
+	}
+	else if (nKeyCode == 38) {
+		// up이 눌렸고 목록의 제일 위에 있었을 때 - 필드 갱신 없이 닫기만 함
+		if (oj.selectedIndex == 0) {
+			goto_list_blur(oj, false, true);
+			_goto_field.focus();
+			_goto_field.value = user_last_input;
+			setTimeout("_goto_field.value = user_last_input", 100); // for IE
+			return false;
+		}
+	}
+	else {
+		return true;
+	}
+}
+
+function goto_text_keydown(oj, KeyStorke) {
+	var evt = KeyStorke || window.event;
+	var nKeyCode = evt.keyCode;
+
+	if (nKeyCode == 40 && resOj) {	// down
+		return true;
+	}
+	else {
+		return false;
+	}
+}

@@ -2099,7 +2099,7 @@ sub GetGotoForm {
 				-size	=> "30",
 				-value	=> "$string",
 				-accesskey => ($not_macro?"g":""),
-				-title  => ($not_macro?"Alt + g":""),
+				-title  => ($not_macro?T("Go")."(Alt + g)":""),
 				-tabindex => ($not_macro?"1000":""),
 				# IE&FF
 				-onKeyup=> ( $not_macro?
@@ -2109,7 +2109,11 @@ sub GetGotoForm {
 							),
 				# FF에서 처음에 한글로 입력을 시작할 때를 위해서
 				-onKeydown=> ( $not_macro?
-								"getMsg('$ScriptName')"
+								"if (goto_text_keydown(this,event)) "
+								. "{"
+								. "_list_div.style.display = 'block';"
+								. "_select_field.focus()} "
+								. "getMsg('$ScriptName')"
 								:
 								""
 							),
@@ -2129,11 +2133,10 @@ sub GetGotoForm {
 					-name	  => "goto_select",
 					-size	  => "15",
 					-tabindex => "1001",
-					-onBlur	  => "div_blur = 1;"
-							. "resOj.onselectedOption(this);"
-							. " document.getElementById('goto_list').style.display='none';"
-							,
-					-values=>["-- Loading page list... --"],
+					-onBlur   => "goto_list_blur(this,true,true);",
+					-onChange => "goto_list_blur(this,true,false);",
+					-values   => ["-- Loading page list... --"],
+					-onKeydown=> "return goto_list_keydown(this,event);",
 				)
 			. "</DIV>\n"
 			:
@@ -2142,6 +2145,14 @@ sub GetGotoForm {
 
 		. $q->endform
 		;
+
+	$result .= <<EOF;
+<script>
+<!--
+gotobar_init();
+-->
+</script>
+EOF
 
 	$q->param("id", $param_backup);
 	return $result;
