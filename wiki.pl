@@ -1737,7 +1737,7 @@ sub GetHtmlHeader {
 	$html .= qq(<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=$HttpCharset">\n);
 	$html .= qq(<META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">\n);
 	$html .= qq|<link rel="alternate" type="application/rss+xml" title="$SiteName" href="http://$ENV{SERVER_NAME}$ENV{SCRIPT_NAME}${\(&ScriptLinkChar())}action=rss">\n|;
-	$html .= qq(<script src="$JavaScriptUrl" language="javascript" type="text/javascript"></script>);
+	$html .= qq(<script src="$JavaScriptUrl" language="javascript" type="text/javascript" charset="UTF-8"></script>);
 	$html .= "\n";
 
 ### RobotsMetaTag
