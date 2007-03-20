@@ -5645,12 +5645,17 @@ sub UpdatePrefNumber {
 ### titleindex action 추가
 ### from Bab2's patch
 sub DoTitleIndex {
-	my (@list);
-	my $index;
-	print "Content-type: text/plain; charset=$HttpCharset\n\n";
+	my (@list, $page);
+	my $charset = &GetParam("charset", "$HttpCharset");
+
+	print "Content-type: text/plain; charset=$charset\n\n";
+
 	@list = &AllPagesList();
-	foreach $index (@list) {
-		print $index."\r\n";
+	if ($charset ne $HttpCharset) {
+		@list = split(/!/, &convert_encode(join('!',@list), "$HttpCharset", "$charset"));
+	}
+	foreach $page (@list) {
+		print $page."\n";
 	}
 }
 
