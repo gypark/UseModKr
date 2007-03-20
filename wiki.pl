@@ -7550,7 +7550,11 @@ sub UploadFile {
 
 	print T('Following is the Interlink of your file') . "<br>\n";
 	print "<div style='text-align:center; font-size:larger; font-weight:bold;'>\n";
-	print "Upload:$target\n";
+	print "Upload:$target ";
+	print $q->button(
+				-name=>T("Copy"),
+				-onClick=>"copy_clip('','Upload:$target')"
+				);
 	print "</div>\n";
 	return 0;
 }
@@ -7632,7 +7636,12 @@ sub OekakiExit {
 	print T('If saving oekaki was done successfully')."<br>\n";
 	print T('Following is the Interlink of your file') . "<br>\n";
 	print "<div style='text-align:center; font-size:larger; font-weight:bold;'>\n";
-	print "Upload:$files[0]<br>\n";
+	print "Upload:$files[0] ";
+	print $q->button(
+				-name=>T("Copy"),
+				-onClick=>"copy_clip('','Upload:$files[0]')"
+				);
+	print "<br>";
 	print "<img style='border: solid 1 gray;' src='$UploadUrl/$files[0]'>\n";
 	print "</div>\n";
 
