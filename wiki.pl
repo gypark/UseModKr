@@ -2169,7 +2169,7 @@ sub GetSearchForm {
 		&GetFormStart("search_form")
 		. &GetHiddenValue("dosearch", 1)
 		. $q->textfield(
-				-name	=> "search_text",
+				-name	=> "search",
 				-class	=> "search",
 				-size	=> "30",
 				-accesskey => "s",
