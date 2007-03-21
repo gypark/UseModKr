@@ -366,6 +366,7 @@ function renew_select() {
 	}
 
 	// 뒤의 공백을 제거하고, 중간 공백은 "_"로 치환하고, 대소문자 구분 안함
+	var temp = search;
 	search = search.replace(/\s*$/, '').replace(' ','_');
 
 	// 입력값이 널 문자 또는 일정 길이 이하면 중단 - 속도 문제
@@ -373,7 +374,7 @@ function renew_select() {
 		return false;
 	}
 
-	user_last_input = search;	// up키로 되돌아갔을때 복원하기 위한 값
+	user_last_input = temp;	// up키로 되돌아갔을때 복원하기 위한 값
 
 	search = new RegExp(search, "i")
 	var new_list = new Array();
