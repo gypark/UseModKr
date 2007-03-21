@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.4a";
-$WikiRelease = "2007-03-21";
+$WikiVersion = "0.92K3-ext2.5rc1";
+$WikiRelease = "2007-03-22";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -683,6 +683,25 @@ sub BrowsePage {
 	}
 #####
 
+### #TEMPLATE
+	if (substr($Text{'text'}, 0, 10) eq '#TEMPLATE ') {
+		my ($template_line, $template_id);
+		if (($FreeLinks) && ($Text{'text'} =~ /\#TEMPLATE\s+\[\[.+\]\]/)) {
+			($template_line, $template_id) = ($Text{'text'} =~ /(\#TEMPLATE\s+\[\[(.+)\]\])/);
+			$template_id = &FreeToNormal($template_id);
+		} else {
+			($template_line, $template_id) = ($Text{'text'} =~ /(\#TEMPLATE\s+(\S+))/);
+		}
+		$Text{'text'} =~ s/$template_line(\s*)//;
+		if (&ValidId($template_id) eq '') {
+			$Text{'text'} = &ApplyDynamicTemplate($template_id, $id, $Text{'text'});
+# 			die "valid[$template_line][$template_id]";
+		} else {  # Not a valid target, so continue as normal page
+			die "notva[$template_line][$template_id]";
+		}
+	}
+
+
 	$MainPage = $id;
 	$MainPage =~ s|/.*||;  # Only the main page name (remove subpage)
 	$fullHtml = &GetHeader($id, &QuoteHtml($id), $oldId);
@@ -812,6 +831,32 @@ sub BrowseExternUrl {
 		print "</html>\n";
 		return;
 	}
+}
+
+### #TEMPLATE
+sub ApplyDynamicTemplate {
+	my ($template_page, $id, $id_text) = @_;
+
+	my $fname = &GetPageFile($template_page);
+	if (!(-f $fname)) {
+		return $id_text;
+	}
+
+	my ($status, $data) = &ReadFile($fname);
+	if (!$status) {
+		return $id_text;
+	}
+
+	$id_text =~ s/\s*$//s;
+
+	my %temp_Page = split(/$FS1/, $data, -1);
+	my %temp_Section = split(/$FS2/, $temp_Page{'text_default'}, -1);
+	my %temp_Text = split(/$FS3/, $temp_Section{'data'}, -1);
+	my $text = &TemplateMacroSubst($id, $temp_Text{'text'});
+
+	$text =~ s/<template_text>/$id_text/;
+
+	return $text;
 }
 
 sub DoRc {
@@ -2856,6 +2901,8 @@ sub MacroInclude {
 	my %TextInclude = split(/$FS3/, $SubSection{'data'}, -1);
 	my $txt = $TextInclude{'text'};
 
+# #TEMPLATE
+	$txt =~ s/^#TEMPLATE\s+(\[\[.+\]\]|\S+)//;
 	# includenotoc 의 경우
 	$txt =~ s/<toc>/$FS_lt."toc".$FS_gt/gei if ($opt eq "notoc");
 	# noinclude 처리 from Jof
