@@ -32,7 +32,7 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.5rc1";
+$WikiVersion = "0.92K3-ext2.5";
 $WikiRelease = "2007-03-22";
 $HashKey = "salt"; # 2-character string
 
@@ -683,25 +683,6 @@ sub BrowsePage {
 	}
 #####
 
-### #TEMPLATE
-	if (substr($Text{'text'}, 0, 10) eq '#TEMPLATE ') {
-		my ($template_line, $template_id);
-		if (($FreeLinks) && ($Text{'text'} =~ /\#TEMPLATE\s+\[\[.+\]\]/)) {
-			($template_line, $template_id) = ($Text{'text'} =~ /(\#TEMPLATE\s+\[\[(.+)\]\])/);
-			$template_id = &FreeToNormal($template_id);
-		} else {
-			($template_line, $template_id) = ($Text{'text'} =~ /(\#TEMPLATE\s+(\S+))/);
-		}
-		$Text{'text'} =~ s/$template_line(\s*)//;
-		if (&ValidId($template_id) eq '') {
-			$Text{'text'} = &ApplyDynamicTemplate($template_id, $id, $Text{'text'});
-# 			die "valid[$template_line][$template_id]";
-		} else {  # Not a valid target, so continue as normal page
-			die "notva[$template_line][$template_id]";
-		}
-	}
-
-
 	$MainPage = $id;
 	$MainPage =~ s|/.*||;  # Only the main page name (remove subpage)
 	$fullHtml = &GetHeader($id, &QuoteHtml($id), $oldId);
@@ -831,32 +812,6 @@ sub BrowseExternUrl {
 		print "</html>\n";
 		return;
 	}
-}
-
-### #TEMPLATE
-sub ApplyDynamicTemplate {
-	my ($template_page, $id, $id_text) = @_;
-
-	my $fname = &GetPageFile($template_page);
-	if (!(-f $fname)) {
-		return $id_text;
-	}
-
-	my ($status, $data) = &ReadFile($fname);
-	if (!$status) {
-		return $id_text;
-	}
-
-	$id_text =~ s/\s*$//s;
-
-	my %temp_Page = split(/$FS1/, $data, -1);
-	my %temp_Section = split(/$FS2/, $temp_Page{'text_default'}, -1);
-	my %temp_Text = split(/$FS3/, $temp_Section{'data'}, -1);
-	my $text = &TemplateMacroSubst($id, $temp_Text{'text'});
-
-	$text =~ s/<template_text>/$id_text/;
-
-	return $text;
 }
 
 sub DoRc {
@@ -2562,6 +2517,23 @@ sub RemoveLink {
 sub MacroIncludeSubst {
 	my ($txt) = @_;
 
+### #TEMPLATE
+	if (substr($txt, 0, 10) eq '#TEMPLATE ') {
+		my ($template_line, $template_id);
+		if (($FreeLinks) && ($txt =~ /\#TEMPLATE\s+\[\[.+\]\]/)) {
+			($template_line, $template_id) = ($txt =~ /(\#TEMPLATE\s+\[\[(.+)\]\])/);
+			$template_id = &FreeToNormal($template_id);
+		} else {
+			($template_line, $template_id) = ($txt =~ /(\#TEMPLATE\s+(\S+))/);
+		}
+		if (&ValidId($template_id) eq '') {
+			$txt =~ s/$template_line//;
+			$txt = &ApplyDynamicTemplate($template_id, $pageid, $txt);
+		} else {  # Not a valid target, so continue as normal page
+			# 할 거 없음
+		}
+	}
+
 	$txt =~ s/(^|\n)<include\((.*)\)>([\r\f]*\n)/$1 . &MacroInclude($2) . $3/geim;
 ### toc 를 포함하지 않는 includenotoc 매크로 추가
 	$txt =~ s/(^|\n)<includenotoc\((.*)\)>([\r\f]*\n)/$1 . &MacroInclude($2, "notoc") . $3/geim;
@@ -2586,6 +2558,33 @@ sub MacroIncludeSubst {
 	}
 
 	return $txt;
+}
+
+### #TEMPLATE
+sub ApplyDynamicTemplate {
+	my ($template_id, $id, $id_text) = @_;
+
+	my $fname = &GetPageFile($template_id);
+	if (!(-f $fname)) {
+		return $id_text;
+	}
+
+	my ($status, $data) = &ReadFile($fname);
+	if (!$status) {
+		return $id_text;
+	}
+
+	$id_text =~ s/^\s*//s;
+	$id_text =~ s/\s*$//s;
+
+	my %temp_Page = split(/$FS1/, $data, -1);
+	my %temp_Section = split(/$FS2/, $temp_Page{'text_default'}, -1);
+	my %temp_Text = split(/$FS3/, $temp_Section{'data'}, -1);
+	my $text = &TemplateMacroSubst($id, $temp_Text{'text'});
+
+	$text =~ s/<template_text>/$id_text/;
+
+	return $text;
 }
 
 ### 추가한 매크로의 동작부
