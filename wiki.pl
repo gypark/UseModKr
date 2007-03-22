@@ -2527,7 +2527,7 @@ sub MacroIncludeSubst {
 			($template_line, $template_id) = ($txt =~ /(\#TEMPLATE\s+(\S+))/);
 		}
 		if (&ValidId($template_id) eq '') {
-			$txt =~ s/$template_line//;
+			$txt =~ s/\Q$template_line\E//;
 			$txt = &ApplyDynamicTemplate($template_id, $pageid, $txt);
 		} else {  # Not a valid target, so continue as normal page
 			# 할 거 없음
