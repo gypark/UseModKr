@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.5";
-$WikiRelease = "2007-03-22";
+$WikiVersion = "0.92K3-ext2.5a";
+$WikiRelease = "2007-03-23";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -274,7 +274,8 @@ if ($CheckTime) {
 ### QUERY_STRING이 %-인코딩된 형태로 오는 경우
 ### guess를 해도 ascii로 판정되기 때문에 변환이 안 된다.
 ### 이 시점에서 디코딩하여 복원함
-	$ENV{'QUERY_STRING'} =~ s/%([0-9a-fA-F]{2})/chr(hex($1))/ge;
+### 쿼리에 엠퍼센드 등이 인코딩되어 있는 경우에 문제가 됨 - 일단 보류 
+# 	$ENV{'QUERY_STRING'} =~ s/%([0-9a-fA-F]{2})/chr(hex($1))/ge;
 
 ### slashlinks 처리
 	if ($SlashLinks && (length($ENV{'PATH_INFO'}) > 1)) {
