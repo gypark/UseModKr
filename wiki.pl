@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.5a";
-$WikiRelease = "2007-03-23";
+$WikiVersion = "0.92K3-ext2.5b";
+$WikiRelease = "2007-03-26";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -553,7 +553,7 @@ sub DoBrowseRequest {
 
 	if ($id) {                    # Just script?PageName
 ### QUERY_STRING 이 utf-8이 아닌 인코딩인 경우
-# 		$id = guess_and_convert($id);
+		$id = guess_and_convert($id);
 				
 		if ($FreeLinks && (!-f &GetPageFile($id))) {
 			$id = &FreeToNormal($id);
@@ -569,8 +569,8 @@ sub DoBrowseRequest {
 	$id = &GetParam('id', '');
 
 ### QUERY_STRING 이 utf-8이 아닌 인코딩인 경우
-# 	$id = guess_and_convert($id);
-# 	$q->param('id', $id);
+	$id = guess_and_convert($id);
+	$q->param('id', $id);
 
 	$DocID = $id;
 	if ($action eq 'browse') {
