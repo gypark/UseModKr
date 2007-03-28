@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.5b";
-$WikiRelease = "2007-03-26";
+$WikiVersion = "0.92K3-ext2.5c";
+$WikiRelease = "2007-03-28";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -2913,7 +2913,7 @@ sub MacroInclude {
 	$txt =~ s/(<thread\()([-+]?\d+(,\d+)?)(\)>)/$1$name,$2$4/gi;
 
 # 섹션 단위 편집 - include 될 때는 하지 않음
-	$txt =~ s/((^|\n)\s*\=+\s+[^\n]+)(\s+\=+)/$1${FS}noedit$FS$3/go;
+	$txt =~ s/((^|\n)[\ \t\f]*\=+[\ \t\f]+[^\n]+)([\ \t\f]+\=+)/$1${FS}noedit$FS$3/go;
 
 	return $txt;
 }
