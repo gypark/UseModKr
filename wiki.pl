@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.5c";
-$WikiRelease = "2007-03-28";
+$WikiVersion = "0.92K3-ext2.6";
+$WikiRelease = "2007-04-21";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -3655,12 +3655,34 @@ sub ISBNLink {
 
 ### 국내 서적
 	if ($num =~ /^(89|60)/) {
-		my $siteurl = "http://image.aladdin.co.kr/cover/cover";
+		my $ISBNDir = "$UploadDir/isbn";
+		my $ISBNUrl = "$UploadUrl/isbn";
+		&CreateDir($UploadDir);
+		&CreateDir($ISBNDir);
+
+		my $aladdin_url = "http://www.aladdin.co.kr/shop/wproduct.aspx?ISBN=$num";
+		my $siteurl     = "http://image.aladdin.co.kr/cover/cover";
+
+		# $first 값은 캐쉬->알라딘html소스->추측을 통해서 정함
 		$first = "$siteurl/$num\_1.jpg";
+		if (-f "$ISBNDir/$num") {
+			# cache에 그림 주소가 있는 경우
+			my ($status, $data) = &ReadFile("$ISBNDir/$num");
+			if ($status) {
+				$first = $data;
+			}
+		} elsif (eval "require LWP::Simple;") {
+			# LWP::Simple을 사용해서 가져올 수 있는 경우
+			my $html = LWP::Simple::get($aladdin_url);
+			if ($html =~ /<img src="?(\S+?)"?\s+.*?name='ImgCover'>/i) {
+				$first = $1;
+				&WriteStringToFile("$ISBNDir/$num", $first);
+			}
+		}
 		$second = "$siteurl/$num\_1.gif";
 		$third = "$siteurl/$num\_1.JPG";
 		$fourth = "$siteurl/$num\_1.GIF";
-		return "<A href=\"http://www.aladdin.co.kr/shop/wproduct.aspx?ISBN=$num\">".
+		return "<A href=\"$aladdin_url\">".
 			"<IMG class='isbn' ".
 			"$ImageTag ".
 			"src='$first' ".
