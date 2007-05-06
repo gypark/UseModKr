@@ -30,71 +30,76 @@ sub plugin_vim {
 	if ($hasMD5) {
 		$hash = Digest::MD5::md5_base64($content.join('',@opt));
 	} else {
-		$hash = crypt($content.join('',@opt), $HashKey);
+		$hash = crypt($content, $HashKey);
 	}
 	$hash =~ s/(\W)/uc sprintf "_%02x", ord($1)/eg;
 
 	my $hashhtml = "$hash.html";
 	my $VimDir = "$UploadDir/vim";
 
-	if (-f "$VimDir/$hashhtml" && not -z "$VimDir/$hashhtml") {
+	if ($hasMD5 and -f "$VimDir/$hashhtml" && not -z "$VimDir/$hashhtml") {
 		# 이미 생성되어 캐쉬에 있음
-	} else {
-		&CreateDir($UploadDir);
-		&CreateDir($VimDir);
+		($status, $text) = &ReadFile("$VimDir/$hashhtml");
 
-		my $hashdir = "$TempDir/$hash";
-		if (not -d $hashdir) {
-			mkdir($hashdir, 0775) or return "[Unable to create $hash dir]";
-		}
-
-		my $pwd = `pwd`;
-		$pwd =~ s/(.*)(\n|\r)*/$1/;
-
-		chdir ($hashdir);
-		
-# html 생성
-		my $tmpi = "$hash.in";
-		my $tmpo = "$hash.out";
-		open (OUT, ">$tmpi") or return "[Unable to open $tmpi file]";
-		print OUT  $content;
-		close(OUT);
-
-		open SAVEOUT, ">&STDOUT";
-		open SAVEERR, ">&STDERR";
-		open STDOUT, ">hash.log";
-		open STDERR, ">&STDOUT";
-
-		qx($vim -T xterm -e -s $tmpi +"set enc=$HttpCharset" +"syntax on" +"set syntax=$type" $option +"ru! $tohtml" +"wq! $tmpo" +q);
-
-		close STDOUT;
-		close STDERR;
-		open STDOUT, ">&SAVEOUT";
-		open STDERR, ">&SAVEERR";
-
-# html 가공 및 옮김
-		($status, $text) = &ReadFile("$tmpo");
-		if (!$status) {
-			return undef;
-		}
-		$text =~ s/<title>.*title>|<\/?head>|<\/?html>|<meta.*>|<\/?body.*>//g;
-		$text =~ s/<pre>/<pre class='syntax' style='font-family:FixedSys,monospace;color:#c0c0c0;background-color:black'>/g;
-
-		chdir($pwd);
-		open (OUT, ">$VimDir/$hashhtml") or return "[Unable to open $hashhtml file]";
-		print OUT  $text;
-		close(OUT);
-
-		unlink (glob("$hashdir/*")) or return "[unlink fail]";
-		rmdir ($hashdir) or return "[rmdir fail]";
+		return $text if $status;
 	}
 
-	($status, $text) = &ReadFile("$VimDir/$hashhtml");
+	# 캐쉬에 없거나, 읽는 데 실패하면 새로 작성
+	&CreateDir($UploadDir);
+	&CreateDir($VimDir);
+
+	my $hashdir = "$TempDir/$hash";
+	if (not -d $hashdir) {
+		mkdir($hashdir, 0775) or return "[Unable to create $hash dir]";
+	}
+
+	my $pwd = `pwd`;
+	$pwd =~ s/(.*)(\n|\r)*/$1/;
+
+	chdir ($hashdir);
+	
+# html 생성
+	my $tmpi = "$hash.in";
+	my $tmpo = "$hash.out";
+	open (OUT, ">$tmpi") or return "[Unable to open $tmpi file]";
+	print OUT  $content;
+	close(OUT);
+
+	open SAVEOUT, ">&STDOUT";
+	open SAVEERR, ">&STDERR";
+	open STDOUT, ">hash.log";
+	open STDERR, ">&STDOUT";
+
+	qx($vim -T xterm -e -s $tmpi +"set enc=$HttpCharset" +"syntax on" +"set syntax=$type" $option +"ru! $tohtml" +"wq! $tmpo" +q);
+
+	close STDOUT;
+	close STDERR;
+	open STDOUT, ">&SAVEOUT";
+	open STDERR, ">&SAVEERR";
+
+	# html 가공 및 옮김
+	($status, $text) = &ReadFile("$tmpo");
 	if (!$status) {
 		return undef;
 	}
+	$text =~ s/<title>.*title>|<\/?head>|<\/?html>|<meta.*>|<\/?body.*>//g;
+	$text =~ s/<pre>/<pre class='syntax' style='font-family:FixedSys,monospace;color:#c0c0c0;background-color:black'>/g;
+	$text =~ s/^(\s|\n)*//gs;
+	$text =~ s/(\s|\n)*$//gs;
+	$text .= "\n";
 
-    return $text;
+	chdir($pwd);
+
+	# 캐쉬에 저장
+	if ($hasMD5 and open (OUT, ">$VimDir/$hashhtml")) {
+		print OUT  $text;
+		close(OUT);
+	}
+
+	unlink (glob("$hashdir/*")) or return "[unlink fail]";
+	rmdir ($hashdir) or return "[rmdir fail]";
+
+	return $text;
 }
 
 1;

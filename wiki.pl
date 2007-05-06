@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.6";
-$WikiRelease = "2007-04-21";
+$WikiVersion = "0.92K3-ext2.7";
+$WikiRelease = "2007-05-06";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -3407,7 +3407,7 @@ sub MakeLaTeX {
 	&CreateDir($UploadDir);
 	&CreateDir($LatexDir);
 
-	if (-f "$LatexDir/$hashimage" && not -z "$LatexDir/$hashimage") {
+	if ($hasMD5 and -f "$LatexDir/$hashimage" && not -z "$LatexDir/$hashimage") {
 		# 이미 생성되어 캐쉬에 있음
 	} else {
 		# 새로 생성해야 됨
