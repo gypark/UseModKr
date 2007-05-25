@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.7";
-$WikiRelease = "2007-05-06";
+$WikiVersion = "0.92K3-ext2.8rc1";
+$WikiRelease = "2007-05-25";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -2757,6 +2757,16 @@ sub MacroComments {
 		$submit_button = $q->submit(-name=>"Submit",-value=>T("Submit"));
 	}
 
+	my $spambot_trap = 
+		"<DIV style='display:none;'>"
+		. "Homepage: "
+		. $q->textfield(-name=>"homepage",
+						-class=>"comments",
+						-size=>"10",
+						-maxlength=>"80",
+						-default=>"")
+		. "</DIV>";
+
 	$txt =
 		$q->startform(-name=>"comments",-method=>"POST",-action=>"$ScriptName") .
 		&GetHiddenValue("action","comments") .
@@ -2767,6 +2777,7 @@ sub MacroComments {
 		(($threadindent ne '')?&GetHiddenValue("threadindent",$threadindent):"") .
 		T('Name') . ": " .
 		$name_field . "&nbsp;" .
+		$spambot_trap .
 		T('Comment') . ": " .
 		$hidden_long .
 		$comment_field . "&nbsp;" .
@@ -5287,6 +5298,18 @@ function oekaki()
 # ECode
 		my $ecode = &simple_crypt(length($id).substr(&CalcDay($Now),5));
 		print &GetHiddenValue("ecode","$ecode")."\n";
+# spambot trap
+		my $spambot_trap = 
+			"<DIV style='display:none;'>"
+			. "Homepage: "
+			. $q->textfield(-name=>"homepage",
+							-class=>"comments",
+							-size=>"10",
+							-maxlength=>"80",
+							-default=>"")
+			. "</DIV>";
+		print $spambot_trap;
+
 ### 섹션 단위 편집
 		if ($section >= 1) {
 			print &GetHiddenValue("section", $section)."\n";
@@ -6320,6 +6343,11 @@ sub DoPost {
 
 	if (($ecode ne $code_today) && ($ecode ne $code_yesterday)) { # spam
 		&ReportError("SPAM editing");
+		return;
+	}
+	my $trap = &GetParam("homepage", "");
+	if ($trap ne "") {
+		&ReportError("SPAM editting caught in trap");
 		return;
 	}
 ###

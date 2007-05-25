@@ -24,6 +24,13 @@ sub action_comments {
 		return;
 	}
 
+# spambot_trap
+	my $trap = &GetParam("homepage", "");
+	if ($trap ne "") {
+		&ReportError("SPAM comment caught in trap");
+		return;
+	}
+
 # 금지단어 처리는 여기서 먼저
 	if (my $bannedText = &TextIsBanned($newcomments)) {
 		print &GetHeader("", T('Editing Denied'),"");
