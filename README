@@ -20,8 +20,9 @@ Changes include:
 ** information of pages (like searching text, finding orphaned pages)
 ** blog features
 * supporting plugins to use external program like Vim
+* various spam-filters
 
-You can all the list of changes in
+You can see all the list of changes in
 http://gypark.pe.kr/wiki/UseModWikiModification  (written in Korean)
 
 You can see an example site and also test in there:
@@ -44,4 +45,5 @@ results, etc.
 * Jof <http://jof4002.net>
 * Nyxity <http://nyxity.com>
 * Bab2 <http://piwd.net>
+* Canday <http://canday.pe.kr>
 * and whom I forgot to mention ;-)
