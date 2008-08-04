@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.8";
-$WikiRelease = "2007-05-29";
+$WikiVersion = "0.92K3-ext2.8a";
+$WikiRelease = "2008-08-05";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -2583,6 +2583,9 @@ sub ApplyDynamicTemplate {
 	my %temp_Text = split(/$FS3/, $temp_Section{'data'}, -1);
 	my $text = &TemplateMacroSubst($id, $temp_Text{'text'});
 
+# 섹션 단위 편집 - 동적 템플릿에 사용될 때는 하지 않음 - 작업하다 말아서 어떤 맥락이었는지
+# 기억이 안 남... 일단 주석 처리 한 채로 submit (2008.8.5)
+#	$text =~ s/((^|\n)[\ \t\f]*\=+[\ \t\f]+[^\n]+)([\ \t\f]+\=+)/$1${FS}noedit$FS$3/go;
 	$text =~ s/<template_text>/$id_text/;
 
 	return $text;
