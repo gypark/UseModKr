@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.8a";
-$WikiRelease = "2008-08-05";
+$WikiVersion = "0.92K3-ext2.9";
+$WikiRelease = "2008-08-08";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -5913,6 +5913,13 @@ sub DoSearch {
 	}
 	print &GetHeader('', &QuoteHtml(Ts('Search for: %s', $string)), '');
 	print '<br>';
+
+# 검색어에 정규표현식 에러가 나는 경우는 quote하여 검색
+    eval { "" =~ /$string/i; };
+    if ($@) {
+        $string = "\Q$string\E";
+    }
+
 	@x = &SearchTitleAndBody($string);
 # 	&PrintPageList(@x);
 	if (&GetParam("context", "")) {
