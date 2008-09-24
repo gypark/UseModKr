@@ -83,7 +83,7 @@ sub plugin_vim {
 		return undef;
 	}
 	$text =~ s/<title>.*title>|<\/?head>|<\/?html>|<meta.*>|<\/?body.*>//g;
-	$text =~ s/<pre>/<pre class='syntax' style='font-family:FixedSys,monospace;color:#c0c0c0;background-color:black'>/g;
+    $text =~ s/^.*?<pre>/<pre class='vim'>/gs;
 	$text =~ s/^(\s|\n)*//gs;
 	$text =~ s/(\s|\n)*$//gs;
 	$text .= "\n";

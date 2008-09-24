@@ -793,3 +793,17 @@ BLOCKQUOTE.searchresultcontext {
 SPAN.highlight {
 	font-weight: bold;
 }
+
+/* vim plugin */
+PRE.vim {
+    font: normal normal normal 105%/160% FixedSys, Lucida Console, Courier New, monospace;
+    border: 1px solid silver;
+    padding: 0.5em 0.5em 0.5em 0.5em;
+    white-space:pre;
+    text-align:justify;
+    width:90%;
+
+    background: black;
+    color: #c0c0c0;
+}
+
