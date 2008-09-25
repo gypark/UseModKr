@@ -779,4 +779,8 @@ Context
 내용출력
 Search
 검색
+Title Search for : %s
+페이지이름 검색 : %s
+Subpage Search for : %s
+하위페이지 검색 : %s
 END_OF_TRANSLATION

@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.9a";
-$WikiRelease = "2008-09-24";
+$WikiVersion = "0.92K3-ext2.10";
+$WikiRelease = "2008-09-25";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -6679,6 +6679,25 @@ sub SearchTitleAndBody {
 		&OpenPage($name);
 		&OpenDefaultText();
 		if (($Text{'text'} =~ /$string/i) || ($name =~ /$string/i)) {
+			push(@found, $name);
+		} elsif ($FreeLinks && ($name =~ m/_/)) {
+			$freeName = $name;
+			$freeName =~ s/_/ /g;
+			if ($freeName =~ /$string/i) {
+				push(@found, $name);
+			}
+		}
+	}
+	return @found;
+}
+
+# 제목에서만 검색
+sub SearchTitle {
+	my ($string) = @_;
+	my ($name, $freeName, @found);
+
+	foreach $name (&AllPagesList()) {
+		if ($name =~ /$string/i) {
 			push(@found, $name);
 		} elsif ($FreeLinks && ($name =~ m/_/)) {
 			$freeName = $name;
