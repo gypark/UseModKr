@@ -19,7 +19,7 @@ sub action_reverse {
 
 	foreach $pagelines (&GetFullLinkList("page=1&inter=1&unique=1&sort=1&exists=2&empty=0&reverse=$string")) {
 		my @pages = split(' ', $pagelines);
-		@x = (@x, shift(@pages));
+        push @x, shift(@pages);
 	}
 	
 	&PrintPageList(@x);
