@@ -34,7 +34,7 @@ sub index {
 
 	$index .= "<TABLE style='border:none; width=100%;' width='100%'>";
 
-	foreach my $key (sort {lc($a) cmp lc($b)} keys %MyIndexHash) {
+	foreach my $key (sort {(lc($a) cmp lc($b)) || ($a cmp $b)} keys %MyIndexHash) {
 		$column++;
 		$column = 1 if ($column > $tablecolumn);
 
@@ -46,7 +46,7 @@ sub index {
 		$index .= join(', ', @{$MyIndexHash{"$key"}{"$key"}}) if defined @{$MyIndexHash{"$key"}{"$key"}};
 
 		# aliases
-		foreach my $aliaskey (sort {lc($a) cmp lc($b)} keys %{$MyIndexHash{"$key"}}) {
+		foreach my $aliaskey (sort {(lc($a) cmp lc($b)) || ($a cmp $b)} keys %{$MyIndexHash{"$key"}}) {
 			next if ($aliaskey eq $key);
 
 			$index .= "<BR>&nbsp;&nbsp;$aliaskey&nbsp;&nbsp;&nbsp;";
