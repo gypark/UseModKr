@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.10a";
-$WikiRelease = "2008-11-09";
+$WikiVersion = "0.92K3-ext2.11";
+$WikiRelease = "2009-04-20";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -7032,6 +7032,11 @@ sub BuildLinkIndexPage {
 ###
 	%seen = ();
 	foreach $link (@links) {
+### 링크변경 개선 - "/하위페이지" 형태의 링크도 변경
+        if ( $link =~ m!^/! ) {
+            $link = (split('/',$page))[0] . $link;
+        }
+###
 		if (defined($LinkIndex{$link})) {
 			if (!$seen{$link}) {
 				$LinkIndex{$link} .= " " . $page;
@@ -7258,6 +7263,14 @@ sub RenameKeepText {
 		return;
 	}
 
+### 링크변경 개선 - "/하위페이지" 형태의 링크도 변경
+    my ( $old_main, $old_sub ) = split("/", $old);
+    my ( $new_main, $new_sub ) = split("/", $new);
+    my $old_new_same_main      = ( $old_main eq $new_main );
+    my ( $page_main, $page_sub) = split("/", $page);
+    my $old_page_same_main      = ( $old_main eq $page_main );
+###
+
 	# First pass: optimize for nothing changed
 	$changed = 0;
 	foreach (@kplist) {
@@ -7266,6 +7279,16 @@ sub RenameKeepText {
 		if ($sectName =~ /^(text_)/) {
 			%Text = split(/$FS3/, $tempSection{'data'}, -1);
 			$newText = &SubstituteTextLinks($old, $new, $Text{'text'});
+### 링크변경 개선 - "/하위페이지" 형태의 링크도 변경
+            if ( $old_page_same_main && $old_sub ) {
+                if ( $old_new_same_main && $new_sub ) {
+                    $newText = &SubstituteTextLinks("/$old_sub", "/$new_sub", $newText);
+                }
+                else {
+                    $newText = &SubstituteTextLinks("/$old_sub", $new, $newText);
+                }
+            }
+###
 			$changed = 1  if ($Text{'text'} ne $newText);
 		}
 		# Later add other section types? (maybe)
@@ -7279,6 +7302,17 @@ sub RenameKeepText {
 		if ($sectName =~ /^(text_)/) {
 			%Text = split(/$FS3/, $tempSection{'data'}, -1);
 			$newText = &SubstituteTextLinks($old, $new, $Text{'text'});
+### 링크변경 개선 - "/하위페이지" 형태의 링크도 변경
+            if ( $old_page_same_main && $old_sub ) {
+                if ( $old_new_same_main && $new_sub ) {
+                    $newText = &SubstituteTextLinks("/$old_sub", "/$new_sub", $newText);
+                }
+                else {
+                    $newText = &SubstituteTextLinks("/$old_sub", $new, $newText);
+                }
+            }
+###
+
 			$Text{'text'} = $newText;
 			$tempSection{'data'} = join($FS3, %Text);
 			print OUT $FS1, join($FS2, %tempSection);
@@ -7310,11 +7344,22 @@ sub RenameTextLinks {
 	$old =~ s/_/ /g;
 	$new =~ s/_/ /g;
 
+### 링크변경 개선 - "/하위페이지" 형태의 링크도 변경
+    my ( $old_main, $old_sub ) = split("/", $old);
+    my ( $new_main, $new_sub ) = split("/", $new);
+    my $old_new_same_main      = ( $old_main eq $new_main );
+###
+
 	# Note: the LinkIndex must be built prior to this routine
 	return  if (!defined($LinkIndex{$oldCanonical}));
 
 	@pageList = split(' ', $LinkIndex{$oldCanonical});
 	foreach $page (@pageList) {
+### 링크변경 개선 - "/하위페이지" 형태의 링크도 변경
+        my ( $page_main, $page_sub) = split("/", $page);
+        my $old_page_same_main      = ( $old_main eq $page_main );
+###
+
 		$changed = 0;
 		&OpenPage($page);
 		foreach $section (keys %Page) {
@@ -7323,6 +7368,16 @@ sub RenameTextLinks {
 				%Text = split(/$FS3/, $Section{'data'}, -1);
 				$oldText = $Text{'text'};
 				$newText = &SubstituteTextLinks($old, $new, $oldText);
+### 링크변경 개선 - "/하위페이지" 형태의 링크도 변경
+                if ( $old_page_same_main && $old_sub ) {
+                    if ( $old_new_same_main && $new_sub ) {
+                        $newText = &SubstituteTextLinks("/$old_sub", "/$new_sub", $newText);
+                    }
+                    else {
+                        $newText = &SubstituteTextLinks("/$old_sub", $new, $newText);
+                    }
+                }
+###
 				if ($oldText ne $newText) {
 					$Text{'text'} = $newText;
 					$Section{'data'} = join($FS3, %Text);
@@ -7332,6 +7387,16 @@ sub RenameTextLinks {
 			} elsif ($section =~ /^cache_diff/) {
 				$oldText = $Page{$section};
 				$newText = &SubstituteTextLinks($old, $new, $oldText);
+### 링크변경 개선 - "/하위페이지" 형태의 링크도 변경
+                if ( $old_page_same_main && $old_sub ) {
+                    if ( $old_new_same_main && $new_sub ) {
+                        $newText = &SubstituteTextLinks("/$old_sub", "/$new_sub", $newText);
+                    }
+                    else {
+                        $newText = &SubstituteTextLinks("/$old_sub", $new, $newText);
+                    }
+                }
+###
 				if ($oldText ne $newText) {
 					$Page{$section} = $newText;
 					$changed = 1;
@@ -7389,7 +7454,7 @@ sub RenamePage {
 	$oldlock = &GetLockedPageFile($old);
 	if (-f $oldlock) {
 		$newlock = &GetLockedPageFile($new);
-		rename($oldlock, $newlock) || die "error while renaming lock";
+		rename($oldlock, $newlock);
 	}
 ### cache 화일은 삭제
 	&UnlinkHtmlCache($old);
@@ -7399,7 +7464,7 @@ sub RenamePage {
 	if (-f $oldcnt) {
 		$newcnt = &GetCountFile($new);
 		&CreatePageDir($CountDir, $new);  # It might not exist yet
-		rename($oldcnt, $newcnt) || die "error while renaming count file";
+		rename($oldcnt, $newcnt);
 	}
 ### hide page by gypark
 	if (defined($HiddenPage{$old})) {
@@ -7414,7 +7479,7 @@ sub RenamePage {
 	if (-f $oldlink) {
 		$newlink = &GetLinkFile($new);
 		&CreatePageDir($LinkDir, $new);  # It might not exist yet
-		rename($oldlink, $newlink) || die "error while renaming link file";
+		rename($oldlink, $newlink);
 	}
 	&EditRecentChanges(2, $old, $new)  if ($doRC);
 	if ($doText) {
