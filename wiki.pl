@@ -6581,10 +6581,10 @@ sub DoPostMain {
 # Twitter
     if ( GetParam('twitter_edit') and UserIsAdmin() and $TwitterID ) {
         $FullUrl = $q->url(-full=>1)  if ($FullUrl eq "");
-        my $sum = $summary;
-        $sum = "" if $sum eq "*";
+        my $sum = ": $summary";
+        $sum = "" if $sum eq ": *";
         my $url = $FullUrl . &ScriptLinkChar() . $id;
-        PostTwitter( "$TwitterPrefix $url $id: $sum" );
+        PostTwitter( "$TwitterPrefix $url $id$sum" );
     }
 
 	if ($UseCache) {
