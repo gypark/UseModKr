@@ -36,7 +36,6 @@ $UserGotoBar4 = "";
 ### Twitter
 $TwitterID    = "";
 $TwitterPass  = "";
-push @INC, ( "/home/gypark/local/perl/lib/perl5", "/home/gypark/local/perl/lib/perl5/i386-linux-thread-multi" );
 
 
 ### Translation
