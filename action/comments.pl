@@ -215,48 +215,9 @@ sub action_comments {
 		}
 	}
 
-# 트위터
-    if ( GetParam('twitter') and UserIsAdmin() and $TwitterID ) {
-        if (
-            ( eval "require Net::Twitter::Lite;" ) and
-            ( eval "require WWW::Shorten;" )
-           ) {
-            
-            import WWW::Shorten 'TinyURL';
-
-            # URL의 한글 부분을 %-인코딩하고, 길이기 26자 이상이면 tinyurl을 통해 줄인다
-            my $shorterlink = sub {
-                my $url = shift;
-
-                my $converted = EncodeUrl( $url );
-                if ( length($converted) > 26 ) {
-                    $converted = makeashorterlink( $converted );
-                }
-
-                return $converted;
-            };
-
-            my $nt = Net::Twitter::Lite->new(
-                        username => $TwitterID,
-                        password => $TwitterPass,
-                    );
-
-            my $msg = $newcomments;
-
-            # 긴 URL 줄이기
-            $msg =~ s/$UrlPattern/$shorterlink->($1)/ge;
-
-            # 140자 제한
-            $msg = Encode::decode($HttpCharset, $msg);
-            $msg = substr($msg, 0, 140);
-            $msg = Encode::encode($HttpCharset, $msg);
-
-            my $result = eval { $nt->update($msg) };
-
-            if ( $@ ) {
-                warn "twitter error [$@]";
-            }
-        }
+# Twitter
+    if ( GetParam('twitter_comment') and UserIsAdmin() and $TwitterID ) {
+        PostTwitter( $newcomments );
     }
 
 	DoPostMain($string, $id, "*", $Section{'ts'}, 0, 0, "$pageid$anchor");

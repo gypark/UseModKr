@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.13";
-$WikiRelease = "2010-02-06";
+$WikiVersion = "0.92K3-ext2.13a";
+$WikiRelease = "2010-02-07";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -64,7 +64,7 @@ use vars qw(
 	$InterWikiMoniker $SiteDescription $RssLogoUrl $RssDays $RssTimeZone
 	$SlashLinks $InterIconUrl $SendPingAllowed $JavaScriptUrl
 	$UseLatex $UserHeader $OekakiJarUrl @UrlEncodingGuess $UrlPrefix
-    $TwitterID $TwitterPass
+    $TwitterID $TwitterPass $TwitterPrefix
 	);
 
 use vars qw($DocID $ImageTag $ClickEdit $UseEmoticon $EmoticonUrl $EditPagePos);		# luke
@@ -2780,7 +2780,7 @@ sub MacroComments {
     # Twitter
     my $twitter = "";
     if ( UserIsAdmin() and $TwitterID ) {
-        $twitter = $q->checkbox(-name=>'twitter', -checked=>0, -label=>T('Twitter')). "\n";
+        $twitter = $q->checkbox(-name=>'twitter_comment', -checked=>0, -label=>T('Twitter')). "\n";
     }
 
 	$txt =
@@ -5347,6 +5347,11 @@ function oekaki()
 								 -label=>T('This change is a minor edit.'));
 		}
 
+        # Twitter
+        if ( UserIsAdmin() and $TwitterID ) {
+            print "<br>", $q->checkbox(-name=>'twitter_edit', -checked=>0, -label=>T('Twitter')), "\n";
+        }
+
 		if ($EmailNotify) {
 			print "&nbsp;&nbsp;&nbsp;" .
 					 $q->checkbox(-name=> 'do_email_notify',
@@ -6572,6 +6577,16 @@ sub DoPostMain {
 #	&WriteRcLog($id, $summary, $isEdit, $editTime, $user, $Section{'host'});
 	&WriteRcLog($id, $summary, $isEdit, $editTime, $user, $Section{'host'}, $Section{'revision'});
 ###
+
+# Twitter
+    if ( GetParam('twitter_edit') and UserIsAdmin() and $TwitterID ) {
+        $FullUrl = $q->url(-full=>1)  if ($FullUrl eq "");
+        my $sum = $summary;
+        $sum = "" if $sum eq "*";
+        my $url = $FullUrl . &ScriptLinkChar() . $id;
+        PostTwitter( "$TwitterPrefix $url $id: $sum" );
+    }
+
 	if ($UseCache) {
 		UnlinkHtmlCache($id);          # Old cached copy is invalid
 		if ($Page{'revision'} < 2) {   # If this is a new page...
@@ -8707,6 +8722,52 @@ sub split_string {
 	$last = &convert_encode($last, "UTF_16BE", "$HttpCharset");
 
 	return ($first, $last);
+}
+
+# Twitter
+# $msg - 트위터에 올릴 내용
+sub PostTwitter {
+    my $msg = shift;
+
+    if (
+        ( eval "require Net::Twitter::Lite;" ) and
+        ( eval "require WWW::Shorten;" )
+       ) {
+        
+        import WWW::Shorten 'TinyURL';
+
+        # URL의 한글 부분을 %-인코딩하고, 길이기 26자 이상이면 tinyurl을 통해 줄인다
+        my $shorterlink = sub {
+            my $url = shift;
+
+            my $converted = EncodeUrl( $url );
+            if ( length($converted) > 26 ) {
+                $converted = makeashorterlink( $converted );
+            }
+
+            return $converted;
+        };
+
+        my $nt = Net::Twitter::Lite->new(
+                    username => $TwitterID,
+                    password => $TwitterPass,
+                );
+
+        # 긴 URL 줄이기
+        $msg =~ s/$UrlPattern/$shorterlink->($1)/ge;
+
+        # 140자 제한
+        $msg = Encode::decode($HttpCharset, $msg);
+        $msg = substr($msg, 0, 140);
+        $msg = Encode::encode("UTF-8", $msg);
+
+        my $result = eval { $nt->update($msg) };
+
+        if ( $@ ) {
+            my ( undef, $filename, $line, $subroutine ) = caller(0);
+            warn "twitter error [$filename:$line:$subroutine] [$@]";
+        }
+    }
 }
 
 ### 통채로 추가한 함수들의 끝

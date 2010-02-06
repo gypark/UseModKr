@@ -76,7 +76,7 @@ sub action_addtopic {
     # Twitter
     my $twitter = "";
     if ( UserIsAdmin() and $TwitterID ) {
-        $twitter = $q->checkbox(-name=>'twitter', -checked=>0, -label=>T('Twitter')). "<br>\n";
+        $twitter = $q->checkbox(-name=>'twitter_comment', -checked=>0, -label=>T('Twitter')). "<br>\n";
     }
 
 

@@ -34,9 +34,9 @@ $UserGotoBar3 = "";
 $UserGotoBar4 = "";
 
 ### Twitter
-$TwitterID    = "";
-$TwitterPass  = "";
-
+$TwitterID     = "";                # Twitter user id
+$TwitterPass   = "";                # password
+$TwitterPrefix = "Wiki Update:";    # prefix of tweet message
 
 ### Translation
 do "./translations/ko_KR.UTF-8.pl";     # korean, UTF-8 encoding
