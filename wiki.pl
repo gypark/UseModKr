@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.12";
-$WikiRelease = "2009-07-20";
+$WikiVersion = "0.92K3-ext2.13";
+$WikiRelease = "2010-02-06";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -64,6 +64,7 @@ use vars qw(
 	$InterWikiMoniker $SiteDescription $RssLogoUrl $RssDays $RssTimeZone
 	$SlashLinks $InterIconUrl $SendPingAllowed $JavaScriptUrl
 	$UseLatex $UserHeader $OekakiJarUrl @UrlEncodingGuess $UrlPrefix
+    $TwitterID $TwitterPass
 	);
 
 use vars qw($DocID $ImageTag $ClickEdit $UseEmoticon $EmoticonUrl $EditPagePos);		# luke
@@ -2776,11 +2777,17 @@ sub MacroComments {
 						-default=>"")
 		. "</DIV>";
 
+    # Twitter
+    my $twitter = "";
+    if ( UserIsAdmin() and $TwitterID ) {
+        $twitter = $q->checkbox(-name=>'twitter', -checked=>0, -label=>T('Twitter')). "\n";
+    }
+
 	$txt =
 		$q->startform(-name=>"comments",-method=>"POST",-action=>"$ScriptName") .
 		&GetHiddenValue("action","comments") .
-		&GetHiddenValue("id","$id") .
-		&GetHiddenValue("pageid","$pageid") .
+		&GetHiddenValue("id",$id) .
+		&GetHiddenValue("pageid",$pageid) .
 		&GetHiddenValue("up","$up") .
 		&GetHiddenValue("ccode","$ccode") .
 		(($threadindent ne '')?&GetHiddenValue("threadindent",$threadindent):"") .
@@ -2790,6 +2797,7 @@ sub MacroComments {
 		T('Comment') . ": " .
 		$hidden_long .
 		$comment_field . "&nbsp;" .
+        $twitter .
 		$submit_button .
 		$q->endform;
 
@@ -8506,8 +8514,14 @@ sub PageCanReceiveTrackbackPing {
 
 sub EncodeUrl {
 	my ($string) = @_;
-	$string =~ s!([^/?#=a-zA-Z0-9_.-])!uc sprintf "%%%02x", ord($1)!eg;
+	$string =~ s!([^:/?#=a-zA-Z0-9_.-])!uc sprintf "%%%02x", ord($1)!eg;
 	return $string;
+}
+
+sub DecodeUrl {
+    my ($string) = @_;
+    $string =~ s/%([0-9a-fA-F]{2})/chr(hex($1))/ge;
+    return $string;
 }
 
 sub GetTrackbackGuide {

@@ -73,6 +73,14 @@ sub action_addtopic {
 
 	$comment_field = &GetTextArea("comment", $default_text, 7, 80);
 
+    # Twitter
+    my $twitter = "";
+    if ( UserIsAdmin() and $TwitterID ) {
+        $twitter = $q->checkbox(-name=>'twitter', -checked=>0, -label=>T('Twitter')). "<br>\n";
+    }
+
+
+
 	# html 출력
 	print &GetHeader("", $header_msg, "");
 
@@ -94,6 +102,7 @@ sub action_addtopic {
 		$name_field . "&nbsp;"."\n".
 		T('Comment') . ":<br>".
 		$comment_field . "&nbsp;" ."\n".
+        $twitter .
 		$q->submit(-name=>"Submit",-value=>("&nbsp;"x5).T("Submit").("&nbsp;"x5))."\n".
 		"<DIV"
 		. " onMouseOver=\"document.getElementById('secret').style.visibility='visible'\""

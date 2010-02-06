@@ -33,6 +33,12 @@ $UserGotoBar2 = "";
 $UserGotoBar3 = "";
 $UserGotoBar4 = "";
 
+### Twitter
+$TwitterID    = "";
+$TwitterPass  = "";
+push @INC, ( "/home/gypark/local/perl/lib/perl5", "/home/gypark/local/perl/lib/perl5/i386-linux-thread-multi" );
+
+
 ### Translation
 do "./translations/ko_KR.UTF-8.pl";     # korean, UTF-8 encoding
 # do "./translations/ko_KR.EUC-KR.pl";    # korean, EUC-KR encoding
