@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.13a";
-$WikiRelease = "2010-02-07";
+$WikiVersion = "0.92K3-ext2.13b";
+$WikiRelease = "2010-02-08";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -8529,7 +8529,7 @@ sub PageCanReceiveTrackbackPing {
 
 sub EncodeUrl {
 	my ($string) = @_;
-	$string =~ s!([^:/?#=a-zA-Z0-9_.-])!uc sprintf "%%%02x", ord($1)!eg;
+	$string =~ s!([^:/&?#=a-zA-Z0-9_.-])!uc sprintf "%%%02x", ord($1)!eg;
 	return $string;
 }
 
