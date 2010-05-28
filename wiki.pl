@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.13b";
-$WikiRelease = "2010-02-08";
+$WikiVersion = "0.92K3-ext2.13c";
+$WikiRelease = "2010-05-28";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -2780,7 +2780,7 @@ sub MacroComments {
     # Twitter
     my $twitter = "";
     if ( UserIsAdmin() and $TwitterID ) {
-        $twitter = $q->checkbox(-name=>'twitter_comment', -checked=>0, -label=>T('Twitter')). "\n";
+        $twitter = $q->checkbox(-name=>'twitter_comment', -checked=>0, -label=>T('Twitter')."($TwitterID)"). "\n";
     }
 
 	$txt =
@@ -5349,7 +5349,7 @@ function oekaki()
 
         # Twitter
         if ( UserIsAdmin() and $TwitterID ) {
-            print "<br>", $q->checkbox(-name=>'twitter_edit', -checked=>0, -label=>T('Twitter')), "\n";
+            print "<br>", $q->checkbox(-name=>'twitter_edit', -checked=>0, -label=>T('Twitter')."($TwitterID)"), "\n";
         }
 
 		if ($EmailNotify) {
@@ -8734,7 +8734,8 @@ sub PostTwitter {
         ( eval "require WWW::Shorten;" )
        ) {
         
-        import WWW::Shorten 'TinyURL';
+#         import WWW::Shorten 'TinyURL';
+        import WWW::Shorten 'Metamark';
 
         # URL의 한글 부분을 %-인코딩하고, 길이기 26자 이상이면 tinyurl을 통해 줄인다
         my $shorterlink = sub {
