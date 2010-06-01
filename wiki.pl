@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.13c";
-$WikiRelease = "2010-05-28";
+$WikiVersion = "0.92K3-ext2.13d";
+$WikiRelease = "2010-06-01";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -8760,7 +8760,8 @@ sub PostTwitter {
         # 140자 제한
         $msg = Encode::decode($HttpCharset, $msg);
         $msg = substr($msg, 0, 140);
-        $msg = Encode::encode("UTF-8", $msg);
+# URI 모듈 1.40 이상을 쓰는 경우는 아래 주석 처리
+#         $msg = Encode::encode("UTF-8", $msg);
 
         my $result = eval { $nt->update($msg) };
 
