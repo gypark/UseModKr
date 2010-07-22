@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.13d";
-$WikiRelease = "2010-06-01";
+$WikiVersion = "0.92K3-ext2.13e";
+$WikiRelease = "2010-07-22";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -3825,7 +3825,8 @@ sub WikiHeading {
 
 	$depth = length($depth);
 	$depth = 6  if ($depth > 6);
-	$text =~ s/^#\s+/&WikiHeadingNumber($depth,$')/e; # $' == $POSTMATCH
+# 	$text =~ s/^#\s+/&WikiHeadingNumber($depth,$')/e; # $' == $POSTMATCH
+	$text =~ s/^#\s+(.*)/&WikiHeadingNumber($depth,$1).$1/e;
 ### 섹션 단위 편집
 # 	return $pre . "<H$depth>$text</H$depth>\n";
 	my $edit_section;
@@ -8622,7 +8623,7 @@ sub TextIsBanned {
 	$data =~ s/\r//g;
 	foreach (split(/\n/, $data)) {
 		next if ((/^\s*$/) || (/^#/));
-		return $& if ($text =~ /$_/i);
+		return $1 if ($text =~ /($_)/i);
 	}
 	return undef;
 }
