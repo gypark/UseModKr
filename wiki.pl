@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.13e";
-$WikiRelease = "2010-07-22";
+$WikiVersion = "0.92K3-ext2.14";
+$WikiRelease = "2010-09-03";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -65,6 +65,7 @@ use vars qw(
 	$SlashLinks $InterIconUrl $SendPingAllowed $JavaScriptUrl
 	$UseLatex $UserHeader $OekakiJarUrl @UrlEncodingGuess $UrlPrefix
     $TwitterID $TwitterPass $TwitterPrefix
+    $TwitterConsumerKey $TwitterConsumerSecret $TwitterAccessToken $TwitterAccessTokenSecret
 	);
 
 use vars qw($DocID $ImageTag $ClickEdit $UseEmoticon $EmoticonUrl $EditPagePos);		# luke
@@ -8750,9 +8751,17 @@ sub PostTwitter {
             return $converted;
         };
 
+# YOU CAN'T USE BASIC AUTHENTICATION ANYMORE
+#         my $nt = Net::Twitter::Lite->new(
+#                     username => $TwitterID,
+#                     password => $TwitterPass,
+#                 );
+
         my $nt = Net::Twitter::Lite->new(
-                    username => $TwitterID,
-                    password => $TwitterPass,
+                consumer_key        => $TwitterConsumerKey,
+                consumer_secret     => $TwitterConsumerSecret,
+                access_token        => $TwitterAccessToken,
+                access_token_secret => $TwitterAccessTokenSecret,
                 );
 
         # 긴 URL 줄이기

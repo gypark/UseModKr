@@ -35,8 +35,13 @@ $UserGotoBar4 = "";
 
 ### Twitter
 $TwitterID     = "";                # Twitter user id
-$TwitterPass   = "";                # password
+$TwitterPass   = "";                # NOT NEEDED ANYMORE. (now use OAuth)
 $TwitterPrefix = "Wiki Update:";    # prefix of tweet message
+### Twitter OAuth
+$TwitterConsumerKey         = "";   # consumer_key
+$TwitterConsumerSecret      = "";   # consumer_secret
+$TwitterAccessToken         = "";   # access_token
+$TwitterAccessTokenSecret   = "";   # access_token_secret
 
 ### Translation
 do "./translations/ko_KR.UTF-8.pl";     # korean, UTF-8 encoding
