@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.14";
-$WikiRelease = "2010-09-03";
+$WikiVersion = "0.92K3-ext2.14a";
+$WikiRelease = "2010-09-09";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -1699,7 +1699,7 @@ sub GetHttpHeader {
 		$cookie .= "path=$cookie_path;";
 
 		if ($SetCookie{'expire'} eq "1") {
-			$cookie .= "expires=Fri, 08-Sep-2010 19:47:23 GMT";
+			$cookie .= "expires=Tue, 31-Dec-2030 23:59:59 GMT";
 		}
 
 		if ($HttpCharset ne '') {
