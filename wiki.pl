@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.14a";
-$WikiRelease = "2010-09-09";
+$WikiVersion = "0.92K3-ext2.15";
+$WikiRelease = "2012-01-06";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -2324,7 +2324,12 @@ sub CommonMarkup {
 
 ### anchor 에 한글 사용
 #		s/\[\#(\w+)\]/&StoreHref(" name=\"$1\"")/ge if $NamedAnchors;
-		s/\[$AnchorPattern\]/&StoreHref(" name=\"$1\"")/ge if $NamedAnchors;
+# anchor 정리 - 2012.01.06
+        s/\[\[$AnchorPattern\|([^\]]+)\]\]/StoreHref("href=\"#$1\"", $2)/ge if $NamedAnchors;
+        s/\[\[$AnchorPattern\]\]/StoreHref("href=\"#$1\"", $1)/ge if $NamedAnchors; 
+
+        s/\[$AnchorPattern\|([^\]]+)\]/StoreHref("name=\"$1\"", $2)/geo;
+        s/\[$AnchorPattern\]/StoreHref("name=\"$1\"")/ge if $NamedAnchors;
 
 		if ($HtmlTags) {
 			my ($t);
@@ -3536,7 +3541,8 @@ EOT
 sub StoreHref {
 	my ($anchor, $text) = @_;
 
-	return "<a" . &StoreRaw($anchor) . ">$text</a>";
+# 	return "<a" . &StoreRaw($anchor) . ">$text</a>";
+    return StoreRaw("<a $anchor>$text</a>");
 }
 
 sub StoreUrl {
