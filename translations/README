@@ -3,9 +3,9 @@ This directory contains "UseModWiki translation files".
 To use this files, add the following line in your config file
 (or the script after the configuration settings):
 
-    do "./translations/korean.pl";			(relative path)
+    do "./translations/korean.pl";          (relative path)
 or
-	do "/home/me/wiki/translations/korean.pl";       (absolute path)
+    do "/home/me/wiki/translations/korean.pl";       (absolute path)
 
 "Home" and "RecentChange" are "page name"s themselves. Therefore, 
 they are not defined in translation files. 
@@ -18,7 +18,7 @@ Use $HomePage and $RCName, respectively, for them.
 
     do "./translations/korean.pl";          (상대 경로)
 또는
-	do "/home/me/wiki/translations/korean.pl";       (절대 경로)
+    do "/home/me/wiki/translations/korean.pl";       (절대 경로)
 
 등과 같이 사용하려는 화일의 경로를 명시해 주면 됩니다.
 

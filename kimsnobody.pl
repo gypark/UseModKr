@@ -45,7 +45,7 @@ $ImgUrl = "http://www.junksf.net/kimsboard/image";
      if ($FORM{'action'} eq "remove") {remove_file();}
   elsif ($FORM{'action'} eq "view") {starting(); open_directory(); ending();}
   else {starting(); open_directory(); ending();}
-	
+    
 
 ###############################################################################
 sub open_directory {

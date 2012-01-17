@@ -1,13 +1,13 @@
 sub wikiversion {
-	my ($txt) = @_;
+    my ($txt) = @_;
 
-	$txt =~ s/\&__LT__;wikiversion&__GT__;/&MacroWikiVersion()/gei;
+    $txt =~ s/\&__LT__;wikiversion&__GT__;/&MacroWikiVersion()/gei;
 
-	return $txt;
+    return $txt;
 }
 
 sub MacroWikiVersion {
-	return &ScriptLink("action=version", $WikiVersion);
+    return &ScriptLink("action=version", $WikiVersion);
 }
 
 1;

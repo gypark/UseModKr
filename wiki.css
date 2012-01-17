@@ -1,20 +1,20 @@
 /*******************************
-	wiki.css
-	CSS for UseModWiki 0.92K3-ext1.30 or later version.
-	gypark@gmail.com
-	from 2002. 03. 01.
+    wiki.css
+    CSS for UseModWiki 0.92K3-ext1.30 or later version.
+    gypark@gmail.com
+    from 2002. 03. 01.
 *******************************/
 
 /********************
  * 사이트 전체
  ********************/
 body {
-	margin-left: 1%;
-	margin-right: 1%;
-	font: normal normal normal 75%/160% gulim, "Times New Roman", serif;
-	text-align:justify;
-	background: #fefefe;
-	color: black;
+    margin-left: 1%;
+    margin-right: 1%;
+    font: normal normal normal 75%/160% gulim, "Times New Roman", serif;
+    text-align:justify;
+    background: #fefefe;
+    color: black;
 }
 
 /********************
@@ -23,260 +23,260 @@ body {
 
 /* ''text'' */
 em {
-	font-size: 105%;
+    font-size: 105%;
 }
 
 /* 줄 앞에 공백이 있는 경우 생기는 pre */
 pre {
-	font: normal normal normal 100%/160% dotumche, courier, monospace;
-	border: none;
-	padding: 0.5em 0.5em 0.5em 0.5em;
-	white-space: pre;
-	text-align:justify;
-	width: 90%;
+    font: normal normal normal 100%/160% dotumche, courier, monospace;
+    border: none;
+    padding: 0.5em 0.5em 0.5em 0.5em;
+    white-space: pre;
+    text-align:justify;
+    width: 90%;
 }
 
 /* {{{ }}} 태그에 의한 pre */
 PRE.code   {
-	font: normal normal normal 100%/160% dotumche, courier, monospace;
-	border: 1px solid silver;
-	padding: 0.5em 0.5em 0.5em 0.5em;
-	white-space:pre;
-	text-align:justify;
-	width:90%;
+    font: normal normal normal 100%/160% dotumche, courier, monospace;
+    border: 1px solid silver;
+    padding: 0.5em 0.5em 0.5em 0.5em;
+    white-space:pre;
+    text-align:justify;
+    width:90%;
 
-	background: #fffffa;
-	color: black;
+    background: #fffffa;
+    color: black;
 }
 
 /* {{{lang }}} 태그에 의한 pre */
 PRE.syntax {
-	font: normal normal normal 100%/160% dotumche, courier, monospace;
-	border: 1px solid silver;
-	padding: 0.5em 0.5em 0.5em 0.5em;
-	white-space:pre;
-	text-align:justify;
-	width:90%;
+    font: normal normal normal 100%/160% dotumche, courier, monospace;
+    border: 1px solid silver;
+    padding: 0.5em 0.5em 0.5em 0.5em;
+    white-space:pre;
+    text-align:justify;
+    width:90%;
 
-	background: #fffffa;
-	color: black;
+    background: #fffffa;
+    color: black;
 }
 
 /* <code> 태그 */
 code {
-	font: normal normal normal 100%/160% dotumche, courier, monospace;
-	margin-top: 8pt;
-	margin-bottom: 8pt;
-	white-space:pre;
+    font: normal normal normal 100%/160% dotumche, courier, monospace;
+    margin-top: 8pt;
+    margin-bottom: 8pt;
+    white-space:pre;
 }
 
 /* 테이블 */
 table {
-	border-style: solid;
-	border-color: silver;
-	border-width: 0px 1px 1px 0px;
+    border-style: solid;
+    border-color: silver;
+    border-width: 0px 1px 1px 0px;
 }
 
 tr {
-	line-height: 20px;
+    line-height: 20px;
 }
 
 th {
-	font: normal normal normal 75%/160% gulim, "Times New Roman", serif;
-	border-style: solid;
-	border-color: silver;
-	border-width: 1px 0px 0px 1px;
-	padding: 2px;
+    font: normal normal normal 75%/160% gulim, "Times New Roman", serif;
+    border-style: solid;
+    border-color: silver;
+    border-width: 1px 0px 0px 1px;
+    padding: 2px;
 }
 
 td {
-	font: normal normal normal 75%/160% gulim, "Times New Roman", serif;
-	border-style: solid;
-	border-color: silver;
-	border-width: 1px 0px 0px 1px;
-	padding: 2px;
+    font: normal normal normal 75%/160% gulim, "Times New Roman", serif;
+    border-style: solid;
+    border-color: silver;
+    border-width: 1px 0px 0px 1px;
+    padding: 2px;
 }
 
 /* 리스트 */
 li {
-	font: normal normal normal 100%/160% gulim, "Times New Roman", serif;
-	text-align:justify;
-	margin-top: 0.2em;
-	margin-bottom: 0.2em;
+    font: normal normal normal 100%/160% gulim, "Times New Roman", serif;
+    text-align:justify;
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
 }
 
 /* 가로선 */
 hr {
-	border: 1px solid darkred;
-	background-color: darkred;
-	height: 1px;
-	margin: 0px;
+    border: 1px solid darkred;
+    background-color: darkred;
+    height: 1px;
+    margin: 0px;
 }
 
 /* 헤딩 */
 h1,h2,h3,h4,h5 {
-	font-family: Arial, Helvetica, sans-serif;
-	margin-top: 10pt;
-	margin-bottom: 8pt;
-	padding-top: 0.3em;
-	padding-bottom: 0.3em;
-	line-height: 110%;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 10pt;
+    margin-bottom: 8pt;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+    line-height: 110%;
 }
 
 h1 {
-	font-size: 200%;
-	padding-left: 3pt;
+    font-size: 200%;
+    padding-left: 3pt;
 }
 
 h2 {
-	font-size: 155%;
-	padding-left:6pt;
-	background: #CCCCCC;
-	color: #000000;
-	border: solid 1px black;
+    font-size: 155%;
+    padding-left:6pt;
+    background: #CCCCCC;
+    color: #000000;
+    border: solid 1px black;
 }
 
 h3 {
-	font-size: 144%;
-	padding-left:9pt;
-	background: #CCCCCC;
-	color: #000000;
-	border: solid 1px black;
+    font-size: 144%;
+    padding-left:9pt;
+    background: #CCCCCC;
+    color: #000000;
+    border: solid 1px black;
 }
 
 h4 {
-	font-size: 133%;
-	padding-left:12pt;
-	background: #CCCCCC;
-	color: #000000;
-	border: solid 1px black;
+    font-size: 133%;
+    padding-left:12pt;
+    background: #CCCCCC;
+    color: #000000;
+    border: solid 1px black;
 }
 
 h5 {
-	font-size: 122%;
-	padding-left:15pt;
-	background: #CCCCCC;
-	color: #000000;
-	border: solid 1px black;
+    font-size: 122%;
+    padding-left:15pt;
+    background: #CCCCCC;
+    color: #000000;
+    border: solid 1px black;
 }
 
 h6 {
-	font-size: 111%;
+    font-size: 111%;
 }
 
 /* 섹션 별 편집 */
 .editsection {
-	font-size: 90%;
-	float: right;
+    font-size: 90%;
+    float: right;
     margin-right: 0.5em;
 }
 
 /* 일반적인 링크 */
 A:link, A:active, A:visited, A:hover {
-	background: transparent;
-	color: blue;
-	text-decoration: none;
+    background: transparent;
+    color: blue;
+    text-decoration: none;
 }
 
 A:hover {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 /* 위키 페이지 링크 */
 A.wikipagelink:link, A.wikipagelink:active, A.wikipagelink:visited, A.wikipagelink:hover {
-	background: transparent;
-	text-decoration: none;
+    background: transparent;
+    text-decoration: none;
 }
 A.wikipagelink:hover
 {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 /* 위키 페이지 편집 링크 */
 A.wikipageedit:link, A.wikipageedit:active, A.wikipageedit:visited, A.wikipageedit:hover {
-	font-weight: bold;
-	background: transparent;
-	text-decoration: none;
+    font-weight: bold;
+    background: transparent;
+    text-decoration: none;
 }
 A.wikipageedit:hover
 {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 /* 외부 URL */
 A.outer:link, A.outer:active, A.outer:visited, A.outer:hover {
-	background: transparent;
-	color: blue;
-	text-decoration: none;
+    background: transparent;
+    color: blue;
+    text-decoration: none;
 }
 A.outer:hover
 {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 /* InterWiki */
 A.inter:link, A.inter:active, A.inter:visited, A.inter:hover {
-	background: transparent;
-	color: blue;
-	text-decoration: none;
+    background: transparent;
+    color: blue;
+    text-decoration: none;
 }
 A.inter:hover
 {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 IMG.inter
 {
-	width: 16;
-	height: 16;
-	border: none;
+    width: 16;
+    height: 16;
+    border: none;
 }
 
 /* 사전 링크 */
 A.dic:link, A.dic:active, A.dic:visited, A.dic:hover {
-	background: transparent;
-	color: blue;
-	text-decoration: none;
+    background: transparent;
+    color: blue;
+    text-decoration: none;
 }
 A.dic:hover
 {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 /* 기타 */
 SELECT,TEXTAREA
 {
-	font: normal normal normal 110%/160% dotumche, courier, monospace;
-	border: 1px solid silver;
-	padding: 0.2em 0.5em 0.2em 0.5em;
-	background: white;
-	color: black;
+    font: normal normal normal 110%/160% dotumche, courier, monospace;
+    border: 1px solid silver;
+    padding: 0.2em 0.5em 0.2em 0.5em;
+    background: white;
+    color: black;
 }
 
 INPUT.text {
-	border: 1px solid black;
-	background: white;
-	color:BLACK;
-	height: 1.3em;
+    border: 1px solid black;
+    background: white;
+    color:BLACK;
+    height: 1.3em;
 }
 
 img {
-	border: solid 0px #fffff0;
+    border: solid 0px #fffff0;
 }
 
 /* ISBN 링크시 책표지 */
 IMG.isbn {
-	border: 1px solid silver;
+    border: 1px solid silver;
 }
 
 /* 페이지 소스 보기 텍스트영역 */
 TEXTAREA.view
 {
-	font: normal normal normal 110%/160% dotumche, courier, monospace;
-	border: 1px solid silver;
-	padding: 0.2em 0.5em 0.2em 0.5em;
-	background: #F9F9F9;
-	color: black;
+    font: normal normal normal 110%/160% dotumche, courier, monospace;
+    border: 1px solid silver;
+    padding: 0.2em 0.5em 0.2em 0.5em;
+    background: #F9F9F9;
+    color: black;
 }
 
 /**********
@@ -285,103 +285,103 @@ TEXTAREA.view
 
 /* 페이지 이름 */
 H1.pagename {
-	padding: 5pt 10pt 5pt 10pt;
-	line-height: 110%;
-	text-align: left;
+    padding: 5pt 10pt 5pt 10pt;
+    line-height: 110%;
+    text-align: left;
 }
 
 /* 액션 이름 */
 H1.actionname {
-	padding: 5pt 10pt 5pt 10pt;
-	font-style: italic;
-	text-align: left;
-	line-height: 110%;
+    padding: 5pt 10pt 5pt 10pt;
+    font-style: italic;
+    text-align: left;
+    line-height: 110%;
 }
 
 /* 사이트 로고이미지 */
 IMG.logoimage {
-	border: none;
+    border: none;
 }
 
 /* 상단 메뉴 바 */
 DIV.gotobar {
-	border-top: 2px solid silver;
-	border-bottom: 2px solid silver;
+    border-top: 2px solid silver;
+    border-bottom: 2px solid silver;
 }
 
 DIV.gotobar_menu {
-	margin: 0;
-	padding: 5px 5px 5px 5px;
-	height: 60px;
-	text-align: left;
+    margin: 0;
+    padding: 5px 5px 5px 5px;
+    height: 60px;
+    text-align: left;
 }
 
 DIV.gotobar_user {
-	float: right;
-	margin: 0 0 0 10px;
-	padding: 2px 5px 2px 5px;
-	height: 60px;
-	border-left: 1px solid gray;
-	width: 150px;
+    float: right;
+    margin: 0 0 0 10px;
+    padding: 2px 5px 2px 5px;
+    height: 60px;
+    border-left: 1px solid gray;
+    width: 150px;
 }
 
 DIV.gotobar_search {
-	float: right;
-	margin: 0 0 0 5px;
-	padding: 2px 5px 2px 5px;
-	height: 60px;
-	border-left: 1px solid gray;
-	width: 360px;
-	position: relative;
-	z-index: 10;
+    float: right;
+    margin: 0 0 0 5px;
+    padding: 2px 5px 2px 5px;
+    height: 60px;
+    border-left: 1px solid gray;
+    width: 360px;
+    position: relative;
+    z-index: 10;
 
 border: 1px solid green;
 }
 
 #goto_list {
-	width: 340px;
+    width: 340px;
 border: 1px solid red;
 }
 
 #goto_list SELECT {
-	width: 340px;
-	position: relative;
+    width: 340px;
+    position: relative;
 }
 
 DIV.gotobar UL {
-	margin: 0;
-	padding: 0;
-	list-style: none;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 DIV.gotobar LI {
-	margin: 0;
-	vertical-align: baseline;
-	padding: 2px 0 2px 0;
+    margin: 0;
+    vertical-align: baseline;
+    padding: 2px 0 2px 0;
 }
 
 DIV.gotobar_menu LI {
-	display: inline;
-	height: 30px;
-	margin: 3px 20px 0 0;
-	text-align: center;
+    display: inline;
+    height: 30px;
+    margin: 3px 20px 0 0;
+    text-align: center;
 }
 
 DIV.gotobar_user LI {
-	text-align: center;
-	margin: 0;
+    text-align: center;
+    margin: 0;
 }
 
 INPUT.goto, INPUT.search {
-	height: 22px;
+    height: 22px;
 }
 
 DIV.gotobar LI FORM {
-	display: inline;
+    display: inline;
 }
 
 DIV.gotobar_search DIV {
-	display: inline;
+    display: inline;
 }
 
 DIV.gotobar A:link, 
@@ -389,39 +389,39 @@ DIV.gotobar A:visited,
 DIV.gotobar A:active, 
 DIV.gotobar A:hover
 {
-	background: transparent;
-	color: blue;
-	text-decoration: none;
+    background: transparent;
+    color: blue;
+    text-decoration: none;
 }
 DIV.gotobar A:hover
 {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 HR.gotobar {
-	border-color: silver;
-	margin-top: 2px;
-	height: 2px;
+    border-color: silver;
+    margin-top: 2px;
+    height: 2px;
 }
 
 /* 편집 가이드 */
 DIV.editguide {
-	text-align: right;
-	background: transparent;
-	border: none;
-	color: black;
+    text-align: right;
+    background: transparent;
+    border: none;
+    color: black;
 }
 
 /* footer */
 DIV.footer {
-	text-align: right;
-	background: transparent;
-	color: gray;
+    text-align: right;
+    background: transparent;
+    color: gray;
 }
 
 HR.footer {
-	border-color: silver;
-	height: 2px;
+    border-color: silver;
+    height: 2px;
 }
 
 
@@ -431,96 +431,96 @@ HR.footer {
 
 TABLE.diff
 {
-	border: 1px solid #CCCCCC;
-	width: 95%;
-	background: transparent;
-	color: black;
+    border: 1px solid #CCCCCC;
+    width: 95%;
+    background: transparent;
+    color: black;
 }
 
 TR.diff
 {
-	border: none;
+    border: none;
 }
 
 TD.diff
 {
-	font: normal normal normal 75%/160% Gulimche, Courier, monospace;
-	border: none;
-	height: 17pt;
+    font: normal normal normal 75%/160% Gulimche, Courier, monospace;
+    border: none;
+    height: 17pt;
 }
 
 TD.diffrange
 {
-	text-align: center;
-	border: none;
-	font: italic normal bold 75%/160% Gulim, "Times New Roman", Serif;
-	background: #CCCCCC;
-	color: black;
-	height: 17pt;
+    text-align: center;
+    border: none;
+    font: italic normal bold 75%/160% Gulim, "Times New Roman", Serif;
+    background: #CCCCCC;
+    color: black;
+    height: 17pt;
 }
 
 TD.diffremove
 {
-	font: normal normal normal 75%/160% Gulimche, Courier, monospace;
-	border: none;
-	background: #FFFFCC;
-	color: black;
-	height: 17pt;
+    font: normal normal normal 75%/160% Gulimche, Courier, monospace;
+    border: none;
+    background: #FFFFCC;
+    color: black;
+    height: 17pt;
 }
 
 TD.diffadd
 {
-	font: normal normal normal 75%/160% Gulimche, Courier, monospace;
-	border: none;
-	background: #CCFFCC;
-	color: black;
-	height: 17pt;
+    font: normal normal normal 75%/160% Gulimche, Courier, monospace;
+    border: none;
+    background: #CCFFCC;
+    color: black;
+    height: 17pt;
 }
 
 /**********
  * 최근변경내역 
  **********/
 TABLE.rc {
-	border: none;
+    border: none;
 }
 
 TR.rc {
-	border: none;
+    border: none;
 }
 
 TD.rc {
-	border: none;
+    border: none;
 }
 
 TD.rcdate {
-	border: none;
-	font-size: 80%;
+    border: none;
+    font-size: 80%;
 }
 
 TD.rcpage {
-	border: none;
+    border: none;
 }
 
 TD.rctime {
-	border: none;
+    border: none;
 }
 
 TD.rccount {
-	border: none;
+    border: none;
 }
 
 TD.rcauthor {
-	border: none;
+    border: none;
 }
 
 TD.rcsummary {
-	border: none;
-	background: transparent;
-	color: green;
+    border: none;
+    background: transparent;
+    color: green;
 }
 
 TD.rcblank {
-	border: none;
+    border: none;
 }
 
 /**********
@@ -528,91 +528,91 @@ TD.rcblank {
  **********/
 TABLE.calendar
 {
-	width: 145;
-	border: 1pt solid silver;
-	background: white;
-	color: black;
+    width: 145;
+    border: 1pt solid silver;
+    background: white;
+    color: black;
 }
 
 CAPTION.calendar
 {
-	background: transparent;
-	color: black;
-	border: none;
-	padding: 0;
-	line-height: 100%;
+    background: transparent;
+    color: black;
+    border: none;
+    padding: 0;
+    line-height: 100%;
 }
 
 CAPTION.calendar A:link,
 CAPTION.calendar A:visited,
-CAPTION.calendar A:active		
+CAPTION.calendar A:active       
 CAPTION.calendar A:hover
 {
-	border: none;
-	background:transparent;
-	color: black;
-	text-decoration: none;
-	font: normal normal bold 75%/160% Gulim, Serif;
-	margin: 0px 0px 0px 0px;
+    border: none;
+    background:transparent;
+    color: black;
+    text-decoration: none;
+    font: normal normal bold 75%/160% Gulim, Serif;
+    margin: 0px 0px 0px 0px;
 }
 CAPTION.calendar A:hover
 {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 TH.calendar
 {
-	border: none;
-	text-align: center;
-	font: bold 75%/100% Gulimche, Curier, monospace;
+    border: none;
+    text-align: center;
+    font: bold 75%/100% Gulimche, Curier, monospace;
 }
 
 TR.calendar
 {
-	border: none;
+    border: none;
 }
 
 TD.calendar
 {
-	border: none;
-	text-align: right;
-	font: 75%/100% Gulimche, Curier, monospace;
+    border: none;
+    text-align: right;
+    font: 75%/100% Gulimche, Curier, monospace;
 }
 
 TD.calendartoday
 {
-	border: 1pt solid silver;
-	text-align: right;
-	font: 75%/100% Gulimche, Curier, monospace;
-	background: yellow;
-	color: black;
+    border: 1pt solid silver;
+    text-align: right;
+    font: 75%/100% Gulimche, Curier, monospace;
+    background: yellow;
+    color: black;
 
 }
 
 TD.calendarthispage
 {
-	line-height:100%;
-	border-top:1px solid black;
-	border-left:1px solid black;
-	border-bottom:1px solid silver;
-	border-right:1px solid silver;
-	text-align: right;
-	font: 75%/100% Gulimche, Curier, monospace;
-	background-color:#F8F8F8;
-	color:black;
+    line-height:100%;
+    border-top:1px solid black;
+    border-left:1px solid black;
+    border-bottom:1px solid silver;
+    border-right:1px solid silver;
+    text-align: right;
+    font: 75%/100% Gulimche, Curier, monospace;
+    background-color:#F8F8F8;
+    color:black;
 }
 
 TD.calendartodaythispage
 {
-	line-height:100%;
-	border-top:1px solid black;
-	border-left:1px solid black;
-	border-bottom:1px solid silver;
-	border-right:1px solid silver;
-	text-align: right;
-	font: 75%/100% Gulimche, Curier, monospace;
-	background: yellow;
-	color: black;
+    line-height:100%;
+    border-top:1px solid black;
+    border-left:1px solid black;
+    border-bottom:1px solid silver;
+    border-right:1px solid silver;
+    text-align: right;
+    font: 75%/100% Gulimche, Curier, monospace;
+    background: yellow;
+    color: black;
 }
 
 TD.calendar A:link,
@@ -620,178 +620,178 @@ TD.calendar A:visited,
 TD.calendar A:active,
 TD.calendar A:hover
 {
-	background:transparent;
-	text-decoration:none
+    background:transparent;
+    text-decoration:none
 }
 TD.calendar A:hover
 {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 /* mysign */
 DIV.mysign
 {
-	text-align: right;
-	color: #333333;
-	background: transparent;
+    text-align: right;
+    color: #333333;
+    background: transparent;
 }
 
 SPAN.mysign
 {
-	color: #333333;
-	background: transparent;
+    color: #333333;
+    background: transparent;
 }
 
 /* comments */
 DIV.comments {
-	background-color:#F8F8F8;
-	color:#000;
-	border:1px solid silver;
-	padding:5px;
+    background-color:#F8F8F8;
+    color:#000;
+    border:1px solid silver;
+    padding:5px;
 }
 
 /* memo */
 DIV.memo {
-	background-color:#F8F8F8;
-	color:#000;
-	border:1px solid silver;
-	padding:5px;
+    background-color:#F8F8F8;
+    color:#000;
+    border:1px solid silver;
+    padding:5px;
 }
 
 /* memo 매크로 링크 */
 A.memo:link, A.memo:active, A.memo:visited, A.memo:hover {
-	background: transparent;
-	color: gray;
-	text-decoration: none;
+    background: transparent;
+    color: gray;
+    text-decoration: none;
 }
 A.memo:hover
 {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 /* footnote */
 DIV.footnote {
-	border-top:1px solid silver;
-	padding:5px;
+    border-top:1px solid silver;
+    padding:5px;
 }
 
 A.footnote {
-	font-size: 80%;
-	vertical-align: super;
+    font-size: 80%;
+    vertical-align: super;
 }
 
 /* 트랙백 주고받기 안내영역 */
 DIV.trackbackguide {
-	text-align: left;
-	background: transparent;
-	border: none;
-	color: black;
+    text-align: left;
+    background: transparent;
+    border: none;
+    color: black;
 }
 
 /* 트랙백 주고받기 가이드 */
 DIV.trackbackguidecontent {
-	background: transparent;
-	border: none;
+    background: transparent;
+    border: none;
 }
 
 A.trackbackguidecontent:link, A.trackbackguidecontent:active, A.trackbackguidecontent:visited, A.trackbackguidecontent:hover {
-	background: transparent;
-	color: blue;
-	text-decoration: none;
+    background: transparent;
+    color: blue;
+    text-decoration: none;
 }
 A.trackbackguidecontent:hover
 {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 /* trackbacksent, trackbackreceived 매크로 */
 DIV.trackbacklist {
-	background-color:#F8F8F8;
-	color:#000;
-	border:1px solid silver;
-	padding:5px;
+    background-color:#F8F8F8;
+    color:#000;
+    border:1px solid silver;
+    padding:5px;
 }
 
 A.trackbacklist:link, A.trackbacklist:active, A.trackbacklist:visited, A.trackbacklist:hover {
-	background: transparent;
-	color: blue;
-	text-decoration: none;
+    background: transparent;
+    color: blue;
+    text-decoration: none;
 }
 A.trackbacklist:hover
 {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 /* thread */
 DIV.threadnew {
-	background-color:#F8F8F8;
-	border: 1px solid gray;
-	padding: 5px 5px 5px 5px;
+    background-color:#F8F8F8;
+    border: 1px solid gray;
+    padding: 5px 5px 5px 5px;
 }
 
 DIV.threadreply {
-	border-bottom: 1px dashed gray;
-	padding: 1px 1px 1px 1px;
+    border-bottom: 1px dashed gray;
+    padding: 1px 1px 1px 1px;
 }
 
 DIV.threadmemo {
-	border:1px solid silver;
-	padding-left:5px;
+    border:1px solid silver;
+    padding-left:5px;
 }
 
 DIV.threaditem {
-	border-left: 2px solid #888888;
-	padding: 5px;
+    border-left: 2px solid #888888;
+    padding: 5px;
 }
 
 A.threadmemo:link, A.threadmemo:active, A.threadmemo:visited, A.threadmemo:hover {
-	background: transparent;
-	color: gray;
-	text-decoration: none;
+    background: transparent;
+    color: gray;
+    text-decoration: none;
 }
 A.threadmemo:hover
 {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 /* index */
 DIV.wordindex {
-	background-color: transparent;
-	border-top:1px solid silver;
-	padding:5px;
+    background-color: transparent;
+    border-top:1px solid silver;
+    padding:5px;
 }
 
 A.wordindex:link, A.wordindex:active, A.wordindex:visited, A.wordindex:hover {
-	background: transparent;
-	color: maroon;
-	text-decoration: none;
+    background: transparent;
+    color: maroon;
+    text-decoration: none;
 }
 A.wordindex:hover
 {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 SPAN.wordindex {
-	font-size: 80%;
-	vertical-align: sub;
-	display: none;
+    font-size: 80%;
+    vertical-align: sub;
+    display: none;
 }
 
 /* search results */
 SPAN.searchresultpagename {
-	font-size: 120%;
-	font-weight: bold;
+    font-size: 120%;
+    font-weight: bold;
 }
 
 SPAN.searchresultpageinfo {
-	font-style: italic;
+    font-style: italic;
 }
 
 BLOCKQUOTE.searchresultcontext {
 }
 
 SPAN.highlight {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 /* vim plugin */

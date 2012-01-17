@@ -1,34 +1,34 @@
 sub allpagesto {
-	my ($txt) = @_;
+    my ($txt) = @_;
 
-	$txt =~ s/\&__LT__;allpagesto\((.+?)\)\&__GT__;/&MacroAllPagesTo($1)/gei;
+    $txt =~ s/\&__LT__;allpagesto\((.+?)\)\&__GT__;/&MacroAllPagesTo($1)/gei;
 
-	return $txt;
+    return $txt;
 }
 
 sub MacroAllPagesTo {
-	my ($string) = @_;
-	my @x = ();
-	my ($pagelines, $pagename, $txt);
-	my $pagename;
-	
-	$string = &RemoveLink($string);
-	$string = &FreeToNormal($string);
-	if (&ValidId($string) ne "") {
-		return "&lt;allpagesto($string)&gt;";
-	}
+    my ($string) = @_;
+    my @x = ();
+    my ($pagelines, $pagename, $txt);
+    my $pagename;
+    
+    $string = &RemoveLink($string);
+    $string = &FreeToNormal($string);
+    if (&ValidId($string) ne "") {
+        return "&lt;allpagesto($string)&gt;";
+    }
 
-	foreach $pagelines (&GetFullLinkList("empty=0&sort=1&reverse=$string")) {
-		my @pages = split(' ', $pagelines);
-		@x = (@x, shift(@pages));
-	}
+    foreach $pagelines (&GetFullLinkList("empty=0&sort=1&reverse=$string")) {
+        my @pages = split(' ', $pagelines);
+        @x = (@x, shift(@pages));
+    }
 
-	foreach $pagename (@x) {
-		$txt .= ".... "  if ($pagename =~ m|/|);
-		$txt .= &GetPageLink($pagename) . "<br>";
-	}
+    foreach $pagename (@x) {
+        $txt .= ".... "  if ($pagename =~ m|/|);
+        $txt .= &GetPageLink($pagename) . "<br>";
+    }
 
-	return $txt;
+    return $txt;
 }
 
 1;

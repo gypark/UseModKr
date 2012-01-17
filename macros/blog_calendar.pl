@@ -1,169 +1,169 @@
 # <blog_calendar(목차페이지,년,월)>
 
 sub blog_calendar {
-	my ($txt) = @_;
+    my ($txt) = @_;
 
-	$txt =~ s/\&__LT__;blog_calendar\(([^,\n]+),([-+]?\d+),([-+]?\d+)\)\&__GT__;/&MacroBlogCalendar($1, $2, $3)/gei;
+    $txt =~ s/\&__LT__;blog_calendar\(([^,\n]+),([-+]?\d+),([-+]?\d+)\)\&__GT__;/&MacroBlogCalendar($1, $2, $3)/gei;
 
-	return $txt;
+    return $txt;
 }
 
 sub MacroBlogCalendar {
-	use Time::Local;
-	use strict;
-	my ($tocpage, $cal_year, $cal_month) = @_;
+    use Time::Local;
+    use strict;
+    my ($tocpage, $cal_year, $cal_month) = @_;
 
-	my $result='';
-	my $cal_result='';
-	my $cal_page;
-	my @cal_color = ("red", "black", "black", "black", "black", "black", "blue", "green");
-	my @cal_dow = (T('Su'), T('Mo'), T('Tu'), T('We'), T('Th'), T('Fr'), T('Sa'));
-	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($Now+$TimeZoneOffset);
-	my ($this_year, $this_month, $this_day) = ($year, $mon, $mday);
-	my $cal_time;
-	my ($td_class, $span_style);
-	my $temp;
+    my $result='';
+    my $cal_result='';
+    my $cal_page;
+    my @cal_color = ("red", "black", "black", "black", "black", "black", "blue", "green");
+    my @cal_dow = (T('Su'), T('Mo'), T('Tu'), T('We'), T('Th'), T('Fr'), T('Sa'));
+    my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($Now+$TimeZoneOffset);
+    my ($this_year, $this_month, $this_day) = ($year, $mon, $mday);
+    my $cal_time;
+    my ($td_class, $span_style);
+    my $temp;
 
-	# 달의 값이 13 이상이면 무효
-	if (!($cal_month =~ /[-+]/) && ($cal_month > 12)) {
-		return "&lt;calendar($tocpage,$cal_year,$cal_month)&gt;";
-	}
+    # 달의 값이 13 이상이면 무효
+    if (!($cal_month =~ /[-+]/) && ($cal_month > 12)) {
+        return "&lt;calendar($tocpage,$cal_year,$cal_month)&gt;";
+    }
 
-	# 라이브러리 읽음
-	my ($MacrosDir, $MyMacrosDir) = ("./macros/", "./mymacros/");
-	if (-f "$MyMacrosDir/blog_library.pl") {
-		require "./$MyMacrosDir/blog_library.pl";
-	} elsif (-f "$MacrosDir/blog_library.pl") {
-		require "./$MacrosDir/blog_library.pl";
-	} else {
-		return "<font color='red'>blog_library.pl not found</font>";
-	}
+    # 라이브러리 읽음
+    my ($MacrosDir, $MyMacrosDir) = ("./macros/", "./mymacros/");
+    if (-f "$MyMacrosDir/blog_library.pl") {
+        require "./$MyMacrosDir/blog_library.pl";
+    } elsif (-f "$MacrosDir/blog_library.pl") {
+        require "./$MacrosDir/blog_library.pl";
+    } else {
+        return "<font color='red'>blog_library.pl not found</font>";
+    }
 
-	# 목차페이지로부터 목차리스트를 얻어냄
-	my ($status, $toc_mainpage, @tocitem_List) = &BlogReadToc($tocpage);
-	if (!$status) {
-		return "$toc_mainpage";
-	}
+    # 목차페이지로부터 목차리스트를 얻어냄
+    my ($status, $toc_mainpage, @tocitem_List) = &BlogReadToc($tocpage);
+    if (!$status) {
+        return "$toc_mainpage";
+    }
 
-	# 리스트를 하나로 연결
-	my $tocitems = join("\n", @tocitem_List);
+    # 리스트를 하나로 연결
+    my $tocitems = join("\n", @tocitem_List);
 
-	# 년도나 달에 0 을 인자로 받으면 올해 또는 이번 달
-	$cal_year = $this_year+1900 if ($cal_year == 0); 
-	$cal_month = $this_month+1 if ($cal_month == 0);
+    # 년도나 달에 0 을 인자로 받으면 올해 또는 이번 달
+    $cal_year = $this_year+1900 if ($cal_year == 0); 
+    $cal_month = $this_month+1 if ($cal_month == 0);
 
-	# 년도에 + 또는 - 가 있으면 올해로부터 변위 계산
-	if ($cal_year =~ /\+(\d+)/ ) {
-		$cal_year = $this_year+1900 + $1;
-	} elsif ($cal_year =~ /-(\d+)/ ) {
-		$cal_year = $this_year+1900 - $1;
-	}
+    # 년도에 + 또는 - 가 있으면 올해로부터 변위 계산
+    if ($cal_year =~ /\+(\d+)/ ) {
+        $cal_year = $this_year+1900 + $1;
+    } elsif ($cal_year =~ /-(\d+)/ ) {
+        $cal_year = $this_year+1900 - $1;
+    }
 
-	# 달에 + 또는 - 가 있으면 이번 달로부터 변위 계산
-	if ($cal_month =~ /\+(\d+)/ ) {
-		$cal_month = $this_month+1 + $1;
-		while ($cal_month > 12)  {
-			$cal_month -= 12;
-			$cal_year++;
-		}
-	} elsif ($cal_month =~ /-(\d+)/ ) {
-		$cal_month = $this_month+1 - $1;
-		while ($cal_month < 1) {
-			$cal_month += 12;
-			$cal_year--;
-		}
-	}
-	
-	# 1902년부터 2037년 사이만 지원함. 그 범위를 벗어나면 1902년과 2037년으로 계산
-	$cal_year = 2037 if ($cal_year > 2037);
-	$cal_year = 1902 if ($cal_year < 1902);
+    # 달에 + 또는 - 가 있으면 이번 달로부터 변위 계산
+    if ($cal_month =~ /\+(\d+)/ ) {
+        $cal_month = $this_month+1 + $1;
+        while ($cal_month > 12)  {
+            $cal_month -= 12;
+            $cal_year++;
+        }
+    } elsif ($cal_month =~ /-(\d+)/ ) {
+        $cal_month = $this_month+1 - $1;
+        while ($cal_month < 1) {
+            $cal_month += 12;
+            $cal_year--;
+        }
+    }
+    
+    # 1902년부터 2037년 사이만 지원함. 그 범위를 벗어나면 1902년과 2037년으로 계산
+    $cal_year = 2037 if ($cal_year > 2037);
+    $cal_year = 1902 if ($cal_year < 1902);
 
-	# 1월~9월은 01~09로 만듦
-	if ($cal_month < 10) {
-		$cal_month = "0" . $cal_month;
-	}
+    # 1월~9월은 01~09로 만듦
+    if ($cal_month < 10) {
+        $cal_month = "0" . $cal_month;
+    }
 
-	# 달력 제목 출력
-	$result .= "<TABLE class='calendar'>";
-	$result .= "<CAPTION class='calendar'>" 
-		."<a href=\"$ScriptName".&ScriptLinkChar()."$toc_mainpage/$cal_year-$cal_month\">"
-		.(length($toc_mainpage)?"$toc_mainpage<br>":"")
-		."$cal_year-$cal_month"
-		."</a>"
-		."</CAPTION>";
+    # 달력 제목 출력
+    $result .= "<TABLE class='calendar'>";
+    $result .= "<CAPTION class='calendar'>" 
+        ."<a href=\"$ScriptName".&ScriptLinkChar()."$toc_mainpage/$cal_year-$cal_month\">"
+        .(length($toc_mainpage)?"$toc_mainpage<br>":"")
+        ."$cal_year-$cal_month"
+        ."</a>"
+        ."</CAPTION>";
 
-	# 상단의 요일 출력 
-	$result .= "<TR class='calendar'>";
-	for (0..6) {
-		$result .= "<TH class='calendar'>"
-			. "<span style='color:$cal_color[$_]'>$cal_dow[$_]</span></TH>";
-	}
-	$result .= "</TR>";
+    # 상단의 요일 출력 
+    $result .= "<TR class='calendar'>";
+    for (0..6) {
+        $result .= "<TH class='calendar'>"
+            . "<span style='color:$cal_color[$_]'>$cal_dow[$_]</span></TH>";
+    }
+    $result .= "</TR>";
 
-	# 인자로 주어진 달의 1일날을 찾음
-	$cal_time = timelocal(0,0,0,1,$cal_month-1,$cal_year);
-	($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($cal_time);
-	# 달력의 첫번째 날 찾음
-	$cal_time -= $wday * (60 * 60 * 24);
-	($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($cal_time);
+    # 인자로 주어진 달의 1일날을 찾음
+    $cal_time = timelocal(0,0,0,1,$cal_month-1,$cal_year);
+    ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($cal_time);
+    # 달력의 첫번째 날 찾음
+    $cal_time -= $wday * (60 * 60 * 24);
+    ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($cal_time);
 
-	# 달력 그림
-	my ($temp_month, $temp_day);
-		
-	for (1..6) {
-		$result .= "<TR class='calendar'>";
-		for (0..6) {
+    # 달력 그림
+    my ($temp_month, $temp_day);
+        
+    for (1..6) {
+        $result .= "<TR class='calendar'>";
+        for (0..6) {
 
-			# 1~9는 01~09로 만듦
-			($temp_month, $temp_day) = ($mon + 1, $mday);
-			$temp_month = "0".$temp_month if ($temp_month < 10);
-			$temp_day = "0".$temp_day if ($temp_day < 10);
-			$cal_page = ($year + 1900)."-".($temp_month)."-".($temp_day);
+            # 1~9는 01~09로 만듦
+            ($temp_month, $temp_day) = ($mon + 1, $mday);
+            $temp_month = "0".$temp_month if ($temp_month < 10);
+            $temp_day = "0".$temp_day if ($temp_day < 10);
+            $cal_page = ($year + 1900)."-".($temp_month)."-".($temp_day);
 
-			$cal_result = $mday;
-			$span_style = "";
-			if (($year == $this_year) && ($mon == $this_month) && ($mday == $this_day)) {
-				$td_class = "calendartoday";
-				$span_style = "text-decoration: underline; ";
-			} else {
-				$td_class = "calendar";
-			}
+            $cal_result = $mday;
+            $span_style = "";
+            if (($year == $this_year) && ($mon == $this_month) && ($mday == $this_day)) {
+                $td_class = "calendartoday";
+                $span_style = "text-decoration: underline; ";
+            } else {
+                $td_class = "calendar";
+            }
 
 # 해당 날짜에 포스트가 있는 경우
-			my ($page, $pagename) = ("", "");
-			if ($tocitems =~ /^\[\[(.+?)(\|.*)?\]\] $cal_page$/m) {
-				($page, $pagename) = ($1, $1);
-				$page =~ s|^/|$toc_mainpage/|;
-				$page = &FreeToNormal($page);
-				$span_style .= "font-weight: bold; text-decoration: underline; ";
-				$wday = 7;
+            my ($page, $pagename) = ("", "");
+            if ($tocitems =~ /^\[\[(.+?)(\|.*)?\]\] $cal_page$/m) {
+                ($page, $pagename) = ($1, $1);
+                $page =~ s|^/|$toc_mainpage/|;
+                $page = &FreeToNormal($page);
+                $span_style .= "font-weight: bold; text-decoration: underline; ";
+                $wday = 7;
 # 현재 보는 페이지에 해당하는 날짜인 경우
-				if ($page eq $OpenPageName) {
-					$td_class .= "thispage";
-				}
-			}
+                if ($page eq $OpenPageName) {
+                    $td_class .= "thispage";
+                }
+            }
 
-			if ($cal_month != ($mon+1)) {
-				$span_style .= "font-size: 0.9em; ";
-			}
+            if ($cal_month != ($mon+1)) {
+                $span_style .= "font-size: 0.9em; ";
+            }
 
-			$result .= "<td class='$td_class'>"
-				.(($page)?"<a href=\"$ScriptName".&ScriptLinkChar()."$page\" title=\"$pagename\">":"")
-				."<span style='color:$cal_color[$wday]; $span_style'>"
-				.$cal_result
-				."</span>"
-				.(($page)?"</a>":"")
-				."</td>";
-			$cal_time += (60 * 60 * 24);
-			($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($cal_time);
-		}
-		$result .= "</TR>";
-		# 4 또는 5 줄로 끝낼 수 있으면 끝냄
-		last if (($mon+1 > $cal_month) || ($year+1900 > $cal_year));
-	}
+            $result .= "<td class='$td_class'>"
+                .(($page)?"<a href=\"$ScriptName".&ScriptLinkChar()."$page\" title=\"$pagename\">":"")
+                ."<span style='color:$cal_color[$wday]; $span_style'>"
+                .$cal_result
+                ."</span>"
+                .(($page)?"</a>":"")
+                ."</td>";
+            $cal_time += (60 * 60 * 24);
+            ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($cal_time);
+        }
+        $result .= "</TR>";
+        # 4 또는 5 줄로 끝낼 수 있으면 끝냄
+        last if (($mon+1 > $cal_month) || ($year+1900 > $cal_year));
+    }
 
-	$result .= "</table>";
-	return $result;
+    $result .= "</table>";
+    return $result;
 }
 
 1;

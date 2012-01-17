@@ -71,10 +71,10 @@ $OekakiJarUrl = "$UrlPrefix/oekakibbs.jar";   # URL for oekaki .jar file
 ### for {{{lang }}} block
 $SOURCEHIGHLIGHT = "/usr/local/bin/source-highlight";    # Path of "source-highlight" binary
 @SRCHIGHLANG     = qw(
-		bib bison caml changelog cpp csharp diff flex fortran html java javascript
-		langdef latex logtalk lua nohilite outlang pascal perl php postscript
-		prolog python ruby sh sml sql style syslog tcl xml
-	);													# Supported languages
+        bib bison caml changelog cpp csharp diff flex fortran html java javascript
+        langdef latex logtalk lua nohilite outlang pascal perl php postscript
+        prolog python ruby sh sml sql style syslog tcl xml
+    );                                                  # Supported languages
 
 ### for "#EXTERN " directive
 $EditGuideInExtern = 0;    # 1 = show edit guide in bottom frame, 0 = don't show
@@ -92,7 +92,7 @@ $SlashLinks   = 1;      # 1 = use script/action links, 0 = script?action
 ### trackback 보내기
 $SendPingAllowed = 0;   # 0 - anyone, 1 - who can edit, 2 - who is admin
 ### LaTeX 변환 지원
-$UseLatex    = 0;		# 1 = Use LaTeX conversion   2 = Don't convert
+$UseLatex    = 0;       # 1 = Use LaTeX conversion   2 = Don't convert
 ### 사용자 정의 헤더
 $UserHeader  = '';      # Optional HTML header additional content
 ### 존재하지 않는 페이지 표시 방식
@@ -103,9 +103,9 @@ $EditNameLink = 1;      # 1 = edit links use name (CSS), 0 = '?' links
 ### caution: Don't write 'utf-8'. It is included implicitly.
 @UrlEncodingGuess = ('euc-kr');
 ### by luke
-$UseEmoticon 	= 1;		# 1 = use emoticon, 0 = not use
-$ClickEdit	 	= 1;		# 1 = edit page by double click on page, 0 = no use
-$EditPagePos	= 1;		# 1 = bottom, 2 = top, 3 = top & bottom
+$UseEmoticon    = 1;        # 1 = use emoticon, 0 = not use
+$ClickEdit      = 1;        # 1 = edit page by double click on page, 0 = no use
+$EditPagePos    = 1;        # 1 = bottom, 2 = top, 3 = top & bottom
 $NamedAnchors   = 1;        # 0 = no anchors, 1 = enable anchors, 2 = enable but suppress display
 
 # Major options:
@@ -158,12 +158,12 @@ $UserDir     = "$DataDir/user";     # Stores user data
 $KeepDir     = "$DataDir/keep";     # Stores kept (old) page data
 $TempDir     = "$DataDir/temp";     # Temporary files and locks
 $LockDir     = "$TempDir/lock";     # DB is locked if this exists
-$InterFile   = "intermap";			# Interwiki site->url map
+$InterFile   = "intermap";          # Interwiki site->url map
 $RcFile      = "$DataDir/rclog";    # New RecentChanges logfile
 $RcOldFile   = "$DataDir/oldrclog"; # Old RecentChanges logfile
 $IndexFile   = "$DataDir/pageidx";  # List of all pages
 $LinkDir     = "$DataDir/link";    # by gypark. Stores the links of each page
-$CountDir    = "$DataDir/count";	# by gypark. Stores view-counts
+$CountDir    = "$DataDir/count";    # by gypark. Stores view-counts
 $HiddenPageFile = "$DataDir/hidden";  # hidden pages list file
 
 # == End of Configuration =================================================

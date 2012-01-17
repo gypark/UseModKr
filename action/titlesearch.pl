@@ -8,15 +8,15 @@
 
 
 sub action_titlesearch {
-	my $string = &GetParam('string');
+    my $string = &GetParam('string');
     my $parent = &GetParam('parent');
-	my @result_string = ();
-	my @result_parent = ();
+    my @result_string = ();
+    my @result_parent = ();
 
-	if (($string eq '') && ($parent eq '')) {
-		&DoIndex();
-		return;
-	}
+    if (($string eq '') && ($parent eq '')) {
+        &DoIndex();
+        return;
+    }
 
 
     if ($string ne '') {
@@ -29,7 +29,7 @@ sub action_titlesearch {
         &PrintPageList(&SearchTitle("^$parent(/|\$)"));
     }
 
-	print &GetCommonFooter();
+    print &GetCommonFooter();
 }
 
 1;

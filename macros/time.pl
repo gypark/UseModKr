@@ -1,9 +1,9 @@
 sub time {
-	my ($txt) = @_;
+    my ($txt) = @_;
 
-	$txt =~ s/\&__LT__;time\&__GT__;/&MacroTime()/gei;
+    $txt =~ s/\&__LT__;time\&__GT__;/&MacroTime()/gei;
 
-	return $txt;
+    return $txt;
 }
 
 sub MacroTime() { return &CalcTime(time); }

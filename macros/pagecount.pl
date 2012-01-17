@@ -1,14 +1,14 @@
 sub pagecount {
-	my ($txt) = @_;
+    my ($txt) = @_;
 
-	$txt =~ s/\&__LT__;PageCount\&__GT__;/&MacroPageCount()/gei;
+    $txt =~ s/\&__LT__;PageCount\&__GT__;/&MacroPageCount()/gei;
 
-	return $txt;
+    return $txt;
 }
 
 sub MacroPageCount() {
-	my @pageList = &AllPagesList();
-	return $#pageList + 1;
+    my @pageList = &AllPagesList();
+    return $#pageList + 1;
 }
 
 1;

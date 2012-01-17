@@ -1,21 +1,21 @@
 sub adminonly {
-	my ($txt) = @_;
+    my ($txt) = @_;
 
-	$txt =~ s/&__LT__;adminonly&__GT__;(.*?)&__LT__;\/adminonly&__GT__;/&MacroAdminOnly($1)/geis;
+    $txt =~ s/&__LT__;adminonly&__GT__;(.*?)&__LT__;\/adminonly&__GT__;/&MacroAdminOnly($1)/geis;
 
-	return $txt;
+    return $txt;
 }
 
 sub MacroAdminOnly {
-	my ($blocktext) = @_;
+    my ($blocktext) = @_;
 
-	$blocktext =~ s/^(\r?\n)(.*?)(\r?\n)$/$2/geis;
+    $blocktext =~ s/^(\r?\n)(.*?)(\r?\n)$/$2/geis;
 
-	if (&UserIsAdmin()) {
-		return "$blocktext";
-	} else {
-		return "";
-	}
+    if (&UserIsAdmin()) {
+        return "$blocktext";
+    } else {
+        return "";
+    }
 }
 
 1;

@@ -1,13 +1,13 @@
 package UseModWiki;
 
 @HelpItem = (
-	"Make Page",		# 0
-	"Text Formatting",	# 1
-	"Link and Image",	# 2
-	"Table",		# 3
-	"Macro",			# 4
-	"Emoticon",			# 5
-	);
+    "Make Page",        # 0
+    "Text Formatting",  # 1
+    "Link and Image",   # 2
+    "Table",        # 3
+    "Macro",            # 4
+    "Emoticon",         # 5
+    );
 
 
 ########### Make Page

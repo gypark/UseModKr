@@ -1,13 +1,13 @@
 sub kdic {
-	my ($txt) = @_;
+    my ($txt) = @_;
 
-	$txt =~ s/\&__LT__;kdic\((.+?)\)\&__GT__;/&MacroKDic($1)/gei;
+    $txt =~ s/\&__LT__;kdic\((.+?)\)\&__GT__;/&MacroKDic($1)/gei;
 
-	return $txt;
+    return $txt;
 }
 
 sub MacroKDic {
-	return "<A class='dic' href='http://krdic.naver.com/krdic?query=@_' target='dictionary'>@_</A>";
+    return "<A class='dic' href='http://krdic.naver.com/krdic?query=@_' target='dictionary'>@_</A>";
 }
 
 1;

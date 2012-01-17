@@ -2,26 +2,26 @@
 # action=rss[&옵션] 의 형태로 링크 반환
 
 sub rss {
-	my ($txt) = @_;
+    my ($txt) = @_;
 
-	$txt =~ s/\&__LT__;rss\((.*?)\)&__GT__;/&MacroRss($1)/gei;
+    $txt =~ s/\&__LT__;rss\((.*?)\)&__GT__;/&MacroRss($1)/gei;
 
-	return $txt;
+    return $txt;
 }
 
 sub MacroRss {
-	use strict;
-	my ($arg) = @_;
-	my $txt;
+    use strict;
+    my ($arg) = @_;
+    my $txt;
 
-	if ($arg ne "") {
-		$arg = "&".$arg;
-	}
+    if ($arg ne "") {
+        $arg = "&".$arg;
+    }
 
-	$txt = &ScriptLink("action=rss$arg",
-			"<img align='absmiddle' src='$IconUrl/xml_rss.gif'> Get RSS of Entire Wiki");
+    $txt = &ScriptLink("action=rss$arg",
+            "<img align='absmiddle' src='$IconUrl/xml_rss.gif'> Get RSS of Entire Wiki");
 
-	return $txt;
+    return $txt;
 }
 
 1;

@@ -1,28 +1,28 @@
 // 메모 매크로, 트랙백 등에 사용
 function onMemoToggle(id)
-{	
-	if (document.getElementById(id).style.display == "none")
-	{
-		document.getElementById(id).style.display = "block";
-	}
-	else
-	{
-		document.getElementById(id).style.display = "none";
-	}
-	return false;
+{   
+    if (document.getElementById(id).style.display == "none")
+    {
+        document.getElementById(id).style.display = "block";
+    }
+    else
+    {
+        document.getElementById(id).style.display = "none";
+    }
+    return false;
 }
 
 // 작성 취소 시 확인
 var previous_text = "", current_text = "", conflict = false, closeok = false;
 function chk_close(e, str) {
-	if (!e) e = event;
-	if (!closeok) {
-		current_text = document.form_edit.text.value;
+    if (!e) e = event;
+    if (!closeok) {
+        current_text = document.form_edit.text.value;
 
-		if (conflict || (previous_text != current_text)) {
-			e.returnValue = str;
-		}
-	}
+        if (conflict || (previous_text != current_text)) {
+            e.returnValue = str;
+        }
+    }
 }
 
 // msg - 사용자에게 확인창을 띄울때 출력되는 메시지
@@ -38,66 +38,66 @@ function chk_close(e, str) {
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
 function copy_clip(msg, text) {
-	if (msg != "") {
-		if (!confirm(msg)) return;
-	}
+    if (msg != "") {
+        if (!confirm(msg)) return;
+    }
 
-	// IE
-	if (window.clipboardData) { 
-		window.clipboardData.setData("Text", text);
-	}
-	// Firefox/Mozilla
-	else if (window.netscape) {
-		// firefox/mozilla 에서 동작하기 위해서는 사용자 프로파일 디렉토리에 prefs.js 파일에 다음과 같이 적어준다
-		// user_pref("signed.applets.codebase_principal_support", true);
-		// 또는 "about:config" 페이지를 열어서 다음 항목의 값을 true로 설정해 준다
-		// signed.applets.codebase_principal_support
+    // IE
+    if (window.clipboardData) { 
+        window.clipboardData.setData("Text", text);
+    }
+    // Firefox/Mozilla
+    else if (window.netscape) {
+        // firefox/mozilla 에서 동작하기 위해서는 사용자 프로파일 디렉토리에 prefs.js 파일에 다음과 같이 적어준다
+        // user_pref("signed.applets.codebase_principal_support", true);
+        // 또는 "about:config" 페이지를 열어서 다음 항목의 값을 true로 설정해 준다
+        // signed.applets.codebase_principal_support
 
-		alert("If it fails to copy, check the option:\n\nsigned.applets.codebase_principal_support  =  true\n\nin \"about:config\" page.");
+        alert("If it fails to copy, check the option:\n\nsigned.applets.codebase_principal_support  =  true\n\nin \"about:config\" page.");
 
-		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
-		
-		var clip = Components.classes['@mozilla.org/widget/clipboard;1'].createInstance(Components.interfaces.nsIClipboard);
-		if (!clip) return;
+        netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
+        
+        var clip = Components.classes['@mozilla.org/widget/clipboard;1'].createInstance(Components.interfaces.nsIClipboard);
+        if (!clip) return;
 
-		var trans = Components.classes['@mozilla.org/widget/transferable;1'].createInstance(Components.interfaces.nsITransferable);
-		if (!trans) return;
+        var trans = Components.classes['@mozilla.org/widget/transferable;1'].createInstance(Components.interfaces.nsITransferable);
+        if (!trans) return;
 
-		trans.addDataFlavor('text/unicode');
+        trans.addDataFlavor('text/unicode');
 
-		var str = Components.classes["@mozilla.org/supports-string;1"].createInstance(Components.interfaces.nsISupportsString);
-		var copytext=text;
+        var str = Components.classes["@mozilla.org/supports-string;1"].createInstance(Components.interfaces.nsISupportsString);
+        var copytext=text;
 
-		str.data=copytext;
+        str.data=copytext;
 
-		trans.setTransferData("text/unicode",str,copytext.length*2);
+        trans.setTransferData("text/unicode",str,copytext.length*2);
 
-		var clipid=Components.interfaces.nsIClipboard;
+        var clipid=Components.interfaces.nsIClipboard;
 
-		if (!clip) return false;
+        if (!clip) return false;
 
-		clip.setData(trans,null,clipid.kGlobalClipboard);
-	}
-	return false;
+        clip.setData(trans,null,clipid.kGlobalClipboard);
+    }
+    return false;
 }
 
 // 단축키 개선
 function GetKeyStroke(KeyStorke) {
-	var evt = KeyStorke || window.event;
-	var eventChooser = evt.keyCode || evt.which;
-	var target = evt.target || evt.srcElement;
-	if (evt.altKey || evt.ctrlKey) return;
-	while (target && target.tagName.toLowerCase() != 'input' && target.tagName.toLowerCase() != 'textarea') {
-		target = target.parentElement;
-	}
-	if (!target) {
-		var which = String.fromCharCode(eventChooser).toLowerCase();
-		for (var i in key) {
-			if (which == i) {
-				document.location.href = key[i];
-			}
-		}
-	}
+    var evt = KeyStorke || window.event;
+    var eventChooser = evt.keyCode || evt.which;
+    var target = evt.target || evt.srcElement;
+    if (evt.altKey || evt.ctrlKey) return;
+    while (target && target.tagName.toLowerCase() != 'input' && target.tagName.toLowerCase() != 'textarea') {
+        target = target.parentElement;
+    }
+    if (!target) {
+        var which = String.fromCharCode(eventChooser).toLowerCase();
+        for (var i in key) {
+            if (which == i) {
+                document.location.href = key[i];
+            }
+        }
+    }
 }
 
 // 바로 가기 필드 자동 완성
@@ -120,170 +120,170 @@ function GetKeyStroke(KeyStorke) {
 //
 //
 
-	////
-	// 동작가능한 브라우저 판정
-	//
-	// @sample        if(chkAjaBrowser()){ location.href='nonajax.htm' }
-	// @sample        oj = new chkAjaBrowser();if(oj.bw.safari){ /* Safari 코드 */ }
-	// @return        라이브러리가 동작가능한 브라우저만 true  true|false
-	//
-	//  Enable list (v038현재)
-	//   WinIE 5.5+ 
-	//   Konqueror 3.3+
-	//   AppleWebKit계(Safari,OmniWeb,Shiira) 124+ 
-	//   Mozilla계(Firefox,Netscape,Galeon,Epiphany,K-Meleon,Sylera) 20011128+ 
-	//   Opera 8+ 
-	//
-	function chkAjaBrowser()
-	{
-		var a,ua = navigator.userAgent;
-		this.bw= { 
-		  safari    : ((a=ua.split('AppleWebKit/')[1])?a.split('(')[0]:0)>=124 ,
-		  konqueror : ((a=ua.split('Konqueror/')[1])?a.split(';')[0]:0)>=3.3 ,
-		  mozes     : ((a=ua.split('Gecko/')[1])?a.split(" ")[0]:0) >= 20011128 ,
-		  opera     : (!!window.opera) && ((typeof XMLHttpRequest)=='function') ,
-		  msie      : (!!window.ActiveXObject)?(!!createHttpRequest()):false 
-		}
-		return (this.bw.safari||this.bw.konqueror||this.bw.mozes||this.bw.opera||this.bw.msie)
-	}
-	
+    ////
+    // 동작가능한 브라우저 판정
+    //
+    // @sample        if(chkAjaBrowser()){ location.href='nonajax.htm' }
+    // @sample        oj = new chkAjaBrowser();if(oj.bw.safari){ /* Safari 코드 */ }
+    // @return        라이브러리가 동작가능한 브라우저만 true  true|false
+    //
+    //  Enable list (v038현재)
+    //   WinIE 5.5+ 
+    //   Konqueror 3.3+
+    //   AppleWebKit계(Safari,OmniWeb,Shiira) 124+ 
+    //   Mozilla계(Firefox,Netscape,Galeon,Epiphany,K-Meleon,Sylera) 20011128+ 
+    //   Opera 8+ 
+    //
+    function chkAjaBrowser()
+    {
+        var a,ua = navigator.userAgent;
+        this.bw= { 
+          safari    : ((a=ua.split('AppleWebKit/')[1])?a.split('(')[0]:0)>=124 ,
+          konqueror : ((a=ua.split('Konqueror/')[1])?a.split(';')[0]:0)>=3.3 ,
+          mozes     : ((a=ua.split('Gecko/')[1])?a.split(" ")[0]:0) >= 20011128 ,
+          opera     : (!!window.opera) && ((typeof XMLHttpRequest)=='function') ,
+          msie      : (!!window.ActiveXObject)?(!!createHttpRequest()):false 
+        }
+        return (this.bw.safari||this.bw.konqueror||this.bw.mozes||this.bw.opera||this.bw.msie)
+    }
+    
 
-	////
-	// XMLHttpRequest 오브젝트 생성
-	//
-	// @sample        oj = createHttpRequest()
-	// @return        XMLHttpRequest 오브젝트(인스턴스)
-	//
-	function createHttpRequest()
-	{
-		if(window.ActiveXObject){
-			 //Win e4,e5,e6용
-			try {
-				return new ActiveXObject("Msxml2.XMLHTTP") ;
-			} catch (e) {
-				try {
-					return new ActiveXObject("Microsoft.XMLHTTP") ;
-				} catch (e2) {
-					return null ;
-	 			}
-	 		}
-		} else if(window.XMLHttpRequest){
-			 //Win Mac Linux m1,f1,o8 Mac s1 Linux k3용
-			return new XMLHttpRequest() ;
-		} else {
-			return null ;
-		}
-	}
-	
-	////
-	// 송수신 함수
-	//
-	// @sample         sendRequest(onloaded,'&prog=1','POST','./about2.php',true,true)
-	// @param callback 송수신시에 기동하는 함수 이름
-	// @param data	   송신하는 데이터 (&이름1=값1&이름2=값2...)
-	// @param method   "POST" 또는 "GET"
-	// @param url      요청하는 파일의 URL
-	// @param async	   비동기라면 true 동기라면 false
-	// @param sload	   수퍼 로드 true로 강제、생략또는 false는 기본
-	// @param user	   인증 페이지용 사용자 이름
-	// @param password 인증 페이지용 암호
-	//
-	function sendRequest(callback,data,method,url,async,sload,user,password)
-	{
-		//XMLHttpRequest 오브젝트 생성
-		var oj = createHttpRequest();
-		if( oj == null ) return null;
-		
-		//강제 로드의 설정
-		var sload = (!!sendRequest.arguments[5])?sload:false;
-		if(sload || method.toUpperCase() == 'GET')url += "?";
-		if(sload)url=url+"t="+(new Date()).getTime();
-		
-		//브라우저 판정
-		var bwoj = new chkAjaBrowser();
-		var opera	  = bwoj.bw.opera;
-		var safari	  = bwoj.bw.safari;
-		var konqueror = bwoj.bw.konqueror;
-		var mozes	  = bwoj.bw.mozes ;
+    ////
+    // XMLHttpRequest 오브젝트 생성
+    //
+    // @sample        oj = createHttpRequest()
+    // @return        XMLHttpRequest 오브젝트(인스턴스)
+    //
+    function createHttpRequest()
+    {
+        if(window.ActiveXObject){
+             //Win e4,e5,e6용
+            try {
+                return new ActiveXObject("Msxml2.XMLHTTP") ;
+            } catch (e) {
+                try {
+                    return new ActiveXObject("Microsoft.XMLHTTP") ;
+                } catch (e2) {
+                    return null ;
+                }
+            }
+        } else if(window.XMLHttpRequest){
+             //Win Mac Linux m1,f1,o8 Mac s1 Linux k3용
+            return new XMLHttpRequest() ;
+        } else {
+            return null ;
+        }
+    }
+    
+    ////
+    // 송수신 함수
+    //
+    // @sample         sendRequest(onloaded,'&prog=1','POST','./about2.php',true,true)
+    // @param callback 송수신시에 기동하는 함수 이름
+    // @param data     송신하는 데이터 (&이름1=값1&이름2=값2...)
+    // @param method   "POST" 또는 "GET"
+    // @param url      요청하는 파일의 URL
+    // @param async    비동기라면 true 동기라면 false
+    // @param sload    수퍼 로드 true로 강제、생략또는 false는 기본
+    // @param user     인증 페이지용 사용자 이름
+    // @param password 인증 페이지용 암호
+    //
+    function sendRequest(callback,data,method,url,async,sload,user,password)
+    {
+        //XMLHttpRequest 오브젝트 생성
+        var oj = createHttpRequest();
+        if( oj == null ) return null;
+        
+        //강제 로드의 설정
+        var sload = (!!sendRequest.arguments[5])?sload:false;
+        if(sload || method.toUpperCase() == 'GET')url += "?";
+        if(sload)url=url+"t="+(new Date()).getTime();
+        
+        //브라우저 판정
+        var bwoj = new chkAjaBrowser();
+        var opera     = bwoj.bw.opera;
+        var safari    = bwoj.bw.safari;
+        var konqueror = bwoj.bw.konqueror;
+        var mozes     = bwoj.bw.mozes ;
 
-		//송신 처리
-		//opera는 onreadystatechange에 중복 응답이 있을 수 있어 onload가 안전
-		//Moz,FireFox는 oj.readyState==3에서도 수신하므로 보통은 onload가 안전
-		//Win ie에서는 onload가 동작하지 않는다
-		//Konqueror은 onload가 불안정
-		//참고 http://jsgt.org/ajax/ref/test/response/responsetext/try1.php
-		if(opera || safari || mozes){
-			oj.onload = function () { callback(oj); }
-		} else {
-		
-			oj.onreadystatechange =function () 
-			{
-				if ( oj.readyState == 4 ){
-					callback(oj);
-				}
-			}
-		}
+        //송신 처리
+        //opera는 onreadystatechange에 중복 응답이 있을 수 있어 onload가 안전
+        //Moz,FireFox는 oj.readyState==3에서도 수신하므로 보통은 onload가 안전
+        //Win ie에서는 onload가 동작하지 않는다
+        //Konqueror은 onload가 불안정
+        //참고 http://jsgt.org/ajax/ref/test/response/responsetext/try1.php
+        if(opera || safari || mozes){
+            oj.onload = function () { callback(oj); }
+        } else {
+        
+            oj.onreadystatechange =function () 
+            {
+                if ( oj.readyState == 4 ){
+                    callback(oj);
+                }
+            }
+        }
 
-		//URL 인코딩
-		data = uriEncode(data)
-		if(method.toUpperCase() == 'GET') {
-			url += data
-		}
-		
-		//open 메소드
-		oj.open(method,url,async,user,password);
+        //URL 인코딩
+        data = uriEncode(data)
+        if(method.toUpperCase() == 'GET') {
+            url += data
+        }
+        
+        //open 메소드
+        oj.open(method,url,async,user,password);
 
-		//헤더 application/x-www-form-urlencoded 설정
-		setEncHeader(oj)
+        //헤더 application/x-www-form-urlencoded 설정
+        setEncHeader(oj)
 
-		//디버그
-		//alert("////jslb_ajaxxx.js//// \n data:"+data+" \n method:"+method+" \n url:"+url+" \n async:"+async);
-		
-		//send 메소드
-		oj.send(data);
+        //디버그
+        //alert("////jslb_ajaxxx.js//// \n data:"+data+" \n method:"+method+" \n url:"+url+" \n async:"+async);
+        
+        //send 메소드
+        oj.send(data);
 
-		//URI 인코딩 헤더 설정
-		function setEncHeader(oj){
-	
-			//헤더 application/x-www-form-urlencoded 설정
-			// @see  http://www.asahi-net.or.jp/~sd5a-ucd/rec-html401j/interact/forms.html#h-17.13.3
-			// @see  #h-17.3
-			//   ( enctype의 기본값은 "application/x-www-form-urlencoded")
-			//   h-17.3에 의해、POST/GET 상관없이 설정
-			//   POST에서 "multipart/form-data"을 설정할 필요가 있는 경우에는 커스터마이즈 해주세요.
-			//
-			//  이 메소드가 Win Opera8.0에서 에러가 나므로 분기(8.01은 OK)
-			var contentTypeUrlenc = 'application/x-www-form-urlencoded; charset=UTF-8';
-			if(!window.opera){
-				oj.setRequestHeader('Content-Type',contentTypeUrlenc);
-			} else {
-				if((typeof oj.setRequestHeader) == 'function')
-					oj.setRequestHeader('Content-Type',contentTypeUrlenc);
-			}	
-			return oj
-		}
+        //URI 인코딩 헤더 설정
+        function setEncHeader(oj){
+    
+            //헤더 application/x-www-form-urlencoded 설정
+            // @see  http://www.asahi-net.or.jp/~sd5a-ucd/rec-html401j/interact/forms.html#h-17.13.3
+            // @see  #h-17.3
+            //   ( enctype의 기본값은 "application/x-www-form-urlencoded")
+            //   h-17.3에 의해、POST/GET 상관없이 설정
+            //   POST에서 "multipart/form-data"을 설정할 필요가 있는 경우에는 커스터마이즈 해주세요.
+            //
+            //  이 메소드가 Win Opera8.0에서 에러가 나므로 분기(8.01은 OK)
+            var contentTypeUrlenc = 'application/x-www-form-urlencoded; charset=UTF-8';
+            if(!window.opera){
+                oj.setRequestHeader('Content-Type',contentTypeUrlenc);
+            } else {
+                if((typeof oj.setRequestHeader) == 'function')
+                    oj.setRequestHeader('Content-Type',contentTypeUrlenc);
+            }   
+            return oj
+        }
 
-		//URL 인코딩
-		function uriEncode(data){
+        //URL 인코딩
+        function uriEncode(data){
 
-			if(data!=""){
-				//&와=로 일단 분해해서 encode
-				var encdata = '';
-				var datas = data.split('&');
-				for(i=1;i<datas.length;i++)
-				{
-					var dataq = datas[i].split('=');
-					encdata += '&'+encodeURIComponent(dataq[0])+'='+encodeURIComponent(dataq[1]);
-				}
-			} else {
-				encdata = "";
-			}
-			return encdata;
-		}
+            if(data!=""){
+                //&와=로 일단 분해해서 encode
+                var encdata = '';
+                var datas = data.split('&');
+                for(i=1;i<datas.length;i++)
+                {
+                    var dataq = datas[i].split('=');
+                    encdata += '&'+encodeURIComponent(dataq[0])+'='+encodeURIComponent(dataq[1]);
+                }
+            } else {
+                encdata = "";
+            }
+            return encdata;
+        }
 
 
-		return oj
-	}
+        return oj
+    }
 
 // 여기서부터는 UseModWiki ext버전에서 바로가기 필드 자동완성을 위해 수정했음
 // 필요한 전역변수
@@ -302,195 +302,195 @@ var _list_div;
 var _search_field;
 
 function gotobar_init() {
-	_goto_field   = document.goto_form.goto_text;
-	_select_field = document.goto_form.goto_select;
-	_list_div = document.getElementById('goto_list');
-	_search_field = document.search_form.search;
+    _goto_field   = document.goto_form.goto_text;
+    _select_field = document.goto_form.goto_select;
+    _list_div = document.getElementById('goto_list');
+    _search_field = document.search_form.search;
 }
 
 //송수신 함수
 function getMsg(url) {
 
-	// 0.2초 이내에는 다시 갱신하지 않음 - 타이핑 속도를 못 따라잡는 문제
-	if (timeout) {
-		return;
-	}
-	timeout=1
-	timeout_url=url
-//	setTimeout("timeout=0;",200)
-	setTimeout("timeout=0; getMsg(timeout_url);",300)
+    // 0.2초 이내에는 다시 갱신하지 않음 - 타이핑 속도를 못 따라잡는 문제
+    if (timeout) {
+        return;
+    }
+    timeout=1
+    timeout_url=url
+//  setTimeout("timeout=0;",200)
+    setTimeout("timeout=0; getMsg(timeout_url);",300)
 
-	if (have_data) {
-		renew_select()
-	}
-	else {
-		// 처음 한번만 서버에서 목록을 받아옴
-		have_data = 1;
-		sendRequest(
-			on_loaded1,									//콜백함수
-			'&action=titleindex',						//파라메터
-			'GET',										//HTTP메소드
-			url,										//URL
-			true,										//비동기
-			true										//강제로드
-		)
-	}
+    if (have_data) {
+        renew_select()
+    }
+    else {
+        // 처음 한번만 서버에서 목록을 받아옴
+        have_data = 1;
+        sendRequest(
+            on_loaded1,                                 //콜백함수
+            '&action=titleindex',                       //파라메터
+            'GET',                                      //HTTP메소드
+            url,                                        //URL
+            true,                                       //비동기
+            true                                        //강제로드
+        )
+    }
 }
 
 function on_loaded1(oj)
 {
-	//응답을 취득
-	var res  =  decodeURIComponent(oj.responseText)
+    //응답을 취득
+    var res  =  decodeURIComponent(oj.responseText)
 
-	// titleindex 출력을 받아서, 개별 페이지 이름의 배열로 분리
-	page_list = res.split(/\s+/)
+    // titleindex 출력을 받아서, 개별 페이지 이름의 배열로 분리
+    page_list = res.split(/\s+/)
 
-	// select 목록 갱신
-	renew_select()
+    // select 목록 갱신
+    renew_select()
 }
 
 function renew_select() {
-	// 사용자가 입력한 값을 포함한 페이지 제목만 추려냄
-	var search = _goto_field.value;
+    // 사용자가 입력한 값을 포함한 페이지 제목만 추려냄
+    var search = _goto_field.value;
 
-	// 입력값에 변동이 없다면 진행하지 않는다
-	if (previous_search == search || !page_list) {
-		return;
-	}
-	previous_search = search
+    // 입력값에 변동이 없다면 진행하지 않는다
+    if (previous_search == search || !page_list) {
+        return;
+    }
+    previous_search = search
 
-	// 목록에서 선택한 직후라면 진행하지 않는다
-	if (div_blur) {
-		div_blur = 0;
-		return;
-	}
+    // 목록에서 선택한 직후라면 진행하지 않는다
+    if (div_blur) {
+        div_blur = 0;
+        return;
+    }
 
-	// 뒤의 공백을 제거하고, 중간 공백은 "_"로 치환하고, 대소문자 구분 안함
-	var temp = search;
-	search = search.replace(/\s*$/, '').replace(' ','_');
+    // 뒤의 공백을 제거하고, 중간 공백은 "_"로 치환하고, 대소문자 구분 안함
+    var temp = search;
+    search = search.replace(/\s*$/, '').replace(' ','_');
 
-	// 입력값이 널 문자 또는 일정 길이 이하면 중단 - 속도 문제
-	if (search.length < 1) {
-		return false;
-	}
+    // 입력값이 널 문자 또는 일정 길이 이하면 중단 - 속도 문제
+    if (search.length < 1) {
+        return false;
+    }
 
-	user_last_input = temp;	// up키로 되돌아갔을때 복원하기 위한 값
+    user_last_input = temp; // up키로 되돌아갔을때 복원하기 위한 값
 
-	search = new RegExp(search, "i")
-	var new_list = new Array();
-	for( i = 0 ; i < page_list.length ; i++ ){
-		if (page_list[i].match(search)) {
-			new_list.push(page_list[i])
-		}
-	}
+    search = new RegExp(search, "i")
+    var new_list = new Array();
+    for( i = 0 ; i < page_list.length ; i++ ){
+        if (page_list[i].match(search)) {
+            new_list.push(page_list[i])
+        }
+    }
 
-	// select 목록 갱신
-	_list_div.style.display='block'
-	resOj = new chgARRAYtoHTMLOptions(new_list,_select_field)
-	resOj.addOptions()
+    // select 목록 갱신
+    _list_div.style.display='block'
+    resOj = new chgARRAYtoHTMLOptions(new_list,_select_field)
+    resOj.addOptions()
 }
 
 // 배열을 인자로 받아서, oj에 해당하는 select 목록을 조작하는 객체를 반환
 // chgXMLtoHTMLOptions()의 흉내를 내어서 수정함
 function chgARRAYtoHTMLOptions(arr,oj) {
 
-	return {
+    return {
 
-		//XML의 items,value,text을 연결하여 배열로 반환합니다
-		setItems : function() {
-			return arr;
-		},
+        //XML의 items,value,text을 연결하여 배열로 반환합니다
+        setItems : function() {
+            return arr;
+        },
 
-		//XML의 데이터로부터 오브젝트를 생성합니다
-		addOptions : function() {
-			//모든 옵션을 지웁니다
-			this.delAllOptions(oj)
-			//XML 데이터의 오브젝트를 받아 냅니다
-			var data = this.setItems()
-			//"item" 태그가 나온 순서대로 처리합니다
-			for( i = 0 ; i < data.length ; i++ ) {
-				var text  = data[i]
-				var value = data[i]
-				oj.options[oj.length]=new Option(text,value)
-			}
-		},
+        //XML의 데이터로부터 오브젝트를 생성합니다
+        addOptions : function() {
+            //모든 옵션을 지웁니다
+            this.delAllOptions(oj)
+            //XML 데이터의 오브젝트를 받아 냅니다
+            var data = this.setItems()
+            //"item" 태그가 나온 순서대로 처리합니다
+            for( i = 0 ; i < data.length ; i++ ) {
+                var text  = data[i]
+                var value = data[i]
+                oj.options[oj.length]=new Option(text,value)
+            }
+        },
 
-		//index로 지정된 옵션을 지웁니다
-		delOptionByIndex : function(index) {
-			oj.options[index]=null
-		},
+        //index로 지정된 옵션을 지웁니다
+        delOptionByIndex : function(index) {
+            oj.options[index]=null
+        },
 
-		//모든 옵션을 지웁니다
-		delAllOptions : function(oj) {
-			var optionIndex = oj.options.length  
-			for ( i=0 ; i <= optionIndex ; i++ ) {
-				oj.options[0]=null			// 어째서 "i"가 아니라 "0"일까...?
-			}
-		},
+        //모든 옵션을 지웁니다
+        delAllOptions : function(oj) {
+            var optionIndex = oj.options.length  
+            for ( i=0 ; i <= optionIndex ; i++ ) {
+                oj.options[0]=null          // 어째서 "i"가 아니라 "0"일까...?
+            }
+        },
 
-		//option이 선택된 때의 처리
-		onselectedOption : function(oj) {
-			_goto_field.value = oj.options[oj.selectedIndex].value
-			previous_search = _goto_field.value;
-		}
-	}
+        //option이 선택된 때의 처리
+        onselectedOption : function(oj) {
+            _goto_field.value = oj.options[oj.selectedIndex].value
+            previous_search = _goto_field.value;
+        }
+    }
 }
 
 function goto_list_blur(oj, field_update, close_div) {
-	div_blur = 1	// 텍스트필드값이 변경되더라도 목록 갱신을 하지 않게 함
-	if (field_update) {
-		resOj.onselectedOption(oj)
-	}
-	if (close_div) {
-		_list_div.style.display = 'none'
-	}
+    div_blur = 1    // 텍스트필드값이 변경되더라도 목록 갱신을 하지 않게 함
+    if (field_update) {
+        resOj.onselectedOption(oj)
+    }
+    if (close_div) {
+        _list_div.style.display = 'none'
+    }
 }
 
 function goto_list_keydown(oj, KeyStorke) {
-	var evt = KeyStorke || window.event;
-	var nKeyCode = evt.keyCode;
+    var evt = KeyStorke || window.event;
+    var nKeyCode = evt.keyCode;
 
-	// 목록을 닫고 텍스트 필드로 되돌아갈 지 여부 판단
-	if (nKeyCode == 13 || nKeyCode == 32) {
-		// enter,space가 눌렸을 때 - 필드 갱신 후 닫음
-		goto_list_blur(oj, true, true);
-		_goto_field.focus();
-		return false;
-	}
-	else if (nKeyCode == 27 || (nKeyCode == 38 && oj.selectedIndex <= 0)) {
-		// esc가 눌렸거나
-		// up이 눌렸고 목록의 제일 위에 있었을 때 - 필드 갱신 없이 닫기만 함
-		goto_list_blur(oj, false, true);
-		_goto_field.focus();
-		_goto_field.value = user_last_input;
-		setTimeout("_search_field.focus(); _goto_field.focus(); _goto_field.value = user_last_input;", 20); // for IE
-		return false;
-	}
-	else if (nKeyCode == 8) {
-		// BS - 필드 값에서 한 글자 지우고 포커스 이동
-		user_last_input = _goto_field.value.substring(0,_goto_field.value.length-1);
-		_goto_field.focus();
-		_goto_field.value = user_last_input;
-		setTimeout("_search_field.focus(); _goto_field.focus(); _goto_field.value = user_last_input;", 20); // for IE
-		return true;
-	}
-	else {
-		return true;
-	}
+    // 목록을 닫고 텍스트 필드로 되돌아갈 지 여부 판단
+    if (nKeyCode == 13 || nKeyCode == 32) {
+        // enter,space가 눌렸을 때 - 필드 갱신 후 닫음
+        goto_list_blur(oj, true, true);
+        _goto_field.focus();
+        return false;
+    }
+    else if (nKeyCode == 27 || (nKeyCode == 38 && oj.selectedIndex <= 0)) {
+        // esc가 눌렸거나
+        // up이 눌렸고 목록의 제일 위에 있었을 때 - 필드 갱신 없이 닫기만 함
+        goto_list_blur(oj, false, true);
+        _goto_field.focus();
+        _goto_field.value = user_last_input;
+        setTimeout("_search_field.focus(); _goto_field.focus(); _goto_field.value = user_last_input;", 20); // for IE
+        return false;
+    }
+    else if (nKeyCode == 8) {
+        // BS - 필드 값에서 한 글자 지우고 포커스 이동
+        user_last_input = _goto_field.value.substring(0,_goto_field.value.length-1);
+        _goto_field.focus();
+        _goto_field.value = user_last_input;
+        setTimeout("_search_field.focus(); _goto_field.focus(); _goto_field.value = user_last_input;", 20); // for IE
+        return true;
+    }
+    else {
+        return true;
+    }
 }
 
 function goto_text_keydown(oj, KeyStorke) {
-	var evt = KeyStorke || window.event;
-	var nKeyCode = evt.keyCode;
+    var evt = KeyStorke || window.event;
+    var nKeyCode = evt.keyCode;
 
-	if (nKeyCode == 40 && resOj) {	// down
-		_list_div.style.display = 'block'
-		if (_select_field.options.length > 0) {
-			_search_field.focus()		// 웹마 때문에 우회함
-			_select_field.focus()
-		}
-	}
-	else if (nKeyCode == 38) {		// up
-		_list_div.style.display = 'none'
-	}
+    if (nKeyCode == 40 && resOj) {  // down
+        _list_div.style.display = 'block'
+        if (_select_field.options.length > 0) {
+            _search_field.focus()       // 웹마 때문에 우회함
+            _select_field.focus()
+        }
+    }
+    else if (nKeyCode == 38) {      // up
+        _list_div.style.display = 'none'
+    }
 }

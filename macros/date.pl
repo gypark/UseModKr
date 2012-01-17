@@ -1,9 +1,9 @@
 sub date {
-	my ($txt) = @_;
+    my ($txt) = @_;
 
-	$txt =~ s/\&__LT__;Date\&__GT__;/&MacroDate()/gei;
+    $txt =~ s/\&__LT__;Date\&__GT__;/&MacroDate()/gei;
 
-	return $txt;
+    return $txt;
 }
 
 sub MacroDate() { return &CalcDay(time); }

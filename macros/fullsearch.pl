@@ -1,23 +1,23 @@
 sub fullsearch {
-	my ($txt) = @_;
+    my ($txt) = @_;
 
-	$txt =~ s/\&__LT__;FullSearch\((.*?)\)\&__GT__;/&MacroFullSearch($1)/gei;
+    $txt =~ s/\&__LT__;FullSearch\((.*?)\)\&__GT__;/&MacroFullSearch($1)/gei;
 
-	return $txt;
+    return $txt;
 }
 
 sub MacroFullSearch()
 {
-	my $pagename;
-	my ($string) = @_;
-	my @x = &SearchTitleAndBody($string);
-	my $txt;
+    my $pagename;
+    my ($string) = @_;
+    my @x = &SearchTitleAndBody($string);
+    my $txt;
 
-	foreach $pagename (@x) {
-		$txt .= ".... "  if ($pagename =~ m|/|);
-		$txt .= &GetPageLink($pagename) . "<br>";
-	}
-	return $txt;
+    foreach $pagename (@x) {
+        $txt .= ".... "  if ($pagename =~ m|/|);
+        $txt .= &GetPageLink($pagename) . "<br>";
+    }
+    return $txt;
 }
 
 1;
