@@ -32,8 +32,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.15";
-$WikiRelease = "2012-01-06";
+$WikiVersion = "0.92K3-ext2.16";
+$WikiRelease = "2012-01-18";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
@@ -2396,9 +2396,9 @@ sub CommonMarkup {
             s/$LinkPattern/&GetPageOrEditLink($1, "")/geo;
         }
 
-        s/$RFCPattern/&StoreRFC($1)/geo;
-        s/$ISBNPattern/&StoreISBN($1)/geo;
-        s/CD:\s*(\d+)/&StoreHotTrack($1)/geo;
+        s/$RFCPattern/StoreRFC($1)/geo;
+        s/$ISBNPattern/StoreISBN($1)/geo;
+        s/CD:\s*(\d+)/StoreHotTrack($1)/geo;
 
         $_ = &MacroSubst($_);               # luke added
 
@@ -3668,83 +3668,102 @@ sub StoreHotTrack {
 sub StoreISBN {
     my ($num) = @_;
 
-    return &StoreRaw(&ISBNLink($num));
+    return StoreRaw(ISBNLink($num));
+}
+
+# 13자리 ISBN을 10자리로 변환
+sub isbn13to10 {
+    my $isbn13 = shift;
+    my $isbn10 = substr($isbn13, 3, 9);
+
+    my $checksum = 0;
+    my $weight = 10;
+    foreach my $c ( split //, $isbn10 ) {
+        $checksum += $c * $weight;
+        $weight--;
+    }
+
+    $checksum = 11 - ( $checksum % 11 );
+    if ( $checksum == 10 ) {
+        $isbn10 .= 'X';
+    }
+    elsif ( $checksum == 11 ) {
+        $isbn10 .= '0';
+    }
+    else {
+        $isbn10 .= $checksum;
+    }
+
+    return $isbn10;
 }
 
 sub ISBNLink {
     my ($rawnum) = @_;
-    my ($rawprint, $html, $num, $first, $second, $third, $fourth, $hyphened);
 
-    $num = $rawnum;
-    $rawprint = $rawnum;
+    my $num = $rawnum;
+    my $rawprint = $rawnum;
     $rawprint =~ s/ +$//;
     $num =~ s/[- ]//g;
-    if (length($num) != 10) {
+
+    # 숫자 자릿수 체크 - 13자리면 10자리로 변환
+    if (length($num) == 13) {
+        $num = isbn13to10($num);
+    }
+    elsif (length($num) != 10) {
         return "ISBN $rawnum";
     }
 
-### 책표지가 없는 경우
+    # 책표지가 없을 때 사용할 아이콘
     my ($noCoverIcon, $iconNum) = ("$IconUrl/isbn-nocover.jpg", ($num % 5));
     $noCoverIcon = "$IconUrl/isbn-nocover-$iconNum.jpg"
         if (-f "$IconUrl/isbn-nocover-$iconNum.jpg");
 
-### 국내 서적
+    my ( $link, $cover );
+
+    # 국내 서적
     if ($num =~ /^(89|60)/) {
-        my $ISBNDir = "$UploadDir/isbn";
-        my $ISBNUrl = "$UploadUrl/isbn";
-        &CreateDir($UploadDir);
-        &CreateDir($ISBNDir);
+        my $aladdin_url = "http://www.aladin.co.kr/shop/wproduct.aspx?ISBN=$num";
 
-        my $aladdin_url = "http://www.aladdin.co.kr/shop/wproduct.aspx?ISBN=$num";
-        my $siteurl     = "http://image.aladdin.co.kr/cover/cover";
+        if ( eval { require WebService::Aladdin } ) {
+            # WebService::Aladdin 모듈이 있다면 그걸 사용
+            my $p     = WebService::Aladdin->new();
 
-        # $first 값은 캐쉬->알라딘html소스->추측을 통해서 정함
-        $first = "$siteurl/$num\_1.jpg";
-        if (-f "$ISBNDir/$num") {
-            # cache에 그림 주소가 있는 경우
-            my ($status, $data) = &ReadFile("$ISBNDir/$num");
-            if ($status) {
-                $first = $data;
-            }
-        } elsif (eval "require LWP::Simple;") {
-            # LWP::Simple을 사용해서 가져올 수 있는 경우
+            my $data  = $p->product($num);
+            $cover = $data->{cover};
+            $link  = $data->{link};
+        }
+        elsif ( eval { require LWP::Simple } ) {
+            # LWP::Simple 모듈이 있다면 알라딘 홈페이지에 들어가서 이미지 주소 추출
+            $link = "http://www.aladin.co.kr/shop/wproduct.aspx?ISBN=$num";
             my $html = LWP::Simple::get($aladdin_url);
-            if ($html =~ /<img src="?(\S+?)"?\s+.*?name='ImgCover'>/i) {
-                $first = $1;
-                &WriteStringToFile("$ISBNDir/$num", $first);
+            if ($html =~ m'<img[^>]+class="np_coverpadding3"[^>]+src="([^">]+)"[^>]*/>'s) {
+                $cover = $1;
+            }
+            else {
+                $cover = $noCoverIcon;
             }
         }
-        $second = "$siteurl/$num\_1.gif";
-        $third = "$siteurl/$num\_1.JPG";
-        $fourth = "$siteurl/$num\_1.GIF";
-        return "<A href=\"$aladdin_url\">".
-            "<IMG class='isbn' ".
-            "$ImageTag ".
-            "src='$first' ".
-            "OnError=\"if (src=='$first') src='$second'; ".
-            "else if (src=='$second') src='$third'; ".
-            "else if (src=='$third') src='$fourth'; ".
-            "else src='$noCoverIcon';\" ".
-            "alt='".T('Go to the on-line bookstore')." ISBN:$rawprint'>".
-            "</a>";
+        else {
+            # 그 모듈도 없으면 포기
+            $link  = "http://www.aladin.co.kr/shop/wproduct.aspx?ISBN=$num";
+            $cover = $noCoverIcon;
+        }
     }
-### 일본 서적
-    if ($num =~ /^4/) {
-        return "<a href='http://bookweb.kinokuniya.co.jp/guest/cgi-bin/wshosea.cgi?W-ISBN=$num'>" .
-            "<IMG class='isbn' ".
-            "$ImageTag src='http://bookweb.kinokuniya.co.jp/imgdata/$num.jpg' ".
-            "OnError='src=\"$noCoverIcon\"' ".
-            "alt='".T('Go to the on-line bookstore')." ISBN:$rawprint'>".
-            "</a>";
+    # 일본 서적
+    elsif ($num =~ /^4/) {
+        $link  = "http://bookweb.kinokuniya.co.jp/guest/cgi-bin/wshosea.cgi?W-ISBN=$num";
+        $cover = "http://bookweb.kinokuniya.co.jp/imgdata/$num.jpg";
     }
-### 그 외 서적
-    return "<a href='http://www.amazon.com/exec/obidos/ISBN=$num'>" .
-        "<IMG class='isbn' ".
-        "$ImageTag src='http://images.amazon.com/images/P/$num.01.MZZZZZZZ.gif' ".
-        "OnError='src=\"$noCoverIcon\"' ".
-        "alt='".T('Go to the on-line bookstore')." ISBN:$rawprint'>".
-        "</a>";
+    # 그 외 서적 - 아마존
+    else {
+        $link  = "http://www.amazon.com/exec/obidos/ISBN=$num";
+        $cover = "http://images.amazon.com/images/P/$num.01.MZZZZZZZ.gif";
+    }
 
+    return StoreHref( qq/href="$link"/,
+                      qq/<IMG class="isbn" src="$cover" onError='src="$noCoverIcon"' alt="/
+                      . T('Go to the on-line bookstore') . qq/ ISBN:$rawprint">/
+                    );
 }
 
 sub SplitUrlPunct {
