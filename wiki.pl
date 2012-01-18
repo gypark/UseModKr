@@ -3722,31 +3722,25 @@ sub ISBNLink {
 
     # 국내 서적
     if ($num =~ /^(89|60)/) {
-        my $aladdin_url = "http://www.aladin.co.kr/shop/wproduct.aspx?ISBN=$num";
+        # 일단 커버는 없고, 링크도 고정된 형태로 가정
+        $cover = $noCoverIcon;
+        $link = "http://www.aladin.co.kr/shop/wproduct.aspx?ISBN=$num";
 
         if ( eval { require WebService::Aladdin } ) {
-            # WebService::Aladdin 모듈이 있다면 그걸 사용
+            # WebService::Aladdin 모듈이 있다면 그걸 사용하여 커버 주소와 링크 추출
             my $p     = WebService::Aladdin->new();
-
-            my $data  = $p->product($num);
-            $cover = $data->{cover};
-            $link  = $data->{link};
+            my $data;
+            if ( eval { $data  = $p->product($num) } ) {
+                $cover = $data->{cover};
+                $link  = $data->{link};
+            }
         }
         elsif ( eval { require LWP::Simple } ) {
-            # LWP::Simple 모듈이 있다면 알라딘 홈페이지에 들어가서 이미지 주소 추출
-            $link = "http://www.aladin.co.kr/shop/wproduct.aspx?ISBN=$num";
-            my $html = LWP::Simple::get($aladdin_url);
+            # LWP::Simple 모듈이 있다면 알라딘 홈페이지에 들어가서 커버 주소 추출
+            my $html = LWP::Simple::get($link);
             if ($html =~ m'<img[^>]+class="np_coverpadding3"[^>]+src="([^">]+)"[^>]*/>'s) {
                 $cover = $1;
             }
-            else {
-                $cover = $noCoverIcon;
-            }
-        }
-        else {
-            # 그 모듈도 없으면 포기
-            $link  = "http://www.aladin.co.kr/shop/wproduct.aspx?ISBN=$num";
-            $cover = $noCoverIcon;
         }
     }
     # 일본 서적
