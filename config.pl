@@ -1,7 +1,7 @@
 # === !/usr/local/bin/perl
 # == Configuration =======================================================
 $DataDir      = "data";          # Main wiki directory
-$UrlPrefix = "http:/cgi-bin/utf";  # URL prefix for other variables ($...Url)
+$UrlPrefix = "http:/cgi-bin/UseModKr";  # URL prefix for other variables ($...Url)
                                    # like "http:/wiki","http://mydomain.com/wiki",etc.
 
 $CookieName   = "Wiki";          # Name for this wiki (for multi-wiki sites)
