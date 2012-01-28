@@ -3738,7 +3738,7 @@ sub ISBNLink {
         elsif ( eval { require LWP::Simple } ) {
             # LWP::Simple 모듈이 있다면 알라딘 홈페이지에 들어가서 커버 주소 추출
             my $html = LWP::Simple::get($link);
-            if ($html =~ m'<img[^>]+class="np_coverpadding3"[^>]+src="([^">]+)"[^>]*/>'s) {
+            if ($html =~ m'property="og:image"\s+content="(.+?)"'s) {
                 $cover = $1;
             }
         }
