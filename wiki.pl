@@ -7739,6 +7739,26 @@ sub PrintUploadFileForm {
     print $q->endform();
 }
 
+# $dir내에 $file이름과 동일한 파일이 있을 경우 뒤에 숫자를 붙여 겹치지 않는 번호를 반환함
+sub GetUniqueUploadFilename {
+    my ( $dir, $file ) = @_;
+
+    return $file if ( not -f "$dir/$file" );
+
+    my ( $filename, $ext ) = ( $file =~ m/^(.+)(\.[^.]+)$/ );
+    unless ( $ext ) {
+        $filename = $file;
+        $ext      = '';
+    }
+
+    my $num = 1;
+    while ( -f "$dir/${filename}_$num$ext" ) {
+        $num++;
+    }
+
+    return "${filename}_$num$ext";
+}
+
 sub UploadFile {
     my ($file) = @_;
     my ($filename);
@@ -7766,8 +7786,7 @@ sub UploadFile {
     $filename =~ s/#/_/g;
 
     &RequestLockDir('upload', 5, 2, 0) || return 5;
-    my $prefix = &GetLastPrefix($UploadDir, $filename);
-    my $target = $prefix.$filename;
+    my $target      = GetUniqueUploadFilename( $UploadDir, $filename );
     my $target_full = "$UploadDir/$target";
 
     &CreateDir($UploadDir);
@@ -7859,7 +7878,8 @@ sub DoOekaki {
 }
 
 sub OekakiExit {
-    my $filename = "oekaki.png";
+    my $filename_pattern = qr/^oekaki(_\d+)?.png$/;
+
     my (@allfiles, @files, %filemtime);
 
     opendir (DIR, "$UploadDir") || die Ts('cant opening %s', $UploadDir) . ": $!";
@@ -7867,7 +7887,7 @@ sub OekakiExit {
     close(DIR);
 
     foreach (@allfiles) {
-        if ($_ =~ m/$filename$/) {
+        if ($_ =~ $filename_pattern) {
             push (@files, $_);
             $filemtime{$_} = ($Now - (-M "$UploadDir/$_") * 86400);
         }
@@ -7918,7 +7938,7 @@ height [1000-40]<input type="text" name="height" size="4" maxlength="4" value="3
 }
 
 sub OekakiSave {
-    my ($buffer, $filename, $prefix, $target_full);
+    my ($buffer, $target_full);
 
 # POST 데이타 읽음
     read (STDIN, $buffer, $ENV{'CONTENT_LENGTH'});
@@ -7947,9 +7967,7 @@ sub OekakiSave {
     }
 
 # 저장할 화일명 결정
-    $filename = "oekaki.png";
-    $prefix = &GetLastPrefix($UploadDir, $filename);
-    $target_full = $UploadDir."/".$prefix.$filename;
+    $target_full = $UploadDir."/".GetUniqueUploadFilename($UploadDir, 'oekaki.png');
 
 # 저장
     &CreateDir($UploadDir);
@@ -8030,30 +8048,6 @@ height [1000-40]<input type="text" name="height" size="4" maxlength="4" value="$
 
 </p>
 |;
-}
-
-### 화일명이 겹칠 경우 앞에 붙일 prefix 를 얻는 함수
-sub GetLastPrefix {
-    my ($dir, $file) = @_;
-
-    if (!(-f "$dir/$file")) {
-        return "";
-    }
-
-    if (!(-f "$dir/2_$file")) {
-        return "2_";
-    }
-
-    my $prefix = 2;
-    while (-f "$dir/$prefix"."_$file") {
-        $prefix += 10;
-    }
-    $prefix -= 10;
-    while (-f "$dir/$prefix"."_$file") {
-        $prefix++;
-    }
-
-    return $prefix ."_";
 }
 
 ### 관심 페이지
