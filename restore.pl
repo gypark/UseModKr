@@ -94,14 +94,14 @@ nobody 소유의 디렉토리와 화일로 만들어 줍니다.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (이 디렉토리가 시스템에 존재하고, 퍼미션이 2777로 되어 있으며,<br>\n
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  디렉토리 안에 다른 화일이나 디렉토리가 없어야 합니다)<br>\n
 <p>
-페이지 이름과 내용의 인코딩 변환: 
+페이지 이름과 내용의 인코딩 변환:
 <select name="encode_convert">
 <option value="none" selected="selected">변환하지 않음</option>
 <option value="EUC-KR,UTF-8">EUC-KR -> UTF-8  로 변환</option>
 <option value="UTF-8,EUC-KR">UTF-8  -> EUC-KR 로 변환</option>
 </select>
 <p>
-페이지의 FS(필드 구분자) 변환: 
+페이지의 FS(필드 구분자) 변환:
 <select name="fs_convert">
 <option value="none" selected="selected">변환하지 않음</option>
 <option value="7f,1e">ext1.* -> ext2.* 형식으로 변환</option>
@@ -119,7 +119,7 @@ nobody 소유의 디렉토리와 화일로 만들어 줍니다.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (예: /home/foo/public_html/cgi-bin/wiki/upload)<br>\n
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (이 디렉토리가 시스템에 존재해야 합니다)<br>\n
 <p>
-인코딩 변환: 
+인코딩 변환:
 <select name="filename_convert">
 <option value="EUC-KR,UTF-8">EUC-KR -> UTF-8  로 변환</option>
 <option value="UTF-8,EUC-KR">UTF-8  -> EUC-KR 로 변환</option>
@@ -141,7 +141,7 @@ END_OF_FILE
 
 sub convert_upload {
     my ($uploaddir) = @_;
-    if ($uploaddir eq "") { 
+    if ($uploaddir eq "") {
         print "<p><b>업로드 디렉토리의 경로를 입력하세요</b>";
         return 0;
     }
@@ -216,8 +216,8 @@ sub copy_dir {
 sub copy_dir_recursive {
     my ($source, $dest, $from, $to, $FSold, $FSnew) = @_;
     if (!opendir (SOURCEDIR, "$source")) {
-        print "<p><b>$source 디렉토리를 여는 데 실패했습니다: $!</b>" ; 
-        return 0; 
+        print "<p><b>$source 디렉토리를 여는 데 실패했습니다: $!</b>" ;
+        return 0;
     }
     my @sourcefiles = readdir(SOURCEDIR);
     closedir SOURCEDIR;

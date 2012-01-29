@@ -24,7 +24,7 @@ sub MacroHistory {
     $i = 0;
     foreach (reverse sort {$a <=> $b} keys %KeptRevisions) {
         if (++$i > $n) {
-            $html .= "<tr><td align='center'><input type='submit' value='" 
+            $html .= "<tr><td align='center'><input type='submit' value='"
                     . T('Compare') . "'/>  </td><td>&nbsp;</td></table></form>\n";
             return $html;
         }

@@ -50,7 +50,7 @@ do "./translations/ko_KR.UTF-8.pl";     # korean, UTF-8 encoding
 ### 인자 없이 wiki.pl 을 부르면 $LogoPage 를 embed 형식으로 출력
 $LogoPage     = "";                             # this page will be displayed when no parameter
 ### 페이지 처리 시간 출력
-$CheckTime    = 0;                              # 1 = mesure the page-processing time (requires Time::HiRes module), 0 = do not 
+$CheckTime    = 0;                              # 1 = mesure the page-processing time (requires Time::HiRes module), 0 = do not
 ### 아이콘 디렉토리 URL
 $IconUrl      = "$UrlPrefix/icons/";          # URL for directory containing icon files
 ### interwiki 아이콘 디렉토리 URL

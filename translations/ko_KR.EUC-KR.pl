@@ -188,7 +188,7 @@ Editing not allowed: %s is read-only.
 Editing %s
 %s 페이지를 편집 중
 Editing revision %s of
-%s 번째 수정본을 편집 중 : 
+%s 번째 수정본을 편집 중 :
 Editing old revision %s.
 %s 번째 수정본을 편집중입니다.
 Saving this page will replace the latest revision with this text.
@@ -218,7 +218,7 @@ Send email notification that %s has been changed.
 Save
 저장
 Your user name is
-현재 사용자 이름 : 
+현재 사용자 이름 :
 Visit %s to set your user name.
 사용자 이름을 등록하려면 %s 을 클릭하세요.
 Preview

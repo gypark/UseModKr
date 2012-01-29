@@ -67,7 +67,7 @@ sub action_blog_rss {
 EOF
         foreach my $field (@ChannelField) {
             if ($RssChannelField{$field} ne "") {
-                $rssHeader .= 
+                $rssHeader .=
                     "<$field>".
                     (($NeedCdata{$field})?("<![CDATA[".$RssChannelField{$field}."]]>"):($RssChannelField{$field})).
                     "</$field>".

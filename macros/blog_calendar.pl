@@ -49,7 +49,7 @@ sub MacroBlogCalendar {
     my $tocitems = join("\n", @tocitem_List);
 
     # 년도나 달에 0 을 인자로 받으면 올해 또는 이번 달
-    $cal_year = $this_year+1900 if ($cal_year == 0); 
+    $cal_year = $this_year+1900 if ($cal_year == 0);
     $cal_month = $this_month+1 if ($cal_month == 0);
 
     # 년도에 + 또는 - 가 있으면 올해로부터 변위 계산
@@ -73,7 +73,7 @@ sub MacroBlogCalendar {
             $cal_year--;
         }
     }
-    
+
     # 1902년부터 2037년 사이만 지원함. 그 범위를 벗어나면 1902년과 2037년으로 계산
     $cal_year = 2037 if ($cal_year > 2037);
     $cal_year = 1902 if ($cal_year < 1902);
@@ -85,14 +85,14 @@ sub MacroBlogCalendar {
 
     # 달력 제목 출력
     $result .= "<TABLE class='calendar'>";
-    $result .= "<CAPTION class='calendar'>" 
+    $result .= "<CAPTION class='calendar'>"
         ."<a href=\"$ScriptName".&ScriptLinkChar()."$toc_mainpage/$cal_year-$cal_month\">"
         .(length($toc_mainpage)?"$toc_mainpage<br>":"")
         ."$cal_year-$cal_month"
         ."</a>"
         ."</CAPTION>";
 
-    # 상단의 요일 출력 
+    # 상단의 요일 출력
     $result .= "<TR class='calendar'>";
     for (0..6) {
         $result .= "<TH class='calendar'>"
@@ -109,7 +109,7 @@ sub MacroBlogCalendar {
 
     # 달력 그림
     my ($temp_month, $temp_day);
-        
+
     for (1..6) {
         $result .= "<TR class='calendar'>";
         for (0..6) {

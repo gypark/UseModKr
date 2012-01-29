@@ -56,7 +56,7 @@ use vars qw(@RcDays @HtmlPairs @HtmlSingle
 
 ### 패치를 위해 추가된 환경설정 변수
 use vars qw(
-    $UserGotoBar $UserGotoBar2 $UserGotoBar3 $UserGotoBar4 
+    $UserGotoBar $UserGotoBar2 $UserGotoBar3 $UserGotoBar4
     $SOURCEHIGHLIGHT @SRCHIGHLANG $EditNameLink
     $EditGuideInExtern $SizeTopFrame $SizeBottomFrame
     $LogoPage $CheckTime $LinkDir $IconUrl $CountDir $UploadDir $UploadUrl
@@ -128,7 +128,7 @@ $UserGotoBar4 = "";
 ### 인자 없이 wiki.pl 을 부르면 $LogoPage 를 embed 형식으로 출력
 $LogoPage     = "";                             # this page will be displayed when no parameter
 ### 페이지 처리 시간 출력
-$CheckTime    = 0;                              # 1 = mesure the page-processing time (requires Time::HiRes module), 0 = do not 
+$CheckTime    = 0;                              # 1 = mesure the page-processing time (requires Time::HiRes module), 0 = do not
 ### 아이콘 디렉토리 URL
 $IconUrl      = "$UrlPrefix/icons/";          # URL for directory containing icon files
 ### interwiki 아이콘 디렉토리 URL
@@ -259,8 +259,8 @@ sub DoWikiRequest {
 ### 처리 시간 측정
 if ($CheckTime) {
     eval "use Time::HiRes qw( usleep ualarm gettimeofday tv_interval )";
-    if ($@) { 
-        $CheckTime = 0; 
+    if ($@) {
+        $CheckTime = 0;
     } else {
         $StartTime = [gettimeofday()];
     }
@@ -276,7 +276,7 @@ if ($CheckTime) {
 ### QUERY_STRING이 %-인코딩된 형태로 오는 경우
 ### guess를 해도 ascii로 판정되기 때문에 변환이 안 된다.
 ### 이 시점에서 디코딩하여 복원함
-### 쿼리에 엠퍼센드 등이 인코딩되어 있는 경우에 문제가 됨 - 일단 보류 
+### 쿼리에 엠퍼센드 등이 인코딩되어 있는 경우에 문제가 됨 - 일단 보류
 #   $ENV{'QUERY_STRING'} =~ s/%([0-9a-fA-F]{2})/chr(hex($1))/ge;
 
 ### slashlinks 처리
@@ -459,7 +459,7 @@ sub InitRequest {
     $CGI::POST_MAX = $MaxPost;
 ### file upload
 #   $CGI::DISABLE_UPLOADS = 1;  # no uploads
-    $CGI::DISABLE_UPLOADS = 0;  
+    $CGI::DISABLE_UPLOADS = 0;
 
 ### slashlinks 처리
 #   if ($SlashLinks && (length($ENV{'PATH_INFO'}) > 1)) {
@@ -556,7 +556,7 @@ sub DoBrowseRequest {
     if ($id) {                    # Just script?PageName
 ### QUERY_STRING 이 utf-8이 아닌 인코딩인 경우
         $id = guess_and_convert($id);
-                
+
         if ($FreeLinks && (!-f &GetPageFile($id))) {
             $id = &FreeToNormal($id);
         }
@@ -716,12 +716,12 @@ sub BrowsePage {
         &OpenKeptRevisions('text_default')  if (!$openKept);
 
 ### 최근변경내역에 북마크 기능 도입
-        if ($showDiff == 5) { 
+        if ($showDiff == 5) {
             if (&LoginUser()) {
                 $diffRevision = $Page{'revision'} - 1;
                 my $userBookmark = &GetParam('bookmark',-1);
-                while (($diffRevision > 1) && 
-                    (defined($RevisionTs{$diffRevision})) && 
+                while (($diffRevision > 1) &&
+                    (defined($RevisionTs{$diffRevision})) &&
                     ($RevisionTs{$diffRevision} > $userBookmark)) {
                     $diffRevision--;
                 }
@@ -839,7 +839,7 @@ sub DoRc {
         $daysago = &GetParam("days", 0);
         $daysago = 7 if ($daysago == 0);
         $starttime = $Now - ((24*60*60)*$daysago);
-        print "<h2>$SiteName : " . 
+        print "<h2>$SiteName : " .
             Ts('Updates in the last %s day' . (($daysago != 1)?"s":""), $daysago) . "</h2>\n";
     } else {
 
@@ -960,7 +960,7 @@ sub DoRc {
                 my $bookmark = &GetParam('bookmark',-1);
                 print "<br>" . &ScriptLink("action=bookmark&time=$Now",
                         T('Update my bookmark timestamp')." [m]");
-                print " (". 
+                print " (".
                     Ts('currently set to %s', &TimeToText($bookmark)).
                     ")<br>\n";
             }
@@ -1281,7 +1281,7 @@ sub DoHistory {
         print &GetCommonFooter();
         return;
     }
-    
+
     print &GetHeader("",&QuoteHtml(Ts('History of %s', $id)), "") . "<br>";
     &OpenPage($id);
     &OpenDefaultText();
@@ -1309,7 +1309,7 @@ FORMEOF
         print "<hr>\n";
         print &GetDiffHTML( &GetParam('defaultdiff',1), $id, '', '', $newText );
     }
-    
+
     print &GetCommonFooter();
 }
 
@@ -1689,7 +1689,7 @@ sub GetHttpHeader {
         if ((my $postfix = $q->script_name()) eq $cookie_path) {    # mod_rewrite 가 사용되지 않은 경우
             $cookie_path =~ s/[^\/]*$//;                            # 스크립트 이름만 제거
         } else {                                        # mod_rewrite
-            if ((my $postfix = $q->path_info()) ne '') {    # wiki.pl/ 로 rewrite 된 경우   
+            if ((my $postfix = $q->path_info()) ne '') {    # wiki.pl/ 로 rewrite 된 경우
                 $cookie_path =~ s/$postfix$//;
             } else {                                        # wiki.pl? 로 rewrite 된 경우
                 my $postfix = $q->query_string();
@@ -1790,7 +1790,7 @@ sub GetHtmlHeader {
 
 ### 작성 취소시 확인
     if (
-            (&GetParam("oldtime", "") ne "") || 
+            (&GetParam("oldtime", "") ne "") ||
             ((lc(&GetParam("action","")) eq "edit") && (&UserCanEdit($id,1)))
        ) {
         my $close_string = T('If you leave current page, the contents you are writing will not be stored.');
@@ -1841,7 +1841,7 @@ document.onkeypress = GetKeyStroke;
 EOH
     }
     $html .= $headExtra;
-        
+
     # Insert any other body stuff (like scripts) into $bodyExtra here
     # (remember to add a space at the beginning to separate from prior text)
     $html .= "</HEAD><BODY $bodyExtra>\n";
@@ -1997,7 +1997,7 @@ sub GetGotoBar {
     $bar_menu .= "<DIV class='gotobar_menu'>\n";
     $bar_menu .= "<UL>\n";
     $bar_menu .= "<LI>"
-                . &GetPageLink($HomePage).&GetPageLinkText($HomePage, "[f]") 
+                . &GetPageLink($HomePage).&GetPageLinkText($HomePage, "[f]")
                 . "</LI>\n";
     $bar_menu .= "<LI>"
                 . &GetPageLink(T($RCName)).&ScriptLink("action=rc", "[r]")
@@ -2060,7 +2060,7 @@ sub GetGotoBar {
     $bar_search .= "<DIV class='gotobar_search'>\n";
     $bar_search .= "<UL>\n";
     $bar_search .= "<LI>" . &GetGotoForm() . "</LI>\n";
-            
+
     $bar_search .= "<LI>" . &GetSearchForm() . "</LI>\n";
     $bar_search .= "</UL>";
     $bar_search .= "</DIV>\n";
@@ -2098,7 +2098,7 @@ sub GetGotoForm {
     $q->param("id", "$string");
     $GotoTextFieldId++;
 
-    $result = 
+    $result =
         $q->start_form(
                 -name           => ($not_macro?"goto_form":""),
                 -method         => "POST",
@@ -2298,7 +2298,7 @@ sub CommonMarkup {
     local $_ = $text;
 
     if ($doLines < 2) { # 2 = do line-oriented only
-### {{{ }}} 처리 
+### {{{ }}} 처리
         s/(^|\n)\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/&StoreRaw("\n<PRE class=\"code\">") . &StoreCodeRaw($2) . &StoreRaw("\n<\/PRE>") . "\n"/igem;
 
 ### plugin
@@ -2326,7 +2326,7 @@ sub CommonMarkup {
 #       s/\[\#(\w+)\]/&StoreHref(" name=\"$1\"")/ge if $NamedAnchors;
 # anchor 정리 - 2012.01.06
         s/\[\[$AnchorPattern\|([^\]]+)\]\]/StoreHref("href=\"#$1\"", $2)/ge if $NamedAnchors;
-        s/\[\[$AnchorPattern\]\]/StoreHref("href=\"#$1\"", $1)/ge if $NamedAnchors; 
+        s/\[\[$AnchorPattern\]\]/StoreHref("href=\"#$1\"", $1)/ge if $NamedAnchors;
 
         s/\[$AnchorPattern\|([^\]]+)\]/StoreHref("name=\"$1\"", $2)/geo;
         s/\[$AnchorPattern\]/StoreHref("name=\"$1\"")/ge if $NamedAnchors;
@@ -2504,7 +2504,7 @@ sub MacroSubst {
             }
         }
     }
-            
+
     foreach my $macro (sort keys %MacroFile) {
         if ($txt =~ /(&__LT__;|<)$macro/i) {
             require "$MacroFile{$macro}";
@@ -2563,7 +2563,7 @@ sub MacroIncludeSubst {
             }
         }
     }
-            
+
     foreach my $macro (sort keys %MacroFile) {
         if ($txt =~ /(&__LT__;|<)$macro/i) {
             require "$MacroFile{$macro}";
@@ -2630,34 +2630,34 @@ sub MacroTrackbackReceived {
 sub MacroImgTag {
     my ($url,$width,$height,$caption,$float) = @_;
     my ($s_width,$s_height,$s_tag,$s_divstyle,$s_caption,$return);
-    
+
     $s_width    = " width=\"$width\"" if ( $width>0 );
     $s_height   = " height=\"$height\"" if ( $height>0 );
     $s_tag      = " title=\"$url\"";
     $s_divstyle = " style=\"float:$float;\"" if ($float ne '');
     $s_caption  = "<br><span class=\"imgcaption\">$caption</span>" if ($caption ne '');
-    
+
     if ($url =~ /$InterLinkPattern/)
     {
         my $id = $url;
         my ($name, $site, $remotePage, $punct, $image);
-    
+
         ($id, $punct) = &SplitUrlPunct($id);
-    
+
         $name = $id;
         ($site, $remotePage) = split(/:/, $id, 2);
         $url = &GetSiteUrl($site);
         if ($url ne "")
         {
             $remotePage =~ s/&amp;/&/g;  # Unquote common URL HTML
-            
+
             if ($url =~ /\|/) {
                 ($url, $image) = split(/\|/, $url, 2);
             }
             $url .= $remotePage;
         }
     }
-    
+
     if ($width > 0 or $height > 0)
     {
         $return     = "<a href=\"$url\"><img src=\"$url\" $s_width $s_height $s_tag border=\"1\" style=\"margin:5px;\"></a>";
@@ -2693,7 +2693,7 @@ sub MacroMemo {
 }
 
 sub MacroComments {
-    my ($itself,$id,$up,$long,$threadindent) = @_;  
+    my ($itself,$id,$up,$long,$threadindent) = @_;
     my $idvalue;
     my $temp;
     my $txt;
@@ -2744,7 +2744,7 @@ sub MacroComments {
                                     -style=>"$readonly_style",
                                     -default=>"$readonly_msg");
         } else {            # comments
-            $comment_field = $q->textfield(-name=>"comment", 
+            $comment_field = $q->textfield(-name=>"comment",
                                             -class=>"comments",
                                             -size=>"60",
                                             -readonly=>"$readonly_true",
@@ -2773,7 +2773,7 @@ sub MacroComments {
         $submit_button = $q->submit(-name=>"Submit",-value=>T("Submit"));
     }
 
-    my $spambot_trap = 
+    my $spambot_trap =
         "<DIV style='display:none;'>"
         . "Homepage: "
         . $q->textfield(-name=>"homepage",
@@ -2826,7 +2826,7 @@ sub MacroUploadedFiles {
     my $txt;
     my $uploadsearch = "<img style='border:0' src='$IconUrl/upload-search.gif'>";
     my $canDelete = &UserIsAdmin();
-    
+
     if (!(-e $UploadDir)) {
         &CreateDir($UploadDir);
     }
@@ -2850,7 +2850,7 @@ sub MacroUploadedFiles {
 
     $txt = $q->start_form("post","$ScriptName","");
     $txt .= "<input type='hidden' name='action' value='deleteuploadedfiles'>";
-    $txt .= "<input type='hidden' name='pagename' value='$OpenPageName'>"; 
+    $txt .= "<input type='hidden' name='pagename' value='$OpenPageName'>";
 
     $txt .= "<TABLE class='uploadedfiles'>";
     $txt .= "<TR class='uploadedfiles'>";
@@ -2909,7 +2909,7 @@ sub MacroInclude {
     if ($OpenPageName eq $name) { # Recursive Include 방지
         return "";
     }
-    
+
     $name =~ s/^\[\[(.*)\]\]$/$1/;
     $name =~ s|^/|$MainPage/|;
     $name = &FreeToNormal($name);
@@ -2918,7 +2918,7 @@ sub MacroInclude {
     if (!(-f $fname)) {
         return "";
     }
-        
+
 ### hide page
     if (&PageIsHidden($name)) {
         return "";
@@ -3281,7 +3281,7 @@ sub StoreSyntaxHighlight {
     foreach (@SRCHIGHLANG) {
         $LANG{$_} = "1";
     }
-    
+
     if (!((-x "$SOURCEHIGHLIGHT") && defined($LANG{$lang}))) {
         return &StoreCodeRaw(@code);
     }
@@ -3293,7 +3293,7 @@ sub StoreSyntaxHighlight {
     if ($opt ne "") {
         $option .= " -t$opt ";
     }
-        
+
     my (@html) = `$SOURCEHIGHLIGHT $option << "EnDoFwIkIcOdE"
 @code
 EnDoFwIkIcOdE`;
@@ -3393,7 +3393,7 @@ sub PostMacroMySign {
         $author = &GetRemoteHost(0);
     }
     # 여기서는 그냥 mysign(이름,시간)으로만 변경
-    $string =~ s/<mysign>([\r\f]*\n)/<mysign($author,$timestamp)>$1/gim; 
+    $string =~ s/<mysign>([\r\f]*\n)/<mysign($author,$timestamp)>$1/gim;
 
     return $string;
 }
@@ -3436,7 +3436,7 @@ sub MakeLaTeX {
     my $LatexDir = "$UploadDir/latex";
     my $LatexUrl = "$UploadUrl/latex";
     my $TemplateFile = "$DataDir/latex.template";
-        
+
     # 디렉토리 생성
     &CreateDir($UploadDir);
     &CreateDir($LatexDir);
@@ -3450,7 +3450,7 @@ sub MakeLaTeX {
 \documentclass[12pt]{amsart}
 
 % Your can use the desire symbol packages
-% Of course, MikTeX needs to be able to get the 
+% Of course, MikTeX needs to be able to get the
 % package that you specify
 \usepackage{mathptmx,bm,calrsfs}
 
@@ -3481,7 +3481,7 @@ EOT
         if (not -f $TemplateFile) {
             &WriteStringToFile($TemplateFile, $DefaultTemplate);
         }
-        
+
         my $template = &ReadFile($TemplateFile);
 
         $template =~ s/<math>/$latex/ige;
@@ -3825,7 +3825,7 @@ sub WikiHeadingNumber {
 #   $anchor =~ s/_$//;
 #   $anchor = '_' . (join '_', @HeadingNumbers) unless $anchor; # Last ditch effort
 
-    $anchor = 'H_' . (join '_', @HeadingNumbers); 
+    $anchor = 'H_' . (join '_', @HeadingNumbers);
 
 ###
 ###############
@@ -3959,7 +3959,7 @@ sub GetDiffHTML {
                     . "</b>\n$links<br>" . &DiffToHTML($diffText) . "<hr>\n";
         }
     }
-    
+
 ### {{{ }}} 처리를 위해 추가. 임시 태그를 원래대로 복원
 ### diff 화면에서도 \\ 와 \ 처리를 해 주는 게 나을려나?
     $html =~ s/&__LT__;/&lt;/g;
@@ -4419,7 +4419,7 @@ sub UserDataFilename {
 
     return $UserDir . "/" . "$id.db";
 }
-    
+
 # ==== Misc. functions ====
 sub ReportError {
     my ($errmsg) = @_;
@@ -4492,7 +4492,7 @@ sub UserCanEdit {
     if (($id ne "") && (&PageIsHidden($id))) {
         return 0;
     }
-    
+
     # Optimized for the "everyone can edit" case (don't check passwords)
     if (($id ne "") && (-f &GetLockedPageFile($id))) {
         return 1  if (&UserIsAdmin());  # Requires more privledges
@@ -4984,7 +4984,7 @@ sub DoOtherRequest {
         } elsif (-f "$ActionDir/$action.pl") {
             $action_file = "$ActionDir/$action.pl";
         }
-        
+
         if ($action_file ne "") {
             my $loadaction = eval "require '$action_file'";
 
@@ -5151,7 +5151,7 @@ sub DoEdit {
         my (@h_depth, @h_pos);
         my $num = 0;
 
-        $temp_text = $oldText;                                              
+        $temp_text = $oldText;
 
         # {{{ }}} 등 헤드라인이 올 수 없는 것들을 먼저 제외
         %SaveUrl = ();
@@ -5337,7 +5337,7 @@ function oekaki()
         my $ecode = &simple_crypt(length($id).substr(&CalcDay($Now),5));
         print &GetHiddenValue("ecode","$ecode")."\n";
 # spambot trap
-        my $spambot_trap = 
+        my $spambot_trap =
             "<DIV style='display:none;'>"
             . "Homepage: "
             . $q->textfield(-name=>"homepage",
@@ -5393,17 +5393,17 @@ function oekaki()
             print ' (', Ts('Visit %s to set your user name.', &GetPrefsLink()), ') ';
         }
 ### 미리보기 버튼에 번역함수 적용
-        print q(<input accesskey="p" type="button" name="prev1" value="). 
-            T('Popup Preview')." [alt+p]" . 
+        print q(<input accesskey="p" type="button" name="prev1" value=").
+            T('Popup Preview')." [alt+p]" .
             q(" onclick="javascript:preview();">); # luke added
 
 ### file upload
-        print " ".q(<input accesskey="u" type="button" name="prev1" value="). 
-            T('Upload File')." [alt+u]" . 
+        print " ".q(<input accesskey="u" type="button" name="prev1" value=").
+            T('Upload File')." [alt+u]" .
             q(" onclick="javascript:upload();">);
 ### oekaki
-        print " ".q(<input accesskey="o" type="button" name="prev1" value="). 
-            T('Oekaki')." [alt+o]" . 
+        print " ".q(<input accesskey="o" type="button" name="prev1" value=").
+            T('Oekaki')." [alt+o]" .
             q(" onclick="javascript:oekaki();">);
 ###
         if ($isConflict) {
@@ -5422,9 +5422,9 @@ function oekaki()
         }
 ### view action 추가
     } else {
-        print $q->textarea(-class=>'view', -accesskey=>'i', -name=>'text', 
-                -default=>$oldText, -rows=>$editRows, -columns=>$editCols, 
-                -override=>1, -style=>'width:100%', -wrap=>'virtual', 
+        print $q->textarea(-class=>'view', -accesskey=>'i', -name=>'text',
+                -default=>$oldText, -rows=>$editRows, -columns=>$editCols,
+                -override=>1, -style=>'width:100%', -wrap=>'virtual',
                 -readonly=>'true');
     }
 ###
@@ -6168,7 +6168,7 @@ sub PrintPageList {
                     print &ScriptLink("action=pagehide&set=1&id=" . $pagename, T('hide'));
                 }
             }
-# 
+#
             print "<BR>\n";
         }
     }
@@ -6467,7 +6467,7 @@ sub DoPostMain {
 
     # Remove "\r"-s (0x0d) from the string
     $string =~ s/\r//g;
-    
+
 ### <mysign> 등 글작성 직후 수행할 매크로
 ### comments 구현을 위해 $id 추가, from Jof
     $string = &ProcessPostMacro($string, $id);
@@ -6489,7 +6489,7 @@ sub DoPostMain {
         my (@h_depth, @h_pos);
         my $num = 0;
 
-        $temp_text = $old;                                              
+        $temp_text = $old;
 
         # {{{ }}} 등 헤드라인이 올 수 없는 것들을 먼저 제외
         %SaveUrl = ();
@@ -7703,7 +7703,7 @@ sub DoUpload {
             T('File has no content'),
             T('Failed to get lock'),
         );
-            
+
     my $result;
 
     print &GetHttpHeader();
@@ -7966,7 +7966,7 @@ sub OekakiSave {
 
 sub OekakiPaint {
     my ($imageWidth, $imageHeight) = (
-        &GetParam('width','300'), 
+        &GetParam('width','300'),
         &GetParam('height','300')
     );
 
@@ -8039,7 +8039,7 @@ sub GetLastPrefix {
     if (!(-f "$dir/$file")) {
         return "";
     }
-    
+
     if (!(-f "$dir/2_$file")) {
         return "2_";
     }
@@ -8088,7 +8088,7 @@ sub DoInterest {
         print &GetCommonFooter();
         return;
     }
-    
+
     print &GetHeader('', $title, '');
     if ($mode eq "add") {
         $UserInterest{$id} = "1";
@@ -8496,7 +8496,7 @@ sub DoSendTrackbackPing {
         my $msg_str = $msg->to_xml;
 
         my ($code, $message) = ($msg_str =~ m!<error>(\d+).*<message>(.*?)</message>!s);
-        
+
         if ($msg->is_success) {
             sleep(1);
             $Now = time;
@@ -8506,7 +8506,7 @@ sub DoSendTrackbackPing {
             my $macro = "\<trackbacksent\>";
             if ($string =~ /$macro/) {
                 my $timestamp = &CalcDay($Now) . " " . &CalcTime($Now);
-                my $newtrackbacksent = "* $timestamp | " . 
+                my $newtrackbacksent = "* $timestamp | " .
                     (($ping_permalink ne '')?$ping_permalink:$ping_url);
                 $string =~ s/($macro)/$newtrackbacksent\n$1/;
                 &DoPostMain($string, $id, &T('New Trackback Sent'), $Section{'ts'}, 0, 0, "!!");
@@ -8693,7 +8693,7 @@ sub store_raw_codes {
 # 스트링의 인코딩을 추측해서, 내 HttpCharset으로 컨버트
 sub guess_and_convert {
     my ($string) = @_;
-    
+
     # legal UTF-8인지 체크
     if ($HttpCharset =~ /utf-8|utf8/i) {
         if (eval "require Unicode::CheckUTF8;") {
@@ -8721,7 +8721,7 @@ sub guess_and_convert {
 # 펄의 "\x{16진수}" 형식으로 된 스트링을 HttpCharset에 맞춰 변환
 sub uni_to_charset {
     my ($str) = @_;
-    
+
     if (eval "require Encode;") {
         return Encode::encode("$HttpCharset", $str);
     }
@@ -8754,7 +8754,7 @@ sub PostTwitter {
         ( eval "require Net::Twitter::Lite;" ) and
         ( eval "require WWW::Shorten;" )
        ) {
-        
+
 #         import WWW::Shorten 'TinyURL';
         import WWW::Shorten 'Metamark';
 

@@ -2,7 +2,7 @@
 
 
 #   이 파일에서 수정할 곳은 첫줄의 펄path(usr/bin/perl or usr/local/bin/perl)
-#   밖에는 없습니다.                          
+#   밖에는 없습니다.
 
 ####################################################################################
 #                                                                                  #
@@ -27,7 +27,7 @@ if($ENV{'QUERY_STRING'} ne "") {
         read(STDIN,$buffer,$ENV{'CONTENT_LENGTH'});
         @pairs = split(/&/, $buffer);
         }
-        
+
         foreach $pair (@pairs) {
             ($name, $value) = split(/=/,$pair);
 
@@ -36,7 +36,7 @@ if($ENV{'QUERY_STRING'} ne "") {
 
             $FORM{$name} = $value;
     }
-  
+
 $CgiUrl = "kimsnobody.pl";
 # $CgiUrl = "kimsnobody.cgi";
 $BaseDir = "./";
@@ -45,7 +45,7 @@ $ImgUrl = "http://www.junksf.net/kimsboard/image";
      if ($FORM{'action'} eq "remove") {remove_file();}
   elsif ($FORM{'action'} eq "view") {starting(); open_directory(); ending();}
   else {starting(); open_directory(); ending();}
-    
+
 
 ###############################################################################
 sub open_directory {
@@ -58,8 +58,8 @@ print "<form action=$CgiUrl method=post>
      <a href=$CgiUrl>[처음]</a> <a href=javascript:history.go(-1)>[뒤로]</a> <a href=\"$CgiUrl?action=$FORM{'action'}&value=$FORM{'value'}\">[리로드]</a></font></td>
     <td bgcolor=C0C0C0 align=center><font face=돋움><strong>열기</strong></font></td>
     <td bgcolor=C0C0C0 align=center><font face=돋움><strong>삭제</strong></font></td>
-  </tr></form>\n";    
-  
+  </tr></form>\n";
+
 if(!$FORM{'value'}) {$FORM{'value'} = $BaseDir;} else {$FORM{'value'} = "$FORM{'value'}/"; }
 opendir(DIRECTORY, "$FORM{'value'}");
 @data = readdir(DIRECTORY);
@@ -80,7 +80,7 @@ print "<td align=center bgcolor=white>$wtype</td>
        <td align=center bgcolor=eeeeee> </td>
        <td align=center bgcolor=eeeeee><a href=\"$CgiUrl?action=remove&value=$FORM{'value'}$data\">Del</a></td></tr>\n";
     }
-else{ 
+else{
 print "<td align=center bgcolor=white>Dir</td>
        <td align=center bgcolor=white><a href=\"$FORM{'value'}$data\" target=_blank><font color=blue><b>$data</b></font></a></td>
        <td align=center bgcolor=eeeeee><a href=\"$CgiUrl?action=view&value=$FORM{'value'}$data\">View</a></td>
@@ -154,7 +154,7 @@ print "
   .family{line-height:140%}
  -->
  </style>\n";
- if($FORM{'action'} eq "remove") {       
+ if($FORM{'action'} eq "remove") {
        print "<META http-equiv=\"refresh\" content =\"0;url=$CgiUrl?action=view&value=$FORM{'value'}\">\n";
        }
   print "</HEAD>
@@ -176,33 +176,33 @@ sub ending {
 ################################################################################[파일종류파악]
 sub file_type {
     $word = $data;
-    if($word =~ /.gif/) {$wtype = "Image";} 
-    elsif($word =~ /.jpg/) {$wtype = "Image";} 
-    elsif($word =~ /.jpeg/) {$wtype = "Image";} 
-    elsif($word =~ /.htm/) {$wtype = "html";} 
-    elsif($word =~ /.html/) {$wtype = "html";} 
-    elsif($word =~ /.zip/) {$wtype = "arc";} 
-    elsif($word =~ /.tar/) {$wtype = "arc";} 
-    elsif($word =~ /.bmp/) {$wtype = "Image";} 
-    elsif($word =~ /.exe/) {$wtype = "exe";} 
-    elsif($word =~ /.doc/) {$wtype = "doc";} 
+    if($word =~ /.gif/) {$wtype = "Image";}
+    elsif($word =~ /.jpg/) {$wtype = "Image";}
+    elsif($word =~ /.jpeg/) {$wtype = "Image";}
+    elsif($word =~ /.htm/) {$wtype = "html";}
+    elsif($word =~ /.html/) {$wtype = "html";}
+    elsif($word =~ /.zip/) {$wtype = "arc";}
+    elsif($word =~ /.tar/) {$wtype = "arc";}
+    elsif($word =~ /.bmp/) {$wtype = "Image";}
+    elsif($word =~ /.exe/) {$wtype = "exe";}
+    elsif($word =~ /.doc/) {$wtype = "doc";}
     elsif($word =~ /.cgi/) {$wtype = "cgi";}
     elsif($word =~ /.ph/) {$wtype = "cgi";}
-    elsif($word =~ /.class/) {$wtype = "cgi";} 
-    elsif($word =~ /.js/) {$wtype = "script";}  
-    elsif($word =~ /.pl/) {$wtype = "cgi";} 
-    elsif($word =~ /.ppt/) {$wtype = "doc";} 
-    elsif($word =~ /.mp3/) {$wtype = "media";} 
-    elsif($word =~ /.mpeg/) {$wtype = "media";} 
-    elsif($word =~ /.swf/) {$wtype = "media";} 
-    elsif($word =~ /.mpg/) {$wtype = "media";} 
-    elsif($word =~ /.asx/) {$wtype = "media";}    
-    elsif($word =~ /.txt/) {$wtype = "doc";} 
-    elsif($word =~ /.rar/) {$wtype = "arc";} 
-    elsif($word =~ /.xls/) {$wtype = "doc";} 
-    elsif($word =~ /.hwp/) {$wtype = "doc";} 
-    elsif($word =~ /.mid/) {$wtype = "doc";} 
-    elsif($word =~ /.ra/) {$wtype = "media";} 
+    elsif($word =~ /.class/) {$wtype = "cgi";}
+    elsif($word =~ /.js/) {$wtype = "script";}
+    elsif($word =~ /.pl/) {$wtype = "cgi";}
+    elsif($word =~ /.ppt/) {$wtype = "doc";}
+    elsif($word =~ /.mp3/) {$wtype = "media";}
+    elsif($word =~ /.mpeg/) {$wtype = "media";}
+    elsif($word =~ /.swf/) {$wtype = "media";}
+    elsif($word =~ /.mpg/) {$wtype = "media";}
+    elsif($word =~ /.asx/) {$wtype = "media";}
+    elsif($word =~ /.txt/) {$wtype = "doc";}
+    elsif($word =~ /.rar/) {$wtype = "arc";}
+    elsif($word =~ /.xls/) {$wtype = "doc";}
+    elsif($word =~ /.hwp/) {$wtype = "doc";}
+    elsif($word =~ /.mid/) {$wtype = "doc";}
+    elsif($word =~ /.ra/) {$wtype = "media";}
     elsif($word =~ /.ram/) {$wtype = "media";}
     else {$wtype = "unknown"}
  }

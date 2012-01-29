@@ -22,7 +22,7 @@ sub MacroShowInterMap() {
         $data = "Can't read intermap file";
     }
 
-    return &StoreRaw("<PRE class='code'>\n".$data."</PRE>"); 
+    return &StoreRaw("<PRE class='code'>\n".$data."</PRE>");
 }
 
 1;
