@@ -519,6 +519,7 @@ sub InitCookie {
     $TimeZoneOffset = 0;
     undef $q->{'.cookies'};  # Clear cache if it exists (for SpeedyCGI)
     %UserCookie = $q->cookie($CookieName);
+    $UserCookie{id} = DecodeUrl($UserCookie{id});
     $UserID = $UserCookie{'id'};
     &LoadUserData($UserID);
     if (($UserData{'id'}       != $UserCookie{'id'})      ||
@@ -1681,7 +1682,7 @@ sub GetHttpHeader {
         $cookie = "$CookieName="
             . "expire&" . $SetCookie{'expire'}
             . "&rev&"   . $SetCookie{'rev'}
-            . "&id&"    . $SetCookie{'id'}
+            . "&id&"    . EncodeUrl($SetCookie{'id'})
             . "&randkey&" . $SetCookie{'randkey'}
             . ";";
 ### slashlinks 지원 - 로긴,로그아웃시에 쿠키의 path를 동일하게 해줌
