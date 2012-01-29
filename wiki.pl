@@ -3154,8 +3154,6 @@ sub InterPageLink {
                 "<IMG class='inter' src='$image' alt='$site:' title='$site:'>" .
                 "</A>";
     $link_html .= "<A class='inter' href='$url' title='$id'>$remotePage</A>";
-### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
-    $link_html .= "<a href=\"$url\" target=\"_blank\"><img class=\"newwindow\" src=\"$IconUrl/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>";
     return ($link_html, $punct);
 }
 
@@ -3188,15 +3186,7 @@ sub StoreBracketInterPage {
     $encoded_page = &EncodeUrl($encoded_page) if ($site !~ /^(Upload|Local|LocalWiki)$/);
     $url .= $encoded_page;
 
-### interwiki 아이콘
-#   return &StoreRaw("<a href=\"$url\">[$text]</a>");
-    my $link_html = '';
-    $link_html = "<A class='inter' href='$url' title='$id'>[$text]</A>" .
-### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
-                "<a href=\"$url\" target=\"_blank\">" .
-                "<img class=\"newwindow\" src=\"$IconUrl/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\">" .
-                "</a>";
-    return &StoreRaw($link_html);
+    return StoreRaw( qq(<a class="inter" href="$url" title="$id">[$text]</a>) );
 }
 
 sub GetBracketUrlIndex {
@@ -3581,8 +3571,7 @@ sub UrlLink {
     my $protocol;
     ($protocol, $name) = ($1, $2) if ($name =~ /^(https?:)(.*)/ && $2 !~ /^\/\//);
 
-### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
-    return ("<A class='outer' href=\"$name\">$protocol$name</A><a href=\"$name\" target=\"_blank\"><img class=\"newwindow\" src=\"$IconUrl/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>", $punct);
+    return ( qq(<a class="outer" href="$name">$protocol$name</a>), $punct );
 }
 
 sub StoreBracketUrl {
@@ -3592,8 +3581,7 @@ sub StoreBracketUrl {
     if ($text eq "") {
         $text = &GetBracketUrlIndex($url);
     }
-### 외부 URL 을 새창으로 띄울 수 있는 링크를 붙임
-    return &StoreRaw("<A class='outer' href=\"$url\">[$text]</A><a href=\"$url\" target=\"_blank\"><img class=\"newwindow\" src=\"$IconUrl/newwindow.gif\" border=\"0\" alt=\"" . T('Open in a New Window') . "\" align=\"absbottom\"></a>");
+    return StoreRaw( qq(<a class="outer" href="$url">[$text]</A>) );
 }
 
 sub StoreBracketLink {
