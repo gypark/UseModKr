@@ -3418,14 +3418,8 @@ sub MakeLaTeX {
     $latex = &UnquoteHtmlForPageContent($latex);
 
     # 그림파일의 이름은 텍스트를 해슁하여 결정
-    my $hash;
-    my $hasMD5 = eval "require Digest::MD5;";
-    if ($hasMD5) {
-        $hash = Digest::MD5::md5_base64($latex);
-    } else {
-        $hash = crypt($latex, $HashKey);
-    }
-    $hash =~ s/(\W)/uc sprintf "_%02x", ord($1)/eg;
+    require Digest::MD5;
+    my $hash = Digest::MD5::md5_hex($latex);
 
     # 기본값 설정
     my $hashimage = "$hash.png";
@@ -3438,7 +3432,7 @@ sub MakeLaTeX {
     &CreateDir($UploadDir);
     &CreateDir($LatexDir);
 
-    if ($hasMD5 and -f "$LatexDir/$hashimage" && not -z "$LatexDir/$hashimage") {
+    if (-f "$LatexDir/$hashimage" && not -z "$LatexDir/$hashimage") {
         # 이미 생성되어 캐쉬에 있음
     } else {
         # 새로 생성해야 됨
@@ -4751,7 +4745,7 @@ sub GenerateAllPagesList {
         @dirs = qw(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z other);
         foreach my $dir (@dirs) {
             if (-e "$PageDir/$dir") {  # Thanks to Tim Holt
-                while (<$PageDir/$dir/*.db $PageDir/$dir/*/*.db>) {
+                while (glob("$PageDir/$dir/*.db $PageDir/$dir/*/*.db")) {
                     s|^$PageDir/||;
                     m|^[^/]+/(\S*).db|;
                     push(@pages, $1);
@@ -4759,7 +4753,8 @@ sub GenerateAllPagesList {
             }
         }
     }
-    return sort(@pages);
+    my @sorted_list = sort @pages;
+    return @sorted_list;
 }
 
 sub AllPagesList {
@@ -8620,14 +8615,14 @@ sub TextIsBanned {
     my ($data, $status);
 
     ($status, $data) = &ReadFile("$DataDir/bantext");
-    return undef if (!$status);
+    return if (!$status);
 
     $data =~ s/\r//g;
     foreach (split(/\n/, $data)) {
         next if ((/^\s*$/) || (/^#/));
         return $1 if ($text =~ /($_)/i);
     }
-    return undef;
+    return;
 }
 
 # $str 의 인코딩을 $from 에서 $to 로 컨버트
