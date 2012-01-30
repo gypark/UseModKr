@@ -50,7 +50,7 @@ use vars qw(@RcDays @HtmlPairs @HtmlSingle
     $ScriptTZ $BracketText $UseAmPm $UseIndex $UseLookup
     $RedirType $AdminPass $EditPass $NetworkFile $BracketWiki
     $FreeLinks $WikiLinks $AdminDelete $FreeLinkPattern $RCName $RunCGI
-    $ShowEdits $ThinLine $LinkPattern $InterLinkPattern $InterSitePattern
+    $ShowEdits $LinkPattern $InterLinkPattern $InterSitePattern
     $UrlProtocols $UrlPattern $ImageExtensions $RFCPattern $ISBNPattern
     $FS $FS1 $FS2 $FS3 $CookieName $SiteBase $StyleSheetUrl $NotFoundPg
     $FooterNote $EditNote $MaxPost $NewText $NotifyDefault $HttpCharset);
@@ -209,7 +209,6 @@ $KeepMajor   = 1;       # 1 = keep major rev,     0 = expire all revisions
 $KeepAuthor  = 1;       # 1 = keep author rev,    0 = expire all revisions
 $ShowEdits   = 0;       # 1 = show minor edits,   0 = hide edits by default
 $HtmlLinks   = 1;       # 1 = allow A HREF links, 0 = no raw HTML links
-$ThinLine    = 1;       # 1 = fancy <hr> tags,    0 = classic wiki <hr>
 $BracketText = 1;       # 1 = allow [URL text],   0 = no link descriptions
 $UseAmPm     = 1;       # 1 = use am/pm in times, 0 = use 24-hour times
 $UseIndex    = 0;       # 1 = use index file,     0 = slow/reliable method
@@ -2401,16 +2400,8 @@ sub CommonMarkup {
 
         $_ = &MacroSubst($_);               # luke added
 
-### ==== 가 hr 과 헤드라인 양쪽에서 처리되어 충돌이 생긴다. hr 패턴을 수정
-        if ($ThinLine) {
-            s/--------+/<hr noshade style="height:5px">/g;
-            s/-------+/<hr noshade style="height:4px">/g;
-            s/------+/<hr noshade style="height:3px">/g;
-            s/-----+/<hr noshade style="height:2px">/g;
-            s/----+/<hr noshade style="height:1px">/g;
-        } else {
-            s/----+/<hr>/g;
-        }
+        # ---- <hr>
+        s/(-{4,})/'<hr noshade style="height:' . ( length($1)>8 ? 5 : length($1)-3 ) . 'px">'/ge;
 
     }
     if ($doLines) { # 0 = no line-oriented, 1 or 2 = do line-oriented
