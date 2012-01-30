@@ -6,14 +6,13 @@ sub fullsearch {
     return $txt;
 }
 
-sub MacroFullSearch()
+sub MacroFullSearch
 {
-    my $pagename;
     my ($string) = @_;
     my @x = &SearchTitleAndBody($string);
     my $txt;
 
-    foreach $pagename (@x) {
+    foreach my $pagename (@x) {
         $txt .= ".... "  if ($pagename =~ m|/|);
         $txt .= &GetPageLink($pagename) . "<br>";
     }

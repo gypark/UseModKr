@@ -1,3 +1,5 @@
+use strict;
+
 sub allpagesto {
     my ($txt) = @_;
 
@@ -9,8 +11,7 @@ sub allpagesto {
 sub MacroAllPagesTo {
     my ($string) = @_;
     my @x = ();
-    my ($pagelines, $pagename, $txt);
-    my $pagename;
+    my $txt;
     
     $string = &RemoveLink($string);
     $string = &FreeToNormal($string);
@@ -18,12 +19,12 @@ sub MacroAllPagesTo {
         return "&lt;allpagesto($string)&gt;";
     }
 
-    foreach $pagelines (&GetFullLinkList("empty=0&sort=1&reverse=$string")) {
+    foreach my $pagelines (&GetFullLinkList("empty=0&sort=1&reverse=$string")) {
         my @pages = split(' ', $pagelines);
         @x = (@x, shift(@pages));
     }
 
-    foreach $pagename (@x) {
+    foreach my $pagename (@x) {
         $txt .= ".... "  if ($pagename =~ m|/|);
         $txt .= &GetPageLink($pagename) . "<br>";
     }

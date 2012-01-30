@@ -54,13 +54,12 @@ sub action_replacetext {
         print "<p>Search & replace ...<br>\n";
     }
 
-    my ($page, $num);
-    $num = 0;
+    my $num = 0;
 
     $oldStr = "\Q$oldStr\E" if (not $regular);
     $oldStr = "(?i)$oldStr" if ($ignoreCase);
 
-    foreach $page (&AllPagesList()) {       # 모든 페이지 검사
+    foreach my $page (&AllPagesList()) {       # 모든 페이지 검사
         &OpenPage($page);
         &OpenDefaultText();
         my $newText = $Text{'text'};

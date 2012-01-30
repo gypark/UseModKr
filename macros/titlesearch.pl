@@ -8,9 +8,9 @@ sub titlesearch {
 
 sub MacroTitleSearch {
     my ($string) = @_;
-    my ($name, $freeName, $txt);
+    my ($freeName, $txt);
 
-    foreach $name (&AllPagesList()) {
+    foreach my $name (&AllPagesList()) {
         if ($name =~ /$string/i) {
             $txt .= &GetPageLink($name) . "<br>";
         } elsif ($FreeLinks && ($name =~ m/_/)) {

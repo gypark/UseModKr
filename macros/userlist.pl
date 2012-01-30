@@ -8,14 +8,13 @@ sub userlist {
 
 sub MacroUserList {
     my (@userlist, $result);
-    my $usernumber;
     opendir(USERLIST, $UserDir);
     @userlist = readdir(USERLIST);
     close(USERLIST);
     shift @userlist;
     shift @userlist;
     @userlist = sort @userlist;
-    foreach $usernumber (0..(@userlist-1)) {
+    foreach my $usernumber (0..(@userlist-1)) {
         @userlist[$usernumber] =~ s/(.*)\.db/($1)/gei;
         @userlist[$usernumber] = &StorePageOrEditLink("@userlist[$usernumber]", "@userlist[$usernumber]") . "<br>";
     }

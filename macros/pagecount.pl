@@ -6,7 +6,7 @@ sub pagecount {
     return $txt;
 }
 
-sub MacroPageCount() {
+sub MacroPageCount {
     my @pageList = &AllPagesList();
     return $#pageList + 1;
 }

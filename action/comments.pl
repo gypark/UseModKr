@@ -1,5 +1,6 @@
+use strict;
+
 sub action_comments {
-    use strict;
     my $id = &GetParam("id", "");   
     my $pageid = &GetParam("pageid", "");
     my $name = &GetParam("name", "");

@@ -8,12 +8,12 @@ sub mostpopular {
 
 sub MacroMostPopular {
     my ($itself, $start, $end) = (@_);
-    my (%pgcount, $page, $countfile, $status, $count, @pages);
+    my (%pgcount, $countfile, $status, $count, @pages);
     my $txt;
 
     if (($start == 0) || ($end == 0)) { return $itself; }
 
-    foreach $page (&AllPagesList()) {
+    foreach my $page (&AllPagesList()) {
         $countfile = &GetCountFile($page);
         ($status, $count) = &ReadFile($countfile);
         if ($status) {
@@ -50,7 +50,7 @@ sub MacroMostPopular {
         @pages = reverse(@pages[$end .. $start]);
     }
 
-    foreach $page (@pages) {
+    foreach my $page (@pages) {
         $txt .= ".... "  if ($page =~ m|/|);
         $txt .= &GetPageLink($page) . 
             " (".Ts('%s hit'.(($pgcount{$page}>1)?'s':''), $pgcount{$page}) . ")<br>";

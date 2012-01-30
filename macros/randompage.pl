@@ -6,7 +6,7 @@ sub randompage {
     return $txt;
 }
 
-sub MacroRandompage() {
+sub MacroRandompage {
     my ($count) = @_;
     my @pageList = &AllPagesList();
     my ($txt);

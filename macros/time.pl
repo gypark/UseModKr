@@ -6,6 +6,6 @@ sub time {
     return $txt;
 }
 
-sub MacroTime() { return &CalcTime(time); }
+sub MacroTime { return &CalcTime(time); }
 
 1;

@@ -7,7 +7,7 @@ sub prevupnext {
     return $txt;
 }
 
-sub MacroPrevUpNext() {
+sub MacroPrevUpNext {
     my ($itself, $tocpage) = @_;
     my $temp;
     my ($mainpage, $subpage);

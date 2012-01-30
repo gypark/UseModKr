@@ -1,3 +1,5 @@
+use strict;
+
 sub allpagesfrom {
     my ($txt) = @_;
 
@@ -8,7 +10,7 @@ sub allpagesfrom {
 
 sub MacroAllPagesFrom {
     my ($string, $exists) = @_;
-    my (@x, @links, $pagename, %seen, %pgExists);
+    my (@x, @links, %seen, %pgExists);
     my $txt;
     
     $string = &RemoveLink($string);
@@ -24,13 +26,13 @@ sub MacroAllPagesFrom {
     }
     
     %pgExists = ();
-    foreach $pagename (&AllPagesList()) {
+    foreach my $pagename (&AllPagesList()) {
         $pgExists{$pagename} = 1;
     }
 
     @x = &GetPageLinksFromFile($string, 1, 0, 0);
 
-    foreach $pagename (@x) {
+    foreach my $pagename (@x) {
         $pagename = (split('/',$string))[0]."$pagename" if ($pagename =~ /^\//);
         if ($seen{$pagename} != 0) {
             next;
@@ -46,7 +48,7 @@ sub MacroAllPagesFrom {
     }
     @links = sort(@links);
 
-    foreach $pagename (@links) {
+    foreach my $pagename (@links) {
         $txt .= ".... "  if ($pagename =~ m|/|);
         $txt .= &GetPageOrEditLink($pagename) . "<br>";
     }

@@ -6,6 +6,6 @@ sub date {
     return $txt;
 }
 
-sub MacroDate() { return &CalcDay(time); }
+sub MacroDate { return &CalcDay(time); }
 
 1;

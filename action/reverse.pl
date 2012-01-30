@@ -1,7 +1,6 @@
 sub action_reverse {
     my ($string) = &GetParam('id');
     my @x = ();
-    my $pagelines;
 
     if ($string eq '') {
         &DoIndex();
@@ -17,7 +16,7 @@ sub action_reverse {
 ###
     print '<br>';
 
-    foreach $pagelines (&GetFullLinkList("page=1&inter=1&unique=1&sort=1&exists=2&empty=0&reverse=$string")) {
+    foreach my $pagelines (&GetFullLinkList("page=1&inter=1&unique=1&sort=1&exists=2&empty=0&reverse=$string")) {
         my @pages = split(' ', $pagelines);
         push @x, shift(@pages);
     }

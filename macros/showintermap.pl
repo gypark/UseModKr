@@ -9,7 +9,7 @@ sub showintermap {
     return $txt;
 }
 
-sub MacroShowInterMap() {
+sub MacroShowInterMap {
     my ($status, $data) = &ReadFile($InterFile);
 
     if ($status) {

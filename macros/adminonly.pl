@@ -1,3 +1,5 @@
+use strict;
+
 sub adminonly {
     my ($txt) = @_;
 
