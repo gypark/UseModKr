@@ -8,6 +8,9 @@
 # 스크립트의 퍼미션을 755 로 변경한 후 웹브라우저를 통해 실행하세요.
 
 use strict;
+use warnings;
+use Encode;
+
 umask 0;
 
 use vars qw(%param @pairs);
@@ -263,16 +266,8 @@ sub copy_dir_recursive {
 sub convert_encode {
     my ($str, $from, $to) = @_;
 
-    eval { require Encode; };
-    unless($@) {
-        $str = Encode::encode($to, Encode::decode($from, $str));
-    } else {
-        eval { require Text::Iconv; };
-        unless($@) {
-            my $converter = Text::Iconv->new($from, $to);
-            $str = $converter->convert($str);
-        }
-    }
+    $str = encode($to, decode($from, $str));
+
     return $str;
 }
 

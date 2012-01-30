@@ -28,6 +28,7 @@
 package UseModWiki;
 use strict;
 
+use Encode;
 use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
@@ -6075,7 +6076,6 @@ sub GetPageDirectoryExt {
 # Number and Alphabet index
     if ($id =~ /^([0-9])/) { return "0"; }
     if ($id =~ /^([a-zA-Z])/) { return uc($1); }
-    if (not eval "require Encode;") { return "others"; }
 
 # Korean index
     my @i_korean = (        # "가" "나" ... "하"
@@ -6118,13 +6118,13 @@ sub GetPageDirectoryExt {
          );
 
 # Now, find the index character for $id
-    my $id_uni = Encode::decode("$HttpCharset", $id);
+    my $id_uni = decode("$HttpCharset", $id);
     for (my $i=0; $i <= $#index; $i++) {
         if (($index[$i] le $id_uni) &&
                 (($i == $#index) || ($id_uni lt $index[$i+1]))) {
             my $retval = $index_print[$i];
             if (Encode::is_utf8($retval)) {
-                $retval = Encode::encode($HttpCharset, $retval);
+                $retval = encode($HttpCharset, $retval);
             }
             return $retval;
         }
@@ -8646,17 +8646,7 @@ sub TextIsBanned {
 # $str 의 인코딩을 $from 에서 $to 로 컨버트
 sub convert_encode {
     my ($str, $from, $to) = @_;
-
-    eval { require Encode; };
-    unless($@) {
-        $str = Encode::encode($to, Encode::decode($from, $str));
-    } else {
-        eval { require Text::Iconv; };
-        unless($@) {
-            my $converter = Text::Iconv->new($from, $to);
-            $str = $converter->convert($str);
-        }
-    }
+    $str = encode($to, decode($from, $str));
     return $str;
 }
 
@@ -8691,7 +8681,7 @@ sub guess_and_convert {
 
     # legal UTF-8인지 체크
     if ($HttpCharset =~ /utf-8|utf8/i) {
-        if (eval "require Unicode::CheckUTF8;") {
+        if (eval { require Unicode::CheckUTF8; }) {
             if (Unicode::CheckUTF8::is_utf8($string)) {
                 # ok
                 return $string;
@@ -8700,7 +8690,7 @@ sub guess_and_convert {
     }
 
     # 추측
-    if (eval "require Encode; require Encode::Guess;") {
+    if (eval { require Encode::Guess; }) {
         my @suspects = (@UrlEncodingGuess, 'utf8');
         my $decoder = Encode::Guess::guess_encoding($string, @suspects);
         if (ref($decoder)) {
@@ -8713,31 +8703,17 @@ sub guess_and_convert {
     return $string;
 }
 
-# 펄의 "\x{16진수}" 형식으로 된 스트링을 HttpCharset에 맞춰 변환
-sub uni_to_charset {
-    my ($str) = @_;
-
-    if (eval "require Encode;") {
-        return Encode::encode("$HttpCharset", $str);
-    }
-    return "";
-}
-
 # $str - 쪼갤 스트링
 # $length - 앞에서부터의 문자 갯수
 # return: (처음 length 길이의 스트링, 나머지 스트링)
 sub split_string {
     my ($str, $length) = @_;
-    my ($first, $last);
 
-# UTF-16BE로 변환하고, 2바이트 단위로 분리한 후, 다시 원래 인코딩으로 변환
-    $str = &convert_encode($str, "$HttpCharset", "UTF-16BE");
-    $length *= 2;
-    ($first, $last) = ($str =~ /^(.{0,$length})(.*)$/s);
-    $first = &convert_encode($first, "UTF_16BE", "$HttpCharset");
-    $last = &convert_encode($last, "UTF_16BE", "$HttpCharset");
+    my $chars = decode( $HttpCharset, $str );
+    my $first = substr( $chars, 0, $length );
+    my $last  = substr( $chars, $length );
 
-    return ($first, $last);
+    return ( encode( $HttpCharset, $first ), encode( $HttpCharset, $last ) );
 }
 
 # Twitter
@@ -8782,10 +8758,10 @@ sub PostTwitter {
         $msg =~ s/$UrlPattern/$shorterlink->($1)/ge;
 
         # 140자 제한
-        $msg = Encode::decode($HttpCharset, $msg);
+        $msg = decode($HttpCharset, $msg);
         $msg = substr($msg, 0, 140);
 # URI 모듈 1.40 이상을 쓰는 경우는 아래 주석 처리
-#         $msg = Encode::encode("UTF-8", $msg);
+#         $msg = encode("UTF-8", $msg);
 
         my $result = eval { $nt->update($msg) };
 
