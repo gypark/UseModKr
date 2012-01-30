@@ -404,9 +404,9 @@ sub DoCacheBrowse {
     $idFile = &GetHtmlCacheFile($query);
     if (-f $idFile) {
         local $/ = undef;   # Read complete files
-        open(INFILE, "<$idFile") or return 0;
-        $text = <INFILE>;
-        close INFILE;
+        open my $in, '<', $idFile or return 0;
+        $text = <$in>;
+        close $in;
         print $text;
         return 1;
     }
