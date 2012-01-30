@@ -1,7 +1,7 @@
 sub color {
     my ($txt) = @_;
 
-#   $txt =~ s/&__LT__;color\(([^,)]+),([^,)]+),([^\n]+?)\)&__GT__;/&MacroColorBk($1, $2, $3)/gei;
+    $txt =~ s/&__LT__;color\(([^,:)]+):([^,)]+),([^\n]+?)\)&__GT__;/&MacroColorBk($1, $2, $3)/gei;
     $txt =~ s/&__LT__;color\(([^,)]+),([^\n]+?)\)&__GT__;/&MacroColor($1, $2)/gei;
 
     return $txt;
