@@ -822,7 +822,7 @@ sub DoRc {
     my ($rcType) = @_;
     my $showHTML;
 
-    my ($fileData, $rcline, $i, $daysago, $lastTs, $ts, $idOnly);
+    my ($fileData, $rcline, $daysago, $lastTs, $ts, $idOnly);
     my (@fullrc, $status, $oldFileData, $firstTs, $errorText);
     my $starttime = 0;
     my $showbar = 0;
@@ -941,7 +941,7 @@ sub DoRc {
     if (!($IsPDA)) {
 ### rss from usemod1.0
         if ($showHTML) {
-            foreach $i (@RcDays) {
+            foreach my $i (@RcDays) {
                 print " | "  if $showbar;
                 $showbar = 1;
                 print &ScriptLink("action=rc&days=$i",
@@ -968,7 +968,7 @@ sub DoRc {
     }
 
     # Later consider a binary search?
-    $i = 0;
+    my $i = 0;
     while ($i < @fullrc) {  # Optimization: skip old entries quickly
         ($ts) = split(/$FS3/, $fullrc[$i]);
         if ($ts >= $starttime) {
@@ -1003,7 +1003,7 @@ sub DoRc {
 
 sub GetRcHtml {
     my @outrc = @_;
-    my ($rcline, $html, $date, $sum, $edit, $count, $newtop, $author);
+    my ($html, $date, $sum, $edit, $count, $newtop, $author);
     my ($showedit, $inlist, $link, $all, $idOnly);
 ### RcOldFile 버그 수정
 #   my ($ts, $oldts, $pagename, $summary, $isEdit, $host, $kind, $extraTemp);
@@ -1038,7 +1038,7 @@ sub GetRcHtml {
 
     if ($showedit != 1) {
         my @temprc = ();
-        foreach $rcline (@outrc) {
+        foreach my $rcline (@outrc) {
             ($ts, $pagename, $summary, $isEdit, $host) = split(/$FS3/, $rcline);
             if ($showedit == 0) {  # 0 = No edits
                 push(@temprc, $rcline)  if (!$isEdit);
@@ -1061,7 +1061,7 @@ sub GetRcHtml {
 
     # Later consider folding into loop above?
     # Later add lines to assoc. pagename array (for new RC display)
-    foreach $rcline (@outrc) {
+    foreach my $rcline (@outrc) {
 ### summary 개선 by gypark
 #       ($ts, $pagename) = split(/$FS3/, $rcline);
         ($ts, $pagename, $summary) = split(/$FS3/, $rcline);
@@ -1110,7 +1110,7 @@ sub GetRcHtml {
 #       = split(/$FS3/, $outrc[0]);
 #   $oldts += 1;
 
-    foreach $rcline (@outrc) {
+    foreach my $rcline (@outrc) {
         ($ts, $pagename, $summary, $isEdit, $host, $kind, $extraTemp)
             = split(/$FS3/, $rcline);
         # Later: need to change $all for new-RC?
@@ -2332,11 +2332,10 @@ sub CommonMarkup {
         s/\[$AnchorPattern\]/StoreHref("name=\"$1\"")/ge if $NamedAnchors;
 
         if ($HtmlTags) {
-            my ($t);
-            foreach $t (@HtmlPairs) {
+            foreach my $t (@HtmlPairs) {
                 s/\&__LT__;$t(\s[^<>]+?)?\&__GT__;(.*?)\&__LT__;\/$t\&__GT__;/<$t$1>$2<\/$t>/gis;
             }
-            foreach $t (@HtmlSingle) {
+            foreach my $t (@HtmlSingle) {
                 s/\&__LT__;$t(\s[^<>]+?)?\&__GT__;/<$t$1>/gi;
             }
         } else {
@@ -3306,10 +3305,8 @@ EnDoFwIkIcOdE`;
     $html =~ s/(\r?\n)*?$//s;
     @html = split(/$FS1/, $html);
 
-    my ($line, $result);
-
-    $result = "";
-    foreach $line (@html) {
+    my $result = "";
+    foreach my $line (@html) {
         $line =~ s/(<font [^>]*>)?&amp;(<\/font>)?(<font [^>]*>)?__DOUBLEBACKSLASH__(<\/font>)?(<font [^>]*>)?;(<\/font>)?/$1\\\\\n$6/g;
         $line =~ s/(<font [^>]*>)?&amp;(<\/font>)?(<font [^>]*>)?__SINGLEBACKSLASH__(<\/font>)?(<font [^>]*>)?;(<\/font>)?/$1\\\n$6/g;
         $line =~ s/(<font [^>]*>)?&amp;(<\/font>)?(<font [^>]*>)?__GT__(<\/font>)?(<font [^>]*>)?;(<\/font>)?/$1&gt;$6/g;
@@ -4054,7 +4051,7 @@ sub DiffToHTMLplain {
 ### diff 출력 개선
 sub DiffToHTMLunified {
     my ($html) = @_;
-    my (@lines, $line, $result, $row, $td_class, $in_table, $output_exist);
+    my (@lines, $result, $row, $td_class, $in_table, $output_exist);
 
     @lines = split("\n", $html);
     shift(@lines);
@@ -4062,7 +4059,7 @@ sub DiffToHTMLunified {
 
     $output_exist = 0;
     $in_table = 0;
-    foreach $line (@lines) {
+    foreach my $line (@lines) {
         $row = "";
 
         $line =~ s/&/&amp;/g;
@@ -4718,7 +4715,7 @@ sub UpdateHtmlCache {
 }
 
 sub GenerateAllPagesList {
-    my (@pages, @dirs, $id, $dir, @pageFiles, @subpageFiles, $subId);
+    my (@pages, @dirs, @pageFiles, @subpageFiles);
 
     @pages = ();
     if ($FastGlob) {
@@ -4728,12 +4725,12 @@ sub GenerateAllPagesList {
         @dirs = readdir(PAGELIST);
         closedir(PAGELIST);
         @dirs = sort(@dirs);
-        foreach $dir (@dirs) {
+        foreach my $dir (@dirs) {
             next  if (($dir eq '.') || ($dir eq '..'));
             opendir(PAGELIST, "$PageDir/$dir");
             @pageFiles = readdir(PAGELIST);
             closedir(PAGELIST);
-            foreach $id (@pageFiles) {
+            foreach my $id (@pageFiles) {
                 next  if (($id eq '.') || ($id eq '..'));
                 if (substr($id, -3) eq '.db') {
                     push(@pages, substr($id, 0, -3));
@@ -4741,7 +4738,7 @@ sub GenerateAllPagesList {
                     opendir(PAGELIST, "$PageDir/$dir/$id");
                     @subpageFiles = readdir(PAGELIST);
                     closedir(PAGELIST);
-                    foreach $subId (@subpageFiles) {
+                    foreach my $subId (@subpageFiles) {
                         if (substr($subId, -3) eq '.db') {
                             push(@pages, "$id/" . substr($subId, 0, -3));
                         }
@@ -4752,13 +4749,12 @@ sub GenerateAllPagesList {
     } else {
         # Old slow/compatible method.
         @dirs = qw(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z other);
-        foreach $dir (@dirs) {
+        foreach my $dir (@dirs) {
             if (-e "$PageDir/$dir") {  # Thanks to Tim Holt
                 while (<$PageDir/$dir/*.db $PageDir/$dir/*/*.db>) {
                     s|^$PageDir/||;
                     m|^[^/]+/(\S*).db|;
-                    $id = $1;
-                    push(@pages, $id);
+                    push(@pages, $1);
                 }
             }
         }
@@ -5779,7 +5775,7 @@ sub UpdatePrefNumber {
 ### titleindex action 추가
 ### from Bab2's patch
 sub DoTitleIndex {
-    my (@list, $page);
+    my (@list);
     my $charset = &GetParam("charset", "$HttpCharset");
 
     print "Content-type: text/plain; charset=$charset\n\n";
@@ -5788,7 +5784,7 @@ sub DoTitleIndex {
     if ($charset ne $HttpCharset) {
         @list = split(/!/, &convert_encode(join('!',@list), "$HttpCharset", "$charset"));
     }
-    foreach $page (@list) {
+    foreach my $page (@list) {
         print $page."\n";
     }
 }
@@ -5983,7 +5979,7 @@ sub PrintSearchResults {
     my ($searchstring, @results) = @_;
     my ($output);
 
-    my ($name, $pageText, $t, $j, $jsnippet, $start, $end) ;
+    my ($pageText, $t, $j, $jsnippet, $start, $end) ;
     my ($snippetlen, $maxsnippets) = ( 100, 5 ) ; #  these seem nice.
     if (&GetParam("context") =~ /^(\d+)$/) {
         $maxsnippets = $1;
@@ -5999,16 +5995,16 @@ sub PrintSearchResults {
     foreach my $title (sort keys %hash) {
         print $q->h2($q->a({-name=>$title, -href=>"#TOC"}, $title)), "\n";
 
-        foreach $name (@{$hash{$title}}) {
+        foreach my $name (@{$hash{$title}}) {
 #  get the page, filter it, remove all tags (since we're presenting in
 #  plaintext, not HTML, a la google(tm)).
             &OpenPage($name);
             &OpenDefaultText();
             $pageText = $Text{'text'};
-            foreach $t (@HtmlPairs, "pre", "nowiki", "code" ) {
+            foreach my $t (@HtmlPairs, "pre", "nowiki", "code" ) {
                 $pageText =~ s/\<$t(\s[^<>]+?)?\>(.*?)\<\/$t\>/$2/gis;
             }
-            foreach $t (@HtmlSingle) {
+            foreach my $t (@HtmlSingle) {
                 $pageText =~ s/\<$t(\s[^<>]+?)?\>//gi;
             }
             $pageText = &QuoteHtml($pageText);
@@ -6179,21 +6175,20 @@ sub DoLinks {
 }
 
 sub PrintLinkList {
-    my ($pagelines, $page, $names, $editlink);
+    my ($names, $editlink);
     my ($link, $extra, @links, %pgExists);
 
     %pgExists = ();
-    foreach $page (&AllPagesList()) {
+    foreach my $page (&AllPagesList()) {
         $pgExists{$page} = 1;
     }
     $names = &GetParam("names", 1);
     $editlink = &GetParam("editlink", 0);
-    foreach $pagelines (@_) {
+    foreach my $pagelines (@_) {
         @links = ();
 ### full link list 개선
-#       foreach $page (split(' ', $pagelines)) {
         my @pages = split(' ', $pagelines);
-        foreach $page (@pages) {
+        foreach my $page (@pages) {
             if ($page =~ /\:/) {  # URL or InterWiki form
                 if ($page =~ /$UrlPattern/) {
                     ($link, $extra) = &UrlLink($page);
@@ -6225,7 +6220,6 @@ sub PrintLinkList {
 sub GetFullLinkList {
 ### GetFullLinkList 에 인자처리 기능 추가
     my ($opt) = @_;
-    my $opt_item;
     my %args = (            # default 값
             "unique" , 1,
             "sort", 1,
@@ -6237,7 +6231,7 @@ sub GetFullLinkList {
             "search", "",
             "reverse", ""
     );
-    foreach $opt_item (split('&',$opt)) {
+    foreach my $opt_item (split('&',$opt)) {
         if ($opt_item =~ /^(.+)=(.+)$/) {
             $args{$1} = $2;
         }
@@ -6245,7 +6239,7 @@ sub GetFullLinkList {
 
 ### 역링크 검색 옵션 추가
 #   my ($name, $unique, $sort, $exists, $empty, $link, $search);
-    my ($name, $unique, $sort, $exists, $empty, $link, $search, $reverse);
+    my ($unique, $sort, $exists, $empty, $search, $reverse);
 
     my ($pagelink, $interlink, $urllink);
     my (@found, @links, @newlinks, @pglist, %pgExists, %seen);
@@ -6277,11 +6271,11 @@ sub GetFullLinkList {
 
     %pgExists = ();
     @pglist = &AllPagesList();
-    foreach $name (@pglist) {
+    foreach my $name (@pglist) {
         $pgExists{$name} = 1;
     }
     %seen = ();
-    foreach $name (@pglist) {
+    foreach my $name (@pglist) {
         @newlinks = ();
         if ($unique != 2) {
             %seen = ();
@@ -6290,7 +6284,7 @@ sub GetFullLinkList {
 #       @links = &GetPageLinks($name, $pagelink, $interlink, $urllink);
         @links = &GetPageLinksFromFile($name, $pagelink, $interlink, $urllink);
 
-        foreach $link (@links) {
+        foreach my $link (@links) {
             $seen{$link}++;
             if (($unique > 0) && ($seen{$link} != 1)) {
                 next;
@@ -6719,9 +6713,9 @@ END_MAIL_CONTENT
 
 sub SearchTitleAndBody {
     my ($string) = @_;
-    my ($name, $freeName, @found);
+    my ($freeName, @found);
 
-    foreach $name (&AllPagesList()) {
+    foreach my $name (&AllPagesList()) {
         &OpenPage($name);
         &OpenDefaultText();
         if (($Text{'text'} =~ /$string/i) || ($name =~ /$string/i)) {
@@ -6740,9 +6734,9 @@ sub SearchTitleAndBody {
 # 제목에서만 검색
 sub SearchTitle {
     my ($string) = @_;
-    my ($name, $freeName, @found);
+    my ($freeName, @found);
 
-    foreach $name (&AllPagesList()) {
+    foreach my $name (&AllPagesList()) {
         if ($name =~ /$string/i) {
             push(@found, $name);
         } elsif ($FreeLinks && ($name =~ m/_/)) {
@@ -6758,9 +6752,9 @@ sub SearchTitle {
 
 sub SearchBody {
     my ($string) = @_;
-    my ($name, @found);
+    my (@found);
 
-    foreach $name (&AllPagesList()) {
+    foreach my $name (&AllPagesList()) {
         &OpenPage($name);
         &OpenDefaultText();
         if ($Text{'text'} =~ /$string/i){
@@ -6782,12 +6776,11 @@ sub UnlinkHtmlCache {
 
 sub NewPageCacheClear {
     my ($id) = @_;
-    my $name;
 
     return if (!$UseCache);
     $id =~ s|.+/|/|;  # If subpage, search for just the subpage
     # The following code used to search the body for the $id
-    foreach $name (&AllPagesList()) {  # Remove all to be safe
+    foreach my $name (&AllPagesList()) {  # Remove all to be safe
         &UnlinkHtmlCache($name);
     }
 }
@@ -6844,7 +6837,7 @@ sub WriteDiff {
 }
 
 sub DoMaintain {
-    my ($name, $fname, $data);
+    my ($fname, $data);
     print &GetHeader('', T('Maintenance on all pages'), '');
     print "<br>";
     $fname = "$DataDir/maintain";
@@ -6858,7 +6851,7 @@ sub DoMaintain {
         }
     }
     &RequestLock() or die(T('Could not get maintain-lock'));
-    foreach $name (&AllPagesList()) {
+    foreach my $name (&AllPagesList()) {
         &OpenPage($name);
         &OpenDefaultText();
         &ExpireKeepFile();
@@ -7057,25 +7050,25 @@ sub UpdateLinksList {
 }
 
 sub BuildLinkIndex {
-    my (@pglist, $page, @links, $link, %seen);
+    my (@pglist, @links, $link, %seen);
 
     @pglist = &AllPagesList();
     %LinkIndex = ();
-    foreach $page (@pglist) {
+    foreach my $page (@pglist) {
         &BuildLinkIndexPage($page);
     }
 }
 
 sub BuildLinkIndexPage {
     my ($page) = @_;
-    my (@links, $link, %seen);
+    my (@links, %seen);
 
 ### 링크 목록을 별도로 관리
 #   @links = &GetPageLinks($page, 1, 0, 0);
     @links = &GetPageLinksFromFile($page, 1, 0, 0);
 ###
     %seen = ();
-    foreach $link (@links) {
+    foreach my $link (@links) {
 ### 링크변경 개선 - "/하위페이지" 형태의 링크도 변경
         if ( $link =~ m!^/! ) {
             $link = (split('/',$page))[0] . $link;
@@ -7127,7 +7120,7 @@ sub EditRecentChanges {
 
 sub EditRecentChangesFile {
     my ($fname, $action, $old, $new) = @_;
-    my ($status, $fileData, $errorText, $rcline, @rclist);
+    my ($status, $fileData, $errorText, @rclist);
     my ($outrc, $ts, $page, $junk);
 
     ($status, $fileData) = &ReadFile($fname);
@@ -7140,7 +7133,7 @@ sub EditRecentChangesFile {
     }
     $outrc = "";
     @rclist = split(/\n/, $fileData);
-    foreach $rcline (@rclist) {
+    foreach my $rcline (@rclist) {
         ($ts, $page, $junk) = split(/$FS3/, $rcline);
         if ($page eq $old) {
             if ($action == 1) {  # Delete
@@ -7369,7 +7362,7 @@ sub RenameKeepText {
 
 sub RenameTextLinks {
     my ($old, $new) = @_;
-    my ($changed, $file, $page, $section, $oldText, $newText, $status);
+    my ($changed, $file, $oldText, $newText, $status);
     my ($oldCanonical, @pageList);
 
     $old =~ s/ /_/g;
@@ -7398,7 +7391,7 @@ sub RenameTextLinks {
     return  if (!defined($LinkIndex{$oldCanonical}));
 
     @pageList = split(' ', $LinkIndex{$oldCanonical});
-    foreach $page (@pageList) {
+    foreach my $page (@pageList) {
 ### 링크변경 개선 - "/하위페이지" 형태의 링크도 변경
         my ( $page_main, $page_sub) = split("/", $page);
         my $old_page_same_main      = ( $old_main eq $page_main );
@@ -7406,7 +7399,7 @@ sub RenameTextLinks {
 
         $changed = 0;
         &OpenPage($page);
-        foreach $section (keys %Page) {
+        foreach my $section (keys %Page) {
             if ($section =~ /^text_/) {
                 &OpenSection($section);
                 %Text = split(/$FS3/, $Section{'data'}, -1);
@@ -7589,11 +7582,11 @@ sub GetLinkFile {
 
 sub SaveLinkFile {
     my ($page) = @_;
-    my (%links, @pagelinks, @interlinks, @urllinks, @alllinks, $link);
+    my (%links, @pagelinks, @interlinks, @urllinks, @alllinks);
 
     @alllinks = &GetPageLinks($page, 1, 1, 1);
 
-    foreach $link (@alllinks) {
+    foreach my $link (@alllinks) {
         if ($link =~ /^$InterLinkPattern$/) {
             push(@interlinks, $link);
         } elsif ($link =~ /^$UrlPattern$/) {
@@ -8286,7 +8279,7 @@ RSS
 sub GetRc {
     my $rcType = shift;
     my @outrc = @_;
-    my ($rcline, $date, $newtop, $author, $inlist, $result);
+    my ($date, $newtop, $author, $inlist, $result);
     my ($showedit, $link, $all, $idOnly, $headItem, $item);
     my ($ts, $pagename, $summary, $isEdit, $host, $kind, $extraTemp);
     my ($rcchangehist, $tEdit, $tChanges, $tDiff);
@@ -8303,7 +8296,7 @@ sub GetRc {
 
     if ($showedit != 1) {
         my @temprc = ();
-        foreach $rcline (@outrc) {
+        foreach my $rcline (@outrc) {
             ($ts, $pagename, $summary, $isEdit, $host) = split(/$FS3/, $rcline);
             if ($showedit == 0) {  # 0 = No edits
                 push(@temprc, $rcline)  if (!$isEdit);
@@ -8324,7 +8317,7 @@ sub GetRc {
     $diffPrefix = $QuotedFullUrl . &QuoteHtml(&ScriptLinkChar()."action=browse\&diff=5\&id=");
 ###
     $historyPrefix = $QuotedFullUrl . &QuoteHtml(&ScriptLinkChar()."action=history\&id=");
-    foreach $rcline (@outrc) {
+    foreach my $rcline (@outrc) {
         ($ts, $pagename) = split(/$FS3/, $rcline);
         $pagecount{$pagename}++;
         $changetime{$pagename} = $ts;
@@ -8339,7 +8332,7 @@ sub GetRc {
     $headList = '';
     $result = '';
     @outrc = reverse @outrc if ($newtop);
-    foreach $rcline (@outrc) {
+    foreach my $rcline (@outrc) {
         ($ts, $pagename, $summary, $isEdit, $host, $kind, $extraTemp)
             = split(/$FS3/, $rcline);
         next  if ((!$all) && ($ts < $changetime{$pagename}));
