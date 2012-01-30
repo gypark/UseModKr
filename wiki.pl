@@ -259,11 +259,12 @@ sub DoWikiRequest {
 
 ### 처리 시간 측정
 if ($CheckTime) {
-    eval "use Time::HiRes qw( usleep ualarm gettimeofday tv_interval )";
-    if ($@) {
-        $CheckTime = 0;
-    } else {
+    if ( eval { require Time::HiRes } ) {
+        Time::HiRes->import( qw/ gettimeofday tv_interval / );
         $StartTime = [gettimeofday()];
+    }
+    else {
+        $CheckTime = 0;
     }
 }
 
