@@ -79,7 +79,7 @@ use vars qw(%Page %Section %Text %InterSite %SaveUrl %SaveNumUrl
     %KeptRevisions %UserCookie %SetCookie %UserData %IndexHash %Translate
     %LinkIndex $InterSiteInit $SaveUrlIndex $SaveNumUrlIndex $MainPage
     $OpenPageName @KeptList @IndexList $IndexInit
-    $q $Now $UserID $TimeZoneOffset $ScriptName $BrowseCode $OtherCode);
+    $q $Now $UserID $TimeZoneOffset $ScriptName );
 
 ### 패치를 위해 추가된 내부 전역 변수
 use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime $Sec_Revision $Sec_Ts
@@ -292,10 +292,8 @@ if ($CheckTime) {
 
     &InitLinkPatterns();
     if (!&DoCacheBrowse()) {
-        eval $BrowseCode;
         &InitRequest() or return;
         if (!&DoBrowseRequest()) {
-            eval $OtherCode;
             &DoOtherRequest();
         }
     }
@@ -450,8 +448,6 @@ sub Ts {
 }
 
 # == Normal page-browsing and RecentChanges code =======================
-$BrowseCode = ""; # Comment next line to always compile (slower)
-#$BrowseCode = <<'#END_OF_BROWSE_CODE';
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
 
@@ -4934,9 +4930,6 @@ sub FreeToNormal {
 #END_OF_BROWSE_CODE
 
 # == Page-editing and other special-action code ========================
-$OtherCode = ""; # Comment next line to always compile (slower)
-#$OtherCode = <<'#END_OF_OTHER_CODE';
-
 # luke added
 
 sub DoPreview {
