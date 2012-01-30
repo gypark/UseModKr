@@ -3492,14 +3492,14 @@ EOT
         chdir ($hashdir);
 
         # 원본 tex 생성
-        open (OUTFILE, ">srender.tex");
-        print OUTFILE $template;
-        close OUTFILE;
+        open my $outfile, '>', 'srender.tex';
+        print $outfile $template;
+        close $outfile;
 
-        open SAVEOUT, ">&STDOUT";
-        open SAVEERR, ">&STDERR";
-        open STDOUT, ">hash.log";
-        open STDERR, ">&STDOUT";
+        open my $saveout, '>&', STDOUT;
+        open my $saveerr, '>&', STDERR;
+        open STDOUT, '>' , 'hash.log';
+        open STDERR, '>&', STDOUT;
 
         # 그림 생성
         qx(latex -interaction=nonstopmode srender.tex);
@@ -3508,8 +3508,8 @@ EOT
 
         close STDOUT;
         close STDERR;
-        open STDOUT, ">&SAVEOUT";
-        open STDERR, ">&SAVEERR";
+        open STDOUT, '>&', $saveout;
+        open STDERR, '>&', $saveerr;
 
         # upload 경로 그림 옮김
         chdir($pwd);
@@ -4359,16 +4359,16 @@ sub ExpireKeepFile {
         return;
     }
     return  if (!$anyExpire);  # No sections expired
-    open (OUT, ">$fname") or die (Ts('cant write %s', $fname) . ": $!");
+    open my $out, '>', $fname or die Ts('cant write %s', $fname).": $!";
     foreach (@kplist) {
         %tempSection = split(/$FS2/, $_, -1);
         $sectName = $tempSection{'name'};
         $sectRev = $tempSection{'revision'};
         if ($keepFlag{$sectRev . "," . $sectName}) {
-            print OUT $FS1, $_;
+            print {$out} $FS1, $_;
         }
     }
-    close(OUT);
+    close $out;
 }
 
 sub OpenKeptList {
@@ -4646,9 +4646,9 @@ sub ReadFile {
     my ($data);
     local $/ = undef;   # Read complete files
 
-    if (open(IN, "<$fileName")) {
-        $data=<IN>;
-        close IN;
+    if ( open(my $in, '<', $fileName)) {
+        $data = <$in>;
+        close $in;
         return (1, $data);
     }
     return (0, "");
@@ -4668,17 +4668,17 @@ sub ReadFileOrDie {
 sub WriteStringToFile {
     my ($file, $string) = @_;
 
-    open (OUT, ">$file") or die(Ts('cant write %s', $file) . ": $!");
-    print OUT  $string;
-    close(OUT);
+    open(my $out, '>', $file) or die(Ts('cant write %s', $file) . ": $!");
+    print {$out} $string;
+    close $out;
 }
 
 sub AppendStringToFile {
     my ($file, $string) = @_;
 
-    open (OUT, ">>$file") or die(Ts('cant write %s', $file) . ": $!");
-    print OUT  $string;
-    close(OUT);
+    open(my $out, '>>', $file) or die(Ts('cant write %s', $file) . ": $!");
+    print {$out} $string;
+    close $out;
 }
 
 sub CreateDir {
@@ -5725,30 +5725,30 @@ sub UpdateEmailList {
     if (my $new_email = $UserData{'email'} = &GetParam("p_email", "")) {
         my $notify = $UserData{'notify'};
         if (-f "$DataDir/emails") {
-            open(NOTIFY, "$DataDir/emails")
+            open(my $notify, '<', "$DataDir/emails")
                 or die(Ts('Could not read from %s:', "$DataDir/emails") . " $!\n");
-            @old_emails = <NOTIFY>;
-            close(NOTIFY);
+            @old_emails = <$notify>;
+            close $notify;
         } else {
             @old_emails = ();
         }
         my $already_in_list = grep /$new_email/, @old_emails;
         if ($notify and (not $already_in_list)) {
             &RequestLock() or die(T('Could not get mail lock'));
-            open(NOTIFY, ">>$DataDir/emails")
+            open(my $notify, '>>', "$DataDir/emails")
                 or die(Ts('Could not append to %s:', "$DataDir/emails") . " $!\n");
-            print NOTIFY $new_email, "\n";
-            close(NOTIFY);
+            print {$notify} $new_email, "\n";
+            close $notify;
             &ReleaseLock();
         }
         elsif ((not $notify) and $already_in_list) {
             &RequestLock() or die(T('Could not get mail lock'));
-            open(NOTIFY, ">$DataDir/emails")
+            open(my $notify, '>', "$DataDir/emails")
                 or die(Ts('Could not overwrite %s:', "$DataDir/emails") . " $!\n");
             foreach (@old_emails) {
-                print NOTIFY "$_" unless /$new_email/;
+                print {$notify} "$_" unless /$new_email/;
             }
-            close(NOTIFY);
+            close $notify;
             &ReleaseLock();
         }
     }
@@ -6662,15 +6662,15 @@ sub SendEmail {
     #    -odq : send mail to queue (i.e. later when convenient)
     #    -oi  : do not wait for "." line to exit
     #    -t   : headers determine recipient.
-    open (SENDMAIL, "| $SendMail -oi -t ") or die "Can't send email: $!\n";
-    print SENDMAIL <<"EOF";
+    open(my $sendmail, '|-', "$SendMail -oi -t ") or die "Can't send email: $!\n";
+    print {$sendmail} <<"EOF";
 From: $from
 To: $to
 Reply-to: $reply
 Subject: $subject\n
 $message
 EOF
-    close(SENDMAIL) or warn "sendmail didn't close nicely";
+    close $sendmail or warn "sendmail didn't close nicely";
 }
 
 ## Email folks who want to know a note that a page has been modified. - JimM.
@@ -6682,11 +6682,11 @@ sub EmailNotify {
             $user = " by $user";
         }
         my $address;
-        open(EMAIL, "$DataDir/emails")
+        open(my $email, '<', "$DataDir/emails")
             or die "Can't open $DataDir/emails: $!\n";
-        $address = join ",", <EMAIL>;
+        $address = join ",", <$email>;
         $address =~ s/\n//g;
-        close(EMAIL);
+        close $email;
         my $home_url = $q->url();
         my $page_url = $home_url . "?$id";
         my $editors_summary = $q->param("summary");
@@ -6829,20 +6829,18 @@ sub WriteRcLog {
     # The two fields at the end of a line are kind and extension-hash
     my $rc_line = join($FS3, $editTime, $id, $summary,
                                          $isEdit, $rhost, "0", $extraTemp);
-    if (!open(OUT, ">>$RcFile")) {
-        die(Ts('%s log error:', $RCName) . " $!");
-    }
-    print OUT  $rc_line . "\n";
-    close(OUT);
+    open my $out, '>>', $RcFile or die(Ts('%s log error:', $RCName) . " $!");
+    print {$out} $rc_line . "\n";
+    close $out;
 }
 
 sub WriteDiff {
     my ($id, $editTime, $diffString) = @_;
 
-    open (OUT, ">>$DataDir/diff_log") or die(T('can not write diff_log'));
-    print OUT  "------\n" . $id . "|" . $editTime . "\n";
-    print OUT  $diffString;
-    close(OUT);
+    open (my $out, '>>', "$DataDir/diff_log") or die(T('can not write diff_log'));
+    print {$out} "------\n" . $id . "|" . $editTime . "\n";
+    print {$out} $diffString;
+    close $out;
 }
 
 sub DoMaintain {
@@ -7341,7 +7339,7 @@ sub RenameKeepText {
     }
 
     return  if (!$changed);  # No sections changed
-    open (OUT, ">$fname") or return;
+    open (my $out, '>', $fname) or return;
     foreach (@kplist) {
         %tempSection = split(/$FS2/, $_, -1);
         $sectName = $tempSection{'name'};
@@ -7361,12 +7359,12 @@ sub RenameKeepText {
 
             $Text{'text'} = $newText;
             $tempSection{'data'} = join($FS3, %Text);
-            print OUT $FS1, join($FS2, %tempSection);
+            print {$out} $FS1, join($FS2, %tempSection);
         } else {
-            print OUT $FS1, $_;
+            print {$out} $FS1, $_;
         }
     }
-    close(OUT);
+    close $out;
 }
 
 sub RenameTextLinks {
@@ -7540,12 +7538,13 @@ sub DoShowVersion {
 #   print "<p>UseModWiki version 0.92K2<p>\n";
     print "<p>UseModWiki version $WikiVersion ($WikiRelease)<p>\n";
 
-    if (open (FH, "<./README")) {
+    if (open(my $fh, '<', './README')) {
         local $/ = undef;
-        my $readme = &QuoteHtml(<FH>);
+        my $readme = <$fh>;
+        $readme = QuoteHtml($readme);
 
         print "<pre>\n". $readme. "\n</pre>\n\n";
-        close(FH);
+        close $fh;
     }
 
     print &GetCommonFooter();
@@ -7786,16 +7785,17 @@ sub UploadFile {
 
     &CreateDir($UploadDir);
 
-    if (!open (FILE, ">$target_full")) {
+    my $fh;
+    if (!open($fh, '>', $target_full)) {
         &ReleaseLockDir('upload');
         die Ts('cant opening %s', $target_full) . ": $!";
     }
     &ReleaseLockDir('upload');
-    binmode FILE;
+    binmode $fh;
     while (<$file>) {
-        print FILE $_;
+        print {$fh} $_;
     }
-    close(FILE);
+    close $fh;
     chmod(0644, "$target_full");
 
     if ((-s "$target_full") > $MaxPost) {
@@ -8163,10 +8163,10 @@ sub SaveHiddenPageFile {
 sub WriteBinaryToFile {
     my ($file, $string) = @_;
 
-    open (OUT, ">$file") or die(Ts('cant write %s', $file) . ": $!");
-    binmode(OUT);
-    print OUT  $string;
-    close(OUT);
+    open(my $out, '>', $file) or die(Ts('cant write %s', $file) . ": $!");
+    binmode $out;
+    print {$out} $string;
+    close $out;
 }
 
 ### template page
