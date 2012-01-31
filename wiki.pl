@@ -479,7 +479,8 @@ sub InitRequest {
     $q->autoEscape(undef);
 
 ### file upload
-    if ($q->cgi_error() =~ m/^413/) {
+    my $cgi_error = $q->cgi_error();
+    if (defined $cgi_error and $cgi_error =~ m/^413/) {
         print $q->redirect(-url=>"http:$ENV{SCRIPT_NAME}".&ScriptLinkChar()."action=upload&error=3");
         exit 1;
     }
@@ -523,8 +524,8 @@ sub InitCookie {
     $UserCookie{id} = DecodeUrl($UserCookie{id});
     $UserID = $UserCookie{'id'};
     &LoadUserData($UserID);
-    if (($UserData{'id'}       != $UserCookie{'id'})      ||
-            ($UserData{'randkey'}  != $UserCookie{'randkey'})) {
+    if (($UserData{'id'} ne $UserCookie{'id'})      ||
+            ($UserData{'randkey'} ne $UserCookie{'randkey'})) {
         $UserID = 113;
         %UserData = ();   # Invalid.  Later consider warning message.
     }
@@ -5147,7 +5148,7 @@ sub DoEdit {
         $oldText = $newText;
     }
 ### 섹션 단위 편집 - 편집할 때
-    my $section = &GetParam('section', '');
+    my $section = &GetParam('section', 0);
     if ($section >= 1) {
         my $temp_text;
         my (@h_depth, @h_pos);
@@ -6037,7 +6038,7 @@ sub PrintSearchResults {
 #  show a snippet from the top of the document
             $j = index( $pageText, " ", $snippetlen ) ;  #  end on word boundary
             $t = substr($pageText, 0, $j);
-            $t =~ s/($searchstring)/<SPAN class='highlight'>\1<\/SPAN>/gi ;
+            $t =~ s/($searchstring)/<SPAN class='highlight'>$1<\/SPAN>/gi ;
             $output .= $t . " <b>...</b> " ;
             $pageText = substr( $pageText, $j ) ;  #  to avoid rematching
 
@@ -6054,7 +6055,7 @@ sub PrintSearchResults {
                     $end = length( $pageText )  if ( $end == -1 ) ;
                     $t = substr( $pageText, $start, $end-$start ) ;
 #  highlight occurrences and tack on to output stream.
-                    $t =~ s/($searchstring)/<SPAN class='highlight'>\1<\/SPAN>/gi ;
+                    $t =~ s/($searchstring)/<SPAN class='highlight'>$1<\/SPAN>/gi ;
                     $output .= $t . " <b>...</b> " ;
 #  truncate text to avoid rematching the same string.
                     $pageText = substr( $pageText, $end ) ;
@@ -6484,7 +6485,7 @@ sub DoPostMain {
     $pgtime = $Section{'ts'};
 
 ### 섹션 단위 편집 - 저장할 때
-    my $section = &GetParam('section', '');
+    my $section = &GetParam('section', 0);
     if ($section >= 1) {
         my $temp_text;
         my (@h_depth, @h_pos);
@@ -7763,7 +7764,6 @@ sub GetUniqueUploadFilename {
 sub UploadFile {
     my ($file) = @_;
     my ($filename);
-    my ($target);
 
     if ($file =~ m/\//) {
         $file =~ m/(.*)\/([^\/]*)/;
@@ -8781,6 +8781,6 @@ if (-f $ConfigFile) {
     die "Can not load config file";
 }
 
-&DoWikiRequest()  if ($RunCGI && ($_ ne 'nocgi'));   # Do everything.
+&DoWikiRequest()  if ($RunCGI && !(defined $_ and $_ eq 'nocgi'));   # Do everything.
 1; # In case we are loaded from elsewhere
 # == End of UseModWiki script. ===========================================
