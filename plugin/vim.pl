@@ -6,6 +6,8 @@
 # some codes
 # }}}
 
+use strict;
+
 sub plugin_vim {
     my ($content, @opt) = @_;
     my $vim = "vim";        # PATH of vim
@@ -25,19 +27,13 @@ sub plugin_vim {
     $content =~ s/\r//g;
 
 # html파일의 이름 결정
-    my $hash;
-    my $hasMD5 = eval "require Digest::MD5;";
-    if ($hasMD5) {
-        $hash = Digest::MD5::md5_base64($content.join('',@opt));
-    } else {
-        $hash = crypt($content, $HashKey);
-    }
-    $hash =~ s/(\W)/uc sprintf "_%02x", ord($1)/eg;
+    require Digest::MD5;
+    my $hash = Digest::MD5::md5_hex($content.join('',@opt));
 
     my $hashhtml = "$hash.html";
     my $VimDir = "$UploadDir/vim";
 
-    if ($hasMD5 and -f "$VimDir/$hashhtml" && not -z "$VimDir/$hashhtml") {
+    if (-f "$VimDir/$hashhtml") {
         # 이미 생성되어 캐쉬에 있음
         ($status, $text) = &ReadFile("$VimDir/$hashhtml");
 
@@ -91,9 +87,9 @@ sub plugin_vim {
     chdir($pwd);
 
     # 캐쉬에 저장
-    if ($hasMD5 and open (OUT, ">$VimDir/$hashhtml")) {
-        print OUT  $text;
-        close(OUT);
+    if (open my $out, '>', "$VimDir/$hashhtml") {
+        print {$out} $text;
+        close $out;
     }
 
     unlink (glob("$hashdir/*")) or return "[unlink fail]";
