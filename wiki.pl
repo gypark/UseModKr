@@ -2164,7 +2164,7 @@ sub CommonMarkup {
         }
         else {
             s/\$\$(.*?)\$\$/StorePlugin('latex inline', $1)/ges;
-            s/\\\[(.*?)\\\]/StorePlugin('latex',        $1)/ige;
+            s/\\\[(.*?)\\\]/StorePlugin('latex',        $1)/ges;
         }
 
 ### anchor 에 한글 사용
