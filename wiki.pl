@@ -2162,6 +2162,10 @@ sub CommonMarkup {
             s/\\\[((.|\n)*?)\\\]/&StoreRaw(&MakeLaTeX("\$"."$1"."\$", "display"))/ige;
             s/\$\$((.|\n)*?)\$\$/&StoreRaw(&MakeLaTeX("\$"."$1"."\$", "inline"))/ige;
         }
+        else {
+            s/\$\$(.*?)\$\$/StorePlugin('latex inline', $1)/ges;
+            s/\\\[(.*?)\\\]/StorePlugin('latex',        $1)/ige;
+        }
 
 ### anchor 에 한글 사용
 #       s/\[\#(\w+)\]/&StoreHref(" name=\"$1\"")/ge if $NamedAnchors;
@@ -3339,15 +3343,9 @@ EOT
 
     # IMG 태그 출력
     if ($type eq "inline") {
-        $imgpath = "<IMG border=0 vspace=0 hspace=0 align='middle' ".
-            "src='$LatexUrl/$hashimage' ".
-            "alt=\"\$$latex\$\">";
+        $imgpath = qq(<img src="$LatexUrl/$hashimage" class="latexinline" alt="\$$latex\$">);
     } elsif ($type eq "display") {
-        $imgpath = "<br>".
-            "<IMG border=0 vspace=15 hspace=40 align='middle' ".
-            "src='$LatexUrl/$hashimage' ".
-            "alt=\"$latex\">".
-            "</br>";
+        $imgpath = qq(<img src="$LatexUrl/$hashimage" class="latexdisplay" alt="$latex">);
     }
     return $imgpath;
 }

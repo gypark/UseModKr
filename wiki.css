@@ -807,3 +807,13 @@ PRE.vim {
     color: #c0c0c0;
 }
 
+/* latex plugin */
+img.latexinline {
+    vertical-align: middle;
+    display: inline;
+}
+
+img.latexdisplay {
+    display: block;
+    margin: 1em auto 1em 10%;
+}
