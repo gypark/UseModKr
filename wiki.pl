@@ -33,7 +33,7 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.19a";
+$WikiVersion = "0.92K3-ext2.20";
 $WikiRelease = "2012-02-02";
 $HashKey = "salt"; # 2-character string
 
