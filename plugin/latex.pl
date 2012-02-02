@@ -57,7 +57,7 @@ sub plugin_latex {
     my $src       = "http://latex.codecogs.com/gif.latex?$content";
     my $img_latex = qq(<img src="$src" class="$class" alt="$alt">);
 
-    # LWP::Simple이 없으면 ditaa.org의 주소를 바로 반환 - 느리다
+    # LWP::Simple이 없으면 온라인 사이트의 변환 결과 주소를 바로 반환 - 느리다
     if ( not eval { require LWP::Simple } ) {
         return $img_latex;
     }
