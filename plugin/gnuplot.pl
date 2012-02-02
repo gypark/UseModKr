@@ -11,31 +11,27 @@
 # 3    3.5
 # }}}
 
+use strict;
+use warnings;
+
 sub plugin_gnuplot {
     my ($content, @opt) = @_;
     my $plt = $content;
-    my $log;
+    my $log = '';
 
     my $gnuplot = "gnuplot";        # PATH of gnuplot;
 
 # 그림 파일의 이름 결정
-    my $hash;
-    my $hasMD5 = eval "require Digest::MD5;";
-    if ($hasMD5) {
-        $hash = Digest::MD5::md5_base64($content);
-    } else {
-        $hash = crypt($content, $HashKey);
-    }
-    $hash =~ s/(\W)/uc sprintf "_%02x", ord($1)/eg;
+    require Digest::MD5;
+    my $hash = Digest::MD5::md5_hex($content);
 
     my $hashimage = "$hash.png";
-    my $imgpath = "";
     my $GnuplotDir = "$UploadDir/gnuplot";
     my $GnuplotUrl = "$UploadUrl/gnuplot";
 
-    if ($hasMD5 and -f "$GnuplotDir/$hashimage" && not -z "$GnuplotDir/$hashimage") {
+    my $imgpath = "<img src='$GnuplotUrl/$hashimage' alt='gnuplot'>";
+    if (-f "$GnuplotDir/$hashimage") {
         # 이미 생성되어 캐쉬에 있음
-        $imgpath .= "<img src='$GnuplotUrl/$hashimage' alt='gnuplot'>";
         return $imgpath;
     }
 
@@ -105,9 +101,8 @@ EOT
     rmdir ($hashdir) or return "[rmdir fail]";
 
     if ($log ne '') {
-        $imgpath = "<pre>\n$log\n</pre>";
+        return "<pre>\n$log\n</pre>";
     }
-    $imgpath .= "<img src='$GnuplotUrl/$hashimage' alt='gnuplot'>";
     return $imgpath;
 }
 
