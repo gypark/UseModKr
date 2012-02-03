@@ -7029,13 +7029,7 @@ sub SubstituteTextLinks {
         $text =~ s/(<html>.*?<\/html>)/StoreRaw($1)/iges;
     }
 ### {{{ }}} 내의 내용은 링크로 간주하지 않음
-    $text =~ s/(^{{{\n(.*?)\n}}}$)/StoreRaw($1)/igesm;
-    $text =~ s/(^{{{#!(\w+( .+?)?)\n(.*?)\n}}}$)/StoreRaw($1)/igesm;
-    $text =~ s/(^{{{(\w+)(\|(n|\d+|n\d+|\d+n))?\n(.*?)\n}}}$)/StoreRaw($1)/igesm;
-    $text =~ s"(<nowiki>.*?</nowiki>)"StoreRaw($1)"iges;
-    $text =~ s"(<pre>.*?</pre>)"StoreRaw($1)"iges;
-    $text =~ s"(<code>.*?</code>)"StoreRaw($1)"iges;
-###
+    $text = store_raw_codes($text);
 
     if ($FreeLinks) {
         $text =~
@@ -8456,11 +8450,10 @@ sub simple_crypt {
 }
 
 # 섹션 단위 편집을 위한 내부 함수
+# {{{ }}} 등, 헤드라인이나 페이지 링크 관련 작업을 할 때 고려하면 안 될 부분을 빼낸다
 sub store_raw_codes {
     my ($text) = @_;
 
-    # {{{ }}} 내의 내용은 헤드라인이 될 수 없으므로 제거
-    # SubstituteTextLinks 의 코드와 동일
     $text =~ s/(^{{{\n(.*?)\n}}}$)/StoreRaw($1)/igesm;
     $text =~ s/(^{{{#!(\w+( .+?)?)\n(.*?)\n}}}$)/StoreRaw($1)/igesm;
     $text =~ s/(^{{{(\w+)(\|(n|\d+|n\d+|\d+n))?\n(.*?)\n}}}$)/StoreRaw($1)/igesm;
