@@ -2143,13 +2143,11 @@ sub CommonMarkup {
 
     if ($doLines < 2) { # 2 = do line-oriented only
 ### {{{ }}} 처리
-        s/(^|\n)\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/&StoreRaw("\n<PRE class=\"code\">") . &StoreCodeRaw($2) . &StoreRaw("\n<\/PRE>") . "\n"/igem;
-
-### plugin
-        s/(^|\n)\{\{\{#!((\w+)( .+)?)[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/$1.&StorePlugin($2,$5)."\n"/igem;
-
+        s/^{{{\n(.*?)\n}}}$/StoreRaw(qq|<pre class="code">\n|) . StoreCodeRaw($1) . StoreRaw("\n<\/pre>")/igesm;
+### plugin 처리
+        s/^{{{#!(\w+( .+?)?)\n(.*?)\n}}}$/StorePlugin($1,$3)/igesm;
 ### {{{lang|n|t }}} 처리
-        s/(^|\n)\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*\n/&StoreRaw("<PRE class=\"syntax\">") . &StoreSyntaxHighlight($2, $4, $5) . &StoreRaw("<\/PRE>") . "\n"/igem;
+        s/^{{{(\w+)(\|(n|\d+|n\d+|\d+n))?\n(.*?)\n}}}$/StoreRaw(qq|<pre class="syntax">\n|) . StoreSyntaxHighlight($1, $3, $4) . StoreRaw("\n<\/pre>")/igesm;
 
 ### <raw> 태그 - quoting 도 하지 않는다
         s/\&__LT__;raw\&__GT__;(([^\n])*?)\&__LT__;\/raw\&__GT__;/&StoreCodeRaw($1)/ige;
@@ -6151,15 +6149,15 @@ sub GetPageLinks {
     &OpenPage($name);
     &OpenDefaultText();
     $text = $Text{'text'};
-    $text =~ s/<html>((.|\n)*?)<\/html>/ /ig;
-### {{{ }}} 내의 내용은 태그로 간주하지 않음
-    $text =~ s/(^|\n)(\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1 \n/igm;
-    $text =~ s/(^|\n)(\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1 \n/igm;
-    $text =~ s/(^|\n)(\{\{\{#!((\w+)( .+)?)[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1 \n/igm;
-    $text =~ s/<nowiki>(.|\n)*?\<\/nowiki>/ /ig;
-    $text =~ s/<pre>(.|\n)*?\<\/pre>/ /ig;
-    $text =~ s/<code>(.|\n)*?\<\/code>/ /ig;
-###
+### {{{ }}} 내의 내용은 링크로 간주하지 않음
+    $text =~ s'<html>.*?</html>' 'igs if ($RawHtml);
+    $text =~ s/^{{{\n(.*?)\n}}}$/\n/igsm;
+    $text =~ s/^{{{#!(\w+( .+?)?)\n(.*?)\n}}}$/\n/igsm;
+    $text =~ s/^{{{(\w+)(\|(n|\d+|n\d+|\d+n))?\n(.*?)\n}}}$/\n/igsm;
+    $text =~ s'<nowiki>.*?</nowiki>' 'igs;
+    $text =~ s'<pre>.*?</pre>' 'igs;
+    $text =~ s'<code>.*?</code>' 'igs;
+
     if ($interlink) {
         $text =~ s/''+/ /g;  # Quotes can adjacent to inter-site links
         $text =~ s/$InterLinkPattern/push(@links, &StripUrlPunct($1)), ' '/ge;
@@ -7034,15 +7032,15 @@ sub SubstituteTextLinks {
     $SaveUrlIndex = 0;
     $text =~ s/$FS//g;              # Remove separators (paranoia)
     if ($RawHtml) {
-        $text =~ s/(<html>((.|\n)*?)<\/html>)/&StoreRaw($1)/ige;
+        $text =~ s/(<html>.*?<\/html>)/StoreRaw($1)/iges;
     }
-### {{{ }}} 내의 내용은 태그로 간주하지 않음
-    $text =~ s/(^|\n)(\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1.&StoreRaw($2)."\n"/igem;
-    $text =~ s/(^|\n)(\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1.&StoreRaw($2)."\n"/igem;
-    $text =~ s/(^|\n)(\{\{\{#!((\w+)( .+)?)[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1.&StoreRaw($2)."\n"/igem;
-    $text =~ s/(<pre>((.|\n)*?)<\/pre>)/&StoreRaw($1)/ige;
-    $text =~ s/(<code>((.|\n)*?)<\/code>)/&StoreRaw($1)/ige;
-    $text =~ s/(<nowiki>((.|\n)*?)<\/nowiki>)/&StoreRaw($1)/ige;
+### {{{ }}} 내의 내용은 링크로 간주하지 않음
+    $text =~ s/(^{{{\n(.*?)\n}}}$)/StoreRaw($1)/igesm;
+    $text =~ s/(^{{{#!(\w+( .+?)?)\n(.*?)\n}}}$)/StoreRaw($1)/igesm;
+    $text =~ s/(^{{{(\w+)(\|(n|\d+|n\d+|\d+n))?\n(.*?)\n}}}$)/StoreRaw($1)/igesm;
+    $text =~ s"(<nowiki>.*?</nowiki>)"StoreRaw($1)"iges;
+    $text =~ s"(<pre>.*?</pre>)"StoreRaw($1)"iges;
+    $text =~ s"(<code>.*?</code>)"StoreRaw($1)"iges;
 ###
 
     if ($FreeLinks) {
@@ -8467,14 +8465,14 @@ sub simple_crypt {
 sub store_raw_codes {
     my ($text) = @_;
 
-    # 코드는 GetPageLinks 에서 다시 가져옴
-    $text =~ s/(<html>((.|\n)*?)<\/html>)/&StoreRaw($1)/ige;
-    $text =~ s/(^|\n)(\{\{\{[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1.&StoreRaw($2)."\n"/igem;
-    $text =~ s/(^|\n)(\{\{\{([a-zA-Z0-9+]+)(\|(n|\d*|n\d+|\d+n))?[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1.&StoreRaw($2)."\n"/igem;
-    $text =~ s/(^|\n)(\{\{\{#!((\w+)( .+)?)[ \t\r\f]*\n((.|\n)*?)\n\}\}\}[ \t\r\f]*)\n/$1.&StoreRaw($2)."\n"/igem;
-    $text =~ s/(<nowiki>(.|\n)*?\<\/nowiki>)/&StoreRaw($1)/ige;
-    $text =~ s/(<pre>(.|\n)*?\<\/pre>)/&StoreRaw($1)/ige;
-    $text =~ s/(<code>(.|\n)*?\<\/code>)/&StoreRaw($1)/ige;
+    # {{{ }}} 내의 내용은 헤드라인이 될 수 없으므로 제거
+    # SubstituteTextLinks 의 코드와 동일
+    $text =~ s/(^{{{\n(.*?)\n}}}$)/StoreRaw($1)/igesm;
+    $text =~ s/(^{{{#!(\w+( .+?)?)\n(.*?)\n}}}$)/StoreRaw($1)/igesm;
+    $text =~ s/(^{{{(\w+)(\|(n|\d+|n\d+|\d+n))?\n(.*?)\n}}}$)/StoreRaw($1)/igesm;
+    $text =~ s"(<nowiki>.*?</nowiki>)"StoreRaw($1)"iges;
+    $text =~ s"(<pre>.*?</pre>)"StoreRaw($1)"iges;
+    $text =~ s"(<code>.*?</code>)"StoreRaw($1)"iges;
 
     return $text;
 }
