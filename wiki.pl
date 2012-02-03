@@ -2143,11 +2143,11 @@ sub CommonMarkup {
 
     if ($doLines < 2) { # 2 = do line-oriented only
 ### {{{ }}} 처리
-        s/^{{{\n(.*?)\n}}}$/StoreRaw(qq|<pre class="code">\n|) . StoreCodeRaw($1) . StoreRaw("\n<\/pre>")/igesm;
+        s/^{{{\r?\n(.*?)\n}}}\r?$/StoreRaw(qq|<pre class="code">\n|) . StoreCodeRaw($1) . StoreRaw("\n<\/pre>")/igesm;
 ### plugin 처리
-        s/^{{{#!(\w+( .+?)?)\n(.*?)\n}}}$/StorePlugin($1,$3)/igesm;
+        s/^{{{#!(\w+( .+?)?)\r?\n(.*?)\n}}}\r?$/StorePlugin($1,$3)/igesm;
 ### {{{lang|n|t }}} 처리
-        s/^{{{(\w+)(\|(n|\d+|n\d+|\d+n))?\n(.*?)\n}}}$/StoreRaw(qq|<pre class="syntax">\n|) . StoreSyntaxHighlight($1, $3, $4) . StoreRaw("\n<\/pre>")/igesm;
+        s/^{{{(\w+)(\|(n|\d+|n\d+|\d+n))?\r?\n(.*?)\r?\n}}}\r?$/StoreRaw(qq|<pre class="syntax">\n|) . StoreSyntaxHighlight($1, $3, $4) . StoreRaw("\n<\/pre>")/igesm;
 
 ### <raw> 태그 - quoting 도 하지 않는다
         s/\&__LT__;raw\&__GT__;(([^\n])*?)\&__LT__;\/raw\&__GT__;/&StoreCodeRaw($1)/ige;
