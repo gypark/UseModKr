@@ -2095,7 +2095,10 @@ sub WikiToHTML {
     $pageText = &MacroIncludeSubst($pageText);
 
     if ($RawHtml) {
-        $pageText =~ s/<html>((.|\n)*?)<\/html>/&StoreRaw($1)/ige;
+        ### {{{ }}} 내의 <html> 태그는 스킵
+        while ($pageText =~ s/^{{{((?:.(?!}}}))+?)<(html>)(.+?)}}}/{{{$1$FS_lt$2$3}}}/igms) { }
+        $pageText =~ s/<html>(.*?)<\/html>/StoreRaw($1)/isge;
+        $pageText =~ s/$FS_lt/</gi;
     }
 ### {{{ }}} 처리를 위해, 본문 소스는 특별하게 Quote 한다
 #   $pageText = &QuoteHtml($pageText);
