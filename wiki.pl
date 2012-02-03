@@ -6150,13 +6150,7 @@ sub GetPageLinks {
     &OpenDefaultText();
     $text = $Text{'text'};
 ### {{{ }}} 내의 내용은 링크로 간주하지 않음
-    $text =~ s'<html>.*?</html>' 'igs if ($RawHtml);
-    $text =~ s/^{{{\n(.*?)\n}}}$/\n/igsm;
-    $text =~ s/^{{{#!(\w+( .+?)?)\n(.*?)\n}}}$/\n/igsm;
-    $text =~ s/^{{{(\w+)(\|(n|\d+|n\d+|\d+n))?\n(.*?)\n}}}$/\n/igsm;
-    $text =~ s'<nowiki>.*?</nowiki>' 'igs;
-    $text =~ s'<pre>.*?</pre>' 'igs;
-    $text =~ s'<code>.*?</code>' 'igs;
+    $text = store_raw_codes($text);
 
     if ($interlink) {
         $text =~ s/''+/ /g;  # Quotes can adjacent to inter-site links
