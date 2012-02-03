@@ -2912,9 +2912,7 @@ sub QuoteHtml {
     $html =~ s/&/&amp;/g;
     $html =~ s/</&lt;/g;
     $html =~ s/>/&gt;/g;
-    if (1) {   # Make an official option?
-        $html =~ s/&amp;([#a-zA-Z0-9]+);/&$1;/g;  # Allow character references
-    }
+    $html =~ s/&amp;([#a-zA-Z0-9]+);/&$1;/g;  # Allow character references
 
     return $html;
 }
@@ -2926,10 +2924,7 @@ sub QuoteHtmlForPageContent {
     $html =~ s/&/&__AMP__;/g;
     $html =~ s/</&__LT__;/g;
     $html =~ s/>/&__GT__;/g;
-    if (1) {   # Make an official option?
-        $html =~ s/&__AMP__;([#a-zA-Z0-9]+);/&$1;/g;  # Allow character references
-    }
-
+    $html =~ s/&__AMP__;([#a-zA-Z0-9]+);/&$1;/g;  # Allow character references
 
     return $html;
 }
