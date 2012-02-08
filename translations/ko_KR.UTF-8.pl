@@ -783,4 +783,6 @@ Title Search for : %s
 페이지이름 검색 : %s
 Subpage Search for : %s
 하위페이지 검색 : %s
+Use this URL if you need a url-encoded address of this page
+이 페이지의 주소를 url인코딩한 URL
 END_OF_TRANSLATION

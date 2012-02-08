@@ -1731,6 +1731,11 @@ sub GetEditGuide {
 ### page count
     $result .= Ts('%s hit' . (($ViewCount > 1)?'s':'') , $ViewCount)." | " if ($ViewCount ne "");
 
+### %-encoded permalink
+    $result .= '<a href="' . $q->url(-path=>1) . '" title="'
+               . T('Use this URL if you need a url-encoded address of this page')
+               . '">Permalink</a> | ';
+
 ### 관심 페이지
     if (&LoginUser()) {
         if (defined($UserInterest{$id})) {
