@@ -1575,7 +1575,7 @@ sub GetHtmlHeader {
     $dtd = '-//IETF//DTD HTML//EN';
     $bgcolor = 'white';  # Later make an option
     $html = qq(<!DOCTYPE HTML PUBLIC "$dtd">\n);
-    $title = $q->escapeHTML($title);
+    $title = QuoteHtml($title);
     $html .= "<HTML><HEAD><TITLE>$title</TITLE>\n";
 
     if ($SiteBase ne "") {
