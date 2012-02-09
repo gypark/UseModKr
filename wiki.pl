@@ -1567,6 +1567,10 @@ sub GetHtmlHeader {
     my ($title, $id) = @_;
     my ($dtd, $bgcolor, $html, $bodyExtra);
 
+    if ($FreeLinks) {
+        $id = &FreeToNormal($id);
+    }
+
     $html = '';
     $dtd = '-//IETF//DTD HTML//EN';
     $bgcolor = 'white';  # Later make an option
@@ -1616,9 +1620,6 @@ sub GetHtmlHeader {
         $html .= qq(<base target="_parent">\n);
     } else {
         if ($ClickEdit) {
-            if ($FreeLinks) {
-                $id = &FreeToNormal($id);
-            }
             my $revision = GetParam('revision','');
             if ( $revision ne '' ) {
                 $bodyExtra .= qq| ondblclick="location.href='$ScriptName${\(&ScriptLinkChar())}action=edit&id=$id&revision=$revision'" |;
