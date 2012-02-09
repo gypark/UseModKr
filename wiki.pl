@@ -1607,6 +1607,21 @@ sub GetHtmlHeader {
         $html .= "<META NAME='robots' CONTENT='noindex,nofollow'/>\n";
     }
 
+### rel=canonical head
+    my $full_url = ($FullUrl ne '')?$FullUrl:$q->url(-full => 1);
+    my $canonical eq '';
+    if ( ($action eq '' or $action eq 'browse') and $id ne '' ) {
+        $canonical = $full_url.ScriptLinkChar().$id;
+    }
+    elsif ( $action eq 'rc' or $action eq 'bookmark' ) {
+        $canonical = $full_url.ScriptLinkChar().T($RCName);
+    }
+# history나 diff화면에서 표준 링크 지정. 이건 조금 과한가
+#     elsif ( (my $id_param = GetParam('id', '')) ne '' ) {
+#         $canonical = $full_url.ScriptLinkChar().$id_param;
+#     }
+    $html .= qq|<link rel="canonical" href="$canonical" />| if $canonical;
+
 ### 사용자 정의 헤더
     $html .= $UserHeader;
     $html .= "\n";
