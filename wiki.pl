@@ -359,10 +359,10 @@ sub InitCookie {
     $TimeZoneOffset = 0;
     undef $q->{'.cookies'};  # Clear cache if it exists (for SpeedyCGI)
     %UserCookie = $q->cookie($CookieName);
-    $UserCookie{id} = DecodeUrl($UserCookie{id});
-    $UserID = $UserCookie{'id'};
+    $UserCookie{'userid'} = DecodeUrl($UserCookie{'userid'});
+    $UserID = $UserCookie{'userid'};
     &LoadUserData($UserID);
-    if (($UserData{'id'} ne $UserCookie{'id'})      ||
+    if (($UserData{'userid'} ne $UserCookie{'userid'})      ||
             ($UserData{'randkey'} ne $UserCookie{'randkey'})) {
         $UserID = 113;
         %UserData = ();   # Invalid.  Later consider warning message.
@@ -1511,7 +1511,7 @@ sub GetHttpHeader {
     my $t;
 
     $t = gmtime;
-    if (defined($SetCookie{'id'})) {
+    if (defined($SetCookie{'userid'})) {
 ### 로긴할 때 자동 로그인 여부 선택
 #       $cookie = "$CookieName="
 #                       . "rev&" . $SetCookie{'rev'}
@@ -1522,7 +1522,7 @@ sub GetHttpHeader {
         $cookie = "$CookieName="
             . "expire&" . $SetCookie{'expire'}
             . "&rev&"   . $SetCookie{'rev'}
-            . "&id&"    . EncodeUrl($SetCookie{'id'})
+            . "&userid&"    . EncodeUrl($SetCookie{'userid'})
             . "&randkey&" . $SetCookie{'randkey'}
             . ";";
 ### slashlinks 지원 - 로긴,로그아웃시에 쿠키의 path를 동일하게 해줌
@@ -4224,6 +4224,13 @@ sub LoadUserData {
     %UserData = split(/$FS1/, $data, -1);  # -1 keeps trailing null fields
 ### 관심 페이지
     %UserInterest = split(/$FS2/, $UserData{'interest'}, -1);
+
+# rename cookie 'id' to 'userid'
+    if ( not exists $UserData{'userid'} and exists $UserData{'id'} ) {
+        $UserData{'userid'} = $UserData{'id'};
+        delete $UserData{'id'};
+        SaveUserData();
+    }
 }
 
 sub UserDataFilename {
@@ -5407,7 +5414,7 @@ sub DoUpdatePrefs {
 ### 다른 사용자의 환경설정 변경을 금지
     my ($status, $data) = &ReadFile(&UserDataFilename($UserID));
     if ($status) {
-        if ((!(&UserIsAdmin)) && ($UserData{'id'} ne $UserID)) {
+        if ((!(&UserIsAdmin)) && ($UserData{'userid'} ne $UserID)) {
             print T('Error: Can not update prefs. That ID already exists and does not match your ID.'). '<br>';
             print &GetCommonFooter();
             return;
@@ -5523,7 +5530,7 @@ sub DoUpdatePrefs {
     $TimeZoneOffset = &GetParam("tzoffset", 0) * (60 * 60);
     print T('Local time:'), ' ', &TimeToText($Now), '<br>';
 
-    $UserData{'id'} = $UserID;
+    $UserData{'userid'} = $UserID;
     &SaveUserData();
     print '<b>', T('Preferences saved.'), '</b>';
     print &GetCommonFooter();
@@ -5619,7 +5626,7 @@ sub DoNewLogin {
     $SetCookie{'randkey'} = int(rand(1000000000));
     $SetCookie{'rev'} = 1;
     %UserCookie = %SetCookie;
-    $UserID = $SetCookie{'id'};
+    $UserID = $SetCookie{'userid'};
     # The cookie will be transmitted in the next header
     %UserData = %UserCookie;
     $UserData{'createtime'} = $Now;
@@ -5685,13 +5692,13 @@ sub DoLogin {
                 $SetCookie{'expire'} = $expire_mode;
             }
 
-            $SetCookie{'id'} = $uid;
+            $SetCookie{'userid'} = $uid;
             $SetCookie{'randkey'} = $UserData{'randkey'};
             $SetCookie{'rev'} = 1;
             $success = 1;
         }
         else {
-            $SetCookie{'id'} = "";
+            $SetCookie{'userid'} = "";
 ### 잘못된 아이디를 넣었을 때의 처리 추가
 ### from Bab2's patch
             $UserID = "";
@@ -5725,7 +5732,7 @@ sub DoLogin {
 }
 
 sub DoLogout {
-    $SetCookie{'id'} = "";
+    $SetCookie{'userid'} = "";
     $SetCookie{'randkey'} = $UserData{'randkey'};
     $SetCookie{'rev'} = 1;
 
