@@ -1620,7 +1620,7 @@ sub GetHtmlHeader {
 #     elsif ( (my $id_param = GetParam('id', '')) ne '' ) {
 #         $canonical = $full_url.ScriptLinkChar().$id_param;
 #     }
-    $html .= qq|<link rel="canonical" href="$canonical" />| if $canonical;
+    $html .= qq|<link rel="canonical" href="$canonical" />\n| if $canonical;
 
 ### 사용자 정의 헤더
     $html .= $UserHeader;
