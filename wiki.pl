@@ -6415,7 +6415,7 @@ sub DoPostMain {
         $id = $rebrowseid;
     }
 ###
-    &ReBrowsePage($id, "", 1);
+    &ReBrowsePage($id, "", 1) if ($id ne "!!");
 }
 
 sub UpdateDiffs {
