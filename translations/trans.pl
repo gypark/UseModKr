@@ -713,4 +713,14 @@ Replace strings in all pages
 
 (section)
 
+Context
+
+Search
+
+Title Search for : %s
+
+Subpage Search for : %s
+
+Use this URL if you need a url-encoded address of this page
+
 END_OF_TRANSLATION
