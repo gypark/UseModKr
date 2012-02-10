@@ -689,52 +689,6 @@ Comment is not allowed
 글 달기가 허용되지 않습니다
 Footnote
 각주
-Send Trackback
-트랙백 주고받기
-Send Trackback Ping of this page to:
-이 페이지의 트랙백 핑을 다음 주소로 보냄:
-Trackback URL:
-트랙백 URL:
-Permalink URL (optional):
-해당 글의 URL (선택사항):
-Send Ping
-트랙백 핑 보내기
-You are not allowed to send Trackback ping of this page
-이 페이지의 트랙백 핑을 보낼 권한이 없습니다
-No Ping URL
-트랙백 핑을 받을 주소가 없습니다
-New Trackback Sent
-트랙백 핑을 보냄
-Error occurred: %s
-에러가 발생했습니다: %s
-Send Trackback Ping
-트랙백 핑 보내기
-Ping successfully sent
-핑을 보내는 데 성공했습니다
-Trackback address of this page:
-이 페이지의 트랙백 주소:
-Copy
-복사
-Copy the address to the clipboard.
-이 주소를 클립보드에 복사합니다.
-This page can not receive Trackback
-이 페이지로는 트랙백을 보낼 수 없습니다
-Trackback from %s
-%s 로부터의 트랙백
-Title:
-제목:
-Content:
-내용:
-New Trackback Received
-트랙백 핑을 받음
-No Trackback sent
-보낸 트랙백 없음
-Trackback sent [%s]
-보낸 트랙백 [%s]
-No Trackback received
-받은 트랙백 없음
-Trackback received [%s]
-받은 트랙백 [%s]
 Write New Thread
 새 글 쓰기
 Write Comment

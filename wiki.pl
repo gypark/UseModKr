@@ -63,7 +63,7 @@ use vars qw(
     $LogoPage $CheckTime $LinkDir $IconUrl $CountDir $UploadDir $UploadUrl
     $HiddenPageFile $TemplatePage
     $InterWikiMoniker $SiteDescription $RssLogoUrl $RssDays $RssTimeZone
-    $SlashLinks $InterIconUrl $SendPingAllowed $JavaScriptUrl
+    $SlashLinks $InterIconUrl $JavaScriptUrl
     $UseLatex $UserHeader $OekakiJarUrl @UrlEncodingGuess $UrlPrefix
     $TwitterID $TwitterPass $TwitterPrefix
     $TwitterConsumerKey $TwitterConsumerSecret $TwitterAccessToken $TwitterAccessTokenSecret
@@ -575,7 +575,6 @@ sub BrowsePage {
     }
 
     if ($EditPagePos >= 2) {
-        $fullHtml .= &GetTrackbackGuide($id);
         $fullHtml .= &GetEditGuide($id, $goodRevision);     # luke added
     }
 
@@ -633,7 +632,6 @@ sub BrowseExternUrl {
     } elsif ((&GetParam('InFrame','') eq '2') && ($EditGuideInExtern)) {
         print &GetHeader($id, "$id [InBottomFrame]",$oldId);
         print "<hr>\n";
-        print &GetTrackbackGuide($id);
         print &GetEditGuide($id, '');
         print &GetMinimumFooter();
         return;
@@ -1800,7 +1798,6 @@ sub GetFooterText {
     }
 
     if ($EditPagePos eq 1 or $EditPagePos eq 3) {
-        $result .= &GetTrackbackGuide($id);
         $result .= &GetEditGuide($id, $rev);
     }
 
@@ -2346,9 +2343,6 @@ sub MacroSubst {
     $txt =~ s/(\&__LT__;longcomments\(([^,]+),([-+]?\d+)\)&__GT__;)/&MacroComments($1,$2,$3,1)/gei;
 ### <memo(제목)></memo> from Jof
     $txt =~ s/(&__LT__;memo\(([^\n]+?)\)&__GT__;((.)*?)&__LT__;\/memo&__GT__;)/&MacroMemo($1, $2, $3)/geis;
-### <trackbacksent> <trackbackreceived>
-    $txt =~ s/(((^|\n)\* .*)*\n?)(&__LT__;trackbacksent&__GT__;)/&MacroTrackbackSent($4,$1)/gei;
-    $txt =~ s/(((^|\n)\* .*\n\*\* .*\n\*\* .*)*\n?)(&__LT__;trackbackreceived&__GT__;)/&MacroTrackbackReceived($4,$1)/gei;
 ###
 
 ### 매크로 모듈화
@@ -2462,27 +2456,6 @@ sub ApplyDynamicTemplate {
     return $text;
 }
 
-### 추가한 매크로의 동작부
-### trackback
-sub MacroTrackbackSent {
-    my ($itself, $trackbacks) = @_;
-    my $title = &T('No Trackback sent');
-
-    my $count = ($trackbacks =~ s/((^|\n)\* .*)/$1/g);
-    $title = &Ts('Trackback sent [%s]', $count) if ($count);
-
-    return &MacroMemo("", $title, $trackbacks, "trackbacklist");
-}
-
-sub MacroTrackbackReceived {
-    my ($itself, $trackbacks) = @_;
-    my $title = &T('No Trackback received');
-
-    my $count = ($trackbacks =~ s/((^|\n)\* .*\n\*\* .*\n\*\* .*)/$1/g);
-    $title = &Ts('Trackback received [%s]', $count) if ($count);
-
-    return &MacroMemo("", $title, $trackbacks, "trackbacklist");
-}
 
 ### img from Jof
 sub MacroImgTag {
@@ -4896,9 +4869,6 @@ sub DoOtherRequest {
         } elsif ($action eq "rss") {
             $UseShortcut = 0;
             &DoRss();
-### Trackback
-        } elsif ($action eq "send_ping") {
-            &DoSendTrackbackPing($id);
 ###
         } else {
             # Later improve error reporting
@@ -6445,7 +6415,7 @@ sub DoPostMain {
         $id = $rebrowseid;
     }
 ###
-    &ReBrowsePage($id, "", 1) if ($id ne "!!");
+    &ReBrowsePage($id, "", 1);
 }
 
 sub UpdateDiffs {
@@ -8267,95 +8237,6 @@ sub GetHtmlRcLine {
     die "GetHtmlRcLine -- must not be executed!!!";
 }
 
-### Trackback
-sub DoSendTrackbackPing {
-    require Net::Trackback::Client;
-    require Net::Trackback::Ping;
-
-    my ($id) = @_;
-    my ($ping_url, $title, $url, $excerpt, $blog_name, $ping_permalink);
-    my $validid = &ValidId($id);
-    my $result = "";
-
-    $ping_url = &GetParam('ping_url');
-    $title = &GetParam('title');
-    $url = &GetParam('url');
-    $excerpt = &GetParam('excerpt');
-    $blog_name = &GetParam('blog_name');
-    $ping_permalink = &GetParam('ping_permalink');
-
-    if ($validid ne '') {
-        $result .= $validid;
-    } elsif (!&UserCanSendTrackbackPing($id)) {
-        $result .= &T('You are not allowed to send Trackback ping of this page');
-    } elsif ($ping_url eq '') {
-        $result .= &T('No Ping URL');
-    } else {
-        my $ping = Net::Trackback::Ping->new;
-        $ping->ping_url("$ping_url");
-        $ping->title("$title");
-        $ping->url("$url");
-        $ping->excerpt("$excerpt");
-        $ping->blog_name("$blog_name");
-
-        my $client = Net::Trackback::Client->new();
-        $client->charset("$HttpCharset");
-        my $msg = $client->send_ping($ping);
-        my $msg_str = $msg->to_xml;
-
-        my ($code, $message) = ($msg_str =~ m!<error>(\d+).*<message>(.*?)</message>!s);
-
-        if ($msg->is_success) {
-            sleep(1);
-            $Now = time;
-            &OpenPage($id);
-            &OpenDefaultText();
-            my $string = $Text{'text'};
-            my $macro = "\<trackbacksent\>";
-            if ($string =~ /$macro/) {
-                my $timestamp = &CalcDay($Now) . " " . &CalcTime($Now);
-                my $newtrackbacksent = "* $timestamp | " .
-                    (($ping_permalink ne '')?$ping_permalink:$ping_url);
-                $string =~ s/($macro)/$newtrackbacksent\n$1/;
-                &DoPostMain($string, $id, &T('New Trackback Sent'), $Section{'ts'}, 0, 0, "!!");
-            }
-            $result .= &T('Ping successfully sent');
-        } else {
-            $result .= &Ts('Error occurred: %s', "$code - $message");
-        }
-    }
-
-    print &GetHttpHeader();
-    print &GetHtmlHeader(&T('Send Trackback Ping') . " : $SiteName", "");
-    print $q->h2(&T('Send Trackback Ping')) . "\n";
-    print $result;
-    print "<hr size='1'>".Ts('Return to %s' , &GetPageLink($id));
-    print $q->end_html;
-
-    return;
-}
-
-sub UserCanSendTrackbackPing {
-    my ($id) = @_;
-
-    return 0 if (! -f &GetPageFile($id));
-    return 1 if ($SendPingAllowed == 0);
-    return 1 if (&UserIsAdmin());
-    return 1 if (($SendPingAllowed == 1) && (&UserCanEdit($id)));
-
-    return 0;
-}
-
-sub PageCanReceiveTrackbackPing {
-    my ($id) = @_;
-
-    return 0 if (! -f &GetPageFile($id));
-    return 0 if (defined $HiddenPage{$id});
-    return 0 if (-f &GetLockedPageFile($id));
-
-    return 1;
-}
-
 sub EncodeUrl {
     my ($string) = @_;
     $string =~ s!([^:/&?#=a-zA-Z0-9_.-])!uc sprintf "%%%02x", ord($1)!eg;
@@ -8366,78 +8247,6 @@ sub DecodeUrl {
     my ($string) = @_;
     $string =~ s/%([0-9a-fA-F]{2})/chr(hex($1))/ge;
     return $string;
-}
-
-sub GetTrackbackGuide {
-    my ($id) = @_;
-
-    my $result = "\n<HR class='footer'>\n<DIV class='trackbackguide'>";
-
-    my $trackbackguide = "<P>";
-
-    $FullUrl = $q->url(-full=>1)  if ($FullUrl eq "");
-    my $encoded = &EncodeUrl($id);
-# TCode
-    my $tcode = &simple_crypt(length($id).substr(&CalcDay($Now),5));
-
-    my $url = $FullUrl . &ScriptLinkChar() . "action=tb&tc=$tcode&id=$encoded";
-
-    if (&PageCanReceiveTrackbackPing($id)) {
-        $trackbackguide .= &T('Trackback address of this page:')." ".
-            "<input type=\"button\" title=\"".
-            &T('Copy the address to the clipboard.').
-            "\" value=\"".
-            &T('Copy').
-            "\" onClick=\"copy_clip('','$url');\"> ".
-            $url;
-    } else {
-        $trackbackguide .= &T('This page can not receive Trackback');
-    }
-
-    if (&UserCanSendTrackbackPing($id)) {
-        $FullUrl = $q->url(-full=>1)  if ($FullUrl eq "");
-        my $url = $FullUrl . &ScriptLinkChar . $encoded;
-        my $title = $id;
-        if ($FreeLinks) {
-            $title =~ s/_/ /g;  # Display with spaces
-        }
-        my $excerpt = $Text{'text'};
-        $excerpt =~ s/<.*?>//g;
-        $excerpt =~ s/(\r?\n)/ /g;
-
-### exceprt 값은 최대 200글자 (UTF-8에서 최악의 경우 600바이트) 까지로 끊음
-#       if (length($excerpt) > 255) {
-#           $excerpt = substr($excerpt, 0, 255);
-#       }
-        $excerpt = (&split_string($excerpt, 200))[0];
-###
-
-        $excerpt = &QuoteHtml($excerpt);
-        $excerpt =~ s/"/&quot;/g;
-
-        $trackbackguide .= "\n<BR>";
-        $trackbackguide .= &GetFormStart("Trackback_ping") .
-            &GetHiddenValue("action", "send_ping") .
-            &GetHiddenValue("title", "$title") .
-            &GetHiddenValue("blog_name", "$SiteName") .
-            &GetHiddenValue("excerpt", "$excerpt") .
-            &GetHiddenValue("url", "$url") .
-            &GetHiddenValue("id", "$id") .
-            "<TABLE style='border: none;'>" .
-            "<TR><TD style='border: none;' colspan=2>" . &T('Send Trackback Ping of this page to:') . "</TD></TR>" .
-            "<TR><TD style='border: none;'>" . &T('Trackback URL:') . "</TD>" .
-            "<TD style='border: none;'>" . $q->textfield(-name=>"ping_url", -default=>"", -override=>1, -size=>100, -maxlength=>200) . "</TD></TR>" .
-            "<TR><TD style='border: none;'>" . &T('Permalink URL (optional):') . "</TD>" .
-            "<TD style='border: none;'>" .
-            $q->textfield(-name=>"ping_permalink", -default=>"", -override=>1, -size=>100, -maxlength=>200) . "</TD></TR>" .
-            "<TR><TD style='text-align: center; border: none;' colspan=2>" . $q->submit(&T('Send Ping')) . "</TD></TR>" .
-            "</TABLE>" .
-            $q->endform;
-    }
-
-    $result .= &MacroMemo("", &T('Send Trackback'), $trackbackguide, "trackbackguidecontent");
-
-    $result .= "</DIV>";
 }
 
 # 금지단어

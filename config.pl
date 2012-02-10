@@ -89,8 +89,6 @@ $RssDays          = 7;          # Default number of days in RSS feed
 $RssTimeZone      = 9;          # Time Zone of Server (hour), 0 for GMT, 9 for Korea
 ### 스크립트 뒤에 / or ? 선택 from usemod1.0
 $SlashLinks   = 1;      # 1 = use script/action links, 0 = script?action
-### trackback 보내기
-$SendPingAllowed = 0;   # 0 - anyone, 1 - who can edit, 2 - who is admin
 ### LaTeX 변환 지원
 $UseLatex    = 0;       # 1 = Use LaTeX conversion   2 = Don't convert
 ### 사용자 정의 헤더

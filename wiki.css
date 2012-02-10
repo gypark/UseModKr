@@ -680,48 +680,6 @@ A.footnote {
     vertical-align: super;
 }
 
-/* 트랙백 주고받기 안내영역 */
-DIV.trackbackguide {
-    text-align: left;
-    background: transparent;
-    border: none;
-    color: black;
-}
-
-/* 트랙백 주고받기 가이드 */
-DIV.trackbackguidecontent {
-    background: transparent;
-    border: none;
-}
-
-A.trackbackguidecontent:link, A.trackbackguidecontent:active, A.trackbackguidecontent:visited, A.trackbackguidecontent:hover {
-    background: transparent;
-    color: blue;
-    text-decoration: none;
-}
-A.trackbackguidecontent:hover
-{
-    text-decoration: underline;
-}
-
-/* trackbacksent, trackbackreceived 매크로 */
-DIV.trackbacklist {
-    background-color:#F8F8F8;
-    color:#000;
-    border:1px solid silver;
-    padding:5px;
-}
-
-A.trackbacklist:link, A.trackbacklist:active, A.trackbacklist:visited, A.trackbacklist:hover {
-    background: transparent;
-    color: blue;
-    text-decoration: none;
-}
-A.trackbacklist:hover
-{
-    text-decoration: underline;
-}
-
 /* thread */
 DIV.threadnew {
     background-color:#F8F8F8;

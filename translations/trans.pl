@@ -673,52 +673,6 @@ Comment is not allowed
 
 Footnote
 
-Send Trackback
-
-Send Trackback Ping of this page to:
-
-Trackback URL:
-
-Permalink URL (optional):
-
-Send Ping
-
-You are not allowed to send Trackback ping of this page
-
-No Ping URL
-
-New Trackback Sent
-
-Error occurred: %s
-
-Send Trackback Ping
-
-Ping successfully sent
-
-Trackback address of this page:
-
-Copy
-
-Copy the address to the clipboard.
-
-This page can not receive Trackback
-
-Trackback from %s
-
-Title:
-
-Content:
-
-New Trackback Received
-
-No Trackback sent
-
-Trackback sent [%s]
-
-No Trackback received
-
-Trackback received [%s]
-
 Write New Thread
 
 Write Comment
