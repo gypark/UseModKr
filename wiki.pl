@@ -7030,6 +7030,9 @@ sub SubstituteTextLinks {
         $text =~
          s/\[\[$FreeLinkPattern\|([^\]]+)\]\]/&SubFreeLink($1,$2,$old,$new)/geo;
         $text =~ s/\[\[$FreeLinkPattern\]\]/&SubFreeLink($1,"",$old,$new)/geo;
+        $text =~
+         s/\[\[$AnchoredFreeLinkPattern\|([^\]]+)\]\]/&SubFreeLink($1,$3,$old,$new,$2)/geo;
+        $text =~ s/\[\[$AnchoredFreeLinkPattern\]\]/&SubFreeLink($1,"",$old,$new,$2)/geo;
     }
     if ($BracketText) {  # Links like [URL text of link]
         $text =~ s/(\[$UrlPattern\s+([^\]]+?)\])/&StoreRaw($1)/geo;
@@ -7046,7 +7049,7 @@ sub SubstituteTextLinks {
 }
 
 sub SubFreeLink {
-    my ($link, $name, $old, $new) = @_;
+    my ($link, $name, $old, $new, $anchor) = @_;
     my ($oldlink);
 
     $oldlink = $link;
@@ -7058,6 +7061,9 @@ sub SubFreeLink {
         $link = $oldlink;  # Preserve spaces if no match
     }
     $link = "[[$link";
+    if ( defined $anchor and $anchor ne '' ) {
+        $link .= "#$anchor";
+    }
     if ($name ne "") {
         $link .= "|$name";
     }
