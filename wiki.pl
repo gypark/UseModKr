@@ -6162,6 +6162,8 @@ sub GetPageLinks {
             my $fl = $FreeLinkPattern;
             $text =~ s/\[\[$fl\|[^\]]+\]\]/push(@links, &FreeToNormal($1)), ' '/ge;
             $text =~ s/\[\[$fl\]\]/push(@links, &FreeToNormal($1)), ' '/ge;
+            $text =~ s/\[\[$AnchoredFreeLinkPattern\|([^\]]+)\]\]/push(@links, &FreeToNormal($1)), ' '/ge;
+            $text =~ s/\[\[$AnchoredFreeLinkPattern\]\]/push(@links, &FreeToNormal($1)), ' '/ge;
         }
         if ($WikiLinks) {
             $text =~ s/$LinkPattern/push(@links, &StripUrlPunct($1)), ' '/ge;
