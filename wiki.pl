@@ -8350,31 +8350,16 @@ sub split_string {
 sub PostTwitter {
     my $msg = shift;
 
-    if (
-        ( eval "require Net::Twitter::Lite;" ) and
-        ( eval "require WWW::Shorten;" )
-       ) {
+    if ( eval "require Net::Twitter::Lite;" ) {
+        my $msg_length = 140;
 
-#         import WWW::Shorten 'TinyURL';
-        import WWW::Shorten 'Metamark';
-
-        # URL의 한글 부분을 %-인코딩하고, 길이기 26자 이상이면 tinyurl을 통해 줄인다
+        # URL은 %인코딩한 후, t.co로 변환될때 길이가 얼마나 줄어들지(때론 늘어날지) 고려
         my $shorterlink = sub {
             my $url = shift;
-
             my $converted = EncodeUrl( $url );
-            if ( length($converted) > 26 ) {
-                $converted = makeashorterlink( $converted );
-            }
-
+            $msg_length += length($converted) - 20;
             return $converted;
         };
-
-# YOU CAN'T USE BASIC AUTHENTICATION ANYMORE
-#         my $nt = Net::Twitter::Lite->new(
-#                     username => $TwitterID,
-#                     password => $TwitterPass,
-#                 );
 
         my $nt = Net::Twitter::Lite->new(
                 consumer_key        => $TwitterConsumerKey,
@@ -8388,7 +8373,7 @@ sub PostTwitter {
 
         # 140자 제한
         $msg = decode($HttpCharset, $msg);
-        $msg = substr($msg, 0, 140);
+        $msg = substr($msg, 0, $msg_length);
 # URI 모듈 1.40 이상을 쓰는 경우는 아래 주석 처리
 #         $msg = encode("UTF-8", $msg);
 
