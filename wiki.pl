@@ -2663,7 +2663,7 @@ sub MacroUploadedFiles {
     }
 
     opendir (DIR, "$UploadDir") || die Ts('cant opening %s', $UploadDir) . ": $!";
-    @files = grep { !/^\.\.?$/ } readdir(DIR);
+    my @files = grep { !/^\.\.?$/ } readdir(DIR);
     close (DIR);
 
     $totalSize = 0;
@@ -2678,6 +2678,16 @@ sub MacroUploadedFiles {
                 ||
                 $a cmp $b
     } @files;
+
+    my ( @dirs, @p_files );
+    foreach my $f ( @files ) {
+        if ( -d "$UploadDir/$f" ) {
+            push @dirs, $f;
+        }
+        else {
+            push @p_files, $f;
+        }
+    }
 
     $txt = $q->start_form("post","$ScriptName","");
     $txt .= "<input type='hidden' name='action' value='deleteuploadedfiles'>";
@@ -2694,7 +2704,7 @@ sub MacroUploadedFiles {
     $txt .= "</TR>\n";
 
 
-    foreach (@files) {
+    foreach (@dirs, @p_files) {
         $txt .= "<TR class='uploadedfiles'>";
         if ($canDelete) {
             $txt .= "<TD class='uploadedfiles' align='center'>";
@@ -2703,7 +2713,12 @@ sub MacroUploadedFiles {
         }
         $txt .= "<TD class='uploadedfiles'>";
         $txt .= &GetReverseLink("Upload:$_", $uploadsearch) . " ";
-        $txt .= "<a href='$UploadUrl/$_'>$_</a>";
+        if ( -d "$UploadDir/$_" ) {
+            $txt .= "$_/";
+        }
+        else {
+            $txt .= "<a href='$UploadUrl/$_'>$_</a>";
+        }
         $txt .= "</TD>";
 
         $size = $filesize{$_};
@@ -7629,10 +7644,23 @@ sub DoDeleteUploadedFiles {
         %vars = $q->Vars;
         @files = split(/\0/,$vars{'files'}, -1);
         foreach (@files) {
-            if (unlink ("$UploadDir/$_")) {
-                print Ts('%s is deleted successfully', $_)."<br>";
-            } else {
-                print Ts('%s can not be deleted', $_). " : $!<br>";
+            if ( -d "$UploadDir/$_" ) {
+                foreach my $sub_f ( glob("$UploadDir/$_/*") ) {
+                    unlink $sub_f;
+                }
+                if ( rmdir "$UploadDir/$_" ) {
+                    print Ts('%s is deleted successfully', $_)."<br>";
+                }
+                else {
+                    print Ts('%s can not be deleted', $_). " : $!<br>";
+                }
+            }
+            else {
+                if (unlink ("$UploadDir/$_")) {
+                    print Ts('%s is deleted successfully', $_)."<br>";
+                } else {
+                    print Ts('%s can not be deleted', $_). " : $!<br>";
+                }
             }
         }
     }

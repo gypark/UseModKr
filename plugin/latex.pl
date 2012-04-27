@@ -17,7 +17,6 @@
 #    }}}
 
 use strict;
-use warnings;
 
 sub plugin_latex {
     my ($content, @opt) = @_;
