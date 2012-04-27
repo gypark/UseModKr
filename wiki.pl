@@ -2663,7 +2663,7 @@ sub MacroUploadedFiles {
     }
 
     opendir (DIR, "$UploadDir") || die Ts('cant opening %s', $UploadDir) . ": $!";
-    my @files = grep { !/^\.\.?$/ } readdir(DIR);
+    @files = grep { !/^\.\.?$/ } readdir(DIR);
     close (DIR);
 
     $totalSize = 0;
