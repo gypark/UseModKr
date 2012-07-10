@@ -764,8 +764,11 @@ sub DoRc {
         }
     }
     $lastTs = 0;
-    if (@fullrc > 0) {  # Only false if no lines in file
-        ($lastTs) = split(/$FS3/, $fullrc[$#fullrc]);
+
+### hide page
+    for (my $i = $#fullrc; $i >= 0; $i--) {
+        my ($ts, $page) = split(/$FS3/, $fullrc[$i]);
+        $lastTs = $ts, last if not PageIsHidden($page);
     }
     $lastTs++  if (($Now - $lastTs) > 5);  # Skip last unless very recent
 
