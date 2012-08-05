@@ -1970,7 +1970,7 @@ sub GetGotoForm {
                 -onSubmit       =>
                         "document.location.href = "
                         . "'$location_prefix'+document.getElementById('goto_$GotoTextFieldId')"
-                        . ".value.replace(/\\s*\$/,'').replace(' ','_');"
+                        . ".value.replace(/\\s*\$/,'').replace(/ /g,'_');"
                         . "return false;"
                         ,
                 )
