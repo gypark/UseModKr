@@ -66,7 +66,17 @@ sub plugin_vim {
     open STDOUT, ">hash.log";
     open STDERR, ">&STDOUT";
 
-    qx($vim -T xterm -e -s $tmpi +"set enc=$HttpCharset" +"syntax on" +"set syntax=$type" $option +"ru! $tohtml" +"wq! $tmpo" +q);
+    qx($vim -T xterm \\
+            -e -s \\
+            $tmpi \\
+            +"set enc=$HttpCharset" \\
+            +"syntax on" \\
+            +"set syntax=$type" \\
+            $option \\
+            +"let html_use_css=1" \\
+            +"ru! $tohtml" \\
+            +"wq! $tmpo" \\
+            +q);
 
     close STDOUT;
     close STDERR;
@@ -78,11 +88,12 @@ sub plugin_vim {
     if (!$status) {
         return undef;
     }
-    $text =~ s/<title>.*title>|<\/?head>|<\/?html>|<meta.*>|<\/?body.*>//g;
-    $text =~ s/^.*?<pre>/<pre class='vim'>/gs;
-    $text =~ s/^(\s|\n)*//gs;
-    $text =~ s/(\s|\n)*$//gs;
-    $text .= "\n";
+    $text =~ s'.*(?=^<style)''sm;
+    $text =~ s'^</head>\n<body>\n''sm;
+    $text =~ s'^<pre>'<pre class="vim">';
+    $text =~ s'\n</body>\n</html>.*''sm;
+    $text =~ s'^pre \{[^}]+}\n(?=.*^</style>$)''sm;
+    $text =~ s'^body \{[^}]+}\n(?=.*^</style>$)''sm;
 
     chdir($pwd);
 
