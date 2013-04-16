@@ -564,7 +564,7 @@ TH.calendar
 {
     border: none;
     text-align: center;
-    font: bold 75%/100% Gulimche, Curier, monospace;
+    font: bold 75%/100% Gulimche, Courier, monospace;
 }
 
 TR.calendar
@@ -576,14 +576,14 @@ TD.calendar
 {
     border: none;
     text-align: right;
-    font: 75%/100% Gulimche, Curier, monospace;
+    font: 75%/100% Gulimche, Courier, monospace;
 }
 
 TD.calendartoday
 {
     border: 1pt solid silver;
     text-align: right;
-    font: 75%/100% Gulimche, Curier, monospace;
+    font: 75%/100% Gulimche, Courier, monospace;
     background: yellow;
     color: black;
 
@@ -597,7 +597,7 @@ TD.calendarthispage
     border-bottom:1px solid silver;
     border-right:1px solid silver;
     text-align: right;
-    font: 75%/100% Gulimche, Curier, monospace;
+    font: 75%/100% Gulimche, Courier, monospace;
     background-color:#F8F8F8;
     color:black;
 }
@@ -610,7 +610,7 @@ TD.calendartodaythispage
     border-bottom:1px solid silver;
     border-right:1px solid silver;
     text-align: right;
-    font: 75%/100% Gulimche, Curier, monospace;
+    font: 75%/100% Gulimche, Courier, monospace;
     background: yellow;
     color: black;
 }
