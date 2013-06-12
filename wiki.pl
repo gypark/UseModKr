@@ -8381,7 +8381,7 @@ sub split_string {
 sub PostTwitter {
     my $msg = shift;
 
-    if ( eval "require Net::Twitter::Lite;" ) {
+    if ( eval "require Net::Twitter::Lite::WithAPIv1_1;" ) {
         my $msg_length = 140;
 
         # URL은 %인코딩한 후, t.co로 변환될때 길이가 얼마나 줄어들지(때론 늘어날지) 고려
@@ -8392,11 +8392,12 @@ sub PostTwitter {
             return $converted;
         };
 
-        my $nt = Net::Twitter::Lite->new(
+        my $nt = Net::Twitter::Lite::WithAPIv1_1->new(
                 consumer_key        => $TwitterConsumerKey,
                 consumer_secret     => $TwitterConsumerSecret,
                 access_token        => $TwitterAccessToken,
                 access_token_secret => $TwitterAccessTokenSecret,
+                legacy_lists_api => 0,
                 );
 
         # 긴 URL 줄이기
