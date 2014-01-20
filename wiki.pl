@@ -8398,6 +8398,7 @@ sub PostTwitter {
                 access_token        => $TwitterAccessToken,
                 access_token_secret => $TwitterAccessTokenSecret,
                 legacy_lists_api => 0,
+                ssl => 1,
                 );
 
         # 긴 URL 줄이기
