@@ -31,7 +31,7 @@ use strict;
 use Encode;
 use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
-$ConfigFile  = "config.pl";             # path of config file
+$ConfigFile  = "./config.pl";             # path of config file
 
 $WikiVersion = "0.92K3-ext2.27c";
 $WikiRelease = "2016-04-08";
