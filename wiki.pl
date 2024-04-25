@@ -1840,14 +1840,14 @@ sub GetMinimumFooter {
 
 sub GetFormStart {
 ### form 에 이름을 넣을 수 있도록 함
-#   return $q->startform("POST", "$ScriptName", "application/x-www-form-urlencoded");
+#   return $q->start_form("POST", "$ScriptName", "application/x-www-form-urlencoded");
 
     my ($name) = @_;
 
     if ($name eq '') {
-        return $q->startform("POST", "$ScriptName", "application/x-www-form-urlencoded");
+        return $q->start_form("POST", "$ScriptName", "application/x-www-form-urlencoded");
     } else {
-        return $q->startform(-method=>"POST", -action=>"$ScriptName", -enctype=>"application/x-www-form-urlencoded" ,-name=>"$name") ;
+        return $q->start_form(-method=>"POST", -action=>"$ScriptName", -enctype=>"application/x-www-form-urlencoded" ,-name=>"$name") ;
     }
 }
 
@@ -2026,7 +2026,7 @@ sub GetGotoForm {
             ""
           )
 
-        . $q->endform
+        . $q->end_form
         ;
 
     $q->param("id", $param_backup);
@@ -2060,7 +2060,7 @@ sub GetSearchForm {
                 -name   => "Submit",
                 -value  => T("Search"),
                 )
-        . $q->endform
+        . $q->end_form
         ;
 
     return $result;
@@ -2624,7 +2624,7 @@ sub MacroComments {
     }
 
     $txt =
-        $q->startform(-name=>"comments",-method=>"POST",-action=>"$ScriptName") .
+        $q->start_form(-name=>"comments",-method=>"POST",-action=>"$ScriptName") .
         &GetHiddenValue("action","comments") .
         &GetHiddenValue("id",$id) .
         &GetHiddenValue("pageid",$pageid) .
@@ -2639,7 +2639,7 @@ sub MacroComments {
         $comment_field . "&nbsp;" .
         $twitter .
         $submit_button .
-        $q->endform;
+        $q->end_form;
 
     if ($threadindent ne '') {
         if ($threadindent >= 1) {   # "새글쓰기"도 감추고 싶다면 1 대신 0으로 할 것
@@ -2747,7 +2747,7 @@ sub MacroUploadedFiles {
 
     $txt .= "</TABLE>";
     $txt .= $q->submit(T('Delete Checked Files')) if ($canDelete);
-    $txt .= $q->endform;
+    $txt .= $q->end_form;
     return $txt;
 
 }
@@ -5142,7 +5142,7 @@ function oekaki()
 
 ### 편집모드에 들어갔을때 포커스가 편집창에 있도록 한다
 #   print &GetFormStart();
-    print $q->startform(-method=>"POST", -action=>"$ScriptName", -enctype=>"application/x-www-form-urlencoded",
+    print $q->start_form(-method=>"POST", -action=>"$ScriptName", -enctype=>"application/x-www-form-urlencoded",
             -name=>"form_edit", -onSubmit=>"closeok=true; return true;");
 ### view action 추가
     if ($canEdit) {
@@ -5265,7 +5265,7 @@ function oekaki()
 
     print &GetHistoryLink($id, T('View other revisions')) . "<br>\n";
     # print &GetGotoBar($id);
-    print $q->endform;
+    print $q->end_form;
 ### 편집모드에 들어갔을때 포커스가 편집창에 있도록 한다
     print "\n<script language=\"JavaScript\" type=\"text/javascript\">\n"
         . "<!--\n"
@@ -5373,7 +5373,7 @@ sub DoEditPrefs {
                                                 T('Add "Random Page" link to link bar'));
     print '<br>', $q->submit(-name=>'Save', -value=>T('Save')), "\n";
     print "<hr class='footer'>\n";
-    print $q->endform;
+    print $q->end_form;
     print &GetMinimumFooter();
 }
 
@@ -5658,7 +5658,7 @@ sub DoEnterLogin {
 
     print '<br>', $q->submit(-name=>'Login', -value=>T('Login')), "\n";
     print "<hr class='footer'>\n";
-    print $q->endform;
+    print $q->end_form;
 
 ### 사용자 아이디를 입력하는 란에 포커스를 준다
     print "\n<script language=\"JavaScript\" type=\"text/javascript\">\n"
@@ -5748,7 +5748,7 @@ sub DoLogout {
     print Ts('Logout for user ID %s complete.', $tempUserID);
 
     print "<hr class='footer'>\n";
-    print $q->endform;
+    print $q->end_form;
     print &GetMinimumFooter();
 }
 
@@ -6790,7 +6790,7 @@ sub DoEditBanned {
     print "<br>", $q->submit(-name=>'Save'), "\n";
     print "<hr class='footer'>\n";
 #   print &GetGotoBar("");
-    print $q->endform;
+    print $q->end_form;
     print &GetMinimumFooter();
 }
 
@@ -6841,7 +6841,7 @@ sub DoEditLinks {
                                             -label=>T('Substitute text for rename'));
     print "<br>", $q->submit(-name=>'Edit'), "\n";
 #   print &GetGotoBar("");
-    print $q->endform;
+    print $q->end_form;
     print "<HR class='footer'>\n";
     print &GetMinimumFooter();
 }
@@ -7546,7 +7546,7 @@ sub PrintUploadFileForm {
     print "&nbsp;&nbsp;" . "\n";
     print $q->submit(T('Upload')) . "\n";
     print "</center>" . "\n";
-    print $q->endform();
+    print $q->end_form();
 }
 
 # $dir내에 $file이름과 동일한 파일이 있을 경우 뒤에 숫자를 붙여 겹치지 않는 번호를 반환함

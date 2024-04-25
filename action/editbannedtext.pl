@@ -19,7 +19,7 @@ sub action_editbannedtext {
         "spam\\.com\$<p>";
     print &GetTextArea('bantext', $banList, 12, 50);
     print "<br>", $q->submit(-name=>'Save'), "\n";
-    print $q->endform;
+    print $q->end_form;
     print &GetCommonFooter();
 }
     

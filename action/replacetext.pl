@@ -39,7 +39,7 @@ sub action_replacetext {
     print $q->submit(-name=>'Replace'), "\n";
     print $q->checkbox(-name=>"p_test", -override=>1, -checked=>1,
                                 -label=>T('Just test'));
-    print $q->endform;
+    print $q->end_form;
 
 # old string 값이 없는 경우. 제일 처음 불렸을 때 등
     if ($oldStr eq '') {

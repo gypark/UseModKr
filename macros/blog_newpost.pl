@@ -62,7 +62,7 @@ sub MacroBlogNewPost {
     }
 
     $txt =
-        $q->startform(-name=>"newpost",-method=>"POST",-action=>"$ScriptName") .
+        $q->start_form(-name=>"newpost",-method=>"POST",-action=>"$ScriptName") .
         &GetHiddenValue("action","blog_newpost") .
         &GetHiddenValue("id","$id") .
         &GetHiddenValue("pageid","$pageid") .
@@ -72,7 +72,7 @@ sub MacroBlogNewPost {
         T('Date').": ".
         $date_field."&nbsp;".
         $submit_button.
-        $q->endform;
+        $q->end_form;
 
     return $txt;
 }

@@ -88,7 +88,7 @@ sub action_addtopic {
         $q->h2($header_msg).
         "<DIV class='threadnew'>".
         $guide_msg."\n".
-        $q->startform(-name=>"comments",-method=>"POST",-action=>"$ScriptName",
+        $q->start_form(-name=>"comments",-method=>"POST",-action=>"$ScriptName",
                 -enctype=>"application/x-www-form-urlencoded",
                 -accept_charset=>"$HttpCharset")."\n".
         &GetHiddenValue("action","comments")."\n".
@@ -122,7 +122,7 @@ sub action_addtopic {
                 )."\n".
         "</DIV>"."\n".
         "</DIV>"."\n".
-        $q->endform."\n".
+        $q->end_form."\n".
         "</DIV>";
 
 ## "[URL 설명]" 형태와 "설명[URL]" 형태를 토글해주는 함수
