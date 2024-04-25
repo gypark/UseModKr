@@ -27,6 +27,7 @@
 #    Boston, MA 02111-1307 USA
 package UseModWiki;
 use strict;
+BEGIN { unshift @INC, ( "." ); }
 
 use Encode;
 use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
