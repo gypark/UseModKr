@@ -88,7 +88,7 @@ $RssLogoUrl       = '';         # Optional image for RSS feed
 $RssDays          = 7;          # Default number of days in RSS feed
 $RssTimeZone      = 9;          # Time Zone of Server (hour), 0 for GMT, 9 for Korea
 ### 스크립트 뒤에 / or ? 선택 from usemod1.0
-$SlashLinks   = 1;      # 1 = use script/action links, 0 = script?action
+$SlashLinks   = 0;      # 1 = use script/action links, 0 = script?action
 ### LaTeX 변환 지원
 $UseLatex    = 0;       # 1 = Use LaTeX conversion   2 = Don't convert
 ### 사용자 정의 헤더
