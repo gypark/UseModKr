@@ -5114,11 +5114,6 @@ function upload()
     var w = window.open("$ScriptName${\(&ScriptLinkChar())}action=upload", "upload", "width=640,height=250,resizable=1,statusbar=1,scrollbars=1");
     w.focus();
 }
-function oekaki()
-{
-    var w = window.open("$ScriptName${\(&ScriptLinkChar())}action=oekaki&mode=paint", "oekaki", "width=900,height=750,resizable=1,statusbar=1,scrollbars=1");
-    w.focus();
-}
 //-->
 </script>
 |;
@@ -5221,11 +5216,6 @@ function oekaki()
         print " ".q(<input accesskey="u" type="button" name="prev1" value=").
             T('Upload File')." [alt+u]" .
             q(" onclick="javascript:upload();">);
-### oekaki
-        print " ".q(<input accesskey="o" type="button" name="prev1" value=").
-            T('Oekaki')." [alt+o]" .
-            q(" onclick="javascript:oekaki();">);
-###
         if ($isConflict) {
             print "\n<br><hr noshade size=1><p><strong>", T('This is the text you submitted:'),
                     "</strong><p>",
