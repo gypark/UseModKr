@@ -1542,7 +1542,7 @@ sub GetHttpHeader {
         $cookie .= "path=$cookie_path;";
 
         if ($SetCookie{'expire'} eq "1") {
-            $cookie .= "expires=Tue, 31-Dec-2030 23:59:59 GMT";
+            $cookie .= "expires=Tue, 31-Dec-2050 23:59:59 GMT";
         }
 
         if ($HttpCharset ne '') {
