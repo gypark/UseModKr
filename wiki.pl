@@ -4860,7 +4860,7 @@ sub DoOtherRequest {
         } elsif ($action eq "logout") {
             &DoLogout();
         } elsif ($action eq "newlogin") {
-            $UserID = 0;
+            $UserID = "";
             &DoEditPrefs();  # Also creates new ID
         } elsif ($action eq "version") {
             &DoShowVersion();
@@ -5290,10 +5290,12 @@ sub DoEditPrefs {
 
     $recentName = $RCName;
     $recentName =~ s/_/ /g;
-    &DoNewLogin()  if ($UserID eq "");
     print &GetHeader('', T('Editing Preferences'), "");
     print &GetFormStart();
     print GetHiddenValue("edit_prefs", 1), "\n";
+    if ($UserID eq "") {
+        print GetHiddenValue("new_login", 1), "\n";
+    }
     print '<b>' . T('User Information:') . "</b>\n";
     print '<br>' . T('UserName:') . ' ', &GetFormText('username', "", 20, 50);
     print ' ' . T('(blank to remove, or valid page name)');
@@ -5386,6 +5388,7 @@ sub GetFormCheck {
 
 sub DoUpdatePrefs {
     my ($username, $password);
+
 ### 암호를 암호화해서 저장
 ### from Bab2's patch
     my $hashpass = "";
@@ -5525,6 +5528,15 @@ sub DoUpdatePrefs {
     print T('Local time:'), ' ', &TimeToText($Now), '<br>';
 
     $UserData{'userid'} = $UserID;
+
+# 새로 ID를 만들었을 때의 추가 데이터
+    if (GetParam("new_login", 0) == 1) {
+        $UserData{'randkey'} = int(rand(1000000000));
+        $UserData{'rev'} = 1;
+        $UserData{'createtime'} = $Now;
+        $UserData{'createip'} = $ENV{REMOTE_ADDR};
+    }
+
     &SaveUserData();
     print '<b>', T('Preferences saved.'), '</b>';
     print &GetCommonFooter();
@@ -5611,21 +5623,6 @@ sub DoIndex {
     print '<br>';
     &PrintPageList(&AllPagesList());
     print &GetCommonFooter();
-}
-
-# Create a new user file/cookie pair
-sub DoNewLogin {
-    # Later consider warning if cookie already exists
-    # (maybe use "replace=1" parameter)
-    $SetCookie{'randkey'} = int(rand(1000000000));
-    $SetCookie{'rev'} = 1;
-    %UserCookie = %SetCookie;
-    $UserID = $SetCookie{'userid'};
-    # The cookie will be transmitted in the next header
-    %UserData = %UserCookie;
-    $UserData{'createtime'} = $Now;
-    $UserData{'createip'} = $ENV{REMOTE_ADDR};
-    &SaveUserData();
 }
 
 sub DoEnterLogin {
