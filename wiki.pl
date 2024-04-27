@@ -367,6 +367,10 @@ sub InitCookie {
             ($UserData{'randkey'} ne $UserCookie{'randkey'})) {
         $UserID = 113;
         %UserData = ();   # Invalid.  Later consider warning message.
+        # 사용자 데이터와 쿠키가 일치하지 않을 때 쿠키도 날려버리자.
+        $SetCookie{'userid'} = '';
+        $SetCookie{'expire'} = 0;
+        $SetCookie{'randkey'} = '';
     }
     if ($UserData{'tzoffset'} != 0) {
         $TimeZoneOffset = $UserData{'tzoffset'} * (60 * 60);
