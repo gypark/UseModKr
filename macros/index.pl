@@ -43,7 +43,7 @@ sub index {
 
         # main keyword
         $index .= "$key&nbsp;&nbsp;&nbsp;";
-        $index .= join(', ', @{$MyIndexHash{"$key"}{"$key"}}) if defined @{$MyIndexHash{"$key"}{"$key"}};
+        $index .= join(', ', @{$MyIndexHash{"$key"}{"$key"}}) if @{$MyIndexHash{"$key"}{"$key"}};
 
         # aliases
         foreach my $aliaskey (sort {(lc($a) cmp lc($b)) || ($a cmp $b)} keys %{$MyIndexHash{"$key"}}) {
