@@ -86,7 +86,7 @@ function GetKeyStroke(KeyStorke) {
     var evt = KeyStorke || window.event;
     var eventChooser = evt.keyCode || evt.which;
     var target = evt.target || evt.srcElement;
-    if (evt.altKey || evt.ctrlKey) return;
+    if (evt.altKey || evt.ctrlKey || evt.metaKey) return;
     while (target && target.tagName.toLowerCase() != 'input' && target.tagName.toLowerCase() != 'textarea') {
         target = target.parentElement;
     }
