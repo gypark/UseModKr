@@ -34,8 +34,8 @@ use vars qw($ConfigFile $WikiVersion $WikiRelease $HashKey);
 ### 환경설정 파일의 경로
 $ConfigFile  = "./config.pl";             # path of config file
 
-$WikiVersion = "0.92K3-ext2.30";
-$WikiRelease = "2024-04-29";
+$WikiVersion = "0.92K3-ext2.31";
+$WikiRelease = "2024-05-02";
 $HashKey = "salt"; # 2-character string
 
 local $| = 1;  # Do not buffer output (localized for mod_perl)
