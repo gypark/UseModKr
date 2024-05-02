@@ -1,7 +1,7 @@
 # === !/usr/local/bin/perl
 # == Configuration =======================================================
 $DataDir      = "data";          # Main wiki directory
-$UrlPrefix = "http:/cgi-bin/UseModKr";  # URL prefix for other variables ($...Url)
+$UrlPrefix = "/cgi-bin/UseModKr";  # URL prefix for other variables ($...Url)
                                    # like "http:/wiki","http://mydomain.com/wiki",etc.
 
 $CookieName   = "Wiki";          # Name for this wiki (for multi-wiki sites)
@@ -78,7 +78,7 @@ $SOURCEHIGHLIGHT = "/usr/local/bin/source-highlight";    # Path of "source-highl
 
 ### for "#EXTERN " directive
 $EditGuideInExtern = 0;    # 1 = show edit guide in bottom frame, 0 = don't show
-$SizeTopFrame      = 160;  # Height of top frame
+$SizeTopFrame      = 180;  # Height of top frame
 $SizeBottomFrame   = 150;  # Height of bottom frame
 
 ### rss from usemod 1.0
