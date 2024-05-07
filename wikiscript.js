@@ -25,60 +25,49 @@ function chk_close(e, str) {
     }
 }
 
-// msg - 사용자에게 확인창을 띄울때 출력되는 메시지
-//     - ""이면 확인창 띄우지 않음
 // text - 클립보드에 복사될 텍스트
-// 출처: http://www.krikkit.net/howto_javascript_copy_clipboard.html
-// modified by raymundo, gypark@gmail.com
+// thanks to ChatGPT
+function copy_clip(field_id, btn) {
 
-// Copyright (C) krikkit - krikkit@gmx.net
-// --> http://www.krikkit.net
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-function copy_clip(msg, text) {
-    if (msg != "") {
-        if (!confirm(msg)) return;
+    var elem = document.getElementById(field_id);
+    // Clipboard API의 지원 여부를 확인
+    if (false && navigator.clipboard && navigator.clipboard.writeText) {
+        var text;
+        if ('value' in elem) {
+            text = elem.value;
+        } else {
+            text = elem.textContent || elem.innerText;
+        }
+
+        // Clipboard API를 사용할 수 있는 경우
+        navigator.clipboard.writeText(text).then(function() {
+            var origVal = btn.value;
+            btn.value = "Copied!";
+            setTimeout(function() {
+                btn.value = origVal; // 1초 후 원래 값으로 복원
+            }, 1000);
+        }).catch(function(error) {
+            alert('failed to copy: ' + error);
+        });
+    } else {
+        // Clipboard API를 사용할 수 없는 경우 (구형 브라우저)
+        try {
+            elem.select();  // 텍스트를 선택
+            var successful = document.execCommand('copy');  // 텍스트를 클립보드에 복사
+            if (successful) {
+                var origVal = btn.value;
+                btn.value = "Copied!";
+                setTimeout(function() {
+                    btn.value = origVal; // 1초 후 원래 값으로 복원
+                }, 1000);
+            }
+            else {
+                alert('failed to copy...');
+            }
+        } catch (err) {
+            alert('This browse does not support copy command.');
+        }
     }
-
-    // IE
-    if (window.clipboardData) { 
-        window.clipboardData.setData("Text", text);
-    }
-    // Firefox/Mozilla
-    else if (window.netscape) {
-        // firefox/mozilla 에서 동작하기 위해서는 사용자 프로파일 디렉토리에 prefs.js 파일에 다음과 같이 적어준다
-        // user_pref("signed.applets.codebase_principal_support", true);
-        // 또는 "about:config" 페이지를 열어서 다음 항목의 값을 true로 설정해 준다
-        // signed.applets.codebase_principal_support
-
-        alert("If it fails to copy, check the option:\n\nsigned.applets.codebase_principal_support  =  true\n\nin \"about:config\" page.");
-
-        netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
-        
-        var clip = Components.classes['@mozilla.org/widget/clipboard;1'].createInstance(Components.interfaces.nsIClipboard);
-        if (!clip) return;
-
-        var trans = Components.classes['@mozilla.org/widget/transferable;1'].createInstance(Components.interfaces.nsITransferable);
-        if (!trans) return;
-
-        trans.addDataFlavor('text/unicode');
-
-        var str = Components.classes["@mozilla.org/supports-string;1"].createInstance(Components.interfaces.nsISupportsString);
-        var copytext=text;
-
-        str.data=copytext;
-
-        trans.setTransferData("text/unicode",str,copytext.length*2);
-
-        var clipid=Components.interfaces.nsIClipboard;
-
-        if (!clip) return false;
-
-        clip.setData(trans,null,clipid.kGlobalClipboard);
-    }
-    return false;
 }
 
 // 단축키 개선

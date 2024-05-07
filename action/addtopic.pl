@@ -112,8 +112,8 @@ sub action_addtopic {
         . " style='text-align: right; visibility: hidden; border: 1px dashed red;'"
         . ">"."\n".
         $q->button(
-                -name=>T("Copy to clipboard"),
-                -onClick=>"copy_clip('',document.comments.comment.value)"
+                -name=>T("Copy"),
+                -onClick=>"copy_clip('comment', this)"
                 ).
         " ".
         $q->button(
