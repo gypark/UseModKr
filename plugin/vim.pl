@@ -90,7 +90,7 @@ sub plugin_vim {
     }
     $text =~ s'.*(?=^<style)''sm;
     $text =~ s'^</head>\n<body>\n''sm;
-    $text =~ s'^<pre>'<pre class="vim">';
+    $text =~ s'^<pre>$'<pre class="vim">'m;
     $text =~ s'\n</body>\n</html>.*''sm;
     $text =~ s'^pre \{[^}]+}\n(?=.*^</style>$)''sm;
     $text =~ s'^body \{[^}]+}\n(?=.*^</style>$)''sm;
