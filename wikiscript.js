@@ -81,10 +81,8 @@ function GetKeyStroke(KeyStorke) {
     }
     if (!target) {
         var which = String.fromCharCode(eventChooser).toLowerCase();
-        for (var i in key) {
-            if (which == i) {
-                document.location.href = key[i];
-            }
+        if (which in key) {
+            document.location.href = key[which];
         }
     }
 }
