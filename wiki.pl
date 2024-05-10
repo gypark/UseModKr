@@ -1676,12 +1676,19 @@ key['f'] = "${shortCutUrl}$shortCutHome";
 key['i'] = "${shortCutUrl}action=index";
 key['r'] = "${shortCutUrl}action=rc";
 key['l'] = "${shortCutUrl}action=$shortCutLogin";
-key['m'] = "${shortCutUrl}action=bookmark&time=$Now";
 
 key['t'] = "#PAGE_TOP";
 key['b'] = "#PAGE_BOTTOM";
 
 EOH
+        # 2024.05.10 - 스크립트에 박혀 있는 이 링크 때문에 amazonbot이 계속 time값을 바꾸며 크롤링한다.
+        # 로그인한 유저에게만 보이도록 수정
+        if (LoginUser()) {
+            $headExtra .= <<EOH;
+key['m'] = "${shortCutUrl}action=bookmark&time=$Now";
+
+EOH
+        }
 
         if ($UseShortcutPage) {
             my $shortCutId = $q->param('id');
