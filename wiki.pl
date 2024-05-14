@@ -3679,16 +3679,25 @@ sub WikiHeading {
     $text =~ s/^#\s+(.*)/&WikiHeadingNumber($depth,$1).$1/e;
 ### 섹션 단위 편집
 #   return $pre . "<H$depth>$text</H$depth>\n";
-    my $edit_section;
+    my $edit_section = '';
     if ($text =~ s/${FS}noedit$FS//) {  # include 된 내용의 경우는 스킵
-    } elsif (&GetParam('revision', '') eq '') {
+    }
+    elsif (&GetParam('revision', '') eq '') {
         $SectionNumber++;
-        $edit_section = '<SPAN class="editsection">['.
-            &ScriptLink("action=edit&id=$pageid&section=$SectionNumber",&T("edit")).
-            ']</SPAN>';
-        $edit_section = '' if ($depth == 1);
-        $edit_section = '' if (&GetParam("action") =~ /help|preview/i);
-        $edit_section = '' if (&GetParam("embed", $EmbedWiki));
+        if (
+            UserCanEdit($pageid, 1)
+            and
+            $depth != 1
+            and
+            GetParam("action") !~ /help|preview/i
+            and
+            !GetParam("embed", $EmbedWiki)
+           )
+        {
+            $edit_section = '<SPAN class="editsection">['.
+                &ScriptLink("action=edit&id=$pageid&section=$SectionNumber",&T("edit")).
+                ']</SPAN>';
+        }
     }
     return $pre . "<H$depth>$edit_section$text</H$depth>\n";
 ######
