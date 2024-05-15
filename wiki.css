@@ -265,8 +265,24 @@ img {
 }
 
 /* ISBN 링크시 책표지 */
-IMG.isbn {
+img.isbn {
     border: 1px solid silver;
+}
+
+img.yes24 {
+    border: 1px solid silver;
+}
+
+img.yes24-S {
+    height: 100px;
+}
+
+img.yes24-M {
+    height: 220px;
+}
+
+img.yes24-L {
+    height: 400px;
 }
 
 /* 페이지 소스 보기 텍스트영역 */
