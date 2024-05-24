@@ -2239,7 +2239,8 @@ sub CommonMarkup {
 #####
         }
         if ($BracketText) {  # Links like [URL text of link]
-            s/\[$UrlPattern\s+([^\]]+?)\]/&StoreBracketUrl($1, $2)/geos;
+            # 텍스트 부분에 \]라고 써서 대괄호 자체를 표기할 수 있게 수정
+            s/\[$UrlPattern\s+((?:\\\]|[^\]])+?)\]/&StoreBracketUrl($1, $2)/geos;
             s/\[$InterLinkPattern\s+([^\]]+?)\]/&StoreBracketInterPage($1, $2)/geos;
             if ($WikiLinks && $BracketWiki) {  # Local bracket-links
                 s/\[$LinkPattern\s+([^\]]+?)\]/&StoreBracketLink($1, $2)/geos;
@@ -3431,6 +3432,10 @@ sub StoreBracketUrl {
     $url = $1 if ($url =~ /^https?:(.*)/ && $1 !~ /^\/\//);
     if ($text eq "") {
         $text = &GetBracketUrlIndex($url);
+    }
+    else {
+        # 텍스트 부분에 \] 라고 쓴 건 ]로 되돌림
+        $text =~ s/\\\]/]/g;
     }
     return StoreRaw( qq(<a class="outer" href="$url">[$text]</A>) );
 }
@@ -7061,7 +7066,8 @@ sub SubstituteTextLinks {
         $text =~ s/\[\[$AnchoredFreeLinkPattern\]\]/&SubFreeLink($1,"",$old,$new,$2)/geo;
     }
     if ($BracketText) {  # Links like [URL text of link]
-        $text =~ s/(\[$UrlPattern\s+([^\]]+?)\])/&StoreRaw($1)/geo;
+        # 텍스트 부분에 \]라고 써서 대괄호 자체를 표기할 수 있게 수정
+        $text =~ s/(\[$UrlPattern\s+((?:\\\]|[^\]])+?)\])/&StoreRaw($1)/geo;
         $text =~ s/(\[$InterLinkPattern\s+([^\]]+?)\])/&StoreRaw($1)/geo;
     }
     $text =~ s/(\[?$UrlPattern\]?)/&StoreRaw($1)/geo;
