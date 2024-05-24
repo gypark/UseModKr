@@ -65,6 +65,11 @@ sub action_addtopic {
     # 입력폼에 채워넣을 기본 텍스트
     $text =~ s/^\s*//;
     $text =~ s/\s*$//;
+
+    # URL 설명 부분에 \]를 써서 ] 표기
+    $title =~ s/\]/\\]/g;
+    $text  =~ s/\]/\\]/g;
+
     if ($text eq "") {
         eval '$default_text = "'.$title_only.'";';
     } else {
