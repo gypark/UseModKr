@@ -174,8 +174,9 @@ http://www.usemod.com/wiki.gif 그림이 나옵니다.
 *주소 그냥 쓰기
 **<nowiki>http://www.yahoo.com</nowiki> -> http://www.yahoo.com
 
-*주소에 라벨 붙이기 : Url과 라벨사이에 공백을 하나 두고 꺽쇠"[", "]"로 둘러 쌉니다.
+*주소에 라벨 붙이기 : Url과 라벨사이에 공백을 하나 두고 꺽쇠"[", "]"로 둘러 쌉니다. 라벨 자체에 "]"를 쓰고 싶으면 "\\]"라고 적습니다.
 **<nowiki>[http://www.yahoo.com Yahoo페이지로 이동]</nowiki> -> [http://www.yahoo.com Yahoo페이지로 이동]
+**<nowiki>[http://www.yahoo.com Yahoo[페이지\\]로 이동]</nowiki> -> [http://www.yahoo.com Yahoo[페이지\\]로 이동]
 
 '''메일주소넣기'''
 
