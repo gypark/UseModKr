@@ -108,7 +108,7 @@ sub action_addtopic {
         T('Comment') . ":<br>".
         $comment_field . "&nbsp;" ."\n".
         $twitter .
-        $q->submit(-name=>"Submit",-value=>("&nbsp;"x5).T("Submit").("&nbsp;"x5))."\n".
+        $q->submit(-name=>"Submit",-class=>"addtopic",-value=>("&nbsp;"x5).T("Submit").("&nbsp;"x5))."\n".
         "<DIV"
         . " onMouseOver=\"document.getElementById('secret').style.visibility='visible'\""
         . " onMouseOut=\"document.getElementById('secret').style.visibility='hidden'\""

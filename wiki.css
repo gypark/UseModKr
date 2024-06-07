@@ -768,6 +768,11 @@ SPAN.highlight {
     font-weight: bold;
 }
 
+/* for mobile */
+input.addtopic {
+    height: 40px;
+}
+
 /* vim plugin */
 PRE.vim {
     font: normal normal normal 105%/160% FixedSys, Lucida Console, Courier New, monospace;
