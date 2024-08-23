@@ -2000,7 +2000,7 @@ sub GetGotoForm {
                 -tabindex => ($not_macro?"1000":""),
                 # IE&FF
                 -onKeyup=> ( $not_macro?
-                                "getMsg('$ScriptName')"
+                                "getTitleIndex('$ScriptName')"
                                 :
                                 ""
                             ),
@@ -2008,7 +2008,7 @@ sub GetGotoForm {
                 # up,down 키로 목록과 필드를 오갈때
                 -onKeydown=> ( $not_macro?
                                 "goto_text_keydown(this,event); "
-                                . "getMsg('$ScriptName')"
+                                . "getTitleIndex('$ScriptName')"
                                 :
                                 ""
                             ),
@@ -5194,6 +5194,8 @@ function upload()
         }
 #####
         print &GetTextArea('text', $oldText, $editRows, $editCols);
+        print qq|<div data-url="$ScriptName" id="autocomplete-box" style="display:none;"></div>'|;
+
         $summary = &GetParam("summary", "*");
         print "<p>", T('Summary:') . " ",
                     $q->textfield(-name=>'summary',

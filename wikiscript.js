@@ -296,7 +296,7 @@ function gotobar_init() {
 }
 
 //송수신 함수
-function getMsg(url) {
+function getTitleIndex(url) {
 
     // 0.2초 이내에는 다시 갱신하지 않음 - 타이핑 속도를 못 따라잡는 문제
     if (timeout) {
@@ -305,14 +305,13 @@ function getMsg(url) {
     timeout=1
     timeout_url=url
 //  setTimeout("timeout=0;",200)
-    setTimeout("timeout=0; getMsg(timeout_url);",300)
+    setTimeout("timeout=0; getTitleIndex(timeout_url);",300)
 
     if (have_data) {
         renew_select()
     }
     else {
         // 처음 한번만 서버에서 목록을 받아옴
-        have_data = 1;
         sendRequest(
             on_loaded1,                                 //콜백함수
             '&action=titleindex',                       //파라메터
@@ -331,6 +330,7 @@ function on_loaded1(oj)
 
     // titleindex 출력을 받아서, 개별 페이지 이름의 배열로 분리
     page_list = res.split(/\s+/)
+    have_data = 1;
 
     // select 목록 갱신
     renew_select()
@@ -354,7 +354,7 @@ function renew_select() {
 
     // 뒤의 공백을 제거하고, 중간 공백은 "_"로 치환하고, 대소문자 구분 안함
     var temp = search;
-    search = search.replace(/\s*$/, '').replace(' ','_');
+    search = search.replace(/\s*$/, '').replaceAll(' ','_');
 
     // 입력값이 널 문자 또는 일정 길이 이하면 중단 - 속도 문제
     if (search.length < 1) {
@@ -363,13 +363,7 @@ function renew_select() {
 
     user_last_input = temp; // up키로 되돌아갔을때 복원하기 위한 값
 
-    search = new RegExp(search, "i")
-    var new_list = new Array();
-    for( i = 0 ; i < page_list.length ; i++ ){
-        if (page_list[i].match(search)) {
-            new_list.push(page_list[i])
-        }
-    }
+    let new_list = page_list.filter(name => name.toLowerCase().includes(search.toLowerCase()));
 
     // select 목록 갱신
     _list_div.style.display='block'
@@ -481,3 +475,231 @@ function goto_text_keydown(oj, KeyStorke) {
         _list_div.style.display = 'none'
     }
 }
+
+
+// 본문 편집 화면에서 페이지 이름 자동완성
+document.addEventListener('DOMContentLoaded', function() {
+    let editor = document.getElementById('text');
+
+    if (!editor) {
+        return;
+    }
+
+    let autocompleteBox = document.getElementById('autocomplete-box');
+    let currentSuggestions = [];
+    let suggestionIndex = -1;
+
+    editor.addEventListener('input', function(e) {
+        let text = editor.value;
+        let cursorPosition = editor.selectionStart;
+        let searchTerm = getSearchTerm(text, cursorPosition);
+
+        if (searchTerm.startsWith('[[')) {
+            let query = searchTerm.substring(2);  // "[[" 이후의 텍스트
+            fetchSuggestions(query);
+        }
+        else {
+            autocompleteBox.style.display = 'none';
+            editor.focus();
+        }
+    });
+
+    editor.addEventListener('keydown', function(e) {
+        if (autocompleteBox.style.display === 'block') {
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                moveSelection(1);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                moveSelection(-1);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                selectSuggestion();
+            } else if (e.key === 'Escape') {
+                autocompleteBox.style.display = 'none';
+                editor.focus();
+            }
+        }
+    });
+
+    document.addEventListener('mousedown', function(e) {
+        // 클릭한 위치가 textarea나 autocompleteBox 내에 포함되지 않으면 상자를 닫습니다.
+        if (!autocompleteBox.contains(e.target)) {
+            autocompleteBox.style.display = 'none';
+        }
+    });
+
+    // 커서 위치가 아직 닫히지 않은 [[ 뒤에 있을 때만 반환
+    function getSearchTerm(text, cursorPosition) {
+        let start = text.lastIndexOf('[[', cursorPosition);
+        let closeTag = text.lastIndexOf(']]', cursorPosition);
+        if (start === -1) return '';
+        if (start < closeTag) return '';
+        let end = cursorPosition;
+        let ret = text.substring(start, end);
+        return ret;
+    }
+
+    function getTitleIndexInEdit(url) {
+        if (have_data) {
+            return;
+        }
+
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url + '?action=titleindex', true);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                let lines = xhr.responseText.split('\n');
+                have_data = 1;
+                page_list = xhr.responseText.split('\n');
+            }
+        };
+        xhr.send();
+    }
+
+    function fetchSuggestions(query) {
+        let url = autocompleteBox.getAttribute('data-url');
+        getTitleIndexInEdit(url);
+        let lines = page_list;
+
+        if (!query) {
+            return;
+        }
+
+        search = query.replace(/\s*$/, '').replace(' ','_');
+
+        // query가 "/"로 시작할 경우 상위 페이지가 같은 것만
+        if (search.startsWith("/")) {
+            let current_page_tag = document.querySelector('input[type="hidden"][name="title"]');
+            if (current_page_tag) {
+                let main_page = current_page_tag.value.split("/")[0];
+                if (main_page) {
+                    search = main_page + search;
+                }
+            }
+        }
+        search = search.toLowerCase();
+
+        if (lines) {
+            currentSuggestions = lines.filter(line => line.toLowerCase().includes(search));
+        }
+        showSuggestions();
+    }
+
+    function showSuggestions() {
+        updateAutocompleteBoxPosition();
+
+        autocompleteBox.innerHTML = '';
+        currentSuggestions.forEach((suggestion, index) => {
+            let item = document.createElement('div');
+            item.textContent = suggestion;
+            item.dataset.index = index;
+            item.addEventListener('click', function() {
+                suggestionIndex = index;
+                moveSelection(0);
+                selectSuggestion();
+            });
+
+            autocompleteBox.appendChild(item);
+        });
+
+        autocompleteBox.style.display = 'block';
+        suggestionIndex = -1;
+    }
+
+    function moveSelection(direction) {
+        let items = autocompleteBox.querySelectorAll('div');
+        suggestionIndex = (suggestionIndex + direction + items.length) % items.length;
+        items.forEach(item => item.classList.remove('selected'));
+        if (items[suggestionIndex]) {
+            items[suggestionIndex].classList.add('selected');
+
+            let selectedItem = items[suggestionIndex];
+            selectedItem.scrollIntoView({
+                block: 'nearest',
+                behavior: 'smooth',
+            });
+        }
+    }
+
+    function selectSuggestion() {
+        let selected = autocompleteBox.querySelector('div.selected');
+        if (selected) {
+            let text = editor.value;
+            let cursorPosition = editor.selectionStart;
+            let searchTerm = getSearchTerm(text, cursorPosition);
+            let selectedText = selected.textContent;
+
+            // 입력한 문자열이 "/"로 시작하는 경우 - 선택한 페이지 이름에서 다시 메인 페이지 이름 부분은 제외
+            let query = searchTerm.substring(2);  // "[[" 이후의 텍스트
+            if (searchTerm.startsWith("[[/")) {
+                let current_page_tag = document.querySelector('input[type="hidden"][name="title"]');
+                if (current_page_tag) {
+                    let main_page = current_page_tag.value.split("/")[0];
+                    if (main_page && selectedText.startsWith(main_page + "/")) {
+                        selectedText = selectedText.substring(main_page.length);
+                    }
+                }
+            }
+            selectedText = selectedText.replaceAll('_', ' ');
+
+            // 치환
+            let newText = text.slice(0, cursorPosition - searchTerm.length) + '[[' + selectedText + ']]' + text.slice(cursorPosition);
+            editor.value = newText;
+
+            // 커서 위치 계산
+            // 앞뒤에 [[ 와 ]] 가 추가되니 +4 필요
+            let newCursorPosition = cursorPosition - searchTerm.length + selectedText.length + 4;
+            editor.setSelectionRange(newCursorPosition, newCursorPosition);
+
+            autocompleteBox.style.display = 'none';
+            editor.focus();
+        }
+    }
+
+    // 현재 커서가 있는 위치의 바로 아래 부근에 자동완성 제안 상자가 위치하도록 지정
+    function updateAutocompleteBoxPosition() {
+        let cursorPosition = editor.selectionStart;
+        let textBeforeCursor = editor.value.substring(0, cursorPosition);
+
+        // Create a temporary element to measure the exact cursor position
+        let tempDiv = document.createElement('div');
+        tempDiv.style.position = 'absolute';
+        tempDiv.style.whiteSpace = 'pre-wrap';
+        tempDiv.style.visibility = 'hidden';
+        tempDiv.style.font = window.getComputedStyle(editor).font;
+        tempDiv.style.padding = '0';
+        tempDiv.style.margin = '0';
+        tempDiv.style.border = 'none';
+
+        // Match the editor's style
+        tempDiv.style.width = editor.clientWidth + 'px';
+        tempDiv.textContent = textBeforeCursor.replace(/\n$/, '\n\u200B'); // Ensure new line is counted
+
+        let tempSpan = document.createElement('span');
+        tempSpan.textContent = '|'; // A temporary cursor marker
+        tempDiv.appendChild(tempSpan);
+
+        // Position the tempDiv over the textarea
+        let editorRect = editor.getBoundingClientRect();
+        tempDiv.style.left = editorRect.left + 'px';
+        tempDiv.style.top = editorRect.top + 'px';
+
+        // 스크롤되어 넘어간 만큼은 빼야 함
+        let scrollTopOffset = editor.scrollTop;
+
+        document.body.appendChild(tempDiv);
+
+        // Calculate the position of the cursor marker
+        let tempSpanRect = tempSpan.getBoundingClientRect();
+        let lineHeight = parseInt(window.getComputedStyle(editor).lineHeight, 10);
+
+        // Set the position of the autocomplete box relative to the cursor
+        autocompleteBox.style.top = tempSpanRect.top + lineHeight - scrollTopOffset + 'px';
+        autocompleteBox.style.left = tempSpanRect.left + 'px';
+        autocompleteBox.style.width = (editor.clientWidth/3) + 'px';
+
+        document.body.removeChild(tempDiv);
+    }
+
+});

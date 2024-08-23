@@ -786,6 +786,20 @@ PRE.vim {
     color: #c0c0c0;
 }
 
+/* 페이지 링크 자동완성 */
+#autocomplete-box {
+    border: 1px solid #ccc;
+    background-color: #f5f6f5;
+    position: absolute;
+    max-height: calc(1.5em*15);
+    overflow-y: auto;
+
+}
+
+#autocomplete-box div.selected {
+    background-color: #bde4ff;
+}
+
 /* latex plugin */
 img.latexinline {
     vertical-align: middle;
