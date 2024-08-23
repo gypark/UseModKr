@@ -507,7 +507,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (e.key === 'PageUp') {
                 e.preventDefault();
                 moveSelection(-12);
-            } else if (e.key === 'Enter') {
+            } else if (e.key === 'Enter' || e.key === 'Tab') {
                 e.preventDefault();
                 selectSuggestion();
             } else if (e.key === 'Escape') {
@@ -526,11 +526,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 커서 위치가 아직 닫히지 않은 [[ 뒤에 있을 때만 반환
     function getSearchTerm(text, cursorPosition) {
-        let start = text.lastIndexOf('[[', cursorPosition);
-        let closeTag = text.lastIndexOf(']]', cursorPosition);
+        let start = text.lastIndexOf('[[', cursorPosition - 1);
+        let close = text.lastIndexOf(']]', cursorPosition - 1);
+        let nextStart = text.indexOf('[[', cursorPosition);
+        let nextClose = text.indexOf(']]', cursorPosition);
+
         if (start === -1) return '';
-        if (start < closeTag) return '';
+        if (start < close) return '';
+
         let end = cursorPosition;
+        // 현재 커서 뒤에 [[보다 ]]가 먼저 나오는 경우는 "[[...]]"내부를 수정하는 중이라는 뜻이니 ]] 직전까지를 사용
+        if (cursorPosition <= nextClose && (nextStart == -1 || nextClose < nextStart)) {
+            end = nextClose;
+        }
         let ret = text.substring(start, end);
         return ret;
     }
@@ -618,6 +626,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function selectSuggestion() {
         let selected = autocompleteBox.querySelector('div.selected');
+        // 명시적으로 선택된 후보가 없으면 첫번째 후보를 사용
+        if (!selected) {
+            selected = autocompleteBox.querySelector('div');
+        }
         if (selected) {
             let text = editor.value;
             let cursorPosition = editor.selectionStart;
@@ -625,7 +637,6 @@ document.addEventListener('DOMContentLoaded', function() {
             let selectedText = selected.textContent;
 
             // 입력한 문자열이 "/"로 시작하는 경우 - 선택한 페이지 이름에서 다시 메인 페이지 이름 부분은 제외
-            let query = searchTerm.substring(2);  // "[[" 이후의 텍스트
             if (searchTerm.startsWith("[[/")) {
                 let current_page_tag = document.querySelector('input[type="hidden"][name="title"]');
                 if (current_page_tag) {
@@ -638,12 +649,18 @@ document.addEventListener('DOMContentLoaded', function() {
             selectedText = selectedText.replaceAll('_', ' ');
 
             // 치환
-            let newText = text.slice(0, cursorPosition - searchTerm.length) + '[[' + selectedText + ']]' + text.slice(cursorPosition);
+            let beforeIndex = text.lastIndexOf('[[', cursorPosition - 1);
+            let beforeString = text.slice(0, beforeIndex);
+            let afterIndex = beforeIndex + searchTerm.length;
+            let afterString = text.slice(afterIndex);
+
+            // (afterString이 ]]로 시작한다면 그건 페이지 링크 내부를 수정하고 있었다는 뜻이니 다시 ]]를 붙일 필요 없음
+            let newText = beforeString + '[[' + selectedText + (afterString.startsWith(']]') ? '' : ']]') + afterString;
             editor.value = newText;
 
             // 커서 위치 계산
             // 앞뒤에 [[ 와 ]] 가 추가되니 +4 필요
-            let newCursorPosition = cursorPosition - searchTerm.length + selectedText.length + 4;
+            let newCursorPosition = beforeIndex + selectedText.length + 4;
             editor.setSelectionRange(newCursorPosition, newCursorPosition);
 
             autocompleteBox.style.display = 'none';
