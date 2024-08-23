@@ -480,12 +480,15 @@ function goto_text_keydown(oj, KeyStorke) {
 // 본문 편집 화면에서 페이지 이름 자동완성
 document.addEventListener('DOMContentLoaded', function() {
     let editor = document.getElementById('text');
-
     if (!editor) {
         return;
     }
 
     let autocompleteBox = document.getElementById('autocomplete-box');
+    if (!autocompleteBox) {
+        return;
+    }
+
     let currentSuggestions = [];
     let suggestionIndex = -1;
 
@@ -549,7 +552,6 @@ document.addEventListener('DOMContentLoaded', function() {
         xhr.open('GET', url + '?action=titleindex', true);
         xhr.onload = function() {
             if (xhr.status === 200) {
-                let lines = xhr.responseText.split('\n');
                 have_data = 1;
                 page_list = xhr.responseText.split('\n');
             }
