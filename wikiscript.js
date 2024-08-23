@@ -514,6 +514,10 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (e.key === 'Tab') {
                 e.preventDefault();
                 selectSuggestion();
+            } else if (e.key === 'Enter' && autocompleteBox.querySelector('div.selected')) {
+                // 엔터의 경우는 명시적으로 선택한 게 있을 때만
+                e.preventDefault();
+                selectSuggestion();
             } else if (e.key === 'Escape') {
                 closeSuggestions();
             }
