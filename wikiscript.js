@@ -547,7 +547,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return ret;
     }
 
-    function getTitleIndexInEdit(url) {
+    function getTitleIndexInEdit(url, query) {
         if (have_data) {
             return;
         }
@@ -558,6 +558,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (xhr.status === 200) {
                 have_data = 1;
                 page_list = xhr.responseText.split('\n');
+                fetchSuggestions(query);
             }
         };
         xhr.send();
@@ -565,7 +566,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function fetchSuggestions(query) {
         let url = autocompleteBox.getAttribute('data-url');
-        getTitleIndexInEdit(url);
+        getTitleIndexInEdit(url, query);
         let lines = page_list;
 
         if (query === undefined) {
