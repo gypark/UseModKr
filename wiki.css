@@ -674,16 +674,18 @@ DIV.memo {
     padding:5px;
 }
 
-/* memo 매크로 링크 */
-A.memo:link, A.memo:active, A.memo:visited, A.memo:hover {
+.memo-toggle {
     background: transparent;
-    color: gray;
-    text-decoration: none;
+    border: none;
+    color: gray; /* 링크 색상과 일치 */
+    text-decoration: underline; /* 링크 스타일 */
+    cursor: pointer; /* 링크 커서 */
+    font: inherit; /* 버튼의 글꼴을 부모 요소와 일치시킴 */
+    padding: 0; /* 기본 padding 제거 */
+    margin: 0; /* 기본 margin 제거 */
+    display: inline; /* 링크와 같은 inline display */
 }
-A.memo:hover
-{
-    text-decoration: underline;
-}
+
 
 /* footnote */
 DIV.footnote {

@@ -85,7 +85,7 @@ use vars qw(%Page %Section %Text %InterSite %SaveUrl %SaveNumUrl
 ### 패치를 위해 추가된 내부 전역 변수
 use vars qw(%RevisionTs $FS_lt $FS_gt $StartTime $Sec_Revision $Sec_Ts
     $ViewCount $AnchoredFreeLinkPattern %UserInterest %HiddenPage
-    $pageid $IsPDA $MemoID $QuotedFullUrl %MacroFile $UseShortcut
+    $pageid $IsPDA $QuotedFullUrl %MacroFile $UseShortcut
     $UseShortcutPage $SectionNumber $AnchorPattern $GotoTextFieldId);
 
 umask 0;
@@ -2526,17 +2526,10 @@ sub MacroMemo {
 
     $class = "memo" if ($class eq '');
     $title = &RemoveLink($title);
-    $MemoID++;
 
-    my $memo_id = "__MEMO__$MemoID";
+    return qq|<button class="memo-toggle">$title</button>|
+        . qq|<div class="$class" style="display:none;">$text</div>|;
 
-    return "<A class=\"$class\" href=\"#\" onClick=\"" .
-        "return onMemoToggle('$memo_id');\">" .
-        $title .
-        "</A>" .
-        "<DIV class=\"$class\" id=\"$memo_id\" style=\"display:none\">" .
-        $text .
-        "</DIV>";
 }
 
 sub MacroComments {
@@ -2920,7 +2913,7 @@ sub WikiLinesToHtml {
                 # $pageHtml .= "<$code>\n";             # deleted luke
             }
         }
-        s/^\s*$/<p>\n/;                        # Blank lines become <p> tags
+        s!^\s*$!<p></p>\n!;                        # Blank lines become <p> tags
         $pageHtml .= &CommonMarkup($_, 1, 2);  # Line-oriented common markup
     }
     while (@htmlStack > 0) {       # Clear stack

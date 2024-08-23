@@ -701,5 +701,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.body.removeChild(tempDiv);
     }
+});
 
+
+// memo
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleButtons = document.querySelectorAll('.memo-toggle');
+
+    toggleButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // 버튼 다음에 있는 .memo 요소를 찾습니다.
+            const memoElement = button.nextElementSibling;
+            console.log("memoElement:"+memoElement);
+
+            if (memoElement && memoElement.classList.contains('memo')) {
+                const isVisible = memoElement.style.display !== 'none';
+                memoElement.style.display = isVisible ? 'none' : 'block';
+
+                // aria-expanded 속성 업데이트
+                const isExpanded = button.getAttribute('aria-expanded') === 'true';
+                button.setAttribute('aria-expanded', !isExpanded);
+            }
+        });
+    });
 });
