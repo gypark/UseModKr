@@ -488,8 +488,7 @@ document.addEventListener('DOMContentLoaded', function() {
             fetchSuggestions(query);
         }
         else {
-            autocompleteBox.style.display = 'none';
-            editor.focus();
+            closeSuggestions();
         }
     });
 
@@ -511,8 +510,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.preventDefault();
                 selectSuggestion();
             } else if (e.key === 'Escape') {
-                autocompleteBox.style.display = 'none';
-                editor.focus();
+                closeSuggestions();
             }
         }
     });
@@ -520,7 +518,8 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('mousedown', function(e) {
         // 클릭한 위치가 textarea나 autocompleteBox 내에 포함되지 않으면 상자를 닫습니다.
         if (!autocompleteBox.contains(e.target)) {
-            autocompleteBox.style.display = 'none';
+            // closeSuggestions()를 부르면 editor.focus()까지 호출되는데 문제가 되진 않으려나?
+            closeSuggestions();
         }
     });
 
@@ -564,8 +563,8 @@ document.addEventListener('DOMContentLoaded', function() {
         getTitleIndexInEdit(url);
         let lines = page_list;
 
-        if (!query) {
-            return;
+        if (query === undefined) {
+            query = '';
         }
 
         search = query.replace(/\s*$/, '').replace(' ','_');
@@ -585,7 +584,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (lines) {
             currentSuggestions = lines.filter(line => line.toLowerCase().includes(search));
         }
-        showSuggestions();
+        if (currentSuggestions.length > 0) {
+            showSuggestions();
+        }
+        else {
+            closeSuggestions();
+        }
     }
 
     function showSuggestions() {
@@ -607,6 +611,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         autocompleteBox.style.display = 'block';
         suggestionIndex = -1;
+    }
+
+    function closeSuggestions() {
+        autocompleteBox.style.display = 'none';
+        editor.focus();
     }
 
     function moveSelection(direction) {
@@ -663,8 +672,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let newCursorPosition = beforeIndex + selectedText.length + 4;
             editor.setSelectionRange(newCursorPosition, newCursorPosition);
 
-            autocompleteBox.style.display = 'none';
-            editor.focus();
+            closeSuggestions();
         }
     }
 
