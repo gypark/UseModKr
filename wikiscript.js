@@ -511,12 +511,10 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (e.key === 'PageUp') {
                 e.preventDefault();
                 moveSelection(-12);
-            } else if (e.key === 'Enter' || e.key === 'Tab') {
+            } else if (e.key === 'Tab') {
                 e.preventDefault();
                 selectSuggestion();
-            } else if (e.key === ']' || e.key === 'Escape') {
-                // ']'를 가로채주는 이유는, 자동완성을 이용하지 않고 그냥 빠르게 타이핑을 하여 ']]<엔터>'를 칠 경우
-                // 300ms가 지나지 않았기 때문에 자동완성 박스가 사라지지 않고, 따라서 첫번째 후보가 적용되어 버리기 때문
+            } else if (e.key === 'Escape') {
                 closeSuggestions();
             }
         }
@@ -652,6 +650,12 @@ document.addEventListener('DOMContentLoaded', function() {
             let cursorPosition = editor.selectionStart;
             let searchTerm = getSearchTerm(text, cursorPosition);
             let selectedText = selected.textContent;
+
+            // 빠르게 타이핑할 경우, 자동완성을 쓰지 않고 "...]]<탭>"을 입력했는데 제안 상자가 미처 닫히지 않은 상태에서
+            // 엔터가 입력되는 바람에 첫번째 후보가 적용되어버릴 수 있다. 이 경우 searchTerm이 빈 문자열
+            if (!searchTerm) {
+                return;
+            }
 
             // 입력한 문자열이 "/"로 시작하는 경우 - 선택한 페이지 이름에서 다시 메인 페이지 이름 부분은 제외
             if (searchTerm.startsWith("[[/")) {
