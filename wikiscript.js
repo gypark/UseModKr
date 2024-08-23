@@ -514,7 +514,9 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (e.key === 'Enter' || e.key === 'Tab') {
                 e.preventDefault();
                 selectSuggestion();
-            } else if (e.key === 'Escape') {
+            } else if (e.key === ']' || e.key === 'Escape') {
+                // ']'를 가로채주는 이유는, 자동완성을 이용하지 않고 그냥 빠르게 타이핑을 하여 ']]<엔터>'를 칠 경우
+                // 300ms가 지나지 않았기 때문에 자동완성 박스가 사라지지 않고, 따라서 첫번째 후보가 적용되어 버리기 때문
                 closeSuggestions();
             }
         }
