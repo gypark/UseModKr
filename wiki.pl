@@ -60,7 +60,6 @@ use vars qw(@RcDays @HtmlPairs @HtmlSingle
 use vars qw(
     $UserGotoBar $UserGotoBar2 $UserGotoBar3 $UserGotoBar4
     $SOURCEHIGHLIGHT @SRCHIGHLANG $EditNameLink
-    $EditGuideInExtern $SizeTopFrame $SizeBottomFrame
     $LogoPage $CheckTime $LinkDir $IconUrl $CountDir $UploadDir $UploadUrl
     $HiddenPageFile $TemplatePage
     $InterWikiMoniker $SiteDescription $RssLogoUrl $RssDays $RssTimeZone
@@ -521,17 +520,6 @@ sub BrowsePage {
         }
     }
 
-### #EXTERN
-    if (substr($Text{'text'}, 0, 8) eq '#EXTERN ') {
-        $oldId = &GetParam('oldid', '');
-        my ($externURL) = ($Text{'text'} =~ /\#EXTERN\s+([^\s]+)/);
-        if ($externURL =~ /^$UrlPattern$/) {
-            &BrowseExternUrl($id, $oldId, $externURL);
-            return;
-        }
-    }
-#####
-
     $MainPage = $id;
     $MainPage =~ s|/.*||;  # Only the main page name (remove subpage)
     $fullHtml = &GetHeader($id, &QuoteHtml($id), $oldId);
@@ -622,42 +610,6 @@ sub ReBrowsePage {
                                                      $id, $isEdit);
     } else {
         print &GetRedirectPage($id, $id, $isEdit);
-    }
-}
-
-### #EXTERN
-sub BrowseExternUrl {
-    my ($id, $oldId, $url) = @_;
-    my $sizeBottomFrame = $SizeBottomFrame * $EditGuideInExtern;
-
-    if (&GetParam('InFrame','') eq '1') {
-        print &GetHeader($id, "$id [InTopFrame]",$oldId);
-        print &GetMinimumFooter();
-        return;
-    } elsif ((&GetParam('InFrame','') eq '2') && ($EditGuideInExtern)) {
-        print &GetHeader($id, "$id [InBottomFrame]",$oldId);
-        print "<hr>\n";
-        print &GetEditGuide($id, '');
-        print &GetMinimumFooter();
-        return;
-    } else {
-        print &GetHttpHeader();
-        print "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Frameset//EN\">\n";
-        print "<html>\n";
-        print "<title>$SiteName: $id</title>\n";
-        print "<frameset rows=\"$SizeTopFrame,*,$sizeBottomFrame\" cols=\"1\" frameborder=\"0\">\n";
-        print "  <frame src=\"$ScriptName".&ScriptLinkChar()."action=browse&InFrame=1&id=$id&oldid=$oldId\" noresize scrolling=\"no\">\n";
-        print "  <frame src=\"$url\" noresize>\n";
-        print "  <frame src=\"$ScriptName".&ScriptLinkChar()."action=browse&InFrame=2&id=$id&oldid=$oldId\" noresize scrolling=\"no\">\n"
-            if ($EditGuideInExtern);
-        print "  <noframes>\n";
-        print "  <body>\n";
-        print "  <p>".T('You need the web browser which supports frame tag.')."\n";
-        print "  </body>\n";
-        print "  </noframes>\n";
-        print "</frameset>\n";
-        print "</html>\n";
-        return;
     }
 }
 
@@ -1470,18 +1422,11 @@ sub GetHeader {
     }
 
     return $result  if ($embed);
-### #EXTERN
-    return $result if (&GetParam('InFrame','') eq '2');
 
-    my $topMsg = "";
     if ($oldId ne '') {
-        $topMsg .= '('.Ts('redirected from %s',&GetEditLink($oldId, $oldId)).')  ';
+        my $topMsg .= '('.Ts('redirected from %s',&GetEditLink($oldId, $oldId)).')  ';
+        $result .= $q->h3($topMsg);
     }
-### #EXTERN
-    if (&GetParam('InFrame','') eq '1') {
-        $topMsg .= '('.Ts('%s includes external page',&GetEditLink($id,$id)).')';
-    }
-    $result .= $q->h3($topMsg) if (($oldId ne '') || (&GetParam('InFrame','') eq '1'));
 
     if ((!$embed) && ($LogoUrl ne "")) {
         $logoImage = "IMG class='logoimage' src=\"$LogoUrl\" alt=\"$altText\" border=0";
@@ -1499,10 +1444,7 @@ sub GetHeader {
     }
 
 ### page 처음에 bottom 으로 가는 링크를 추가
-### #EXTERN
-    if (&GetParam('InFrame','') eq '') {
-        $result .= "\n<div class=\"gobottom\" align=\"right\"><a accesskey=\"z\" name=\"PAGE_TOP\" href=\"#PAGE_BOTTOM\">". T('Bottom')." [b]" . "</a></div>\n";
-    }
+    $result .= "\n<div class=\"gobottom\" align=\"right\"><a accesskey=\"z\" name=\"PAGE_TOP\" href=\"#PAGE_BOTTOM\">". T('Bottom')." [b]" . "</a></div>\n";
 
     if (&GetParam("toplinkbar", 1)) {
         # Later consider smaller size?
@@ -1636,18 +1578,14 @@ sub GetHtmlHeader {
     if ($bgcolor ne '') {
         $bodyExtra = qq( BGCOLOR="$bgcolor");
     }
-### #EXTERN
-    if (&GetParam('InFrame','') ne '') {
-        $html .= qq(<base target="_parent">\n);
-    } else {
-        if ($ClickEdit) {
-            my $revision = GetParam('revision','');
-            if ( $revision ne '' ) {
-                $bodyExtra .= qq| ondblclick="location.href='$ScriptName${\(&ScriptLinkChar())}action=edit&id=$id&revision=$revision'" |;
-            }
-            else {
-                $bodyExtra .= qq| ondblclick="location.href='$ScriptName${\(&ScriptLinkChar())}action=edit&id=$id'" |;
-            }
+
+    if ($ClickEdit) {
+        my $revision = GetParam('revision','');
+        if ( $revision ne '' ) {
+            $bodyExtra .= qq| ondblclick="location.href='$ScriptName${\(&ScriptLinkChar())}action=edit&id=$id&revision=$revision'" |;
+        }
+        else {
+            $bodyExtra .= qq| ondblclick="location.href='$ScriptName${\(&ScriptLinkChar())}action=edit&id=$id'" |;
         }
     }
 
@@ -1831,10 +1769,6 @@ sub GetCommonFooter {
 }
 
 sub GetMinimumFooter {
-### #EXTERN
-    if (&GetParam('InFrame','') ne '') {
-        return $q->end_html;
-    }
     my $result = '';
     if ($FooterNote ne '') {
         $result .= T($FooterNote);  # Allow local translations
@@ -7494,9 +7428,6 @@ sub GetPageCount {
         }
     } elsif ($edit_user ne $view_user) {
         $add = 1;
-    }
-    if (&GetParam('InFrame',"") ne "") {
-        $add = 0;
     }
     $pagecount += $add;
 

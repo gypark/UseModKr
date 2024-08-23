@@ -76,11 +76,6 @@ $SOURCEHIGHLIGHT = "/usr/local/bin/source-highlight";    # Path of "source-highl
         prolog python ruby sh sml sql style syslog tcl xml
     );                                                  # Supported languages
 
-### for "#EXTERN " directive
-$EditGuideInExtern = 0;    # 1 = show edit guide in bottom frame, 0 = don't show
-$SizeTopFrame      = 180;  # Height of top frame
-$SizeBottomFrame   = 150;  # Height of bottom frame
-
 ### rss from usemod 1.0
 $InterWikiMoniker = '';         # InterWiki moniker for this wiki. (for RSS)
 $SiteDescription  = $SiteName;  # Description of this wiki. (for RSS)
