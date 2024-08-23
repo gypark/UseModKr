@@ -478,18 +478,23 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentSuggestions = [];
     let suggestionIndex = -1;
 
+    let debounceTimeout;
     editor.addEventListener('input', function(e) {
-        let text = editor.value;
-        let cursorPosition = editor.selectionStart;
-        let searchTerm = getSearchTerm(text, cursorPosition);
+        clearTimeout(debounceTimeout);
 
-        if (searchTerm.startsWith('[[')) {
-            let query = searchTerm.substring(2);  // "[[" 이후의 텍스트
-            fetchSuggestions(query);
-        }
-        else {
-            closeSuggestions();
-        }
+        debounceTimeout = setTimeout(function() {
+            let text = editor.value;
+            let cursorPosition = editor.selectionStart;
+            let searchTerm = getSearchTerm(text, cursorPosition);
+
+            if (searchTerm.startsWith('[[')) {
+                let query = searchTerm.substring(2);  // "[[" 이후의 텍스트
+                fetchSuggestions(query);
+            }
+            else {
+                closeSuggestions();
+            }
+        }, 300);
     });
 
     editor.addEventListener('keydown', function(e) {
