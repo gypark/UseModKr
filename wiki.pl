@@ -5121,7 +5121,7 @@ function upload()
         }
 #####
         print &GetTextArea('text', $oldText, $editRows, $editCols);
-        print qq|<div data-url="$ScriptName" id="autocomplete-box" style="display:none;"></div>'|;
+        print qq|<div data-url="$ScriptName" id="autocomplete-box" style="display:none;"></div>|;
 
         $summary = &GetParam("summary", "*");
         print "<p>", T('Summary:') . " ",
