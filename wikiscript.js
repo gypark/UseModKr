@@ -501,6 +501,12 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (e.key === 'ArrowUp') {
                 e.preventDefault();
                 moveSelection(-1);
+            } else if (e.key === 'PageDown') {
+                e.preventDefault();
+                moveSelection(12);
+            } else if (e.key === 'PageUp') {
+                e.preventDefault();
+                moveSelection(-12);
             } else if (e.key === 'Enter') {
                 e.preventDefault();
                 selectSuggestion();
