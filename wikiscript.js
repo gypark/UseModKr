@@ -492,7 +492,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 fetchSuggestions(query);
             }
             else {
-                closeSuggestions();
+                // 여기서는 closeSuggestions()을 쓰면 안 됨.
+                // 빠르게 입력하다가 <탭>을 눌러 변경사항요약으로 넘어갈 때 editor.focus() 때문에 다시 편집창으로 이동함
+                autocompleteBox.style.display = 'none';
             }
         }, 300);
     });
