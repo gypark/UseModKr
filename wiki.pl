@@ -2020,6 +2020,12 @@ sub GetRedirectPage {
     # Normally get URL from script, but allow override.
     $FullUrl = $q->url(-full=>1)  if ($FullUrl eq "");
     $url = $FullUrl . &ScriptLinkChar() . $newid;
+
+    # 섹션 단위 편집을 했다면 이 시점에 section 파라메터가 있다. 화면을 표시할 때 해당 섹션으로 이동
+    my $section = GetParam('section');
+    if (defined $section and $section > 0) {
+        $url .= "#S_$section";
+    }
     $nameLink = "<a href=\"$url\">$name</a>";
     if ($RedirType < 3) {
         if ($RedirType == 1) {             # Use CGI.pm
@@ -3599,7 +3605,7 @@ sub WikiHeadingNumber {
 
 ### WikiHeading 개선 from Jof
 #   return &StoreHref(" name=\"$anchor\"") . $number;
-    return &StoreHref(" name='$anchor' href='#toc'",$number);
+    return &StoreHref("name='$anchor' href='#toc'",$number);
 }
 
 sub WikiHeading {
@@ -3631,7 +3637,9 @@ sub WikiHeading {
                 ']</SPAN>';
         }
     }
-    return $pre . "<H$depth>$edit_section$text</H$depth>\n";
+    # HeadingNumber를 붙이는지 여부와 무관하게, 섹션 단위 편집 후 해당 섹션으로 이동하기 위한 앵커
+    my $anchorSectionNumber = StoreHref(qq|name="S_$SectionNumber"|,'');
+    return $pre . "$anchorSectionNumber<H$depth>$edit_section$text</H$depth>\n";
 ######
 }
 
