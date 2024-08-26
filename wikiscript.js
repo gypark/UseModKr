@@ -475,8 +475,14 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
+    // 현재 입력된 내용을 가지고 필터링한 제안 목록
     let currentSuggestions = [];
+    // 제안 목록 중 사용자가 선택한 것의 인덱스
     let suggestionIndex = -1;
+    // 한글 조립 중일 때 true
+    let isComposing = false;
+    // 직전에 한글 조립이 끝났을 때 true
+    let composingEnd = false;
 
     let debounceTimeout;
     editor.addEventListener('input', function(e) {
@@ -500,7 +506,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     editor.addEventListener('keydown', function(e) {
-        if (autocompleteBox.style.display === 'block') {
+        // 맥북+크롬에서는 한글 타이핑 중에 탭을 누르면 자동완성 후에 뒤늦게 [타이핑중이던 한글+탭]이 입력되는 문제가 있어서
+        // isComposing 검사가 필요
+        if (!isComposing && autocompleteBox.style.display === 'block') {
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
                 moveSelection(1);
@@ -524,6 +532,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 closeSuggestions();
             }
         }
+    });
+
+    editor.addEventListener('compositionstart', function() {
+        isComposing = true; // 조합이 시작되면 플래그를 true로 설정
+    });
+
+    editor.addEventListener('compositionend', function() {
+        isComposing = false; // 조합이 끝나면 플래그를 false로 설정
+        composingEnd = true; // 방금 조립이 끝났음
     });
 
     document.addEventListener('mousedown', function(e) {
@@ -563,7 +580,7 @@ document.addEventListener('DOMContentLoaded', function() {
         xhr.onload = function() {
             if (xhr.status === 200) {
                 have_data = 1;
-                page_list = xhr.responseText.split('\n');
+                page_list = xhr.responseText.split('\n').filter(line => line.trim());
                 fetchSuggestions(query);
             }
         };
@@ -622,7 +639,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         autocompleteBox.style.display = 'block';
-        suggestionIndex = -1;
+
+        // "안녕"을 입력하는 경우 "안"까지는 한글 조립 중이다가 "ㄴ"을 쓰는 순간 조립이 끝나며 리스너가 한 번 더 불리고
+        // 다시 조립하면서 또 불린다. 또 "안녕"을 쓰고 제안이 뜬 상태에서 커서키로 선택을 하더라도 다음과 같은 순서로 진행해 버림
+        // 조립 끝->리스너 호출->방향키 핸들러->제안 선택->뒤늦게 리스너 호출의 결과로 박스가 새로 그려지며 인덱스가 -1로 복귀
+        // 따라서 조립 중에서 조립 끝으로 바뀌는 순간에는 스킵하게 함
+        if (composingEnd) {
+            composingEnd = false;
+            if (suggestionIndex > -1) {
+                moveSelection(0);
+            }
+        }
+        else {
+            suggestionIndex = -1;
+        }
     }
 
     function closeSuggestions() {
