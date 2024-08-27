@@ -502,7 +502,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 빠르게 입력하다가 <탭>을 눌러 변경사항요약으로 넘어갈 때 editor.focus() 때문에 다시 편집창으로 이동함
                 autocompleteBox.style.display = 'none';
             }
-        }, 300);
+        }, 200);
     });
 
     editor.addEventListener('keydown', function(e) {
