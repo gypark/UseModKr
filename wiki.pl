@@ -1199,7 +1199,13 @@ sub ScriptLinkClass {
         }
     }
 
-    return "<a $rel href=\"$ScriptName" . &ScriptLinkChar() . "$action\" class=\"$class\">$text</a>";
+    my $data_editlink = '';
+    if ($class eq 'wikipagelink') {
+        my $editlink = $ScriptName . ScriptLinkChar() . "action=edit&id=$action";
+        $data_editlink = qq|data-editlink="$editlink"|;
+    }
+
+    return "<a $rel href=\"$ScriptName" . &ScriptLinkChar() . "$action\" class=\"$class\" $data_editlink>$text</a>";
 }
 
 sub HelpLink {

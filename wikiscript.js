@@ -800,3 +800,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a.wikipagelink').forEach(function(link) {
+        link.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                // Ctrl + Alt + Enter 키가 눌렸을 때
+                if (event.ctrlKey && !event.shiftKey && event.altKey) {
+                    this.href = encodeURI(this.getAttribute('data-editlink'));
+                }
+                /*
+                // 링크를 열기 위해 Enter를 눌렀을 때 기본 동작을 실행하게 하려면 focus를 유지하고 preventDefault를 호출하지 않음.
+                setTimeout(() => {
+                    window.location.href = this.href;
+                }, 0);
+                // 기본 동작을 막고 커스텀 동작을 하게 하려면 preventDefault()를 호출
+                event.preventDefault(); // 이 줄이 있을 경우, 기본 Enter 키 동작(링크 열기)을 막음
+                */
+            }
+        });
+    });
+});
