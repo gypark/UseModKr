@@ -807,7 +807,11 @@ document.addEventListener('DOMContentLoaded', function() {
             if (event.key === 'Enter') {
                 // Ctrl + Alt + Enter 키가 눌렸을 때
                 if (event.ctrlKey && !event.shiftKey && event.altKey) {
+                    const originalHref = this.href;
                     this.href = encodeURI(this.getAttribute('data-editlink'));
+                    setTimeout(() => {
+                        this.href = originalHref;
+                    }, 100);
                 }
                 /*
                 // 링크를 열기 위해 Enter를 눌렀을 때 기본 동작을 실행하게 하려면 focus를 유지하고 preventDefault를 호출하지 않음.
