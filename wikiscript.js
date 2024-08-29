@@ -801,12 +801,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// (#5) 다수의 링크를 키보드로 이동하며 열 때 처음부터 편집 화면으로 열 수 있도록
+// Ctrl(or Cmd) + Alt(or Shift) + Enter 키가 눌리면 data-editlink 속성에 있는 주소를 엶
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('a.wikipagelink').forEach(function(link) {
         link.addEventListener('keydown', function(event) {
             if (event.key === 'Enter') {
-                // Ctrl + Alt + Enter 키가 눌렸을 때
-                if (event.ctrlKey && !event.shiftKey && event.altKey) {
+                if ((event.ctrlKey || event.metaKey) && (event.shiftKey || event.altKey)) {
                     const originalHref = this.href;
                     this.href = encodeURI(this.getAttribute('data-editlink'));
                     setTimeout(() => {
