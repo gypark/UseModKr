@@ -2474,7 +2474,7 @@ sub MacroMemo {
     $title = &RemoveLink($title);
 
     return qq|<button class="memo-toggle">$title</button>|
-        . qq|<div class="$class" style="display:none;">$text</div>|;
+        . qq|<div class="memo-area $class" style="display:none;">$text</div>|;
 
 }
 

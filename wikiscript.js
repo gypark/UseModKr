@@ -789,7 +789,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // 버튼 다음에 있는 .memo 요소를 찾습니다.
             const memoElement = button.nextElementSibling;
 
-            if (memoElement && memoElement.classList.contains('memo')) {
+            if (memoElement && memoElement.classList.contains('memo-area')) {
                 const isVisible = memoElement.style.display !== 'none';
                 memoElement.style.display = isVisible ? 'none' : 'block';
 
