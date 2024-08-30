@@ -693,14 +693,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            // 입력한 문자열이 "/"로 시작하는 경우 - 선택한 페이지 이름에서 다시 메인 페이지 이름 부분은 제외
-            if (searchTerm.startsWith("[[/")) {
-                let current_page_tag = document.querySelector('input[type="hidden"][name="title"]');
-                if (current_page_tag) {
-                    let main_page = current_page_tag.value.split("/")[0];
-                    if (main_page && selectedText.startsWith(main_page + "/")) {
-                        selectedText = selectedText.substring(main_page.length);
-                    }
+            // 자동완성으로 선택한 페이지와 현재 편집 중인 페이지의 메인 페이지가 동일하다면 메인 페이지 이름을 제거하고
+            // [[/<선택한하위페이지>]] 형태로 남긴다.
+            // 단, 입력한 문자열 자체에 메인 페이지 이름이 있다면 (예: "[[상위페이지/하") 명시적으로 넣고 싶은 것으로 간주, 제거하지 않음 
+            let current_page_tag = document.querySelector('input[type="hidden"][name="title"]');
+            if (current_page_tag) {
+                let main_page = current_page_tag.value.split("/")[0];
+                if (main_page && selectedText.startsWith(main_page + "/") && !searchTerm.startsWith("[[" + main_page + "/")) {
+                    selectedText = selectedText.substring(main_page.length);
                 }
             }
             selectedText = selectedText.replaceAll('_', ' ');
