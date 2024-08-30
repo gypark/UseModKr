@@ -599,28 +599,19 @@ document.addEventListener('DOMContentLoaded', function() {
         search = query.replace(/\s*$/, '').replace(' ','_');
 
         // query가 "/"로 시작할 경우 상위 페이지가 같은 것만
-        let main_page = '';
         if (search.startsWith("/")) {
             let current_page_tag = document.querySelector('input[type="hidden"][name="title"]');
             if (current_page_tag) {
-                main_page = current_page_tag.value.split("/")[0];
+                let main_page = current_page_tag.value.split("/")[0];
                 if (main_page) {
-                    // main_page = "상위페이지/", search = "/를 제외한 검색어" 형태로 구성
-                    main_page += '/';
-                    search = search.substring(1);
+                    search = main_page + search;
                 }
             }
         }
         search = search.toLowerCase();
 
         if (lines) {
-            if (main_page) {
-                // query가 "/"로 시작한 경우 필터링을 두 번(상위페이지 이름으로 시작하고, 하위 페이지 내에 검색어가 포함되는 것들)
-                currentSuggestions = lines.filter(line => line.startsWith(main_page) && line.substring(main_page.length).toLowerCase().includes(search));
-            }
-            else {
-                currentSuggestions = lines.filter(line => line.toLowerCase().includes(search));
-            }
+            currentSuggestions = lines.filter(line => line.toLowerCase().includes(search));
         }
         if (currentSuggestions.length > 0) {
             showSuggestions();
