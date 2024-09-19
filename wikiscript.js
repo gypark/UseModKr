@@ -17,7 +17,7 @@ function copy_clip(field_id, btn) {
 
     var elem = document.getElementById(field_id);
     // Clipboard API의 지원 여부를 확인
-    if (false && navigator.clipboard && navigator.clipboard.writeText) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
         var text;
         if ('value' in elem) {
             text = elem.value;
@@ -817,3 +817,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// 파일 업로드 직후 파일 링크가 자동으로 복사되도록... (취향 문제?)
+window.onload = function() {
+    copy_clip('uploadlink', document.querySelector('input[name="Copy"]'));
+};

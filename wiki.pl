@@ -7496,9 +7496,13 @@ sub PrintUploadFileForm {
     print "<input type='hidden' name='action' value='upload'>";
     print "<input type='hidden' name='upload' value='1'>" . "\n";
     print "<center>" . "\n";
+    print qq|<div class="file-upload-container">| . "\n";
+    print qq|<div class="file-upload">| . "\n";
     print $q->filefield("upload_file","",60,80) . "\n";
     print "&nbsp;&nbsp;" . "\n";
+    print qq|</div>| . "\n";
     print $q->submit(T('Upload')) . "\n";
+    print qq|</div>| . "\n";
     print "</center>" . "\n";
     print $q->end_form();
 }

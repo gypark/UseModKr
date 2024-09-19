@@ -540,6 +540,40 @@ TD.rcblank {
 }
 
 /**********
+ * 파일 업로드
+ **********/
+.file-upload {
+    width: 70%;
+    height: 100px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px dashed #ccc;
+    margin: 10px;
+    position: relative;
+    overflow: hidden;
+    flex-direction: row;
+}
+
+.file-upload input[type="file"] {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+}
+
+.file-upload input[type="file"]::file-selector-button {
+    height: 100%;
+}
+
+.file-upload-container input[type="submit"] {
+    margin-left: 5px;
+    height: 100px;
+}
+
+/**********
  * Calendar 
  **********/
 TABLE.calendar
