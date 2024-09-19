@@ -5077,7 +5077,7 @@ function help(s)
 <!--
 function upload()
 {
-    var w = window.open("$ScriptName${\(&ScriptLinkChar())}action=upload", "upload", "width=640,height=250,resizable=1,statusbar=1,scrollbars=1");
+    var w = window.open("$ScriptName${\(&ScriptLinkChar())}action=upload", "upload", "width=640,height=270,resizable=1,statusbar=1,scrollbars=1");
     w.focus();
 }
 //-->
