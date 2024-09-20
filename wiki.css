@@ -562,6 +562,7 @@ TD.rcblank {
     top: 0;
     left: 0;
     cursor: pointer;
+    padding: 5px;
 }
 
 .file-upload input[type="file"]::file-selector-button {
@@ -571,6 +572,10 @@ TD.rcblank {
 .file-upload-container input[type="submit"] {
     margin-left: 5px;
     height: 100px;
+}
+
+.file-upload.has-file {
+    background-color: #d4edda;
 }
 
 /**********

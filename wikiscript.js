@@ -833,3 +833,18 @@ document.addEventListener('DOMContentLoaded', function() {
 window.onload = function() {
     copy_clip('uploadlink', document.querySelector('input[name="Copy"]'));
 };
+
+
+// 업로드할 파일을 선택한 상태이면 배경색 변경
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.file-upload input[type="file"]').forEach(input => {
+        input.addEventListener('change', function() {
+            const container = this.parentElement;
+            if (this.files.length > 0) {
+                container.classList.add('has-file');
+            } else {
+                container.classList.remove('has-file');
+            }
+        });
+    });
+});
