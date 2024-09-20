@@ -16,6 +16,16 @@ function chk_close(e, str) {
 function copy_clip(field_id, btn) {
 
     var elem = document.getElementById(field_id);
+    if (!elem) {
+        return;
+    }
+
+    // 클립보드API를 쓰는 방식은 제일 처음 사용할 때 허용 여부를 묻는다.
+    // 그래서 그냥 execCommand를 쓰는 두번째 방식을 무조건 사용하게 했는데,
+    // 업로드 직후에 자동으로 파일명 링크가 복사되도록 하려 했더니 (아래에 document.onload)
+    // 두번째 방식은 사용자의 동작 없이 복사를 하는 것이라 그런지 복사가 되지 않음.
+    // 그래서 첫번째 방식을 쓰도록 조건문의 false를 제거함 (e1b2470)
+
     // Clipboard API의 지원 여부를 확인
     if (navigator.clipboard && navigator.clipboard.writeText) {
         var text;
@@ -805,13 +815,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         this.href = originalHref;
                     }, 100);
                 }
+
                 /*
-                // 링크를 열기 위해 Enter를 눌렀을 때 기본 동작을 실행하게 하려면 focus를 유지하고 preventDefault를 호출하지 않음.
+                   링크를 여는 것 자체를 자바스크립트에서 location을 바꿔치기하는 식으로 구현한다면 아래와 같은 식으로 할 수도 있겠다.
+                /*
                 setTimeout(() => {
                     window.location.href = this.href;
                 }, 0);
-                // 기본 동작을 막고 커스텀 동작을 하게 하려면 preventDefault()를 호출
-                event.preventDefault(); // 이 줄이 있을 경우, 기본 Enter 키 동작(링크 열기)을 막음
+                event.preventDefault();
                 */
             }
         });
