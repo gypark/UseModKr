@@ -95,6 +95,8 @@ sub plugin_vim {
     $text =~ s'^pre \{[^}]+}\n(?=.*^</style>$)''sm;
     $text =~ s'^body \{[^}]+}\n(?=.*^</style>$)''sm;
 
+    $text = font2span($text);
+
     chdir($pwd);
 
     # 캐쉬에 저장
@@ -107,6 +109,26 @@ sub plugin_vim {
     rmdir ($hashdir) or return "[rmdir fail]";
 
     return $text;
+}
+
+sub font2span {
+    my $html = shift;
+
+    my @colors = $html =~ m/color="#([^"]+)"/g;
+    my %colorMap;
+    $colorMap{$_}++ for @colors;
+    @colors = keys %colorMap;
+
+    my $style = "<style type=\"text/css\">\n";
+    for my $color (@colors) {
+        $style .= "._$color { color: #$color }\n";
+    }
+
+    $style .= "</style>\n";
+    $html = $style . $html;
+    $html =~ s/font color="#/span class="_/g;
+    $html =~ s/\/font/\/span/g;
+    return $html;
 }
 
 1;
